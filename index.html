@@ -218,6 +218,8 @@ Error message and password prompt
 
 <li>$:/themes/tiddlywiki/vanilla</li>
 
+<li>Backlink</li>
+
 <li>Welkom</li>
 
 </ul>
@@ -15067,9 +15069,9 @@ Error message and password prompt
 <pre>$:/core/ui/SideBar/Tools</pre>
 </div>
 <div title="$:/status/RequireReloadDueToPluginChange">
-<pre>yes</pre>
+<pre>no</pre>
 </div>
-<div list="$:/Import Welkom" title="$:/StoryList">
+<div list="Backlink Welkom" title="$:/StoryList">
 <pre></pre>
 </div>
 <div author="JeremyRuston" core-version="&gt;=5.0.0" dependents="$:/themes/tiddlywiki/vanilla" description="Emphasises individual tiddlers" name="Snow White" plugin-priority="0" plugin-type="theme" title="$:/themes/tiddlywiki/snowwhite" type="application/json" version="5.1.23">
@@ -15180,6 +15182,13 @@ Error message and password prompt
         }
     }
 }</pre>
+</div>
+<div created="20210319192024935" modified="20210319192107453" tags="[[&lt;$list filter=&quot;[all[current]backlinks[]sort[title]]&quot; emptyMessage=&quot;&quot;&gt; &lt;$link to={{!!title}}&gt;&lt;$view field=&quot;title&quot;/&gt;: &lt;/$link&gt; &lt;$context length=80 term=&lt;&lt;storyTiddler&gt;&gt; /&gt; &lt;br&gt; &lt;/$list&gt;]]" title="Backlink">
+<pre>&lt;$list filter=&quot;[all[current]backlinks[]sort[title]]&quot; emptyMessage=&quot;&quot;&gt;
+&lt;$link to={{!!title}}&gt;&lt;$view field=&quot;title&quot;/&gt;: &lt;/$link&gt;
+&lt;$context length=80 term=&lt;&lt;storyTiddler&gt;&gt; /&gt;
+&lt;br&gt;
+&lt;/$list&gt;</pre>
 </div>
 <div created="20210319184531023" modified="20210319184840603" tags="" title="Welkom">
 <pre>Dit is mijn persoonlijke notebook. Een [[tiddlywiki|https://tiddlywiki.com/]], gehost op Github en gepubliceerd via Githubpages.</pre>
