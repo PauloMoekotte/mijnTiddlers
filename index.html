@@ -161,6 +161,8 @@ Error message and password prompt
 
 <li>$:/plugins/tiddlywiki/bibtex</li>
 
+<li>$:/plugins/tiddlywiki/blog</li>
+
 <li>$:/SiteSubtitle</li>
 
 <li>$:/SiteTitle</li>
@@ -14006,6 +14008,36 @@ Error message and password prompt
             &quot;text&quot;: &quot;\nThe MIT License (MIT)\nCopyright (c) 2013 ORCID, Inc.\n\nCopyright (c) 2010 Henrik Muehe\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \&quot;Software\&quot;), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \&quot;AS IS\&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.\n&quot;,
             &quot;type&quot;: &quot;text/plain&quot;,
             &quot;title&quot;: &quot;$:/plugins/tiddlywiki/bibtex/license&quot;
+        }
+    }
+}</pre>
+</div>
+<div dependents="" description="Blog publishing tools" list="readme docs" name="Blog" plugin-type="plugin" title="$:/plugins/tiddlywiki/blog" type="application/json" version="5.1.23">
+<pre>{
+    &quot;tiddlers&quot;: {
+        &quot;$:/plugins/tiddlywiki/blog/docs&quot;: {
+            &quot;title&quot;: &quot;$:/plugins/tiddlywiki/blog/docs&quot;,
+            &quot;text&quot;: &quot;Until there's more documentation, see an example of the use of this plugin here:\n\n* Blog: http://jermolene-blog.github.io/\n* Repository: https://github.com/Jermolene-blog/blog\n&quot;
+        },
+        &quot;$:/plugins/tiddlywiki/blog/readme&quot;: {
+            &quot;title&quot;: &quot;$:/plugins/tiddlywiki/blog/readme&quot;,
+            &quot;text&quot;: &quot;This plugin contains tools to help publish blogs:\n\n* Templates and tools for building static HTML pages and posts\n&quot;
+        },
+        &quot;$:/plugins/tiddlywiki/blog/templates/html-page/page&quot;: {
+            &quot;title&quot;: &quot;$:/plugins/tiddlywiki/blog/templates/html-page/page&quot;,
+            &quot;text&quot;: &quot;\\define tv-wikilink-template() posts/$uri_doubleencoded$.html\n\\define tv-config-toolbar-icons() no\n\\define tv-config-toolbar-text() no\n\\define tv-config-toolbar-class() tc-btn-invisible\n`&lt;!doctype html&gt;\n&lt;html&gt;\n&lt;head&gt;\n&lt;meta http-equiv=\&quot;Content-Type\&quot; content=\&quot;text/html;charset=utf-8\&quot; /&gt;\n&lt;meta name=\&quot;generator\&quot; content=\&quot;TiddlyWiki\&quot; /&gt;\n&lt;meta name=\&quot;tiddlywiki-version\&quot; content=\&quot;`{{$:/core/templates/version}}`\&quot; /&gt;\n&lt;meta name=\&quot;viewport\&quot; content=\&quot;width=device-width, initial-scale=1.0\&quot; /&gt;\n&lt;meta name=\&quot;apple-mobile-web-app-capable\&quot; content=\&quot;yes\&quot; /&gt;\n&lt;meta name=\&quot;apple-mobile-web-app-status-bar-style\&quot; content=\&quot;black-translucent\&quot; /&gt;\n&lt;meta name=\&quot;mobile-web-app-capable\&quot; content=\&quot;yes\&quot;/&gt;\n&lt;meta name=\&quot;format-detection\&quot; content=\&quot;telephone=no\&quot;&gt;\n&lt;link id=\&quot;faviconLink\&quot; rel=\&quot;shortcut icon\&quot; href=\&quot;favicon.ico\&quot;&gt;\n&lt;link rel=\&quot;stylesheet\&quot; href=\&quot;static.css\&quot;&gt;\n&lt;title&gt;`&lt;$transclude field=\&quot;caption\&quot;&gt;&lt;$view field=\&quot;title\&quot;/&gt;&lt;/$transclude&gt;: {{$:/core/wiki/title}}`&lt;/title&gt;\n&lt;/head&gt;\n&lt;body class=\&quot;tc-body\&quot;&gt;\n`{{$:/StaticBanner||$:/core/templates/html-tiddler}}`\n&lt;section class=\&quot;tc-story-river\&quot;&gt;\n`&lt;$importvariables filter=\&quot;[[$:/core/ui/PageMacros]] [all[shadows+tiddlers]tag[$:/tags/Macro]!has[draft.of]]\&quot;&gt;\n&lt;$view tiddler=\&quot;$:/plugins/tiddlywiki/blog/templates/tiddler\&quot; format=\&quot;htmlwikified\&quot;/&gt;\n&lt;/$importvariables&gt;`\n&lt;/section&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n`\n&quot;
+        },
+        &quot;$:/plugins/tiddlywiki/blog/templates/html-page/post&quot;: {
+            &quot;title&quot;: &quot;$:/plugins/tiddlywiki/blog/templates/html-page/post&quot;,
+            &quot;text&quot;: &quot;\\define tv-wikilink-template() /$uri_doubleencoded$.html\n\\define tv-config-toolbar-icons() no\n\\define tv-config-toolbar-text() no\n\\define tv-config-toolbar-class() tc-btn-invisible\n`&lt;!doctype html&gt;\n&lt;html&gt;\n&lt;head&gt;\n&lt;meta http-equiv=\&quot;Content-Type\&quot; content=\&quot;text/html;charset=utf-8\&quot; /&gt;\n&lt;meta name=\&quot;generator\&quot; content=\&quot;TiddlyWiki\&quot; /&gt;\n&lt;meta name=\&quot;tiddlywiki-version\&quot; content=\&quot;`{{$:/core/templates/version}}`\&quot; /&gt;\n&lt;meta name=\&quot;viewport\&quot; content=\&quot;width=device-width, initial-scale=1.0\&quot; /&gt;\n&lt;meta name=\&quot;apple-mobile-web-app-capable\&quot; content=\&quot;yes\&quot; /&gt;\n&lt;meta name=\&quot;apple-mobile-web-app-status-bar-style\&quot; content=\&quot;black-translucent\&quot; /&gt;\n&lt;meta name=\&quot;mobile-web-app-capable\&quot; content=\&quot;yes\&quot;/&gt;\n&lt;meta name=\&quot;format-detection\&quot; content=\&quot;telephone=no\&quot;&gt;\n&lt;link id=\&quot;faviconLink\&quot; rel=\&quot;shortcut icon\&quot; href=\&quot;../favicon.ico\&quot;&gt;\n&lt;link rel=\&quot;stylesheet\&quot; href=\&quot;../static.css\&quot;&gt;\n&lt;title&gt;`&lt;$transclude field=\&quot;caption\&quot;&gt;&lt;$view field=\&quot;title\&quot;/&gt;&lt;/$transclude&gt;: {{$:/core/wiki/title}}`&lt;/title&gt;\n&lt;/head&gt;\n&lt;body class=\&quot;tc-body\&quot;&gt;\n`{{$:/StaticBanner||$:/core/templates/html-tiddler}}`\n&lt;section class=\&quot;tc-story-river\&quot;&gt;\n`&lt;$importvariables filter=\&quot;[[$:/core/ui/PageMacros]] [all[shadows+tiddlers]tag[$:/tags/Macro]!has[draft.of]]\&quot;&gt;\n&lt;$view tiddler=\&quot;$:/plugins/tiddlywiki/blog/templates/tiddler\&quot; format=\&quot;htmlwikified\&quot;/&gt;\n&lt;$view tiddler=\&quot;$:/plugins/tiddlywiki/blog/templates/menu\&quot; format=\&quot;htmlwikified\&quot;/&gt;\n&lt;/$importvariables&gt;`\n&lt;/section&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n`\n&quot;
+        },
+        &quot;$:/plugins/tiddlywiki/blog/templates/menu&quot;: {
+            &quot;title&quot;: &quot;$:/plugins/tiddlywiki/blog/templates/menu&quot;,
+            &quot;text&quot;: &quot;&lt;div class=\&quot;tc-blog-menu\&quot;&gt;\n\n&lt;div class=\&quot;tc-blog-menu-item\&quot;&gt;\n\n&lt;a href=\&quot;../index.html\&quot;&gt;\n\n{{$:/core/images/home-button}}\n\n&lt;/a&gt;\n\n&lt;/div&gt;\n\n&lt;/div&gt;\n&quot;
+        },
+        &quot;$:/plugins/tiddlywiki/blog/templates/tiddler&quot;: {
+            &quot;title&quot;: &quot;$:/plugins/tiddlywiki/blog/templates/tiddler&quot;,
+            &quot;text&quot;: &quot;&lt;div class=\&quot;tc-tiddler-frame tc-tiddler-view-frame\&quot;&gt;\n\n&lt;div class=\&quot;tc-tiddler-title\&quot;&gt;\n\n&lt;div class=\&quot;tc-titlebar\&quot;&gt;\n\n&lt;h2 class=\&quot;tc-title\&quot;&gt;\n\n&lt;$transclude field=\&quot;caption\&quot; mode=\&quot;inline\&quot;&gt;\n\n&lt;$view field=\&quot;title\&quot;/&gt;\n\n&lt;/$transclude&gt;\n\n&lt;/h2&gt;\n\n&lt;/div&gt;\n\n&lt;/div&gt;\n\n&lt;div class=\&quot;tc-subtitle\&quot;&gt;\n\n&lt;$view field=\&quot;modified\&quot; format=\&quot;date\&quot; template=\&quot;DDth MMM YYYY\&quot;/&gt;\n\n&lt;/div&gt;\n\n&lt;div class=\&quot;tc-tiddler-body\&quot;&gt;\n\n&lt;$transclude/&gt;\n\n&lt;/div&gt;\n\n&lt;/div&gt;\n&quot;
         }
     }
 }</pre>
