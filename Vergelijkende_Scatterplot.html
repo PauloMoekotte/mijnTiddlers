@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vergelijkende Scatterplot Technologieën: Noord-Brabant vs. Overijssel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+         h2 {
+            text-align: center;
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: normal;
+        }
+        svg {
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+            border: 1px solid #e0e0e0;
+        }
+        /* Styling voor de 'g' elementen die de shapes en tekst bevatten */
+        .node {
+            cursor: pointer;
+        }
+        .node circle, .node rect {
+            stroke: #fff;
+            stroke-width: 1.5px;
+            transition: transform 0.2s ease-out, filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .node text {
+            font-size: 10px;
+            paint-order: stroke;
+            stroke: white;
+            stroke-width: 2.5px;
+            fill: #333;
+            pointer-events: none;
+            text-anchor: middle;
+            opacity: 0; /* Initieel verborgen, zichtbaar bij hover van de parent .node */
+            transition: opacity 0.3s ease-in-out;
+        }
+        .node:hover text { /* Tekst tonen als over de groep gehoverd wordt */
+            opacity: 1;
+        }
+        .node.highlighted circle, .node.highlighted rect {
+            transform: scale(1.15);
+            filter: drop-shadow(0px 0px 4px rgba(0,0,0,0.4));
+        }
+         .node.faded circle, .node.faded rect {
+            opacity: 0.3;
+        }
+        .axis-label {
+            font-size: 12px;
+            fill: #555;
+            text-anchor: middle;
+        }
+        .legend {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        .legend-color-box { /* Voor kleuren */
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .legend-shape-box { /* Voor vormen (provincies) */
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            border: 1.5px solid #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .legend-shape-box.circle { border-radius: 50%; }
+        .legend-shape-box.square { border-radius: 2px; }
+
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .container { width: 100%; margin: 0; border-radius: 0; padding: 10px; }
+            h1 { font-size: 1.4em; }
+            h2 { font-size: 0.9em; }
+            .node text { font-size: 9px; }
+            .axis-label { font-size: 10px; }
+            .legend { margin-top: 15px; padding: 10px; }
+            .legend-title { font-size: 1em;}
+            .legend-item { font-size: 0.8em;}
+        }
+    </style>
+</head>
+<body class="bg-slate-100">
+    <div class="container mx-auto p-4 md:p-8 bg-white shadow-xl rounded-lg">
+        <h1 class="text-xl md:text-2xl lg:text-3xl font-bold text-center text-gray-700 mb-2">
+            Kansrijke Technologieën: Noord-Brabant vs. Overijssel
+        </h1>
+        <h2 class="text-md md:text-lg text-center text-gray-500 mb-6">Scatterplot: Knowledge Complexity (KCi) vs. Relatedness Density (RDi)</h2>
+        
+        <div id="scatterplot-graph" class="w-full">
+            <svg id="interactive-svg"></svg>
+        </div>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div id="legend" class="legend mt-6 p-4 bg-gray-50 rounded-md border border-gray-200">
+            <div class="legend-title text-lg font-semibold text-gray-700 mb-3">Legenda</div>
+            <div id="legend-provinces" class="mb-3">
+                <div class="legend-subtitle font-semibold text-sm text-gray-600 mb-1">Provincie:</div>
+                </div>
+            <div id="legend-categories">
+                <div class="legend-subtitle font-semibold text-sm text-gray-600 mb-1">Categorieën:</div>
+                </div>
+        </div>
+         <p class="text-xs text-gray-500 text-center mt-4">
+            Data gebaseerd op Figuren A1 (NB) & A2 (OV) uit Boschma & Balland (ESB, 2022). Beweeg over een node voor details.
+        </p>
+    </div>
+
+    <script>
+        const categories = {
+            "Chemie": "#FFB6C1", 
+            "Digitaal": "#4682B4", 
+            "Medicijnen en medisch": "#FF6347", 
+            "Elektrisch en electronica": "#FFD700", 
+            "Groen": "#32CD32", 
+            "Mechanisch": "#A9A9A9", 
+            "Instrumenten": "#FFA500" 
+        };
+
+        // Gecombineerde data, geschat uit Figuren A1 (NB) en A2 (OV) van Boschma & Balland (2022)
+        // Radius is hier een schatting voor visuele weergave.
+        const nodesDataCombined = [
+            // Noord-Brabant (NB) data - gebaseerd op Figuur A1
+            { id: "levensmiddelenchemie_NB", name: "Levensmiddelenchemie", province: "Noord-Brabant", category: "Chemie", rdi: 0.15, kci: 0.40, radius: 17 },
+            { id: "polymeren_NB", name: "Polymeren", province: "Noord-Brabant", category: "Chemie", rdi: 0.10, kci: 0.55, radius: 10 },
+            { id: "basischechemie_NB", name: "Basische chemie", province: "Noord-Brabant", category: "Chemie", rdi: 0.05, kci: 0.30, radius: 10 },
+            { id: "computertechnologie_NB", name: "Computer technologie", province: "Noord-Brabant", category: "Digitaal", rdi: 0.85, kci: 0.95, radius: 22 },
+            { id: "digitalecommunicatie_NB", name: "Digitale communicatie", province: "Noord-Brabant", category: "Digitaal", rdi: 0.90, kci: 0.90, radius: 20 },
+            { id: "telecommunicatie_NB", name: "Telecommunicatie", province: "Noord-Brabant", category: "Digitaal", rdi: 0.80, kci: 0.85, radius: 18 },
+            { id: "basiscommunicatie_NB", name: "Basis communicatie", province: "Noord-Brabant", category: "Digitaal", rdi: 0.75, kci: 0.55, radius: 28 },
+            { id: "medischetechnologie_NB", name: "Medische technologie", province: "Noord-Brabant", category: "Medicijnen en medisch", rdi: 0.55, kci: 0.65, radius: 28 },
+            { id: "biotechnologie_NB", name: "Biotechnologie", province: "Noord-Brabant", category: "Medicijnen en medisch", rdi: 0.40, kci: 0.70, radius: 16 },
+            { id: "farmaceutica_NB", name: "Farmaceutica", province: "Noord-Brabant", category: "Medicijnen en medisch", rdi: 0.25, kci: 0.78, radius: 11 },
+            { id: "optisch_NB", name: "Optisch", province: "Noord-Brabant", category: "Instrumenten", rdi: 0.65, kci: 0.50, radius: 23 },
+            { id: "meting_NB", name: "Meting", province: "Noord-Brabant", category: "Instrumenten", rdi: 0.60, kci: 0.70, radius: 10 },
+            { id: "controle_NB", name: "Controle", province: "Noord-Brabant", category: "Instrumenten", rdi: 0.50, kci: 0.35, radius: 22 },
+            { id: "meubelsengames_NB", name: "Meubels en games", province: "Noord-Brabant", category: "Instrumenten", rdi: 0.55, kci: 0.25, radius: 15 },
+            { id: "semiconductoren_NB", name: "Semiconductoren", province: "Noord-Brabant", category: "Elektrisch en electronica", rdi: 0.45, kci: 0.40, radius: 24 },
+            { id: "elektrischemichines_NB", name: "Elektrische machines", province: "Noord-Brabant", category: "Elektrisch en electronica", rdi: 0.65, kci: 0.08, radius: 18 },
+            { id: "micro-nanotechnologie_NB", name: "Micro- & nanotech", province: "Noord-Brabant", category: "Groen", rdi: 0.40, kci: 0.60, radius: 21 },
+            { id: "transport_NB", name: "Transport", province: "Noord-Brabant", category: "Groen", rdi: 0.50, kci: 0.15, radius: 24 }, // Voertuigen en transportmiddelen
+            { id: "milieutechnologie_NB", name: "Milieutechnologie", province: "Noord-Brabant", category: "Groen", rdi: 0.20, kci: 0.25, radius: 16 },
+            { id: "machineinstrumenten_NB", name: "Machine-instrumenten", province: "Noord-Brabant", category: "Mechanisch", rdi: 0.35, kci: -0.05, radius: 17 },
+            { id: "anderespecialemachines_NB", name: "Andere speciale machines", province: "Noord-Brabant", category: "Mechanisch", rdi: 0.30, kci: 0.08, radius: 19 },
+            { id: "textielpapiermachines_NB", name: "Textiel & papier machines", province: "Noord-Brabant", category: "Mechanisch", rdi: 0.25, kci: 0.15, radius: 11 },
+
+            // Overijssel (OV) data - gebaseerd op Figuur A2
+            { id: "levensmiddelenchemie_OV", name: "Levensmiddelenchemie", province: "Overijssel", category: "Chemie", rdi: 0.12, kci: 0.30, radius: 16 },
+            { id: "polymeren_OV", name: "Polymeren", province: "Overijssel", category: "Chemie", rdi: 0.08, kci: 0.50, radius: 10 },
+            // Basische chemie niet duidelijk zichtbaar in OV figuur A2
+            { id: "computertechnologie_OV", name: "Computer technologie", province: "Overijssel", category: "Digitaal", rdi: 0.83, kci: 0.93, radius: 20 },
+            { id: "digitalecommunicatie_OV", name: "Digitale communicatie", province: "Overijssel", category: "Digitaal", rdi: 0.88, kci: 0.88, radius: 18 },
+            { id: "telecommunicatie_OV", name: "Telecommunicatie", province: "Overijssel", category: "Digitaal", rdi: 0.78, kci: 0.78, radius: 17 },
+            { id: "basiscommunicatie_OV", name: "Basis communicatie", province: "Overijssel", category: "Digitaal", rdi: 0.68, kci: 0.48, radius: 26 },
+            { id: "medischetechnologie_OV", name: "Medische technologie", province: "Overijssel", category: "Medicijnen en medisch", rdi: 0.48, kci: 0.63, radius: 25 },
+            { id: "biotechnologie_OV", name: "Biotechnologie", province: "Overijssel", category: "Medicijnen en medisch", rdi: 0.33, kci: 0.68, radius: 15 },
+            { id: "farmaceutica_OV", name: "Farmaceutica", province: "Overijssel", category: "Medicijnen en medisch", rdi: 0.18, kci: 0.73, radius: 10 },
+            { id: "optisch_OV", name: "Optisch", province: "Overijssel", category: "Instrumenten", rdi: 0.58, kci: 0.43, radius: 20 },
+            { id: "meting_OV", name: "Meting", province: "Overijssel", category: "Instrumenten", rdi: 0.58, kci: 0.58, radius: 10 },
+            { id: "controle_OV", name: "Controle", province: "Overijssel", category: "Instrumenten", rdi: 0.43, kci: 0.33, radius: 24 },
+            { id: "meubelsengames_OV", name: "Meubels en games", province: "Overijssel", category: "Instrumenten", rdi: 0.48, kci: 0.23, radius: 14 },
+            { id: "semiconductoren_OV", name: "Semiconductoren", province: "Overijssel", category: "Elektrisch en electronica", rdi: 0.38, kci: 0.38, radius: 16 },
+            { id: "elektrischemichines_OV", name: "Elektrische machines", province: "Overijssel", category: "Elektrisch en electronica", rdi: 0.58, kci: 0.03, radius: 18 },
+            { id: "micro-nanotechnologie_OV", name: "Micro- & nanotech", province: "Overijssel", category: "Groen", rdi: 0.28, kci: 0.53, radius: 17 },
+            { id: "transport_OV", name: "Transport", province: "Overijssel", category: "Groen", rdi: 0.43, kci: 0.08, radius: 23 },
+            { id: "milieutechnologie_OV", name: "Milieutechnologie", province: "Overijssel", category: "Groen", rdi: 0.18, kci: 0.18, radius: 15 },
+            { id: "machineinstrumenten_OV", name: "Machine-instrumenten", province: "Overijssel", category: "Mechanisch", rdi: 0.28, kci: -0.02, radius: 16 },
+            { id: "anderespecialemachines_OV", name: "Andere speciale machines", province: "Overijssel", category: "Mechanisch", rdi: 0.23, kci: 0.03, radius: 16 },
+            { id: "textielpapiermachines_OV", name: "Textiel & papier machines", province: "Overijssel", category: "Mechanisch", rdi: 0.18, kci: 0.08, radius: 10 }
+        ];
+
+        const svg = d3.select("#interactive-svg");
+        const graphContainer = document.getElementById('scatterplot-graph');
+        const tooltip = d3.select("#tooltip");
+
+        let width, height;
+        const margin = { top: 40, right: 40, bottom: 70, left: 70 }; 
+
+        function drawScatterplot() {
+            svg.selectAll("*").remove();
+
+            width = graphContainer.clientWidth - margin.left - margin.right;
+            height = Math.max(400, Math.min(window.innerHeight * 0.6, graphContainer.clientWidth * 0.65)) - margin.top - margin.bottom;
+             if (width < 350) height = width * 1.1;
+
+
+            svg.attr("width", width + margin.left + margin.right)
+               .attr("height", height + margin.top + margin.bottom);
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const allRdiValues = nodesDataCombined.map(d => d.rdi);
+            const allKciValues = nodesDataCombined.map(d => d.kci);
+
+            const xScale = d3.scaleLinear()
+                .domain([0, d3.max(allRdiValues) * 1.05])
+                .range([0, width]);
+
+            const yScale = d3.scaleLinear()
+                .domain([d3.min(allKciValues) - 0.05, d3.max(allKciValues) * 1.05])
+                .range([height, 0]);
+
+            g.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(xScale).ticks(width < 450 ? 5 : 10).tickFormat(d3.format(".1f")))
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("x", width / 2)
+                .attr("y", margin.bottom - 25)
+                .attr("fill", "currentColor")
+                .text("Relatedness Density (RDi)");
+
+            g.append("g")
+                .call(d3.axisLeft(yScale).ticks(height < 350 ? 5 : 8).tickFormat(d3.format(".1f")))
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -height / 2)
+                .attr("y", -margin.left + 25)
+                .attr("fill", "currentColor")
+                .text("Knowledge Complexity (KCi)");
+
+            // Creëer groepen voor elke node (data point)
+            const nodeGroups = g.selectAll(".node")
+                .data(nodesDataCombined)
+                .join("g")
+                .attr("class", "node") // class 'node' op de 'g'
+                .attr("transform", d => `translate(${xScale(d.rdi)},${yScale(d.kci)})`)
+                .on("mouseover", function(event, d_hover) {
+                    d3.select(this).classed("highlighted", true).raise();
+                    d3.selectAll(".node:not(.highlighted)").classed("faded", true);
+                    
+                    tooltip.transition().duration(150).style("opacity", .95);
+                    tooltip.html(`<strong>${d_hover.name} (${d_hover.province})</strong><br>RDi: ${d_hover.rdi.toFixed(2)}<br>KCi: ${d_hover.kci.toFixed(2)}`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 30) + "px");
+                    d3.select(this).select("text").style("opacity", 1);
+                })
+                .on("mouseout", function() {
+                    d3.select(this).classed("highlighted", false);
+                    d3.selectAll(".node").classed("faded", false);
+                    tooltip.transition().duration(300).style("opacity", 0);
+                    d3.select(this).select("text").style("opacity", 0);
+                });
+
+            // Voeg cirkels toe voor Noord-Brabant
+            nodeGroups.filter(d => d.province === "Noord-Brabant")
+                .append("circle")
+                .attr("r", d => d.radius)
+                .attr("fill", d => categories[d.category] || "#ccc");
+
+            // Voeg vierkanten toe voor Overijssel
+            nodeGroups.filter(d => d.province === "Overijssel")
+                .append("rect")
+                .attr("x", d => -d.radius) // Centreer het vierkant
+                .attr("y", d => -d.radius) // Centreer het vierkant
+                .attr("width", d => d.radius * 2)
+                .attr("height", d => d.radius * 2)
+                .attr("fill", d => categories[d.category] || "#ccc");
+            
+            // Voeg tekstlabels toe aan elke groep (initieel verborgen)
+            nodeGroups.append("text")
+                .text(d => d.name)
+                .attr("dy", d => -d.radius - 6); // Positie tekst net boven de shape
+
+        }
+
+        // Maak de legenda dynamisch
+        const legendProvincesContainer = d3.select("#legend-provinces");
+        const provinceShapes = [
+            { name: "Noord-Brabant", shape: "circle" },
+            { name: "Overijssel", shape: "square" }
+        ];
+        provinceShapes.forEach(p => {
+            const legendItem = legendProvincesContainer.append("div").attr("class", "legend-item");
+            const shapeBox = legendItem.append("div").attr("class", `legend-shape-box ${p.shape}`);
+            if (p.shape === 'circle') {
+                shapeBox.style('border-radius', '50%');
+            } else {
+                shapeBox.style('border-radius', '2px');
+            }
+            legendItem.append("span").text(p.name);
+        });
+        
+        const legendCategoriesContainer = d3.select("#legend-categories");
+        Object.entries(categories).forEach(([categoryName, color]) => {
+            const legendItem = legendCategoriesContainer.append("div").attr("class", "legend-item");
+            legendItem.append("div")
+                .attr("class", "legend-color-box")
+                .style("background-color", color);
+            legendItem.append("span").text(categoryName);
+        });
+
+        drawScatterplot();
+        window.addEventListener('resize', drawScatterplot);
+
+    </script>
+</body>
+</html>
