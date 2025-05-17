@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactieve Scatterplot Technologieën Overijssel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8; /* Lichte achtergrondkleur */
+            color: #333;
+            overflow-x: hidden; /* Voorkom horizontale scrollbar */
+        }
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50; /* Donkerblauw/grijs voor titel */
+            margin-bottom: 10px;
+            font-size: 1.8em; /* Responsive font size */
+        }
+         h2 {
+            text-align: center;
+            color: #555; /* Iets lichtere kleur voor subtitel */
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: normal;
+        }
+        svg {
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+            background-color: #fdfdfd; /* Iets lichtere achtergrond voor SVG */
+            border: 1px solid #e0e0e0;
+        }
+        .node circle {
+            stroke: #fff;
+            stroke-width: 1.5px;
+            transition: transform 0.2s ease-out, filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .node text {
+            font-size: 10px;
+            paint-order: stroke; /* Zorgt dat de stroke achter de fill getekend wordt */
+            stroke: white; /* Witte rand rond tekst voor leesbaarheid */
+            stroke-width: 2.5px;
+            stroke-linecap: butt;
+            stroke-linejoin: miter;
+            fill: #333; /* Donkere tekstkleur */
+            pointer-events: none; /* Zorgt dat tekst geen hover events blokkeert */
+            text-anchor: middle;
+            opacity: 0; /* Initieel verborgen, zichtbaar bij hover */
+            transition: opacity 0.3s ease-in-out;
+        }
+        .node:hover text {
+            opacity: 1;
+        }
+        .node.highlighted circle {
+            transform: scale(1.15); /* Iets groter bij hover */
+            filter: drop-shadow(0px 0px 4px rgba(0,0,0,0.4)); /* Schaduw effect */
+        }
+         .node.faded circle {
+            opacity: 0.3; /* Maak andere nodes vager */
+        }
+        .axis-label {
+            font-size: 12px;
+            fill: #555;
+            text-anchor: middle;
+        }
+        .legend {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9fafb; /* Lichte achtergrond voor legenda */
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        .legend-color-box {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .tooltip {
+            position: absolute; /* Noodzakelijk voor positionering t.o.v. muis */
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            pointer-events: none; /* Tooltip vangt geen muis events op */
+            opacity: 0; /* Initieel onzichtbaar */
+            transition: opacity 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10; /* Zorg dat tooltip boven andere elementen is */
+        }
+
+        /* Responsive design aanpassingen */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            h2 {
+                font-size: 1em;
+            }
+            .node text {
+                font-size: 9px;
+            }
+            .axis-label {
+                font-size: 10px;
+            }
+            .legend {
+                margin-top: 15px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100">
+    <div class="container mx-auto p-4 md:p-8 bg-white shadow-xl rounded-lg">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-700 mb-2">
+            Kansrijke Technologieën Overijssel
+        </h1>
+        <h2 class="text-lg text-center text-gray-500 mb-6">Scatterplot: Knowledge Complexity (KCi) vs. Relatedness Density (RDi)</h2>
+        
+        <div id="scatterplot-graph" class="w-full">
+            <svg id="interactive-svg"></svg>
+        </div>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div id="legend" class="legend mt-6 p-4 bg-gray-50 rounded-md border border-gray-200">
+            <div class="legend-title text-lg font-semibold text-gray-700 mb-3">Legenda Categorieën</div>
+            </div>
+         <p class="text-xs text-gray-500 text-center mt-4">
+            Gebaseerd op Figuur A2 (Overijssel) uit Boschma & Balland (ESB, 2022). Beweeg over een node voor details.
+        </p>
+    </div>
+
+    <script>
+        // Data voor de nodes (knooppunten) - Geschat voor Overijssel
+        const categories = {
+            "Chemie": "#FFB6C1", // Lichtroze
+            "Digitaal": "#4682B4", // Staalblauw
+            "Medicijnen en medisch": "#FF6347", // Tomatenrood
+            "Elektrisch en electronica": "#FFD700", // Goud
+            "Groen": "#32CD32", // Limoengroen
+            "Mechanisch": "#A9A9A9", // Donkergrijs
+            "Instrumenten": "#FFA500" // Oranje
+        };
+
+        const nodesDataOverijssel = [
+            // { id: "ID", name: "Naam", category: "Categorie", rdi: X, kci: Y, radius: R }
+            // Chemie
+            { id: "levensmiddelenchemie", name: "Levensmiddelenchemie", category: "Chemie", rdi: 0.12, kci: 0.30, radius: 16 },
+            { id: "polymeren", name: "Polymeren", category: "Chemie", rdi: 0.08, kci: 0.50, radius: 10 },
+            // Digitaal
+            { id: "computertechnologie", name: "Computer technologie", category: "Digitaal", rdi: 0.83, kci: 0.93, radius: 20 },
+            { id: "digitalecommunicatie", name: "Digitale communicatie", category: "Digitaal", rdi: 0.88, kci: 0.88, radius: 18 },
+            { id: "telecommunicatie", name: "Telecommunicatie", category: "Digitaal", rdi: 0.78, kci: 0.78, radius: 17 },
+            { id: "basiscommunicatie", name: "Basis communicatie", category: "Digitaal", rdi: 0.68, kci: 0.48, radius: 26 },
+            // Medicijnen en medisch
+            { id: "medischetechnologie", name: "Medische technologie", category: "Medicijnen en medisch", rdi: 0.48, kci: 0.63, radius: 25 },
+            { id: "biotechnologie", name: "Biotechnologie", category: "Medicijnen en medisch", rdi: 0.33, kci: 0.68, radius: 15 },
+            { id: "farmaceutica", name: "Farmaceutica", category: "Medicijnen en medisch", rdi: 0.18, kci: 0.73, radius: 10 },
+            // Instrumenten
+            { id: "optisch", name: "Optisch", category: "Instrumenten", rdi: 0.58, kci: 0.43, radius: 20 },
+            { id: "meting", name: "Meting", category: "Instrumenten", rdi: 0.58, kci: 0.58, radius: 10 },
+            { id: "controle", name: "Controle", category: "Instrumenten", rdi: 0.43, kci: 0.33, radius: 24 },
+            { id: "meubelsengames", name: "Meubels en games", category: "Instrumenten", rdi: 0.48, kci: 0.23, radius: 14 },
+            // Elektrisch en electronica
+            { id: "semiconductoren", name: "Semiconductoren", category: "Elektrisch en electronica", rdi: 0.38, kci: 0.38, radius: 16 },
+            { id: "elektrischemichines", name: "Elektrische machines", category: "Elektrisch en electronica", rdi: 0.58, kci: 0.03, radius: 18 },
+            // Groen
+            { id: "micro-nanotechnologie", name: "Micro- & nanotech", category: "Groen", rdi: 0.28, kci: 0.53, radius: 17 },
+            { id: "transport", name: "Transport", category: "Groen", rdi: 0.43, kci: 0.08, radius: 23 },
+            { id: "milieutechnologie", name: "Milieutechnologie", category: "Groen", rdi: 0.18, kci: 0.18, radius: 15 },
+            // Mechanisch
+            { id: "machineinstrumenten", name: "Machine-instrumenten", category: "Mechanisch", rdi: 0.28, kci: -0.02, radius: 16 },
+            { id: "anderespecialemachines", name: "Andere speciale machines", category: "Mechanisch", rdi: 0.23, kci: 0.03, radius: 16 },
+            { id: "textielpapiermachines", name: "Textiel & papier machines", category: "Mechanisch", rdi: 0.18, kci: 0.08, radius: 10 }
+        ];
+
+        const svg = d3.select("#interactive-svg");
+        const graphContainer = document.getElementById('scatterplot-graph');
+        const tooltip = d3.select("#tooltip");
+
+        let width, height;
+        // Marges voor de assen en labels
+        const margin = { top: 40, right: 40, bottom: 70, left: 70 }; 
+
+        function drawScatterplot() {
+            // Verwijder vorige SVG inhoud als die bestaat
+            svg.selectAll("*").remove();
+
+            // Bepaal breedte en hoogte van de container, rekening houdend met marges
+            width = graphContainer.clientWidth - margin.left - margin.right;
+            // Zorg voor een minimale hoogte en pas aspect ratio aan
+            height = Math.max(350, Math.min(window.innerHeight * 0.55, graphContainer.clientWidth * 0.6)) - margin.top - margin.bottom; 
+            if (width < 300) height = width * 1; // Meer hoogte voor smalle schermen
+
+            svg.attr("width", width + margin.left + margin.right)
+               .attr("height", height + margin.top + margin.bottom);
+
+            // Groepeer elementen voor eenvoudiger transformaties
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Definieer schalen voor X en Y assen
+            const xScale = d3.scaleLinear()
+                .domain([0, d3.max(nodesDataOverijssel, d => d.rdi) * 1.05]) // 5% extra ruimte op de as
+                .range([0, width]);
+
+            const yScale = d3.scaleLinear()
+                .domain([d3.min(nodesDataOverijssel, d => d.kci) - 0.05, d3.max(nodesDataOverijssel, d => d.kci) * 1.05]) // 5% extra ruimte
+                .range([height, 0]); // Y-as is omgekeerd in SVG coördinaten
+
+            // Teken X-as
+            g.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(xScale).ticks(width < 400 ? 4 : 8).tickFormat(d3.format(".1f"))) // Max 1 decimaal
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("x", width / 2)
+                .attr("y", margin.bottom - 25) // Positie label onder de as
+                .attr("fill", "currentColor")
+                .text("Relatedness Density (RDi)");
+
+            // Teken Y-as
+            g.append("g")
+                .call(d3.axisLeft(yScale).ticks(height < 300 ? 4 : 7).tickFormat(d3.format(".1f"))) // Max 1 decimaal
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -height / 2)
+                .attr("y", -margin.left + 25) // Positie label links van de as
+                .attr("fill", "currentColor")
+                .text("Knowledge Complexity (KCi)");
+
+            // Maak de nodes (cirkels)
+            const node = g.selectAll(".node")
+                .data(nodesDataOverijssel)
+                .join("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${xScale(d.rdi)},${yScale(d.kci)})`);
+
+            node.append("circle")
+                .attr("r", d => d.radius)
+                .attr("fill", d => categories[d.category] || "#ccc") // Fallback kleur
+                .on("mouseover", function(event, d_hover) {
+                    const parentNode = d3.select(this.parentNode);
+                    parentNode.classed("highlighted", true).raise(); // Breng naar voren
+                    d3.selectAll(".node:not(.highlighted)").classed("faded", true);
+                    
+                    tooltip.transition().duration(150).style("opacity", .95);
+                    tooltip.html(`<strong>${d_hover.name}</strong><br>RDi: ${d_hover.rdi.toFixed(2)}<br>KCi: ${d_hover.kci.toFixed(2)}`)
+                        .style("left", (event.pageX + 10) + "px") // Positioneer rechts van de muis
+                        .style("top", (event.pageY - 30) + "px"); // Positioneer boven de muis
+
+                    parentNode.select("text").style("opacity", 1); // Toon tekstlabel
+                })
+                .on("mouseout", function(event, d_hover) {
+                    const parentNode = d3.select(this.parentNode);
+                    parentNode.classed("highlighted", false);
+                    d3.selectAll(".node").classed("faded", false);
+                    tooltip.transition().duration(300).style("opacity", 0);
+                    
+                    parentNode.select("text").style("opacity", 0); // Verberg tekstlabel
+                });
+            
+            // Voeg tekstlabels toe aan nodes (initieel verborgen)
+            node.append("text")
+                .text(d => d.name)
+                .attr("dy", d => -d.radius - 5); // Positie tekst net boven de cirkel
+
+        }
+
+        // Maak de legenda dynamisch
+        const legendContainer = d3.select("#legend");
+        // Verwijder eventuele bestaande legend items (indien resize meerdere keren wordt aangeroepen)
+        legendContainer.selectAll(".legend-item").remove(); 
+        Object.entries(categories).forEach(([categoryName, color]) => {
+            const legendItem = legendContainer.append("div")
+                .attr("class", "legend-item");
+
+            legendItem.append("div")
+                .attr("class", "legend-color-box")
+                .style("background-color", color);
+
+            legendItem.append("span")
+                .text(categoryName);
+        });
+
+        // Teken de scatterplot initieel
+        drawScatterplot();
+        // Herteken de scatterplot bij het wijzigen van de venstergrootte
+        window.addEventListener('resize', drawScatterplot);
+
+    </script>
+</body>
+</html>
