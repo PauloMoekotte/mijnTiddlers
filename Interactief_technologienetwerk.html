@@ -1,1 +1,355 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-T">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactief Technologienetwerk EU</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8; /* Lichte achtergrondkleur */
+            color: #333;
+            overflow-x: hidden; /* Voorkom horizontale scrollbar */
+        }
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50; /* Donkerblauw/grijs voor titel */
+            margin-bottom: 20px;
+            font-size: 1.8em; /* Responsive font size */
+        }
+        svg {
+            display: block;
+            margin: 0 auto;
+            border-radius: 8px;
+            background-color: #fdfdfd; /* Iets lichtere achtergrond voor SVG */
+            border: 1px solid #e0e0e0;
+        }
+        .node circle {
+            stroke: #fff;
+            stroke-width: 1.5px;
+            cursor: grab;
+            transition: transform 0.2s ease-out, filter 0.3s ease-in-out;
+        }
+        .node circle:active {
+            cursor: grabbing;
+        }
+        .node text {
+            font-size: 10px;
+            paint-order: stroke;
+            stroke: white; /* Witte rand rond tekst voor leesbaarheid */
+            stroke-width: 2px;
+            stroke-linecap: butt;
+            stroke-linejoin: miter;
+            fill: #333; /* Donkere tekstkleur */
+            pointer-events: none; /* Zorgt dat tekst geen hover events blokkeert */
+            text-anchor: middle;
+            dy: -12px; /* Positie tekst boven de node */
+        }
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            transition: stroke-opacity 0.3s ease-in-out, stroke 0.3s ease-in-out;
+        }
+        .legend {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f9fafb; /* Lichte achtergrond voor legenda */
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        .legend-color-box {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        /* Hover effecten */
+        .node.highlighted circle {
+            /* filter: drop-shadow(0px 0px 5px rgba(0,0,0,0.5)); */
+            transform: scale(1.1);
+        }
+        .node.highlighted text {
+            font-weight: bold;
+            fill: #000;
+        }
+        .link.highlighted {
+            stroke-opacity: 1;
+            stroke-width: 2.5px;
+        }
+        .node.faded circle, .node.faded text {
+            opacity: 0.2;
+        }
+        .link.faded {
+            stroke-opacity: 0.1;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5em;
+            }
+            .node text {
+                font-size: 9px;
+            }
+            .legend {
+                margin-top: 15px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100">
+    <div class="container mx-auto p-4 md:p-8 bg-white shadow-xl rounded-lg">
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-700 mb-6">
+            Interactief Technologienetwerk EU
+        </h1>
+        
+        <div id="network-graph" class="w-full">
+            <svg id="interactive-svg"></svg>
+        </div>
+
+        <div id="legend" class="legend mt-6 p-4 bg-gray-50 rounded-md border border-gray-200">
+            <div class="legend-title text-lg font-semibold text-gray-700 mb-3">Legenda Categorieën</div>
+            </div>
+         <p class="text-xs text-gray-500 text-center mt-4">
+            Gebaseerd op de afbeelding 'Netwerk van technologieën in de EU'. Beweeg over een node om details te zien. Nodes zijn versleepbaar.
+        </p>
+    </div>
+
+    <script>
+        // Data voor de nodes (knooppunten)
+        // Categorieën en hun kleuren
+        const categories = {
+            "Sleuteltechnologie": "#2c3e50", // Donkerblauw/grijs
+            "Chemie": "#3498db",             // Blauw
+            "Digitaal": "#5dade2",           // Lichtblauw
+            "Medicijnen en medisch": "#e74c3c", // Rood
+            "Elektrisch en electronica": "#f39c12", // Oranje
+            "Groen": "#2ecc71",               // Groen
+            "Instrumenten": "#95a5a6"        // Grijs
+        };
+
+        const nodesData = [
+            { id: "mRNA", name: "mRNA", category: "Sleuteltechnologie" },
+            { id: "Kunstmatige technologie", name: "Kunstmatige technologie", category: "Sleuteltechnologie" },
+            { id: "Computer technologie", name: "Computer technologie", category: "Sleuteltechnologie" },
+            { id: "Controle", name: "Controle", category: "Sleuteltechnologie" },
+            { id: "Blockchain", name: "Blockchain", category: "Chemie" },
+            { id: "Medische technologie", name: "Medische technologie", category: "Digitaal" },
+            { id: "Biotechnologie", name: "Biotechnologie", category: "Medicijnen en medisch" },
+            { id: "Oncologie", name: "Oncologie", category: "Medicijnen en medisch" },
+            { id: "Optisch", name: "Optisch", category: "Elektrisch en electronica" },
+            { id: "Textiel en papiermachines", name: "Textiel en papiermachines", category: "Elektrisch en electronica" },
+            { id: "Micro- en nanotechnologie", name: "Micro- en nanotechnologie", category: "Groen" },
+            { id: "Andere speciale machines", name: "Andere speciale machines", category: "Groen" },
+            { id: "Civiele techniek", name: "Civiele techniek", category: "Groen" },
+            { id: "Batterijen", name: "Batterijen", category: "Groen" },
+            { id: "Milieutechnologie", name: "Milieutechnologie", category: "Groen" },
+            { id: "Meubelen/games", name: "Meubelen/games", category: "Instrumenten" },
+            { id: "Elektrische machines en apparaten", name: "Elektrische machines en apparaten", category: "Instrumenten" },
+            { id: "Oppervlakte en coating technologie", name: "Oppervlakte en coating technologie", category: "Instrumenten" },
+            { id: "Machine-instrumenten", name: "Machine-instrumenten", category: "Instrumenten" },
+            { id: "Waterstof", name: "Waterstof", category: "Instrumenten" }
+        ];
+
+        // Data voor de links (verbindingen) - gebaseerd op de afbeelding (vereenvoudigd)
+        const linksData = [
+            { source: "mRNA", target: "Biotechnologie" }, { source: "mRNA", target: "Oncologie" }, { source: "mRNA", target: "Medische technologie" },
+            { source: "Kunstmatige technologie", target: "Computer technologie" }, { source: "Kunstmatige technologie", target: "Medische technologie" }, { source: "Kunstmatige technologie", target: "Blockchain" },
+            { source: "Computer technologie", target: "Blockchain" }, { source: "Computer technologie", target: "Medische technologie" }, { source: "Computer technologie", target: "Controle" }, { source: "Computer technologie", target: "Optisch" },
+            { source: "Controle", target: "Optisch" }, { source: "Controle", target: "Elektrische machines en apparaten" }, { source: "Controle", target: "Meubelen/games" }, { source: "Controle", target: "Medische technologie" },
+            { source: "Medische technologie", target: "Biotechnologie" }, { source: "Medische technologie", target: "Oncologie" }, { source: "Medische technologie", target: "Optisch" }, { source: "Medische technologie", target: "Micro- en nanotechnologie" },
+            { source: "Biotechnologie", target: "Oncologie" }, { source: "Biotechnologie", target: "Textiel en papiermachines" },
+            { source: "Optisch", target: "Textiel en papiermachines" }, { source: "Optisch", target: "Micro- en nanotechnologie" },
+            { source: "Textiel en papiermachines", target: "Andere speciale machines" }, { source: "Textiel en papiermachines", target: "Oppervlakte en coating technologie" },
+            { source: "Micro- en nanotechnologie", target: "Andere speciale machines" }, { source: "Micro- en nanotechnologie", target: "Civiele techniek" }, { source: "Micro- en nanotechnologie", target: "Batterijen" },
+            { source: "Andere speciale machines", target: "Civiele techniek" }, { source: "Andere speciale machines", target: "Machine-instrumenten" },
+            { source: "Civiele techniek", target: "Batterijen" }, { source: "Civiele techniek", target: "Milieutechnologie" }, { source: "Civiele techniek", target: "Waterstof" }, { source: "Civiele techniek", target: "Elektrische machines en apparaten" },
+            { source: "Batterijen", target: "Milieutechnologie" }, { source: "Batterijen", target: "Machine-instrumenten" }, { source: "Batterijen", target: "Waterstof" },
+            { source: "Milieutechnologie", target: "Waterstof" },
+            { source: "Meubelen/games", target: "Elektrische machines en apparaten" },
+            { source: "Elektrische machines en apparaten", target: "Oppervlakte en coating technologie" }, { source: "Elektrische machines en apparaten", target: "Machine-instrumenten" },
+            { source: "Oppervlakte en coating technologie", target: "Machine-instrumenten" }, { source: "Oppervlakte en coating technologie", target: "Waterstof" },
+            { source: "Machine-instrumenten", target: "Waterstof" }
+        ];
+
+        // Selecteer het SVG element en de container
+        const svg = d3.select("#interactive-svg");
+        const graphContainer = document.getElementById('network-graph');
+
+        let width, height;
+
+        // Functie om de grafiek te tekenen/updaten
+        function drawGraph() {
+            // Verwijder vorige SVG inhoud als die bestaat
+            svg.selectAll("*").remove();
+
+            // Bepaal breedte en hoogte van de container
+            width = graphContainer.clientWidth;
+            height = Math.min(window.innerHeight * 0.7, width * 0.7); // Houd een redelijke aspect ratio
+            if (width < 400) height = width * 1.2; // Meer hoogte voor smalle schermen
+
+            svg.attr("width", width)
+               .attr("height", height)
+               .attr("viewBox", [-width / 2, -height / 2, width, height]); // Centreer de grafiek
+
+            // Maak de force simulation
+            const simulation = d3.forceSimulation(nodesData)
+                .force("link", d3.forceLink(linksData).id(d => d.id).distance(width < 600 ? 60 : 90)) // Kortere links op mobiel
+                .force("charge", d3.forceManyBody().strength(width < 600 ? -200 : -350)) // Minder afstoting op mobiel
+                .force("center", d3.forceCenter(0,0))
+                .force("collision", d3.forceCollide().radius(d => (d.name.length * 2.5) + 20)); // Voorkom overlap
+
+            // Maak de links (lijnen)
+            const link = svg.append("g")
+                .attr("class", "links")
+                .selectAll("line")
+                .data(linksData)
+                .join("line")
+                .attr("class", "link");
+
+            // Maak de nodes (cirkels met tekst)
+            const node = svg.append("g")
+                .attr("class", "nodes")
+                .selectAll("g")
+                .data(nodesData)
+                .join("g")
+                .attr("class", "node");
+
+            node.append("circle")
+                .attr("r", d => Math.max(10, d.name.length * 0.8 + 5)) // Dynamische grootte op basis van naam lengte
+                .attr("fill", d => categories[d.category] || "#ccc")
+                .on("mouseover", handleMouseOver)
+                .on("mouseout", handleMouseOut);
+
+            node.append("text")
+                .text(d => d.name)
+                .attr("dy", d => -(Math.max(10, d.name.length * 0.8 + 5) + 5)); // Positie tekst boven de node
+
+            // Voeg drag functionaliteit toe
+            node.call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+            // Update posities bij elke 'tick' van de simulation
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+
+            // Drag functies
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+                d3.select(this).select("circle").style("cursor", "grabbing");
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null; // Zet fx/fy op null zodat de node weer door de simulatie beïnvloed wordt
+                d.fy = null;
+                d3.select(this).select("circle").style("cursor", "grab");
+            }
+
+            // Hover functies
+            function handleMouseOver(event, d_hover) {
+                // Markeer de gehoverde node
+                node.classed("highlighted", n => n.id === d_hover.id);
+                node.classed("faded", n => n.id !== d_hover.id); // Initieel alles faden behalve de hover node
+
+                // Vind buren
+                const neighbors = new Set();
+                linksData.forEach(l => {
+                    if (l.source.id === d_hover.id) neighbors.add(l.target.id);
+                    if (l.target.id === d_hover.id) neighbors.add(l.source.id);
+                });
+
+                // Markeer buren en vervaag de rest (behalve de gehoverde node zelf)
+                node.filter(n => n.id !== d_hover.id)
+                    .classed("highlighted", n => neighbors.has(n.id))
+                    .classed("faded", n => !neighbors.has(n.id));
+                
+                // Markeer de links
+                link.classed("highlighted", l => (l.source.id === d_hover.id || l.target.id === d_hover.id) && (neighbors.has(l.source.id) || neighbors.has(l.target.id) || l.source.id === d_hover.id || l.target.id === d_hover.id ))
+                    .classed("faded", l => !( (l.source.id === d_hover.id || l.target.id === d_hover.id) && (neighbors.has(l.source.id) || neighbors.has(l.target.id) || l.source.id === d_hover.id || l.target.id === d_hover.id )));
+
+                // Zorg dat de gehoverde node niet faded is
+                node.filter(n => n.id === d_hover.id).classed("faded", false);
+            }
+
+            function handleMouseOut() {
+                node.classed("highlighted", false).classed("faded", false);
+                link.classed("highlighted", false).classed("faded", false);
+            }
+        }
+
+        // Maak de legenda
+        const legendContainer = d3.select("#legend");
+        Object.entries(categories).forEach(([categoryName, color]) => {
+            const legendItem = legendContainer.append("div")
+                .attr("class", "legend-item");
+
+            legendItem.append("div")
+                .attr("class", "legend-color-box")
+                .style("background-color", color);
+
+            legendItem.append("span")
+                .text(categoryName);
+        });
+
+        // Teken de grafiek initieel
+        drawGraph();
+
+        // Herteken de grafiek bij het wijzigen van de venstergrootte
+        window.addEventListener('resize', drawGraph);
+
+    </script>
+</body>
+</html>
 
