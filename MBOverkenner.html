@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBO Opleidingsaanbod Infographic Nederland</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 
+        Plan Samenvatting:
+        1. Titel & Introductie: Belang van MBO.
+        2. MBO Landschap: Kerncijfers (sectoren, fictieve studentenverdeling via Donut chart).
+        3. Soorten MBO-Instellingen: Kaarten voor ROCs, AOCs, Vakscholen.
+        4. Sector Verkenning (voor elke 6 sectoren):
+            - Introductie sector.
+            - Bar chart: Populaire opleidingsclusters (fictieve data).
+            - Stacked Bar chart: Niveauverdeling binnen clusters (fictieve data).
+        5. SWOT Analyse MBO: Sterktes, Zwaktes, Kansen, Bedreigingen voor MBO-keuze.
+        6. Studiekeuzeproces: HTML/CSS flow chart.
+        7. Trends in het MBO: Digitalisering, Duurzaamheid, Leven Lang Ontwikkelen.
+        8. Conclusie & Call to Action.
+        Alle visualisaties via Chart.js (Canvas) of HTML/CSS. Geen SVG/Mermaid.
+    -->
+    <!-- 
+        Visualisatie Keuzes Samenvatting (Data -> Doel -> Visualisatie -> Bibliotheek/Methode - Bevestiging GEEN SVG):
+        - Aantal sectoren -> Informeren -> Groot Getal -> HTML/CSS - GEEN SVG
+        - Fictieve studentenverdeling -> Vergelijken -> Donut Chart -> Chart.js Canvas - GEEN SVG
+        - Soorten MBO-instellingen -> Organiseren/Informeren -> HTML/CSS Kaarten met Unicode iconen -> HTML/CSS - GEEN SVG
+        - Populaire opleidingsclusters per sector -> Vergelijken -> Bar Chart -> Chart.js Canvas - GEEN SVG
+        - Niveauverdeling per cluster -> Vergelijken (compositie) -> Stacked Bar Chart -> Chart.js Canvas - GEEN SVG
+        - SWOT Analyse MBO -> Organiseren -> 4-Kwadrant Layout -> HTML/CSS - GEEN SVG
+        - Studiekeuzeproces -> Organiseren -> Flow Chart (pijlen met Unicode/borders) -> HTML/CSS - GEEN SVG
+        - Trends in MBO -> Informeren -> HTML/CSS Kaarten met Unicode iconen -> HTML/CSS - GEEN SVG
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Lichte achtergrond voor contrast */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px; /* Iets kleiner voor betere weergave in grid */
+            margin-left: auto;
+            margin-right: auto;
+            height: 280px; /* Aangepaste basishoogte */
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 320px; /* Aangepast voor md schermen */
+            }
+        }
+        .stat-card {
+            background-color: #CAF0F8; /* Lichte blauwtint uit palet */
+            color: #023047; /* Donkerblauw voor tekst */
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #0077B6; /* Primair blauw */
+        }
+        .stat-label {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+        .section-title {
+            color: #023047; /* Donkerblauw voor titels */
+            border-bottom: 3px solid #00B4D8; /* Accentkleur voor onderlijning */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .flow-step {
+            background-color: #90E0EF;
+            color: #023047;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            position: relative;
+            margin-bottom: 1.5rem; /* Ruimte voor pijl */
+        }
+        .flow-arrow::after {
+            content: '⬇️'; /* Unicode pijl */
+            font-size: 1.5rem;
+            color: #0077B6;
+            position: absolute;
+            bottom: -1.2rem;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .flow-step:last-child .flow-arrow::after {
+            content: ''; /* Geen pijl na de laatste stap */
+        }
+        .swot-quadrant {
+            border: 2px solid #00B4D8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            height: 100%;
+        }
+        .swot-title {
+            font-weight: 600;
+            color: #0077B6;
+            margin-bottom: 0.5rem;
+        }
+        h1, h2, h3 {
+            color: #023047;
+        }
+        /* Kleuren voor charts */
+        .chartColors {
+            --color1: #0077B6; /* Brilliant Blue */
+            --color2: #00B4D8; /* Medium Blue */
+            --color3: #90E0EF; /* Light Blue */
+            --color4: #CAF0F8; /* Very Light Blue */
+            --color5: #023E8A; /* Darker Blue for contrast if needed */
+            --colorGray: #6c757d; /* Neutral Gray */
+        }
+    </style>
+</head>
+<body class="chartColors">
+
+    <header class="bg-[#0077B6] text-white p-6 shadow-lg">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl font-bold">De Toekomst van Vakmanschap</h1>
+            <p class="text-xl mt-2">Een Interactief Overzicht van het MBO-Aanbod in Nederland</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="intro" class="mb-12 text-center">
+            <h2 class="text-3xl font-semibold mb-4 section-title inline-block">Welkom bij de MBO Verkenner</h2>
+            <p class="text-lg text-gray-700 max-w-3xl mx-auto">
+                Het Middelbaar Beroepsonderwijs (MBO) is essentieel voor de Nederlandse economie en biedt jongeren en volwassenen de kans om een vak te leren en zich te ontwikkelen. Met honderden opleidingen verspreid over diverse sectoren, is er altijd een pad dat bij jouw talenten en ambities past. Deze infographic helpt je de wereld van het MBO te ontdekken.
+            </p>
+        </section>
+
+        <section id="landschap" class="mb-12 card">
+            <h2 class="text-2xl font-semibold mb-6 section-title">Het MBO Landschap in Vogelvlucht</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Kernsectoren</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">MBO Niveaus</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Gespecialiseerde Opleidingen</div>
+                </div>
+            </div>
+            <p class="text-gray-700 mb-4 text-center">
+                Het MBO is divers en biedt opleidingen op verschillende niveaus, van praktijkgerichte entreeopleidingen tot specialistische vakopleidingen. Onderstaande grafiek geeft een (fictieve) indicatie van de studentenverdeling over de belangrijkste sectoren.
+            </p>
+            <div class="chart-container">
+                <canvas id="sectorDistributionChart"></canvas>
+            </div>
+            <p class="text-sm text-gray-600 mt-2 text-center">Bron: Illustratieve data gebaseerd op algemene trends.</p>
+        </section>
+
+        <section id="instellingen" class="mb-12 card">
+            <h2 class="text-2xl font-semibold mb-6 section-title">Soorten MBO-Instellingen</h2>
+            <p class="text-gray-700 mb-6">
+                In Nederland wordt MBO-onderwijs aangeboden door verschillende typen instellingen, elk met hun eigen focus en specialisaties:
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-[#E0F7FA] p-6 rounded-lg shadow-md text-center">
+                    <span class="text-4xl mb-2 block">🏢</span>
+                    <h3 class="text-xl font-semibold text-[#0077B6] mb-2">Regionale Opleidingscentra (ROC's)</h3>
+                    <p class="text-sm text-gray-700">Grote instellingen met een breed aanbod aan opleidingen in diverse sectoren. Vaak verspreid over meerdere locaties in een regio.</p>
+                </div>
+                <div class="bg-[#E0F7FA] p-6 rounded-lg shadow-md text-center">
+                    <span class="text-4xl mb-2 block">🌳</span>
+                    <h3 class="text-xl font-semibold text-[#0077B6] mb-2">Agrarische Opleidingscentra (AOC's)</h3>
+                    <p class="text-sm text-gray-700">Gespecialiseerd in opleidingen binnen de 'groene' sector, zoals landbouw, tuinbouw, dierverzorging, voeding en milieu.</p>
+                </div>
+                <div class="bg-[#E0F7FA] p-6 rounded-lg shadow-md text-center">
+                    <span class="text-4xl mb-2 block">🛠️</span>
+                    <h3 class="text-xl font-semibold text-[#0077B6] mb-2">Vakscholen</h3>
+                    <p class="text-sm text-gray-700">Kleinere, gespecialiseerde scholen die zich richten op een specifieke branche of beroepsgroep, zoals de grafische industrie, scheepvaart of mode.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="sectoren" class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 section-title">Verken de MBO Sectoren</h2>
+            <p class="text-gray-700 mb-6">
+                Het MBO kent zes hoofsectoren. Hieronder een diepere duik in elke sector, met voorbeelden van opleidingsclusters en een (fictieve) indicatie van de niveauverdeling.
+            </p>
+
+            <div id="sector-techniek" class="card mb-8">
+                <h3 class="text-xl font-bold text-[#0077B6] mb-1">1. Techniek</h3>
+                <p class="text-sm text-gray-600 mb-4">Ontwerpen, ontwikkelen, installeren, onderhouden en repareren van technische producten, systemen en processen.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Populaire Opleidingsclusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="techniekClustersChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Niveauverdeling binnen Clusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="techniekNiveausChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 text-center">Data in grafieken is illustratief.</p>
+            </div>
+
+            <div id="sector-zorg" class="card mb-8">
+                <h3 class="text-xl font-bold text-[#0077B6] mb-1">2. Zorg, Welzijn en Sport</h3>
+                <p class="text-sm text-gray-600 mb-4">Zorg, ondersteuning, begeleiding en activiteiten voor gezondheid, welzijn en participatie.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Populaire Opleidingsclusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="zorgClustersChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Niveauverdeling binnen Clusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="zorgNiveausChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 text-center">Data in grafieken is illustratief.</p>
+            </div>
+            
+            <div id="sector-economie" class="card mb-8">
+                <h3 class="text-xl font-bold text-[#0077B6] mb-1">3. Economie en Dienstverlening</h3>
+                <p class="text-sm text-gray-600 mb-4">Commerciële, administratieve, financiële, logistieke, en facilitaire dienstverlening.</p>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Populaire Opleidingsclusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="economieClustersChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Niveauverdeling binnen Clusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="economieNiveausChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 text-center">Data in grafieken is illustratief.</p>
+            </div>
+
+            <div id="sector-educatie" class="card mb-8">
+                <h3 class="text-xl font-bold text-[#0077B6] mb-1">4. Educatie en Participatie</h3>
+                <p class="text-sm text-gray-600 mb-4">Ondersteunen van leer- en ontwikkelingsprocessen en bevorderen van maatschappelijke participatie.</p>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Populaire Opleidingsclusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="educatieClustersChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Niveauverdeling binnen Clusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="educatieNiveausChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 text-center">Data in grafieken is illustratief.</p>
+            </div>
+
+            <div id="sector-creatief" class="card mb-8">
+                <h3 class="text-xl font-bold text-[#0077B6] mb-1">5. Creatieve Industrie</h3>
+                <p class="text-sm text-gray-600 mb-4">Bedenken, ontwerpen en realiseren van creatieve producten en diensten (media, vormgeving, mode, etc.).</p>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Populaire Opleidingsclusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="creatiefClustersChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Niveauverdeling binnen Clusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="creatiefNiveausChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 text-center">Data in grafieken is illustratief.</p>
+            </div>
+
+            <div id="sector-groen" class="card mb-8">
+                <h3 class="text-xl font-bold text-[#0077B6] mb-1">6. Groen</h3>
+                <p class="text-sm text-gray-600 mb-4">Alles rondom planten, dieren, natuur, milieu, voeding en de leefomgeving.</p>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Populaire Opleidingsclusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="groenClustersChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-center">Niveauverdeling binnen Clusters (Illustratief)</h4>
+                        <div class="chart-container h-72 md:h-80">
+                            <canvas id="groenNiveausChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2 text-center">Data in grafieken is illustratief.</p>
+            </div>
+        </section>
+
+        <section id="swot" class="mb-12 card">
+            <h2 class="text-2xl font-semibold mb-6 section-title">SWOT Analyse: Kiezen voor het MBO</h2>
+            <p class="text-gray-700 mb-6">Een MBO-opleiding kiezen is een belangrijke stap. Hier is een beknopte analyse van de algemene sterktes, zwaktes, kansen en bedreigingen:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="swot-quadrant bg-green-50 border-green-500">
+                    <h3 class="swot-title text-green-700">👍 Sterktes (Strengths)</h3>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li>Praktijkgericht onderwijs</li>
+                        <li>Goede aansluiting op de arbeidsmarkt</li>
+                        <li>Mogelijkheid tot specialisatie</li>
+                        <li>Doorgroeimogelijkheden naar HBO</li>
+                        <li>Diverse leerwegen (BOL/BBL)</li>
+                    </ul>
+                </div>
+                <div class="swot-quadrant bg-red-50 border-red-500">
+                    <h3 class="swot-title text-red-700">👎 Zwaktes (Weaknesses)</h3>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li>Soms verouderd imago (onverdiend)</li>
+                        <li>Variërende kwaliteit tussen instellingen/opleidingen</li>
+                        <li>Uitvalpercentages kunnen een zorg zijn</li>
+                    </ul>
+                </div>
+                <div class="swot-quadrant bg-blue-50 border-blue-500">
+                    <h3 class="swot-title text-blue-700">🚀 Kansen (Opportunities)</h3>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li>Grote vraag naar vakmensen in veel sectoren</li>
+                        <li>Technologische ontwikkelingen creëren nieuwe beroepen</li>
+                        <li>Focus op leven lang ontwikkelen</li>
+                        <li>Internationalisering en stages in het buitenland</li>
+                    </ul>
+                </div>
+                <div class="swot-quadrant bg-yellow-50 border-yellow-500">
+                    <h3 class="swot-title text-yellow-700">⚠️ Bedreigingen (Threats)</h3>
+                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                        <li>Snelle veranderingen op de arbeidsmarkt vragen flexibiliteit</li>
+                        <li>Automatisering van bepaalde taken</li>
+                        <li>Concurrentie van andere opleidingsvormen</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="studiekeuze" class="mb-12 card">
+            <h2 class="text-2xl font-semibold mb-6 section-title">Jouw Pad naar een MBO Opleiding</h2>
+            <p class="text-gray-700 mb-6">Het kiezen van de juiste MBO-opleiding doe je in een paar stappen. Hier is een eenvoudig stappenplan om je op weg te helpen:</p>
+            <div class="max-w-md mx-auto">
+                <div class="flow-step">
+                    <span class="font-bold block text-lg">Stap 1: Oriënteren</span>
+                    <p class="text-sm">Ontdek je interesses. Welke sectoren spreken je aan? Gebruik websites zoals KiesMBO.nl.</p>
+                    <div class="flow-arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <span class="font-bold block text-lg">Stap 2: Verdiepen</span>
+                    <p class="text-sm">Bezoek open dagen, praat met studenten en docenten. Lees over specifieke opleidingen en beroepen (SBB.nl).</p>
+                    <div class="flow-arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <span class="font-bold block text-lg">Stap 3: Instelling Kiezen</span>
+                    <p class="text-sm">Vergelijk MBO-instellingen. Let op sfeer, locatie, en extra faciliteiten.</p>
+                    <div class="flow-arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <span class="font-bold block text-lg">Stap 4: Aanmelden</span>
+                    <p class="text-sm">Zorg dat je je op tijd aanmeldt voor de opleiding van jouw keuze!</p>
+                    <div class="flow-arrow"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="trends" class="mb-12 card">
+            <h2 class="text-2xl font-semibold mb-6 section-title">Trends in het MBO</h2>
+            <p class="text-gray-700 mb-6">Het MBO-onderwijs staat niet stil. Enkele belangrijke trends die de toekomst van vakmanschap vormgeven:</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-[#CAF0F8] p-6 rounded-lg shadow text-center">
+                    <span class="text-4xl mb-2 block">💻</span>
+                    <h3 class="text-xl font-semibold text-[#0077B6] mb-2">Digitalisering & Technologie</h3>
+                    <p class="text-sm text-gray-700">Integratie van nieuwe technologieën in alle sectoren, van data-analyse tot robotica en AI. Digitale vaardigheden zijn cruciaal.</p>
+                </div>
+                <div class="bg-[#CAF0F8] p-6 rounded-lg shadow text-center">
+                    <span class="text-4xl mb-2 block">🌿</span>
+                    <h3 class="text-xl font-semibold text-[#0077B6] mb-2">Duurzaamheid & Groene Vaardigheden</h3>
+                    <p class="text-sm text-gray-700">Groeiende aandacht voor duurzaam produceren, energietransitie en circulaire economie. Dit vraagt om nieuwe kennis en vaardigheden.</p>
+                </div>
+                <div class="bg-[#CAF0F8] p-6 rounded-lg shadow text-center">
+                    <span class="text-4xl mb-2 block">🔄</span>
+                    <h3 class="text-xl font-semibold text-[#0077B6] mb-2">Leven Lang Ontwikkelen</h3>
+                    <p class="text-sm text-gray-700">De arbeidsmarkt verandert snel. Het MBO speelt een belangrijke rol in bij- en omscholing van werkenden gedurende hun hele carrière.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center py-8 border-t border-gray-300">
+            <p class="text-gray-700">Deze infographic is bedoeld als een algemeen overzicht en startpunt voor oriëntatie.</p>
+            <p class="text-gray-700">Voor de meest actuele en gedetailleerde informatie, bezoek <a href="https://www.kiesmbo.nl" target="_blank" class="text-[#0077B6] hover:underline">KiesMBO.nl</a> en de websites van de MBO-instellingen.</p>
+            <p class="text-sm text-gray-500 mt-4">&copy; <span id="currentYear"></span> MBO Verkenner Infographic. Alle rechten voorbehouden (illustratief).</p>
+        </footer>
+    </main>
+
+<script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Helper function for label wrapping
+    function wrapLabels(labels, maxLength = 16) {
+        return labels.map(label => {
+            if (typeof label === 'string' && label.length > maxLength) {
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine.trim());
+                        currentLine = word + ' ';
+                    } else {
+                        currentLine += word + ' ';
+                    }
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            }
+            return label;
+        });
+    }
+
+    // Shared tooltip configuration
+    const tooltipTitleCallback = {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        }
+                        return label;
+                    }
+                }
+            }
+        }
+    };
+    
+    const chartColors = [
+        getComputedStyle(document.documentElement).getPropertyValue('--color1').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color2').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color3').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color4').trim(),
+        getComputedStyle(document.documentElement).getPropertyValue('--color5').trim()
+    ];
+
+    // 1. Sector Distribution Chart (Donut)
+    const sectorCtx = document.getElementById('sectorDistributionChart').getContext('2d');
+    new Chart(sectorCtx, {
+        type: 'doughnut',
+        data: {
+            labels: wrapLabels(['Techniek', 'Zorg & Welzijn', 'Economie & Dienstverlening', 'Groen', 'Creatieve Industrie', 'Educatie & Participatie']),
+            datasets: [{
+                label: 'Studentenverdeling (Fictief)',
+                data: [30, 25, 20, 8, 12, 5], // Sums to 100
+                backgroundColor: chartColors,
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: false },
+                tooltip: tooltipTitleCallback.plugins.tooltip
+            }
+        }
+    });
+
+    // Generic function to create sector charts
+    function createSectorCharts(sectorId, clusterLabels, clusterData, niveauDataN2, niveauDataN3, niveauDataN4) {
+        const clusterCtx = document.getElementById(`${sectorId}ClustersChart`).getContext('2d');
+        new Chart(clusterCtx, {
+            type: 'bar',
+            data: {
+                labels: wrapLabels(clusterLabels),
+                datasets: [{
+                    label: 'Populariteit (Fictief)',
+                    data: clusterData,
+                    backgroundColor: chartColors[0],
+                    borderColor: chartColors[0],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: { x: { beginAtZero: true } },
+                plugins: { 
+                    legend: { display: false },
+                    tooltip: tooltipTitleCallback.plugins.tooltip
+                }
+            }
+        });
+
+        const niveauCtx = document.getElementById(`${sectorId}NiveausChart`).getContext('2d');
+        new Chart(niveauCtx, {
+            type: 'bar',
+            data: {
+                labels: wrapLabels(clusterLabels),
+                datasets: [
+                    { label: 'Niveau 2', data: niveauDataN2, backgroundColor: chartColors[1] },
+                    { label: 'Niveau 3', data: niveauDataN3, backgroundColor: chartColors[2] },
+                    { label: 'Niveau 4', data: niveauDataN4, backgroundColor: chartColors[3] }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: { x: { stacked: true, beginAtZero: true }, y: { stacked: true } },
+                plugins: { 
+                    legend: { position: 'bottom' },
+                    tooltip: tooltipTitleCallback.plugins.tooltip
+                }
+            }
+        });
+    }
+
+    // Data and calls for each sector
+    // Techniek
+    createSectorCharts('techniek',
+        ['Installatietechniek', 'Metaal & Constructie', 'ICT & Software Dev', 'Bouw & Infra', 'Procestechniek'],
+        [80, 75, 90, 70, 60], // Cluster data
+        [20, 15, 10, 25, 15], // N2
+        [30, 35, 30, 25, 25], // N3
+        [30, 25, 50, 20, 20]  // N4
+    );
+
+    // Zorg, Welzijn en Sport
+    createSectorCharts('zorg',
+        ['Verpleging & Verzorging', 'Pedagogisch Werk', 'Maatschappelijke Zorg', 'Sport & Bewegen', 'Assisterende Gezondheidszorg'],
+        [85, 70, 75, 65, 60],
+        [25, 20, 15, 10, 20],
+        [35, 30, 30, 30, 25],
+        [25, 20, 30, 25, 15]
+    );
+
+    // Economie en Dienstverlening
+    createSectorCharts('economie',
+        ['Marketing & Communicatie', 'Logistiek Management', 'Financieel Administratief', 'Retail & Verkoop', 'Horeca & Toerisme'],
+        [70, 75, 80, 85, 78],
+        [15, 20, 25, 20, 18],
+        [30, 30, 30, 35, 35],
+        [25, 25, 25, 30, 25]
+    );
+    
+    // Educatie en Participatie
+    createSectorCharts('educatie',
+        ['Onderwijsassistentie', 'Pedagogisch Werk Kinderopvang', 'Sociaal-Cultureel Werk', 'Gespecialiseerd Pedagogisch Medewerker'],
+        [80, 85, 70, 75],
+        [0, 20, 15, 10], // N2 often less direct in some of these specific higher roles
+        [40, 35, 30, 30],
+        [40, 30, 25, 35]
+    );
+
+    // Creatieve Industrie
+    createSectorCharts('creatief',
+        ['Mediavormgeving (Grafisch/AV)', 'Game Development & Design', 'Mode & Styling', 'Podium- & Eventtechniek', 'Ruimtelijk Vormgever'],
+        [88, 78, 70, 75, 68],
+        [10, 15, 20, 15, 10],
+        [38, 33, 25, 30, 28],
+        [40, 30, 25, 30, 30]
+    );
+
+    // Groen
+    createSectorCharts('groen',
+        ['Dierverzorging & Paraveterinair', 'Hovenier & Groenbeheer', 'Teelt & Agrarisch Loonwerk', 'Voeding & Kwaliteit', 'Bos- & Natuurbeheer'],
+        [82, 76, 70, 65, 72],
+        [22, 26, 20, 15, 12],
+        [35, 30, 30, 25, 30],
+        [25, 20, 20, 25, 30]
+    );
+
+</script>
+
+</body>
+</html>
