@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociological Imagination Explorer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            margin-top: 20px;
+            color: #3498db;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between textareas */
+        }
+
+        button {
+            background-color: #3498db; /* Primary button color */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #exampleIssuesContainer button {
+            background-color: #e0e0e0; /* Lighter for example buttons */
+            color: #333;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            padding: 8px 15px;
+        }
+        #exampleIssuesContainer button:hover {
+            background-color: #c0c0c0;
+        }
+        
+        #startExploringButton {
+            background-color: #2ecc71; /* Green for start */
+        }
+        #startExploringButton:hover {
+            background-color: #27ae60;
+        }
+
+        #resetButton {
+            background-color: #e74c3c; /* Red for reset */
+        }
+        #resetButton:hover {
+            background-color: #c0392b;
+        }
+
+        #synthesisSection {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border-left: 5px solid #3498db;
+        }
+        #synthesisTextContainer p { /* Target the p tag inside for the text */
+            font-size: 1.1rem;
+            margin: 0; /* Remove default p margins if not desired */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
+            input[type="text"], textarea, button {
+                font-size: 0.95rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            #exampleIssuesContainer {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            #exampleIssuesContainer button {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sociological Imagination Explorer</h1>
+
+        <!-- Section 1: Personal Issue Selection -->
+        <div id="issueSelectionSection">
+            <h2>1. What's on your mind?</h2>
+            <label for="personalIssueInput">Enter a personal issue or experience:</label>
+            <input type="text" id="personalIssueInput" placeholder="e.g., Difficulty finding a job, Enjoying exercise">
+            
+            <p>Or choose an example:</p>
+            <div id="exampleIssuesContainer">
+                <!-- Example issue buttons will be added by JS -->
+            </div>
+            <button id="startExploringButton">Start Exploring This Issue</button>
+        </div>
+
+        <!-- Section 2: Display Personal Issue & Input Personal Perspective -->
+        <div id="personalPerspectiveSection" style="display:none;">
+            <h2>Your Selected Issue: <span id="displayedIssue" style="color: #e74c3c; font-weight:bold;"></span></h2>
+            
+            <h3>My Perspective (Zoom In)</h3>
+            <p>How do you personally experience or think about this?</p>
+            <div class="input-group">
+                <textarea id="personalPerspective1" placeholder="e.g., My feelings about this..."></textarea>
+                <textarea id="personalPerspective2" placeholder="e.g., What I've tried to do..."></textarea>
+                <textarea id="personalPerspective3" placeholder="e.g., How it affects my daily life..."></textarea>
+            </div>
+            <button id="seeBigPictureButton">See the Big Picture (Zoom Out)</button>
+        </div>
+
+        <!-- Section 3: Display Societal Perspective -->
+        <div id="societalPerspectiveSection" style="display:none;">
+            <h3>Societal Perspective (Zoom Out)</h3>
+            <p>What broader social forces, patterns, or public issues might be connected to this?</p>
+            <div class="input-group">
+                <textarea id="societalPerspective1" placeholder="e.g., Economic trends (unemployment rates, job market)..."></textarea>
+                <textarea id="societalPerspective2" placeholder="e.g., Cultural norms or expectations..."></textarea>
+                <textarea id="societalPerspective3" placeholder="e.g., Social structures (education system, healthcare)..."></textarea>
+            </div>
+            <button id="synthesizeButton">Connect & Synthesize</button>
+        </div>
+
+        <!-- Section 4: Synthesis -->
+        <div id="synthesisSection" style="display:none;">
+            <h3>Sociological Imagination (Connecting the Dots)</h3>
+            <div id="synthesisTextContainer">
+                <p id="synthesisText"></p>
+            </div>
+            <button id="resetButton">Explore Another Issue</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Element selectors
+            const issueSelectionSection = document.getElementById('issueSelectionSection');
+            const personalIssueInput = document.getElementById('personalIssueInput');
+            const exampleIssuesContainer = document.getElementById('exampleIssuesContainer');
+            const startExploringButton = document.getElementById('startExploringButton');
+
+            const personalPerspectiveSection = document.getElementById('personalPerspectiveSection');
+            const displayedIssue = document.getElementById('displayedIssue');
+            const personalPerspective1 = document.getElementById('personalPerspective1');
+            const personalPerspective2 = document.getElementById('personalPerspective2');
+            const personalPerspective3 = document.getElementById('personalPerspective3');
+            const seeBigPictureButton = document.getElementById('seeBigPictureButton');
+
+            const societalPerspectiveSection = document.getElementById('societalPerspectiveSection');
+            const societalPerspective1 = document.getElementById('societalPerspective1');
+            const societalPerspective2 = document.getElementById('societalPerspective2');
+            const societalPerspective3 = document.getElementById('societalPerspective3');
+            const synthesizeButton = document.getElementById('synthesizeButton');
+
+            const synthesisSection = document.getElementById('synthesisSection');
+            const synthesisText = document.getElementById('synthesisText'); // This is the <p> tag
+            const resetButton = document.getElementById('resetButton');
+
+            let currentPersonalIssue = "";
+
+            const exampleIssues = [
+                "Difficulty finding a job",
+                "Enjoying regular exercise",
+                "Feeling stressed about exams",
+                "Choosing what to eat daily",
+                "Feeling lonely sometimes"
+            ];
+
+            // Populate example issues
+            exampleIssues.forEach(issue => {
+                const button = document.createElement('button');
+                button.textContent = issue;
+                button.onclick = () => {
+                    personalIssueInput.value = issue;
+                };
+                exampleIssuesContainer.appendChild(button);
+            });
+
+            // Event Listener for "Start Exploring"
+            startExploringButton.addEventListener('click', () => {
+                currentPersonalIssue = personalIssueInput.value.trim();
+                if (!currentPersonalIssue) {
+                    alert("Please enter a personal issue or select an example.");
+                    personalIssueInput.focus();
+                    return;
+                }
+
+                displayedIssue.textContent = `"${currentPersonalIssue}"`;
+                
+                issueSelectionSection.style.display = 'none';
+                personalPerspectiveSection.style.display = 'block';
+                
+                // Ensure other sections are hidden and buttons reset for a clean start of this phase
+                societalPerspectiveSection.style.display = 'none';
+                synthesisSection.style.display = 'none';
+                seeBigPictureButton.style.display = 'block'; 
+                // synthesizeButton is part of societalPerspectiveSection, which is hidden, so it's fine.
+
+                // Scroll to the newly revealed section
+                personalPerspectiveSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+            // Event Listener for "See the Big Picture"
+            seeBigPictureButton.addEventListener('click', () => {
+                societalPerspectiveSection.style.display = 'block';
+                seeBigPictureButton.style.display = 'none'; // Hide this button as its job is done for this stage
+                societalPerspectiveSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+            // Event Listener for "Synthesize"
+            synthesizeButton.addEventListener('click', () => {
+                const sp1 = societalPerspective1.value.trim();
+                const sp2 = societalPerspective2.value.trim();
+                const sp3 = societalPerspective3.value.trim();
+
+                let chosenSocietalPerspective = "";
+                if (sp1) chosenSocietalPerspective = sp1;
+                else if (sp2) chosenSocietalPerspective = sp2;
+                else if (sp3) chosenSocietalPerspective = sp3;
+
+                let synthesisMessage = "";
+                if (chosenSocietalPerspective) {
+                    synthesisMessage = `Your experience with "${currentPersonalIssue}" is a personal matter, yet it's also connected to broader societal factors like "${chosenSocietalPerspective}".`;
+                } else {
+                    synthesisMessage = `Your experience with "${currentPersonalIssue}" is a personal matter. The sociological imagination helps us see how such experiences are often linked to broader societal forces.`;
+                }
+                
+                synthesisText.textContent = synthesisMessage;
+                synthesisSection.style.display = 'block';
+                synthesizeButton.style.display = 'none'; // Hide this button as its job is done for this stage
+                synthesisSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+
+            // Event Listener for "Reset"
+            resetButton.addEventListener('click', () => {
+                personalIssueInput.value = "";
+                currentPersonalIssue = "";
+                
+                personalPerspective1.value = "";
+                personalPerspective2.value = "";
+                personalPerspective3.value = "";
+                
+                societalPerspective1.value = "";
+                societalPerspective2.value = "";
+                societalPerspective3.value = "";
+
+                synthesisText.textContent = "";
+
+                issueSelectionSection.style.display = 'block';
+                personalPerspectiveSection.style.display = 'none';
+                societalPerspectiveSection.style.display = 'none';
+                synthesisSection.style.display = 'none';
+
+                // Reset button visibility states for next run
+                seeBigPictureButton.style.display = 'block'; 
+                synthesizeButton.style.display = 'block'; // Ensure it's ready for when societalPerspectiveSection is shown
+
+                personalIssueInput.focus();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
