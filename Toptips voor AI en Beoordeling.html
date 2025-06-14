@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Toptips voor AI en Beoordeling</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .icon-card {
+            background-color: #f8fafc; /* gray-50 */
+            border: 1px solid #e2e8f0; /* gray-200 */
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .icon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .icon-card .content {
+            flex-grow: 1;
+        }
+        .icon-bg {
+            background-color: #14b8a6; /* teal-500 */
+        }
+        .jisc-bg {
+            background-color: #f97316; /* orange-500 */
+        }
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 90%;
+            width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #14b8a6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 sm:p-6 md:p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
+        <!-- Header -->
+        <header class="p-8 jisc-bg text-white text-center">
+            <h1 class="text-3xl md:text-4xl font-bold">Toptips voor AI en Beoordeling</h1>
+            <p class="mt-4 max-w-2xl mx-auto">
+                Ons doel is om te zorgen voor eerlijke, zinvolle en authentieke beoordelingen, terwijl we studenten helpen hun vaardigheden te ontwikkelen en AI verantwoord te gebruiken.
+            </p>
+        </header>
+
+        <main class="p-8">
+            <!-- Vóór de beoordeling sectie -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-teal-500 pb-2 mb-6">Vóór de Beoordeling</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Tip 1 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Stel duidelijke verwachtingen</h3>
+                        <p class="text-sm text-gray-600">Wees helder over het toegestane AI-gebruik en bespreek het beleid van de instelling.</p>
+                    </div>
+                     <!-- Tip 2 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">AI als ondersteuning</h3>
+                        <p class="text-sm text-gray-600">Benadruk dat AI dient ter ondersteuning van het leren, niet ter vervanging van origineel denken.</p>
+                    </div>
+                    <!-- Tip 3 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Erken AI-gebruik</h3>
+                        <p class="text-sm text-gray-600">Leg uit hoe studenten hun AI-gebruik moeten loggen en vermelden volgens de richtlijnen.</p>
+                    </div>
+                    <!-- Tip 4 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Bied variatie en keuze</h3>
+                        <p class="text-sm text-gray-600">Gebruik diverse beoordelingsmethoden zoals presentaties of reflecties om misbruik te beperken.</p>
+                    </div>
+                    <!-- Tip 5 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Creëer oefenkansen</h3>
+                        <p class="text-sm text-gray-600">Gebruik formatieve opdrachten als veilige omgeving om verantwoord AI-gebruik te oefenen.</p>
+                    </div>
+                    <!-- Tip 6 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Leer je studenten kennen</h3>
+                        <p class="text-sm text-gray-600">Krijg inzicht in het begrip van elke student via formatieve opdrachten vóór de eindbeoordeling.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Na de beoordeling sectie -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-teal-500 pb-2 mb-6">Na de Beoordeling</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Tip 7 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 10l-2.5 2.5M10 10l2.5-2.5" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Wees voorzichtig met detectie</h3>
+                        <p class="text-sm text-gray-600">Onthoud dat AI-detectietools beperkingen hebben. Gebruik ze als indicator, niet als bewijs.</p>
+                    </div>
+                    <!-- Tip 8 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Gebruik meerdere methoden</h3>
+                        <p class="text-sm text-gray-600">Combineer schriftelijke antwoorden met mondelinge toelichtingen om begrip te verifiëren.</p>
+                    </div>
+                    <!-- Tip 9 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                         <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Toon empathie</h3>
+                        <p class="text-sm text-gray-600">Benader gesprekken met empathie; oneigenlijk AI-gebruik kan wijzen op diepere problemen.</p>
+                    </div>
+                    <!-- Tip 10 with Gemini Feature -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="content">
+                            <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                            </div>
+                            <h3 class="font-semibold text-gray-700 mb-2">Bereid gesprekken voor</h3>
+                            <p class="text-sm text-gray-600 mb-4">Stel vooraf vragen op om het gesprek te leiden en het begrip van de student te peilen.</p>
+                        </div>
+                        <button id="openModalBtn" class="mt-auto w-full bg-teal-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-600 transition">
+                            Genereer Vragen ✨
+                        </button>
+                    </div>
+                    <!-- Tip 11 -->
+                    <div class="icon-card rounded-xl p-6 text-center">
+                        <div class="icon-bg rounded-full p-3 mb-4 mx-auto w-max">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </div>
+                        <h3 class="font-semibold text-gray-700 mb-2">Voer een AI-reflectie uit</h3>
+                        <p class="text-sm text-gray-600">Reflecteer op het proces: werd AI correct gebruikt? Wat kan er beter bij de volgende beoordeling?</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white p-4 text-center text-sm">
+            <p>Gebaseerd op de 'FE AI and assessment top tips' van Jisc. ✨ Aangevuld met Gemini.</p>
+        </footer>
+    </div>
+
+    <!-- Modal for Gemini Feature -->
+    <div id="geminiModal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">✨ Genereer Vragen voor Gesprekken</h2>
+            <p class="text-gray-600 mb-6">Voer het onderwerp van de beoordeling in. Gemini helpt u bij het opstellen van vragen om het begrip van een student te toetsen.</p>
+            
+            <div class="mb-4">
+                <label for="topicInput" class="block text-gray-700 text-sm font-bold mb-2">Onderwerp van de beoordeling:</label>
+                <input type="text" id="topicInput" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="bv. De Franse Revolutie, fotosynthese, etc.">
+            </div>
+
+            <button id="generateBtn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">Genereer Vragen</button>
+
+            <div id="loader" class="hidden loader"></div>
+            <div id="resultContainer" class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200 hidden whitespace-pre-wrap"></div>
+            <div id="errorContainer" class="mt-6 p-4 bg-red-100 text-red-700 rounded-lg hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- Modal Control ---
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modal = document.getElementById('geminiModal');
+
+        openModalBtn.addEventListener('click', () => {
+            modal.classList.add('visible');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('visible');
+        });
+
+        // Close modal when clicking on the overlay
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('visible');
+            }
+        });
+
+        // --- Gemini API Integration ---
+        const generateBtn = document.getElementById('generateBtn');
+        const topicInput = document.getElementById('topicInput');
+        const loader = document.getElementById('loader');
+        const resultContainer = document.getElementById('resultContainer');
+        const errorContainer = document.getElementById('errorContainer');
+
+        generateBtn.addEventListener('click', async () => {
+            const topic = topicInput.value;
+            if (!topic.trim()) {
+                showError('Voer alstublieft een onderwerp in.');
+                return;
+            }
+
+            // Reset UI
+            hideError();
+            resultContainer.classList.add('hidden');
+            loader.classList.remove('hidden');
+            generateBtn.disabled = true;
+
+            try {
+                // Construct the prompt for the Gemini API
+                const prompt = `Genereer een lijst met 5 tot 7 open, verdiepende vragen die een docent kan stellen aan een student om diens begrip te peilen over het onderwerp "${topic}". De student wordt ervan verdacht AI op een ongepaste manier te hebben gebruikt voor de opdracht. De vragen moeten gericht zijn op het achterhalen van het daadwerkelijke kennisniveau, het redeneerproces en de eigen inbreng van de student. Vermijd vragen die met een simpel ja/nee of een enkel feit beantwoord kunnen worden. Formatteer de output als een genummerde lijst.`;
+
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // API key is handled by the environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API-verzoek mislukt met status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const generatedText = result.candidates[0].content.parts[0].text;
+                    showResult(generatedText);
+                } else {
+                    // Handle cases where the response structure is unexpected
+                    console.error('Onverwachte API respons structuur:', result);
+                    showError('De gegenereerde content kon niet worden verwerkt. Controleer de console voor details.');
+                }
+            } catch (error) {
+                console.error('Fout bij het aanroepen van de Gemini API:', error);
+                showError('Er is een fout opgetreden. Probeer het later opnieuw.');
+            } finally {
+                // Re-enable UI
+                loader.classList.add('hidden');
+                generateBtn.disabled = false;
+            }
+        });
+        
+        function showResult(text) {
+            resultContainer.textContent = text;
+            resultContainer.classList.remove('hidden');
+        }
+
+        function showError(message) {
+            errorContainer.textContent = message;
+            errorContainer.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorContainer.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
