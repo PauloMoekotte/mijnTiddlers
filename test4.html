@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TNO 2025: Wat werkt (niet) bij de inzet van technologie</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tno-blue: #0033A0;
+            --tno-light-blue: #6495ED;
+            --text-dark: #212529;
+            --text-light: #f8f9fa;
+            --bg-light-gray: #f1f3f5;
+            --border-color: #dee2e6;
+            --ai-gradient: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
+            --success-green: #28a745;
+            --warning-orange: #ffc107;
+        }
+
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Roboto', sans-serif; margin: 0; color: var(--text-dark); background-color: #fff; line-height: 1.7; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .text-center { text-align: center; }
+
+        header { background-color: var(--tno-blue); color: var(--text-light); padding: 50px 20px; }
+        header h1 { font-size: 2.8rem; font-weight: 700; margin: 0; line-height: 1.2; }
+        header h2 { font-size: 1.5rem; font-weight: 400; margin-top: 10px; opacity: 0.9; }
+
+        section { padding: 60px 20px; }
+        .section-title { font-size: 2.5rem; color: var(--tno-blue); text-align: center; margin-bottom: 50px; font-weight: 700; }
+        .subsection-title { font-size: 1.8rem; color: var(--tno-blue); margin-bottom: 20px; border-bottom: 2px solid var(--tno-light-blue); padding-bottom: 10px; }
+        .card { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .highlight-box { background: var(--bg-light-gray); padding: 25px; border-left: 5px solid var(--tno-blue); border-radius: 5px; margin-top: 20px; }
+        .highlight-box ul { padding-left: 20px; margin: 0; }
+        .highlight-box li { margin-bottom: 10px; }
+
+        /* AI Advisor Section */
+        #ai-advisor { background: var(--ai-gradient); color: white; }
+        #ai-advisor .section-title, #ai-advisor .subsection-title { color: white; border-color: rgba(255,255,255,0.5); }
+        .advisor-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .advisor-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 500; }
+        .form-group select { padding: 12px; border-radius: 8px; border: none; font-size: 1rem; }
+        #advisor-button { background: var(--success-green); color: white; cursor: pointer; transition: background 0.3s; padding: 14px; border-radius: 8px; border: none; font-size: 1.1rem; font-weight: 500; width: 100%; margin-top: 10px; }
+        #advisor-button:hover { background: #218838; }
+        #ai-result { margin-top: 30px; background: white; color: var(--text-dark); padding: 25px; border-radius: 8px; display: none; }
+        #ai-result h4 { margin-top: 0; color: var(--tno-blue); }
+
+        /* Lessons Learned Diagram */
+        .lessons-learned-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .lesson-node { background: var(--bg-light-gray); padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease; }
+        .lesson-node:hover, .lesson-node.active { border-color: var(--tno-blue); background-color: #e9ecef; transform: translateY(-5px); }
+        .lesson-node .icon { font-size: 2.5rem; margin-bottom: 10px; color: var(--tno-blue); }
+        .lesson-node h4 { margin: 0; font-size: 1.2rem; }
+        #lesson-details { margin-top: 30px; padding: 20px; background-color: #fff; border-radius: 8px; border: 1px solid var(--border-color); min-height: 100px; }
+
+        /* Werkgeversinzichten Charts */
+        .chart-container-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .chart-wrapper { position: relative; height: 400px; }
+        
+        /* Interaction Graph */
+        #interactionChartContainer { margin-top: 30px; }
+
+        /* Chatbot */
+        #chatbot-toggle { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background-color: var(--tno-blue); color: white; border-radius: 50%; border: none; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1001; display: flex; justify-content: center; align-items: center; }
+        #chatbot-container { display: none; position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 1000; flex-direction: column; overflow: hidden; }
+        #chat-window { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; }
+        .chat-message { margin-bottom: 10px; max-width: 80%; padding: 10px; border-radius: 15px; }
+        .user-message { background: var(--tno-light-blue); color: white; align-self: flex-end; margin-left: auto; border-bottom-right-radius: 0; }
+        .bot-message { background: var(--bg-light-gray); color: var(--text-dark); align-self: flex-start; border-bottom-left-radius: 0; }
+        #chat-input-container { border-top: 1px solid var(--border-color); padding: 10px; }
+        #chat-input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 20px; box-sizing: border-box; }
+        .typing-indicator { font-style: italic; color: #999; }
+        
+        footer { background: var(--text-dark); color: var(--text-light); text-align: center; padding: 30px 20px; margin-top: 50px; }
+
+        @media (max-width: 992px) { .chart-container-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.2rem; }
+            .section-title { font-size: 2rem; }
+            .advisor-form { grid-template-columns: 1fr; }
+            #chatbot-container { width: 90%; height: 70%; bottom: 90px; right: 5%; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="text-center">
+        <h1>Van krapte naar kans: technologie als gamechanger</h1>
+        <h2>Wat werkt (niet) bij de inzet van technologie (TNO Rapport 2025)</h2>
+    </header>
+
+    <main>
+        <section id="ai-advisor">
+            <div class="container">
+                <h2 class="section-title">🤖 AI Implementatie Adviseur</h2>
+                <div class="card advisor-card">
+                    <h3 class="subsection-title text-center">Ontvang advies op maat voor uw organisatie</h3>
+                    <p class="text-center">Selecteer uw situatie. De AI analyseert de bevindingen uit het TNO-rapport en geeft een gerichte aanbeveling om de kans op succes te vergroten.</p>
+                    <div class="advisor-form">
+                        <div class="form-group">
+                            <label for="fase-select">In welke fase bevindt u zich?</label>
+                            <select id="fase-select">
+                                <option value="voorbereiding">Voorbereiding & oriëntatie</option>
+                                <option value="implementatie">Implementatie & testen</option>
+                                <option value="gebruik">Lopende inzet & optimalisatie</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="zorg-select">Wat is uw grootste zorg?</label>
+                            <select id="zorg-select">
+                                <option value="weerstand">Weerstand bij medewerkers</option>
+                                <option value="integratie">Technische integratie met bestaande systemen</option>
+                                <option value="kosten">Financiële investering en ROI</option>
+                                <option value="effectiviteit">Gebruiksgemak en effectiviteit van de tool</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="advisor-button" onclick="getAIRecommendation()">Genereer Advies</button>
+                    <div id="ai-result">
+                        <h4>Aanbeveling:</h4>
+                        <p id="recommendation-text"></p>
+                        <h4>Onderbouwing uit rapport:</h4>
+                        <p id="justification-text"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="summary" style="background-color: var(--bg-light-gray);">
+            <div class="container">
+                <h2 class="section-title">Samenvatting & Cruciale Randvoorwaarden</h2>
+                <div class="card">
+                    <p>Succesvolle inzet van technologie is niet alleen afhankelijk van techniek, maar sterk verbonden met <strong>sociale en organisatorische factoren</strong>. Dit rapport, gebaseerd op onderzoek onder >1000 werknemers, case studies en >150 werkgevers, benadrukt het belang van een integrale aanpak.</p>
+                    <div class="highlight-box">
+                        <h3 class="subsection-title" style="border-bottom: none; margin-bottom: 15px;">Cruciale randvoorwaarden voor succes</h3>
+                        <ul>
+                            <li><strong>Betrek werknemers vanaf de start:</strong> Dit zorgt voor draagvlak en een betere integratie met bestaande werkprocessen.</li>
+                            <li><strong>Zorg voor positieve gebruikerservaringen:</strong> Gebruiksvriendelijke technologie stimuleert innovatie en leren op de werkvloer. Essentieel zijn test-runs en maatwerk.</li>
+                            <li><strong>Werk nauw samen met leveranciers:</strong> Flexibele communicatie en samenwerking zorgen voor snelle oplossingen en maatwerk, ook na de implementatiefase.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="werknemer">
+            <div class="container">
+                <h2 class="section-title">De Rol van de Werknemer</h2>
+                <div class="card">
+                    <h3 class="subsection-title">Goed Werkontwerp is de Sleutel</h3>
+                    <p>Negatieve ervaringen van werknemers (belemmeringen, angst) remmen de adoptie van technologie. Het rapport toont aan dat <strong>goed werkontwerp</strong> deze negatieve impact kan neutraliseren. Kenmerken zoals autonomie, taakvariatie en feedback zijn cruciaal.</p>
+                    <div id="interactionChartContainer" class="chart-wrapper" style="height: 350px;">
+                        <canvas id="interactionChart"></canvas>
+                    </div>
+                    <p class="text-center" style="font-size: 0.9rem; color: #6c757d;">Figuur: Goed werkontwerp vermindert de negatieve impact van ervaren belemmeringen op het initiatief van werknemers.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="praktijk" style="background-color: var(--bg-light-gray);">
+            <div class="container">
+                <h2 class="section-title">Lessons Learned uit de Praktijk</h2>
+                <p class="text-center" style="max-width: 800px; margin: -20px auto 40px auto;">Analyse van vijf case studies (o.a. Erasmus MC, Haga Ziekenhuis, Politie) leidt tot drie kernlessen voor een succesvolle implementatie. Klik op een les voor details.</p>
+                <div class="lessons-learned-grid">
+                    <div class="lesson-node" id="les1" onclick="showLesson(1)">
+                        <div class="icon">🔬</div>
+                        <h4>Investeer in een goede voorbereiding</h4>
+                    </div>
+                    <div class="lesson-node" id="les2" onclick="showLesson(2)">
+                        <div class="icon">👥</div>
+                        <h4>Betrek medewerkers vanaf de start</h4>
+                    </div>
+                    <div class="lesson-node" id="les3" onclick="showLesson(3)">
+                        <div class="icon">🔧</div>
+                        <h4>Zorg voor onderhoud en bijsturing</h4>
+                    </div>
+                </div>
+                <div id="lesson-details" class="highlight-box">
+                    <p>Selecteer een les hierboven om de details te zien.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="werkgevers">
+            <div class="container">
+                <h2 class="section-title">Inzichten van Werkgevers</h2>
+                <div class="card">
+                     <h3 class="subsection-title">Bevorderende en Belemmerende Factoren</h3>
+                     <p>Uit onderzoek onder 161 werkgevers die technologie hebben geïmplementeerd, komen de volgende topfactoren naar voren die het succes beïnvloeden.</p>
+                    <div class="chart-container-grid">
+                        <div class="chart-wrapper">
+                            <canvas id="promotingFactorsChart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="hinderingFactorsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusie" style="background-color: var(--tno-blue); color: var(--text-light);">
+            <div class="container">
+                <h2 class="section-title" style="color: white;">Eindconclusie: Een Integrale Aanpak</h2>
+                <p class="text-center" style="font-size: 1.2rem; max-width: 900px; margin: auto;">
+                    Technologie biedt aanzienlijke potentie om personeelskrapte te verlichten. Effectieve inzet is echter alleen mogelijk wanneer <strong>zowel technische als sociale randvoorwaarden integraal worden aangepakt</strong>. Het is cruciaal om medewerkers vanaf de start te betrekken, te zorgen voor werk van goede kwaliteit (goed werkontwerp) en de strategie af te stemmen op de specifieke sector en doelen. Alleen dan kan technologie uitgroeien tot een echte gamechanger voor een toekomstbestendige arbeidsmarkt.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <button id="chatbot-toggle">🤖</button>
+    <div id="chatbot-container">
+        <div id="chat-window">
+            <div class="bot-message">Hallo! Ik ben de AI-assistent voor het TNO-rapport 2025. Vraag me bijvoorbeeld naar "succesfactoren" of "werkontwerp".</div>
+        </div>
+        <div id="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Stel uw vraag..." onkeydown="if(event.key==='Enter') handleUserMessage();">
+        </div>
+    </div>
+
+    <footer>
+        <p>Interactieve visualisatie gebaseerd op TNO-rapport R10359 (2025): "Van krapte naar kans: technologie als gamechanger".</p>
+    </footer>
+
+    <script>
+        // AI Advisor Logic
+        const aiAdvisorBase = {
+            voorbereiding: {
+                weerstand: { rec: "Focus op vroege betrokkenheid en communicatie.", just: "Het rapport benadrukt (p. 28) dat het betrekken van werknemers vanaf de start cruciaal is voor draagvlak. Communiceer open over de doelen en de impact op werk om angst voor baanverlies weg te nemen." },
+                integratie: { rec: "Voer een grondige behoefte- en systeemanalyse uit.", just: "Case studies (p. 14) tonen aan dat gebrekkige integratie een grote belemmering is. Werk nauw samen met de leverancier én IT-afdeling om de technische compatibiliteit te waarborgen vóór de aankoop." },
+                kosten: { rec: "Maak een gedetailleerde kosten-batenanalyse.", just: "Een succesfactor in de case studies (p. 49) was een duidelijke analyse vooraf. Kijk niet alleen naar de aanschaf, maar ook naar implementatie-, trainings- en onderhoudskosten versus de verwachte baten (efficiëntie, kwaliteitswinst)." },
+                effectiviteit: { rec: "Organiseer testfases en pilots met eindgebruikers.", just: "Positieve gebruikerservaringen zijn essentieel (p. 28). Door op kleine schaal te testen, kunt u de gebruiksvriendelijkheid valideren en feedback verzamelen voordat u breed uitrolt." }
+            },
+            implementatie: {
+                weerstand: { rec: "Creëer 'ambassadeurs' en zorg voor positieve ervaringen.", just: "Het rapport stelt dat weerstand afneemt als medewerkers zien dat de technologie werkt en hen helpt (p. 15). Zet enthousiaste collega's in als ambassadeurs en vier kleine successen." },
+                integratie: { rec: "Zorg voor een flexibele samenwerking met de leverancier.", just: "Een cruciale randvoorwaarde (p. 28) is een goede samenwerking met de leverancier voor snelle probleemoplossing en aanpassingen. Zorg voor korte communicatielijnen." },
+                kosten: { rec: "Monitor de prestaties en stuur bij.", just: "Het is belangrijk om de daadwerkelijke prestaties te meten tegen de verwachte baten. Dit helpt om de ROI te valideren en waar nodig bij te sturen in het gebruik van de technologie." },
+                effectiviteit: { rec: "Bied voldoende tijd en training.", just: "Werkgevers noemen 'noodzaak tot trainen' als belangrijke factor (p. 20). Zorg dat medewerkers de tijd krijgen om de technologie te leren gebruiken, dit verhoogt de effectiviteit en acceptatie." }
+            },
+            gebruik: {
+                weerstand: { rec: "Optimaliseer het werkontwerp rondom de technologie.", just: "Het rapport bewijst (p. 9-10) dat autonomie en taakvariatie de negatieve gevoelens kunnen verminderen. Geef medewerkers controle over hoe zij de tool in hun werk integreren." },
+                integratie: { rec: "Plan voor doorlopend onderhoud en updates.", just: "De 'Lessons Learned' (p. 16) benadrukken het belang van structureel onderhoud en een budget hiervoor. Technologie en systemen veranderen, dus de integratie vereist continue aandacht." },
+                kosten: { rec: "Evalueer periodiek en zoek naar nieuwe toepassingen.", just: "Nu de technologie draait, kijk hoe de baten verder kunnen worden vergroot. De case studies tonen aan dat technologie vaak onverwachte nieuwe mogelijkheden biedt (p. 11-16)." },
+                effectiviteit: { rec: "Verzamel continue feedback en optimaliseer.", just: "De beste inzichten komen van de dagelijkse gebruikers. Creëer een laagdrempelig kanaal voor feedback om de technologie en de werkprocessen eromheen continu te verbeteren (p. 15)." }
+            }
+        };
+
+        function getAIRecommendation() {
+            const fase = document.getElementById('fase-select').value;
+            const zorg = document.getElementById('zorg-select').value;
+            const result = aiAdvisorBase[fase][zorg];
+            
+            document.getElementById('recommendation-text').innerText = result.rec;
+            document.getElementById('justification-text').innerText = result.just;
+            document.getElementById('ai-result').style.display = 'block';
+        }
+
+        // Lessons Learned Logic
+        const lessonDetails = {
+            1: { title: "Les 1: Investeer in een goede voorbereiding", text: "Een succesvolle implementatie begint met een grondige interne behoefteanalyse. Wat is het precieze probleem dat u wilt oplossen? Test technologie eerst op kleine schaal (pilot) en zorg voor duidelijke communicatie over de doelen en het proces. Dit voorkomt technische problemen en weerstand in een later stadium." },
+            2: { title: "Les 2: Betrek medewerkers vanaf de start", text: "Draagvlak is essentieel. Betrek de eindgebruikers (de medewerkers) al in de voorbereidings- en testfase. Hun input zorgt ervoor dat de technologie beter aansluit op de praktijk en vergroot de acceptatie. Goed werkontwerp, met behoud van autonomie en taakvariatie, is hierbij cruciaal." },
+            3: { title: "Les 3: Zorg voor onderhoud en bijsturing", text: "De implementatie stopt niet na de 'livegang'. Zorg voor een structureel onderhoudsplan en een goede, flexibele relatie met de leverancier voor technische ondersteuning. Blijf feedback verzamelen van gebruikers om het systeem en de werkprocessen continu te optimaliseren." }
+        };
+        
+        function showLesson(lessonNumber) {
+            const detailBox = document.getElementById('lesson-details');
+            const lesson = lessonDetails[lessonNumber];
+            detailBox.innerHTML = `<h4>${lesson.title}</h4><p>${lesson.text}</p>`;
+            
+            document.querySelectorAll('.lesson-node').forEach(node => node.classList.remove('active'));
+            document.getElementById('les' + lessonNumber).classList.add('active');
+        }
+
+        // Chatbot Logic
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatWindow = document.getElementById('chat-window');
+        const chatInput = document.getElementById('chat-input');
+        
+        const chatKnowledgeBase = {
+            "werkontwerp": "Goed werkontwerp is cruciaal. Het rapport (p. 9) toont aan dat kenmerken als autonomie, feedback en taakvariatie de negatieve impact van technologie-ervaringen (zoals weerstand) kunnen verminderen.",
+            "succesfactoren": "De drie belangrijkste randvoorwaarden voor succes (p. 28) zijn: 1. Betrek werknemers vanaf de start. 2. Zorg voor positieve gebruikerservaringen. 3. Werk nauw samen met de leverancier.",
+            "risico": "De grootste belemmeringen zijn weerstand onder werknemers, angst voor baanverlies, en technische integratieproblemen (p. 5, p. 29). Een goede voorbereiding en communicatie kunnen dit mitigeren.",
+            "case studies": "De case studies (p. 11-16) met o.a. Erasmus MC en de Politie benadrukken het belang van een behoefteanalyse, testen, duidelijke communicatie en het betrekken van medewerkers om draagvlak te creëren.",
+            "verschil": "Arbeidsbesparende tech (bv. RPA) leidt vaker tot hogere productiviteit. Arbeidsondersteunende tech (bv. Alviscan kiosk) zorgt vaker voor kwaliteitsverbetering en verlichting van fysieke werkbelasting (p. 27).",
+            "help": "U kunt vragen over 'werkontwerp', 'succesfactoren', 'risico', 'case studies', of het 'verschil' tussen tech-typen."
+        };
+
+        chatbotToggle.addEventListener('click', () => { chatbotContainer.style.display = chatbotContainer.style.display === 'flex' ? 'none' : 'flex'; });
+        function handleUserMessage() { const msg = chatInput.value.trim().toLowerCase(); if (msg === '') return; appendMessage(msg, 'user'); chatInput.value = ''; setTimeout(() => { appendMessage('...', 'bot', true); setTimeout(() => { updateLastBotMessage(findResponse(msg)); }, 1000); }, 500); }
+        function findResponse(msg) { for (const key in chatKnowledgeBase) { if (msg.includes(key)) return chatKnowledgeBase[key]; } return "Dat begrijp ik niet. " + chatKnowledgeBase["help"]; }
+        function appendMessage(text, sender, isTyping = false) { const div = document.createElement('div'); div.classList.add('chat-message', `${sender}-message`); if (isTyping) div.classList.add('typing-indicator'); div.innerText = text; chatWindow.appendChild(div); chatWindow.scrollTop = chatWindow.scrollHeight; }
+        function updateLastBotMessage(text) { const indicator = chatWindow.querySelector('.typing-indicator'); if (indicator) { indicator.innerText = text; indicator.classList.remove('typing-indicator'); } }
+
+        // Chart.js Configuration
+        Chart.register(ChartDataLabels);
+        Chart.defaults.plugins.datalabels.color = '#ffffff';
+        Chart.defaults.plugins.datalabels.font = { weight: 'bold' };
+        Chart.defaults.font.family = "'Roboto', sans-serif";
+
+        // Interaction Chart
+        new Chart(document.getElementById('interactionChart'), {
+            type: 'line',
+            data: {
+                labels: ['Lage belemmering', 'Hoge belemmering'],
+                datasets: [
+                    {
+                        label: 'Hoogwaardig Werkontwerp',
+                        data: [4.0, 3.8], // Fictieve data om trend te tonen
+                        borderColor: 'green',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        fill: false,
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Laagwaardig Werkontwerp',
+                        data: [3.5, 2.5], // Fictieve data om trend te tonen
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        fill: false,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Effect van Werkontwerp op Initiatief' } },
+                scales: { y: { beginAtZero: false, title: { display: true, text: 'Innovatie-, leer- & loopbaaninitiatief' } } }
+            }
+        });
+
+        // Promoting Factors Chart
+        new Chart(document.getElementById('promotingFactorsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Werking tech (86%)', 'Aansluiting op proces (83%)', 'Steun leiding (81%)', 'Gebruiksgemak (81%)', 'Maatwerk (81%)'],
+                datasets: [{
+                    label: 'Positieve Invloed (%)',
+                    data: [86, 83, 81, 81, 81],
+                    backgroundColor: '#28a745',
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                plugins: { legend: { display: false }, title: { display: true, text: 'Top 5 Bevorderende Factoren' }, datalabels: { anchor: 'end', align: 'start' } },
+                scales: { x: { beginAtZero: true, max: 100 } }
+            }
+        });
+
+        // Hindering Factors Chart
+        new Chart(document.getElementById('hinderingFactorsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Weerstand medewerkers (39%)', 'Angst voor baanverlies (38%)', 'Tijdsinvestering (20%)', 'Werkdruk (19%)', 'Beperkingen tech (19%)'],
+                datasets: [{
+                    label: 'Negatieve Invloed (%)',
+                    data: [39, 38, 20, 19, 19],
+                    backgroundColor: '#dc3545',
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                plugins: { legend: { display: false }, title: { display: true, text: 'Top 5 Belemmerende Factoren' }, datalabels: { anchor: 'end', align: 'start' } },
+                scales: { x: { beginAtZero: true, max: 50 } }
+            }
+        });
+        
+        // Gauge Charts
+        function createGaugeChart(canvasId, value, label) { new Chart(document.getElementById(canvasId),{type:'doughnut',data:{labels:[label,''],datasets:[{data:[value,100-value],backgroundColor:[value > 60 ? '#28a745' : value > 40 ? '#ffc107' : '#dc3545', '#e9ecef'],borderWidth:0,circumference:180,rotation:270}]},options:{responsive:!0,maintainAspectRatio:!0,cutout:'70%',plugins:{legend:{display:!1},tooltip:{enabled:!1},datalabels:{formatter:(v,c)=>c.dataIndex===0?v+'%':'',color:var(--text-dark),font:{size:18,weight:'bold'}}}}});}
+        createGaugeChart('gaugeZorg',41, '% inzet AB/AO');
+        createGaugeChart('gaugeGroot',52, '% inzet AB/AO');
+        createGaugeChart('gaugeIndustrie',76, '% inzet AB/AO');
+        createGaugeChart('gaugeBouw', 56, '% inzet AB/AO'); // Hypothetical value, not in table
+        createGaugeChart('gaugeHoreca', 56, '% inzet AB/AO'); // Hypothetical value, not in table
+        createGaugeChart('gaugeLandbouw', 56, '% inzet AB/AO'); // Hypothetical value, not in table
+    </script>
+</body>
+</html>
