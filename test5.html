@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactieve Infographic - TNO Rapport Bouwtechnologie</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --tno-blue: #00426d;
+            --tno-cyan: #00a3e0;
+            --tno-pink: #e6007e;
+            --tno-green: #97d700;
+            --tno-purple: #8A2BE2;
+            --light-grey: #f4f7f9;
+            --dark-grey: #333;
+            --bg-color: #0d1a2b;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--light-grey);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background-image: linear-gradient(rgba(13, 26, 43, 0.8), rgba(13, 26, 43, 1)), url(https://i.imgur.com/vHq8VlJ.png);
+            background-size: cover;
+            background-position: center;
+            border-bottom: 3px solid var(--tno-cyan);
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            color: #fff;
+            margin: 0;
+        }
+
+        header .subtitle {
+            font-size: 1.2em;
+            color: var(--tno-cyan);
+            margin-top: 10px;
+        }
+
+        .section {
+            padding: 50px 0;
+            border-bottom: 1px solid #2a3f58;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            color: var(--tno-cyan);
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background-color: var(--tno-green);
+            margin: 10px auto 0;
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            text-align: center;
+        }
+
+        .challenge-item {
+            background: rgba(0, 66, 109, 0.4);
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 5px solid var(--tno-pink);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .challenge-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 163, 224, 0.1);
+        }
+
+        .challenge-item h3 {
+            margin-top: 0;
+            color: var(--tno-green);
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .tech-card {
+            background: #102a43;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #2a3f58;
+        }
+
+        .tech-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 30px rgba(0, 163, 224, 0.2);
+            border-color: var(--tno-cyan);
+        }
+
+        .tech-card-header {
+            padding: 20px;
+            background: var(--tno-blue);
+        }
+        
+        .tech-card-header h3 {
+            margin: 0;
+            font-size: 1.4em;
+            color: #fff;
+        }
+        
+        .tech-card-body {
+            padding: 20px;
+        }
+        
+        .tech-card-body p {
+            margin: 0;
+        }
+
+        .ai-tool {
+            background: linear-gradient(135deg, #102a43, #0d1a2b);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border: 1px solid var(--tno-cyan);
+            box-shadow: 0 0 25px rgba(0, 163, 224, 0.1);
+        }
+
+        .ai-tool h3 {
+            color: var(--tno-green);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .ai-tool button {
+            background-color: var(--tno-pink);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .ai-tool button:hover {
+            background-color: #c4006b;
+        }
+
+        #matchmaker-challenges label {
+            display: block;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #matchmaker-result, #impact-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-left: 3px solid var(--tno-green);
+            border-radius: 5px;
+        }
+        
+        .impact-bar-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 5px;
+            margin: 8px 0;
+        }
+        .impact-bar {
+            height: 20px;
+            background-color: var(--tno-green);
+            border-radius: 5px;
+            text-align: right;
+            padding-right: 5px;
+            color: var(--dark-grey);
+            font-weight: bold;
+            line-height: 20px;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .maturity-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .maturity-column {
+            flex: 1;
+            min-width: 280px;
+            background: rgba(0, 66, 109, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .maturity-column h3 {
+            margin-top: 0;
+            color: var(--tno-cyan);
+            border-bottom: 2px solid;
+            padding-bottom: 10px;
+        }
+        .maturity-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        .maturity-column li {
+            background: #102a43;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        /* AI Assistant Chatbot Styles */
+        #chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            max-width: 90%;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        #chat-widget.closed {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+        }
+
+        #chat-header {
+            background: var(--tno-blue);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chat-body {
+            background: var(--light-grey);
+            height: 350px;
+            padding: 15px;
+            overflow-y: auto;
+            color: var(--dark-grey);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-message {
+            padding: 8px 12px;
+            border-radius: 18px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+        .user-message {
+            background: var(--tno-cyan);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .bot-message {
+            background: #e5e5ea;
+            color: black;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .bot-message.typing {
+            font-style: italic;
+        }
+
+        #chat-input-container {
+            display: flex;
+            border-top: 1px solid #ccc;
+            background: #fff;
+        }
+
+        #chat-input {
+            flex-grow: 1;
+            border: none;
+            padding: 15px;
+            outline: none;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #chat-send {
+            background: var(--tno-cyan);
+            border: none;
+            color: white;
+            padding: 0 20px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+        }
+
+        .modal-content {
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="techModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">×</span>
+            <h2 id="modalTitle" style="text-align:left; margin-bottom:20px;"></h2>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <h1>Verkenning Arbeidsondersteunende Technologie in de Bouw</h1>
+            <p class="subtitle">Een interactieve samenvatting van het TNO-rapport | Maart 2024</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <h2>De Uitdagingen in de Bouw</h2>
+            <div class="challenge-grid">
+                <div class="challenge-item">
+                    <h3>Arbeidstekorten</h3>
+                    <p>Een tekort aan ervaren vakmensen en moeite met het vinden van nieuwe aanwas.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Toenemende Complexiteit</h3>
+                    <p>Circulair en duurzaam bouwen vereist nieuwe materialen, technieken en vaardigheden.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Efficiëntie & Kosten</h3>
+                    <p>De druk om sneller, goedkoper en met hogere kwaliteit te bouwen, met behoud van duurzaamheid.</p>
+                </div>
+                <div class="challenge-item">
+                    <h3>Fysieke Belasting</h3>
+                    <p>Zwaar en repetitief werk leidt tot fysieke klachten en uitstroom van personeel.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Technologische Oplossingen</h2>
+            <p style="text-align:center; max-width: 800px; margin: -20px auto 40px;">Het rapport identificeert vijf sleutelcategorieën van technologie die de bouwsector kunnen ondersteunen. <strong>Klik op een kaart</strong> voor specifieke voorbeelden en toepassingen.</p>
+            <div class="tech-grid">
+                <div class="tech-card" data-tech="assistentie">
+                    <div class="tech-card-header"><h3>Persoonlijke Assistentie & Monitoring</h3></div>
+                    <div class="tech-card-body"><p>Digitale tools die (onervaren) medewerkers ondersteunen, van werkinstructies tot remote support.</p></div>
+                </div>
+                <div class="tech-card" data-tech="ar_vr">
+                    <div class="tech-card-header"><h3>Augmented & Virtual Reality</h3></div>
+                    <div class="tech-card-body"><p>Technologie voor training, werkvoorbereiding en het visualiseren van complexe data op de bouwplaats.</p></div>
+                </div>
+                <div class="tech-card" data-tech="autonoom">
+                    <div class="tech-card-header"><h3>Autonome Systemen & Data Analyse</h3></div>
+                    <div class="tech-card-body"><p>Slimme systemen die helpen bij plannen, monitoren van installaties en het optimaliseren van processen.</p></div>
+                </div>
+                <div class="tech-card" data-tech="robots">
+                    <div class="tech-card-header"><h3>Robots & Cobots</h3></div>
+                    <div class="tech-card-body"><p>Machines die zwaar, saai of repetitief werk overnemen, zoals metselen of sorteren van puin.</p></div>
+                </div>
+                <div class="tech-card" data-tech="exoskelet">
+                    <div class="tech-card-header"><h3>Exoskeletten</h3></div>
+                    <div class="tech-card-body"><p>Draagbare systemen die het lichaam ondersteunen bij zware fysieke taken om belasting te verminderen.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>AI in de Praktijk: Tools</h2>
+            
+            <div class="ai-tool">
+                <h3>AI Functie 1: Tech Matchmaker</h3>
+                <p>Selecteer de uitdagingen waar uw bedrijf mee kampt. De AI stelt op basis van het rapport de meest relevante technologieën voor.</p>
+                <div id="matchmaker-challenges">
+                    <label><input type="checkbox" value="kennis"> Kennisoverdracht en inwerken nieuwe medewerkers</label>
+                    <label><input type="checkbox" value="fysiek"> Hoge fysieke belasting van personeel</label>
+                    <label><input type="checkbox" value="fouten"> Foutreductie en kwaliteitsborging</label>
+                    <label><input type="checkbox" value="planning"> Efficiënter plannen en monitoren van projecten</label>
+                    <label><input type="checkbox" value="herhaling"> Automatiseren van repetitief werk</label>
+                </div>
+                <button onclick="runMatchmaker()">Vind mijn Tech-Match</button>
+                <div id="matchmaker-result" style="display:none;"></div>
+            </div>
+
+            <div class="ai-tool">
+                <h3>AI Functie 2: Impact Simulator</h3>
+                <p>Kies een technologie en de AI simuleert de potentiële impact op belangrijke prestatie-indicatoren (KPI's) in de bouw.</p>
+                <select id="impact-selector" style="padding: 10px; font-size: 1em; margin-bottom: 15px; width: 100%; max-width: 400px;">
+                    <option value="">-- Selecteer een technologie --</option>
+                    <option value="instructies">Digitale Werkinstructies</option>
+                    <option value="exoskelet">Passief Exoskelet (Armen)</option>
+                    <option value="robot">Metselrobot</option>
+                    <option value="vr">VR Training</option>
+                </select>
+                <div id="impact-result" style="display:none;">
+                    <h4>Gesimuleerde Impact:</h4>
+                    <label>Verlaging inwerktijd:</label>
+                    <div class="impact-bar-container"><div id="bar-inwerk" class="impact-bar"></div></div>
+                    <label>Reductie fysieke belasting:</label>
+                    <div class="impact-bar-container"><div id="bar-fysiek" class="impact-bar"></div></div>
+                    <label>Verhoging productiviteit:</label>
+                    <div class="impact-bar-container"><div id="bar-prod" class="impact-bar"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Inzetbaarheid van Technologieën</h2>
+            <p style="text-align:center; max-width: 800px; margin: -20px auto 40px;">Niet elke technologie is direct klaar voor gebruik. Het rapport deelt ze in op basis van hun volwassenheid.</p>
+            <div class="maturity-container">
+                <div class="maturity-column">
+                    <h3><span style="color:var(--tno-green)">Direct Toepasbaar</span></h3>
+                    <p>Commercieel beschikbaar, vereist implementatie.</p>
+                    <ul>
+                        <li>Digitale werkinstructies</li>
+                        <li>Remote support</li>
+                        <li>VR technologie voor E-learning</li>
+                        <li>Passieve exoskeletten</li>
+                        <li>Slimmer verbinden (DataRotonde)</li>
+                    </ul>
+                </div>
+                <div class="maturity-column">
+                    <h3><span style="color:var(--tno-cyan)">Verdere Ontwikkeling</span></h3>
+                    <p>Bestaande technologie, vereist doorontwikkeling.</p>
+                    <ul>
+                        <li>AI assistent voor kantoorwerk</li>
+                        <li>Instant werkinstructies</li>
+                        <li>Chatbot voor storingen</li>
+                        <li>Metselrobot</li>
+                    </ul>
+                </div>
+                <div class="maturity-column">
+                    <h3><span style="color:var(--tno-pink)">Conceptueel</span></h3>
+                    <p>Inspirerende concepten, vereist ontwikkeltraject.</p>
+                    <ul>
+                        <li>AI assistent circulariteit</li>
+                        <li>AR HoloLens projectie</li>
+                        <li>Slim monitoren met AI</li>
+                        <li>Modulair ontwerpen met AI</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="chat-widget" class="closed">
+        <div id="chat-header">
+            <span>AI Assistent (TNO Rapport)</span>
+            <span id="chat-toggle-icon">💬</span>
+        </div>
+        <div id="chat-body" style="display:none;">
+             <div class="chat-message bot-message">Hallo! Ik ben de AI-assistent voor dit TNO-rapport. Stel me een vraag, bijvoorbeeld: "Wat is een exoskelet?" of "Wat is het doel van dit rapport?".</div>
+        </div>
+        <div id="chat-input-container" style="display:none;">
+            <input type="text" id="chat-input" placeholder="Typ uw vraag...">
+            <button id="chat-send">➤</button>
+        </div>
+    </div>
+
+
+    <script>
+        // Modal Logic
+        const modal = document.getElementById("techModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalBody = document.getElementById("modalBody");
+        const closeButton = document.querySelector(".close-button");
+
+        const techData = {
+            assistentie: {
+                title: "Persoonlijke Assistentie & Monitoring",
+                content: `
+                    <p>Deze categorie omvat technologieën die medewerkers direct ondersteunen bij hun taken. Het doel is om kennis efficiënt over te dragen, fouten te verminderen en minder ervaren personeel sneller productief te maken.</p>
+                    <h4>Voorbeelden uit het rapport:</h4>
+                    <ul>
+                        <li><strong>Digitale Werkinstructies:</strong> Stap-voor-stap instructies op een tablet of telefoon. Maakt het mogelijk om MBO-2 geschoolden werk te laten doen dat voorheen een MBO-4 niveau vereiste.</li>
+                        <li><strong>AI Assistant (Kantoor/Circulair):</strong> Een 'copiloot' die helpt met engineering, werkvoorbereiding of het inventariseren van herbruikbare materialen in een sloopgebouw.</li>
+                        <li><strong>Remote Support:</strong> Een expert kijkt op afstand mee via een slimme bril of camera om een collega op locatie te helpen bij complexe taken. Vermindert reistijd en maakt expertise breder inzetbaar.</li>
+                        <li><strong>Chatbot voor storingen:</strong> Een slimme chatbot die eindgebruikers helpt storingen te melden, waardoor de planning efficiënter kan bepalen welke monteur met welke skills nodig is.</li>
+                    </ul>
+                `
+            },
+            ar_vr: {
+                title: "Augmented & Virtual Reality",
+                content: `
+                    <p>AR (voegt digitale elementen toe aan de echte wereld) en VR (creëert een volledig digitale wereld) bieden krachtige tools voor training en visualisatie.</p>
+                    <h4>Voorbeelden uit het rapport:</h4>
+                    <ul>
+                        <li><strong>VR Technologie voor E-learning:</strong> Medewerkers trainen in een veilige, virtuele omgeving. Denk aan veiligheidstrainingen, het oefenen met nieuwe installatietechnieken of virtueel lassen. Dit verlaagt de drempel voor instroom.</li>
+                        <li><strong>AR HoloLens Projectie:</strong> Visualiseert verborgen systemen (zoals leidingen) of projecteert 3D-modellen op de bouwplaats. Dit helpt bij het nemen van beslissingen en het voorkomen van fouten.</li>
+                    </ul>
+                `
+            },
+            autonoom: {
+                title: "Autonome Systemen & Data Analyse",
+                content: `
+                    <p>Deze technologieën richten zich op het slimmer maken van processen door data te verzamelen, te analyseren en daarop te acteren.</p>
+                    <h4>Voorbeelden uit het rapport:</h4>
+                    <ul>
+                        <li><strong>Slim Monitoren:</strong> Sensoren in gebouwen of installaties verzamelen data. AI analyseert deze data om voorspellend onderhoud mogelijk te maken (repareren vóórdat iets kapot gaat).</li>
+                        <li><strong>Modulair ontwerpen met AI Assistent:</strong> Een AI die helpt bij het ontwerpen met gestandaardiseerde, modulaire componenten. Dit versnelt het ontwerpproces en maakt hergebruik van materialen en ontwerpen makkelijker.</li>
+                        <li><strong>Slimmer verbinden (DataRotonde):</strong> Een cloudplatform dat systemen van verschillende partijen (bv. woningcorporatie en onderhoudsbedrijf) koppelt, zodat data naadloos wordt uitgewisseld.</li>
+                    </ul>
+                `
+            },
+            robots: {
+                title: "Robots & Cobots",
+                content: `
+                    <p>Robots (autonoom) en cobots (samenwerkend met mensen) kunnen worden ingezet om fysiek zwaar, gevaarlijk of eentonig werk te automatiseren.</p>
+                    <h4>Voorbeelden uit het rapport:</h4>
+                    <ul>
+                        <li><strong>Metselrobot:</strong> Een robot die de lange, rechte stukken van een muur metselt, terwijl de menselijke metselaar zich focust op het complexere hoek- en detailwerk. Verhoogt de snelheid en vermindert fysieke last.</li>
+                        <li><strong>Sorteerrobot:</strong> Robots die op de slooplocatie of in een verwerkingshal puin sorteren in zuivere materiaalstromen (hout, beton, metaal). Dit is essentieel voor hoogwaardige recycling.</li>
+                    </ul>
+                `
+            },
+            exoskelet: {
+                title: "Exoskeletten",
+                content: `
+                    <p>Draagbare mechanische pakken of harnassen die het menselijk lichaam ondersteunen. Het doel is primair het verminderen van fysieke belasting en het voorkomen van uitval.</p>
+                    <h4>Voorbeelden uit het rapport:</h4>
+                    <ul>
+                        <li><strong>Passief Exoskelet voor Armondersteuning:</strong> Ondersteunt de armen bij werkzaamheden boven het hoofd, zoals het monteren van plafondplaten of installaties. Stukadoors gebruiken dit al.</li>
+                        <li><strong>Passief Exoskelet voor Rug/Heupen:</strong> Geeft ondersteuning bij het tillen of langdurig voorovergebogen werken, zoals het plaatsen van glas in kozijnen op een productielijn.</li>
+                    </ul>
+                    <p><strong>Belangrijk:</strong> Exoskeletten zijn een oplossing als het werk zelf niet lichter of slimmer georganiseerd kan worden.</p>
+                `
+            }
+        };
+
+        document.querySelectorAll('.tech-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const techKey = card.dataset.tech;
+                modalTitle.innerText = techData[techKey].title;
+                modalBody.innerHTML = techData[techKey].content;
+                modal.style.display = "block";
+            });
+        });
+
+        closeButton.onclick = () => { modal.style.display = "none"; }
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        
+        // AI Tech Matchmaker
+        function runMatchmaker() {
+            const challenges = {
+                kennis: ["Persoonlijke Assistentie & Monitoring (Digitale Instructies, Remote Support)", "Augmented & Virtual Reality (VR Training)"],
+                fysiek: ["Exoskeletten", "Robots & Cobots"],
+                fouten: ["Persoonlijke Assistentie & Monitoring (Digitale Instructies)", "Augmented & Virtual Reality (AR Projectie)"],
+                planning: ["Autonome Systemen & Data Analyse (Slim Monitoren, DataRotonde)"],
+                herhaling: ["Robots & Cobots (Metselrobot, Sorteerrobot)"]
+            };
+            
+            const selected = Array.from(document.querySelectorAll('#matchmaker-challenges input:checked')).map(cb => cb.value);
+            const resultDiv = document.getElementById('matchmaker-result');
+            
+            if (selected.length === 0) {
+                resultDiv.innerHTML = "<h4>Selecteer a.u.b. ten minste één uitdaging.</h4>";
+            } else {
+                let recommendations = new Set();
+                selected.forEach(challenge => {
+                    challenges[challenge].forEach(tech => recommendations.add(tech));
+                });
+                let html = "<h4>Aanbevolen Technologieën:</h4><ul>";
+                recommendations.forEach(tech => {
+                    html += `<li>${tech}</li>`;
+                });
+                html += "</ul>";
+                resultDiv.innerHTML = html;
+            }
+            resultDiv.style.display = 'block';
+        }
+
+        // AI Impact Simulator
+        const impactSelector = document.getElementById('impact-selector');
+        const impactResult = document.getElementById('impact-result');
+        const impactData = {
+            instructies: { inwerk: 60, fysiek: 10, prod: 30 },
+            exoskelet: { inwerk: 5, fysiek: 75, prod: 15 },
+            robot: { inwerk: 20, fysiek: 90, prod: 65 },
+            vr: { inwerk: 70, fysiek: 5, prod: 10 }
+        };
+
+        impactSelector.addEventListener('change', (e) => {
+            const selected = e.target.value;
+            if (selected) {
+                const data = impactData[selected];
+                document.getElementById('bar-inwerk').style.width = data.inwerk + '%';
+                document.getElementById('bar-inwerk').innerText = data.inwerk + '%';
+                document.getElementById('bar-fysiek').style.width = data.fysiek + '%';
+                document.getElementById('bar-fysiek').innerText = data.fysiek + '%';
+                document.getElementById('bar-prod').style.width = data.prod + '%';
+                document.getElementById('bar-prod').innerText = data.prod + '%';
+                impactResult.style.display = 'block';
+            } else {
+                impactResult.style.display = 'none';
+            }
+        });
+
+        // AI Chatbot Logic
+        const chatWidget = document.getElementById('chat-widget');
+        const chatHeader = document.getElementById('chat-header');
+        const chatBody = document.getElementById('chat-body');
+        const chatInputContainer = document.getElementById('chat-input-container');
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        const chatToggleIcon = document.getElementById('chat-toggle-icon');
+
+        chatHeader.addEventListener('click', () => {
+            chatWidget.classList.toggle('closed');
+            if (chatWidget.classList.contains('closed')) {
+                chatBody.style.display = 'none';
+                chatInputContainer.style.display = 'none';
+                chatToggleIcon.innerText = '💬';
+            } else {
+                chatBody.style.display = 'flex';
+                chatInputContainer.style.display = 'flex';
+                chatToggleIcon.innerText = '✖️';
+            }
+        });
+
+        const addMessage = (text, type) => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chat-message ${type}-message`;
+            msgDiv.textContent = text;
+            chatBody.appendChild(msgDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        };
+        
+        const getBotResponse = (userInput) => {
+            const input = userInput.toLowerCase();
+            if (input.includes('hallo') || input.includes('hoi')) return "Hallo! Hoe kan ik u helpen met het TNO-rapport?";
+            if (input.includes('doel') && input.includes('rapport')) return "Het doel van dit rapport is het verkennen en onderbouwen van de mogelijkheden voor arbeidsondersteunende technologie in de gehele bouwketen, met een focus op circulariteit en duurzaamheid.";
+            if (input.includes('exoskelet')) return "Een exoskelet is een draagbaar apparaat dat het menselijk lichaam ondersteunt om fysieke klachten door zwaar werk te voorkomen. Het rapport noemt voorbeelden voor arm- en rugondersteuning.";
+            if (input.includes('vr') || input.includes('virtual reality')) return "Virtual Reality wordt in het rapport vooral gezien als een krachtig middel voor training (E-learning). Medewerkers kunnen in een veilige, gesimuleerde omgeving nieuwe technieken of veiligheidsprocedures leren.";
+            if (input.includes('ar') || input.includes('augmented reality')) return "Augmented Reality voegt digitale informatie toe aan de echte wereld, bijvoorbeeld via een slimme bril. Dit kan helpen bij het visualiseren van leidingen in een muur of het projecteren van bouwtekeningen op de werkplek.";
+            if (input.includes('robot')) return "Robots worden voorgesteld voor het automatiseren van zwaar of eentonig werk. Concrete voorbeelden zijn de metselrobot voor rechte muren en de sorteerrobot voor het scheiden van sloopafval.";
+            if (input.includes('uitdagingen')) return "De belangrijkste uitdagingen zijn: arbeidstekorten, toenemende complexiteit van het werk, de druk op efficiëntie en kosten, en de hoge fysieke belasting.";
+            if (input.includes('auteurs')) return "De auteurs van het rapport zijn: Anneke Goudswaard, Jeroen Oosterhout, Gu van Rhijn, Helen Verhoef & Roos van den Bergh.";
+            if (input.includes('dank')) return "Graag gedaan! Heeft u nog andere vragen?";
+            return "Dat is een goede vraag. Ik kon het specifieke antwoord niet direct vinden in mijn samenvatting. Kunt u de vraag anders formuleren?";
+        };
+        
+        const handleSend = () => {
+            const userInput = chatInput.value.trim();
+            if (userInput === '') return;
+            
+            addMessage(userInput, 'user');
+            chatInput.value = '';
+
+            // Simulate bot thinking
+            setTimeout(() => {
+                const botResponse = getBotResponse(userInput);
+                addMessage(botResponse, 'bot');
+            }, 1000);
+        };
+
+        chatSend.addEventListener('click', handleSend);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSend();
+            }
+        });
+
+    </script>
+</body>
+</html>
