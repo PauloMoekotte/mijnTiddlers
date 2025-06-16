@@ -1,0 +1,792 @@
+Absoluut! Hier is een interactieve HTML-infographic gebaseerd op het TNO-rapport "Van krapte naar kans: technologie als gamechanger".
+
+De infographic is ontworpen om de belangrijkste bevindingen en interactieve elementen van het rapport na te bootsen in een webvriendelijk formaat. U kunt de onderstaande code kopiëren en opslaan als een `.html`-bestand en het vervolgens in uw webbrowser openen om de volledige interactiviteit te ervaren.
+
+### Kenmerken van de Infographic:
+*   **Volledig Responsief:** Werkt op zowel desktop als mobiele apparaten.
+*   **Interactieve Navigatie:** Het startdiagram fungeert als een klikbare inhoudsopgave die u soepel naar de juiste sectie scrolt.
+*   **Pop-up Modals:** Klik op technologiecategorieën en impact-iconen om gedetailleerde informatie en tabellen te onthullen, net als in het originele rapport.
+*   **Dynamische Grafieken:** De data uit het rapport wordt gevisualiseerd met behulp van Chart.js, inclusief staaf-, donut- en meterdiagrammen.
+*   **Sector Dashboards:** Gedetailleerde, klikbare overzichten van de potentie van technologie per sector, met alle relevante statistieken.
+*   **Moderne Styling:** De look-and-feel is geïnspireerd op het originele TNO-ontwerp, met dezelfde kleurenschema's en een strakke, leesbare lay-out.
+
+---
+
+### HTML Code (`infographic.html`)
+```html
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Van krapte naar kans: technologie als gamechanger</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #5F4B8B;
+            --dark-text: #333;
+            --light-text: #fff;
+            --bg-light: #f8f9fa;
+            --border-color: #e0e0e0;
+            --gradient-start: #ff8a8a;
+            --gradient-end: #4dd0e1;
+            --accent-green: #26a69a;
+            --accent-blue: #42a5f5;
+            --accent-orange: #ffa726;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            color: var(--dark-text);
+            background-color: var(--light-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #a664c1, #8e7ce1, #7b99f8, #69b4fa, #59cffc, #48e9d6);
+            color: var(--light-text);
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+
+        section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2.section-title {
+            font-size: 2.5rem;
+            color: var(--primary-purple);
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        h2.section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-purple);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        
+        h3.subsection-title {
+            font-size: 1.8rem;
+            color: var(--primary-purple);
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        /* Interactive Index */
+        #index .flowchart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            text-align: center;
+        }
+        
+        #index .flowchart-item {
+            background: linear-gradient(135deg, #f3e5f5, #e8eaf6);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #ce93d8;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: var(--dark-text);
+        }
+        
+        #index .flowchart-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(95, 75, 139, 0.2);
+        }
+        
+        #index .flowchart-item h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary-purple);
+        }
+
+        /* Technology Inventory & Impact */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .tech-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .tech-card:hover {
+            background-color: #e9e5f1;
+            transform: scale(1.03);
+        }
+        .tech-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-purple);
+        }
+        .tech-card h4 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            -webkit-animation-name: fadeIn;
+            animation-name: fadeIn;
+            -webkit-animation-duration: 0.4s;
+            animation-duration: 0.4s;
+        }
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 900px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            -webkit-animation-name: slideIn;
+            animation-name: slideIn;
+            -webkit-animation-duration: 0.4s;
+            animation-duration: 0.4s;
+        }
+        .close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover, .close-btn:focus {
+            color: #000;
+        }
+        
+        .modal h3 {
+            color: var(--primary-purple);
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--bg-light);
+            font-weight: 600;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+        
+        /* Sector Potential */
+        .sector-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            border: 2px solid var(--primary-purple);
+            background: #fff;
+            color: var(--primary-purple);
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .tab-button.active, .tab-button:hover {
+            background: var(--primary-purple);
+            color: #fff;
+        }
+        .sector-content {
+            display: none;
+        }
+        .sector-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        .sector-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .dashboard-card {
+            background-color: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .dashboard-card h4 {
+            color: var(--primary-purple);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        .impact-rating {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        
+        footer {
+            background: var(--dark-text);
+            color: var(--light-text);
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+        }
+        footer p {
+            margin: 0;
+        }
+        footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes slideIn { from {top: -300px; opacity: 0} to {top: 5%; opacity: 1} }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            header h2 { font-size: 1.5rem; }
+            h2.section-title { font-size: 2rem; }
+            .modal-content { width: 95%; margin: 10% auto; }
+            .sector-tabs { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Van krapte naar kans</h1>
+        <h2>Technologie als gamechanger</h2>
+        <p>Interactieve Infographic gebaseerd op Tussenrapportage stap 1 van TNO</p>
+    </header>
+
+    <main>
+        <section id="summary">
+            <div class="container">
+                <h2 class="section-title">Samenvatting</h2>
+                <div class="card">
+                    <p>Dit rapport onderzoekt de potentie van <strong>arbeidsbesparende</strong> en <strong>arbeidsondersteunende</strong> technologieën als mogelijke oplossingen voor de krapte op de arbeidsmarkt. Het project 'Van krapte naar kans' richt zich op het begrijpen van de mensgerichte inzet van technologie, hoe werknemers dit ervaren en de factoren die implementatie beïnvloeden.</p>
+                    <p>Hoewel er veel literatuur is, ontbreekt vaak empirisch bewijs. Resultaten suggereren echter dat technologie veelbelovend kan zijn in sectoren zoals de <strong>groot- & detailhandel</strong> en de <strong>gezondheids- & welzijnszorg</strong>. Met de opkomst van AI en andere toepassingen, blijft de vraag naar de perceptie van werknemers en empirisch bewijs een belangrijk aandachtspunt.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="index">
+            <div class="container">
+                <h2 class="section-title">Navigeer door het Rapport</h2>
+                <div class="flowchart">
+                    <a href="#about" class="flowchart-item"><h3>1. Over het onderzoek</h3></a>
+                    <a href="#inventory" class="flowchart-item"><h3>2. Inventarisatie Technologie</h3></a>
+                    <a href="#impact" class="flowchart-item"><h3>3. Impact van Technologie</h3></a>
+                    <a href="#usage" class="flowchart-item"><h3>4. Inzet van Technologie</h3></a>
+                    <a href="#potential" class="flowchart-item"><h3>5. Potentie van Technologie</h3></a>
+                    <a href="#conclusion" class="flowchart-item"><h3>6. Conclusie & Volgende Stappen</h3></a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" style="background-color: var(--bg-light);">
+            <div class="container">
+                <h2 class="section-title">1. Over het project 'van krapte naar kans'</h2>
+                <div class="card">
+                    <h3 class="subsection-title">Krapte op de arbeidsmarkt</h3>
+                    <p>De huidige arbeidsmarkt kent meer vacatures dan werklozen. Arbeidsbesparende technologie (robotisering, digitalisering) en arbeidsondersteunende technologie (ondersteuning bij taken) worden vaak genoemd als mogelijke oplossingen.</p>
+                    <h3 class="subsection-title">Project 'Van krapte naar kans: technologie als gamechanger'</h3>
+                    <p>In dit onderzoeksproject van TNO en Instituut Gak wordt onderzocht of, en onder welke voorwaarden, technologie mensen kan helpen. De nadruk ligt op de <strong>‘mensgerichte inzet van technologie’</strong>. We bekijken hoe werknemers het ervaren en welke factoren de implementatie beïnvloeden.</p>
+                    <p>Dit tussenrapport beschrijft de eerste resultaten, gebaseerd op een systematisch literatuuronderzoek en kwantitatieve analyses van de Werkgevers Enquête Arbeid 2022 (WEA).</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="inventory">
+            <div class="container">
+                <h2 class="section-title">2. Inventarisatie Technologie</h2>
+                 <p class="text-center" style="text-align:center; max-width: 800px; margin: -20px auto 40px auto;">Uit literatuuronderzoek zijn 155 relevante studies geïdentificeerd, onderverdeeld in de onderstaande categorieën. Klik op een categorie voor een omschrijving.</p>
+                <div class="tech-grid">
+                    <div class="tech-card" onclick="openModal('modal-pa')">
+                        <div class="icon">⚙️</div>
+                        <h4>Persoonlijke assistentie & monitoring</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-arvr')">
+                        <div class="icon">👓</div>
+                        <h4>AR & VR</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-robots')">
+                        <div class="icon">🤖</div>
+                        <h4>Robots & cobots</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-exo')">
+                        <div class="icon">🦾</div>
+                        <h4>Exoskeletten</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-maatwerk')">
+                        <div class="icon">🖨️</div>
+                        <h4>Maatwerkproductie</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-data')">
+                        <div class="icon">📊</div>
+                        <h4>Autonome systemen & data-analyse</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-process')">
+                        <div class="icon">🏭</div>
+                        <h4>Geautomatiseerde productieprocessen</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" style="background-color: var(--bg-light);">
+            <div class="container">
+                <h2 class="section-title">3. Impact van Technologie op Krapte</h2>
+                 <p class="text-center" style="text-align:center; max-width: 800px; margin: -20px auto 40px auto;">Slechts een klein deel van de gevonden studies heeft de samenhang met personeelskrapte (zoals arbeidsreductie of productiviteit) empirisch onderzocht. Klik op een categorie om de gevonden resultaten te zien.</p>
+                <div class="tech-grid">
+                     <div class="tech-card" onclick="openModal('modal-impact-pa')">
+                        <div class="icon">⚙️</div><h4>Persoonlijke assistentie & monitoring</h4>
+                    </div>
+                     <div class="tech-card" onclick="openModal('modal-impact-arvr')">
+                        <div class="icon">👓</div><h4>AR & VR</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-impact-robots')">
+                        <div class="icon">🤖</div><h4>Robots & cobots</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-impact-exo')">
+                        <div class="icon">🦾</div><h4>Exoskeletten</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-impact-maatwerk')">
+                        <div class="icon">🖨️</div><h4>Maatwerkproductie</h4>
+                    </div>
+                    <div class="tech-card" onclick="openModal('modal-impact-data')">
+                        <div class="icon">📊</div><h4>Autonome systemen & data-analyse</h4>
+                    </div>
+                     <div class="tech-card" onclick="openModal('modal-impact-process')">
+                        <div class="icon">🏭</div><h4>Geautomatiseerde productieprocessen</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="usage">
+            <div class="container">
+                <h2 class="section-title">4. Inzet van Technologie in Nederland</h2>
+                <div class="card">
+                    <h3 class="subsection-title">Gebruik van Technologie (WEA 2021)</h3>
+                    <p>In 2021 zette 58% van de werkgevers tenminste één vorm van technologie in. Workflow software (49%) en groupware/sociale media (39%) werden het meest gebruikt. De minste inzet was voor kunstmatige intelligentie (4%) en wearables (4%). De informatie- & communicatiesector en het openbaar bestuur liepen voorop in de adoptie.</p>
+                    <div class="sector-dashboard">
+                         <div class="dashboard-card">
+                            <h4>Inzet van technologieën</h4>
+                            <canvas id="techUsageChart"></canvas>
+                        </div>
+                        <div class="dashboard-card">
+                            <h4>Beweegredenen inzet robotisering</h4>
+                            <canvas id="roboticsReasonsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="potential" style="background-color: var(--bg-light);">
+            <div class="container">
+                <h2 class="section-title">5. Potentie van Technologie per Sector</h2>
+                 <p style="text-align:center; max-width: 800px; margin: -20px auto 40px auto;">Hieronder wordt per sector de potentie van technologie ingeschat op basis van de huidige personeelskrapte, de mate van technologie-adoptie en wetenschappelijk bewijs. Kies een sector om het dashboard te bekijken.</p>
+                <div class="sector-tabs">
+                    <button class="tab-button active" onclick="openSector(event, 'Gezondheidszorg')">Gezondheids- & welzijnszorg</button>
+                    <button class="tab-button" onclick="openSector(event, 'Groothandel')">Groot- & detailhandel</button>
+                    <button class="tab-button" onclick="openSector(event, 'Industrie')">Industrie</button>
+                    <button class="tab-button" onclick="openSector(event, 'Bouw')">Bouw</button>
+                    <button class="tab-button" onclick="openSector(event, 'Horeca')">Horeca</button>
+                    <button class="tab-button" onclick="openSector(event, 'Landbouw')">Landbouw</button>
+                </div>
+
+                <div id="Gezondheidszorg" class="sector-content active">
+                    <div class="card">
+                        <h3 class="subsection-title">Gezondheids- & welzijnszorg</h3>
+                        <div class="sector-dashboard">
+                            <div class="dashboard-card"><h4>Personeelskrapte</h4><p style="font-size: 2rem; font-weight: 700; margin:0;">65.400</p><p>openstaande vacatures (Q2 2023)</p><p><strong>Trend: Stijgend</strong></p></div>
+                            <div class="dashboard-card"><h4>Huidige inzet technologie</h4><canvas id="gaugeZorg"></canvas></div>
+                            <div class="dashboard-card"><h4>Wetenschappelijk Bewijs</h4><p>Zorgrobots, patiëntscreening en monitoring leveren aanzienlijke tijdsbesparing op.</p></div>
+                            <div class="dashboard-card"><h4>Geschatte Impact</h4><p class="impact-rating" style="color: var(--accent-green);">+++</p><p>(Zeer Hoog)</p></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="Groothandel" class="sector-content">
+                     <div class="card">
+                        <h3 class="subsection-title">Groot- & detailhandel</h3>
+                        <div class="sector-dashboard">
+                             <div class="dashboard-card"><h4>Personeelskrapte</h4><p style="font-size: 2rem; font-weight: 700; margin:0;">87.300</p><p>openstaande vacatures (Q2 2023)</p><p><strong>Trend: Stabiel (hoog)</strong></p></div>
+                             <div class="dashboard-card"><h4>Huidige inzet technologie</h4><canvas id="gaugeGroot"></canvas></div>
+                             <div class="dashboard-card"><h4>Wetenschappelijk Bewijs</h4><p>Arbeidsbesparende technologie zoals maatwerkproductie draagt bij aan aanzienlijke tijdsbesparing.</p></div>
+                             <div class="dashboard-card"><h4>Geschatte Impact</h4><p class="impact-rating" style="color: var(--accent-green);">+++</p><p>(Zeer Hoog)</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="Industrie" class="sector-content">
+                     <div class="card">
+                        <h3 class="subsection-title">Industrie</h3>
+                        <div class="sector-dashboard">
+                            <div class="dashboard-card"><h4>Personeelskrapte</h4><p style="font-size: 2rem; font-weight: 700; margin:0;">39.100</p><p>openstaande vacatures (Q2 2023)</p><p><strong>Trend: Stabiel</strong></p></div>
+                             <div class="dashboard-card"><h4>Huidige inzet technologie</h4><canvas id="gaugeIndustrie"></canvas></div>
+                             <div class="dashboard-card"><h4>Wetenschappelijk Bewijs</h4><p>Voldoende empirisch bewijs voor zowel arbeidsbesparende (automatisering) als ondersteunende (cobots) technologie.</p></div>
+                             <div class="dashboard-card"><h4>Geschatte Impact</h4><p class="impact-rating" style="color: var(--accent-orange);">++</p><p>(Hoog)</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="Bouw" class="sector-content">
+                     <div class="card">
+                        <h3 class="subsection-title">Bouw</h3>
+                        <div class="sector-dashboard">
+                            <div class="dashboard-card"><h4>Personeelskrapte</h4><p style="font-size: 2rem; font-weight: 700; margin:0;">25.200</p><p>openstaande vacatures (Q2 2023)</p><p><strong>Trend: Stabiel</strong></p></div>
+                             <div class="dashboard-card"><h4>Huidige inzet technologie</h4><canvas id="gaugeBouw"></canvas></div>
+                             <div class="dashboard-card"><h4>Wetenschappelijk Bewijs</h4><p>Robots (inspectiedrones) en cobots zijn aantoonbaar effectief. Exoskeletten vergroten duurzame inzetbaarheid.</p></div>
+                             <div class="dashboard-card"><h4>Geschatte Impact</h4><p class="impact-rating" style="color: var(--accent-orange);">++</p><p>(Hoog)</p></div>
+                        </div>
+                    </div>
+                </div>
+                
+                 <div id="Horeca" class="sector-content">
+                     <div class="card">
+                        <h3 class="subsection-title">Horeca</h3>
+                        <div class="sector-dashboard">
+                            <div class="dashboard-card"><h4>Personeelskrapte</h4><p style="font-size: 2rem; font-weight: 700; margin:0;">33.000</p><p>openstaande vacatures (Q2 2023)</p><p><strong>Trend: Stabiel (hoog)</strong></p></div>
+                             <div class="dashboard-card"><h4>Huidige inzet technologie</h4><canvas id="gaugeHoreca"></canvas></div>
+                             <div class="dashboard-card"><h4>Wetenschappelijk Bewijs</h4><p>Zeer beperkt. Opkomst van serveerrobots, maar nog geen solide wetenschappelijk bewijs voor de effecten.</p></div>
+                             <div class="dashboard-card"><h4>Geschatte Impact</h4><p class="impact-rating" style="color: #bdbdbd;">?</p><p>(Onzeker)</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div id="Landbouw" class="sector-content">
+                     <div class="card">
+                        <h3 class="subsection-title">Landbouw, bosbouw & visserij</h3>
+                        <div class="sector-dashboard">
+                            <div class="dashboard-card"><h4>Personeelskrapte</h4><p style="font-size: 2rem; font-weight: 700; margin:0;">3.200</p><p>openstaande vacatures (Q2 2023)</p><p><strong>Trend: Stabiel (laag)</strong></p></div>
+                             <div class="dashboard-card"><h4>Huidige inzet technologie</h4><canvas id="gaugeLandbouw"></canvas></div>
+                             <div class="dashboard-card"><h4>Wetenschappelijk Bewijs</h4><p>Overtuigend bewijs voor effecten van snoe-robots, drones en oogstmachines.</p></div>
+                             <div class="dashboard-card"><h4>Geschatte Impact</h4><p class="impact-rating" style="color: var(--accent-orange);">++</p><p>(Hoog)</p></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="conclusion">
+            <div class="container">
+                <h2 class="section-title">6. Conclusie en Volgende Stappen</h2>
+                <div class="card">
+                    <h3 class="subsection-title">Voorlopige conclusie</h3>
+                    <p>Technologie is het meest veelbelovend in de <strong>groot- en detailhandel</strong> en de <strong>gezondheids- en welzijnszorg</strong>. De potentie in sectoren als het openbaar bestuur en ICT lijkt beperkter door het reeds uitgebreide gebruik. Voor veel andere sectoren ontbreekt een substantiële basis aan bewijs.</p>
+                    <h3 class="subsection-title">Onzekerheden en volgende stappen</h3>
+                    <p>De impact van snel ontwikkelende technologieën zoals <strong>AI (chatGPT)</strong> is nog onzeker. Daarnaast is er meer empirisch onderzoek nodig naar arbeidsondersteunende technologie (zoals slimme brillen) en de perceptie en acceptatie door gebruikers. Het project gaat verder met empirische studies om deze factoren verder in kaart te brengen en te bepalen hoe technologie succesvol kan worden ingezet.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Deze interactieve infographic is een samenvatting en visualisatie van het TNO-rapport "Van krapte naar kans: technologie als gamechanger".</p>
+        <p>Gemaakt door een AI-assistent. Voor de volledige details, zie het <a href="https://www.tno.nl/nl/aandachtsgebieden/gezondheid/healthy-living/nieuws/2023/10/van-krapte-naar-kans/" target="_blank">originele rapport</a>.</p>
+    </footer>
+
+    <!-- Modals for Technology Inventory -->
+    <div id="modal-pa" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">&times;</span><h3>Persoonlijke assistentie & monitoring</h3><p>Technologische oplossingen die gebruikers ondersteunen. Dit varieert van tekstuele assistentie (voorlezen/vertalen) tot tracking-technologieën die feedback geven op fysiologische gegevens (slaap, stress). Een concreet voorbeeld is een systeem dat continu glucosewaarden van diabetespatiënten monitort, wat zorgpersoneel tijd bespaart.</p></div></div>
+    <div id="modal-arvr" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">&times;</span><h3>Augmented Reality (AR) & Virtual Reality (VR)</h3><p>AR voegt digitale informatie toe aan de fysieke omgeving (bv. via smart glasses in een magazijn). VR dompelt een gebruiker onder in een volledig digitale omgeving (bv. voor trainingen). Deze technologieën kunnen worden ingezet om werknemers te instrueren, of om vaardigheden te ontwikkelen in een gesimuleerde omgeving.</p></div></div>
+    <div id="modal-robots" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">&times;</span><h3>Robots & cobots</h3><p>Deze categorie omvat een breed scala aan robotica. Voorbeelden zijn snoeimachines in de landbouw, robots in de zorg die medicijnen verplaatsen of patiënten helpen, en sociale robots die gezelschap bieden. Drones voor inspectie of landbouw vallen hier ook onder.</p></div></div>
+    <div id="modal-exo" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">&times;</span><h3>Exoskeletten</h3><p>Draagbare apparaten die het menselijk lichaam ondersteunen, versterken of beschermen. Ze worden ingezet om zwaar werk te verlichten (bv. voor stukadoors) of om lichamelijke klachten door overbelasting te voorkomen. Ze kunnen vermoeidheid verminderen en spierspanning verlagen.</p></div></div>
+    <div id="modal-maatwerk" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">&times;</span><h3>Maatwerkproductie</h3><p>Voornamelijk 3D-printers. Deze worden ingezet om complexe structuren te printen, bijvoorbeeld in de bouw (gebouwen, bruggen) om arbeidskosten te besparen, of in de kledingindustrie om sneller en flexibeler kledingstukken te ontwerpen en produceren. Dit draagt bij aan op maat gemaakte en gepersonaliseerde producten.</p></div></div>
+    <div id="modal-data" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">&times;</span><h3>Autonome systemen & data-analyse</h3><p>Systemen en software die bedrijfsprocessen optimaliseren. Voorbeelden zijn RFID-tags in de textielindustrie voor voorraadbeheer, en het gebruik van big data en realtime analytics om grote hoeveelheden data te analyseren. Dit kan ook leiden tot autonome systemen die zonder menselijke tussenkomst beslissingen nemen, zoals in de olie-industrie.</p></div></div>
+    <div id="modal-process" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">&times;</span><h3>Geautomatiseerde productieprocessen</h3><p>Dit betreft de implementatie van machines om arbeidskosten te verminderen. Voorbeelden zijn geavanceerde breitechnieken in de kledingindustrie die kledingstukken van begin tot eind produceren zonder handmatige tussenkomst, en machines voor grootschalige oogst van fruit en groenten in de landbouwsector.</p></div></div>
+
+    <!-- Modals for Impact -->
+    <div id="modal-impact-pa" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h3>Impact: Persoonlijke assistentie & monitoring</h3>
+            <table>
+              <thead><tr><th>Bron</th><th>Resultaat</th><th>Type</th><th>Sector</th></tr></thead>
+              <tbody>
+                <tr><td>Miller et al. (2007)</td><td>Continuous Glucose Monitoring bespaart verpleegkundigen 2 uur zorgtijd per patiënt per dag.</td><td>AB</td><td>Gezondheid- en welzijn</td></tr>
+                <tr><td>Sarig et al. (2012)</td><td>Machines verhogen de productiviteit van het oogstproces tot wel 100 keer.</td><td>AO</td><td>Landbouw</td></tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="modal-impact-arvr" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">&times;</span><h3>Impact: AR & VR</h3><p>Voor deze categorie zijn er geen studies gevonden waarbij de relatie tussen de technologie en een maat van personeelskrapte empirisch is onderzocht.</p></div></div>
+    <div id="modal-impact-robots" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h3>Impact: Robots & cobots</h3>
+            <table>
+              <thead><tr><th>Bron</th><th>Resultaat</th><th>Type</th><th>Sector</th></tr></thead>
+              <tbody>
+                <tr><td>Wang et al. (2022)</td><td>Inzet van drones bij gewasbesproeiing leidt tot 20% hogere efficiëntie.</td><td>AB</td><td>Landbouw</td></tr>
+                <tr><td>Leng et al. (2023)</td><td>Robot die taken overneemt bij houtconstructies verhoogt snelheid productieproces met ca. 10%.</td><td>AB</td><td>Bouw/Industrie</td></tr>
+                <tr><td>Chaploutsky et al. (2002)</td><td>Mechanisch snoeien reduceert benodigde tijd van 160 uur/ha naar 2-3 uur, een kostenbesparing van 75%.</td><td>AB</td><td>Landbouw</td></tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+     <div id="modal-impact-exo" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h3>Impact: Exoskeletten</h3>
+            <table>
+              <thead><tr><th>Bron</th><th>Resultaat</th><th>Type</th><th>Sector</th></tr></thead>
+              <tbody>
+                <tr><td>Sano et al. (2013)</td><td>Een Wearable Assist Suit kan tot 46% van de benodigde spiercapaciteit besparen.</td><td>AO</td><td>Bouw</td></tr>
+                <tr><td>De Vries et al. (2022)</td><td>93% van de stukadoors geeft aan dat een exoskelet hen lichamelijk ondersteunt; 45% is minder vermoeid.</td><td>AO</td><td>Bouw</td></tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+     <div id="modal-impact-maatwerk" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h3>Impact: Maatwerkproductie</h3>
+            <table>
+              <thead><tr><th>Bron</th><th>Resultaat</th><th>Type</th><th>Sector</th></tr></thead>
+              <tbody>
+                <tr><td>Tait et al. (2007)</td><td>Automatiseren van patroon-ontwerp in kledingindustrie bespaart 98% van de tijd die normaal nodig is.</td><td>AB</td><td>Groot- en detailhandel / Industrie</td></tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+     <div id="modal-impact-data" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h3>Impact: Autonome systemen & data-analyse</h3>
+            <table>
+              <thead><tr><th>Bron</th><th>Resultaat</th><th>Type</th><th>Sector</th></tr></thead>
+              <tbody>
+                <tr><td>Ni et al. (2019)</td><td>Geautomatiseerd patiënt-screening systeem verminderde de screeningstijd per patiënt met 34%.</td><td>AB</td><td>Gezondheid- en welzijn</td></tr>
+                <tr><td>Yao-Hsu et al. (2014)</td><td>Nieuw fraude-detectiesysteem spoort 79% van de gevallen op, tegenover 6% bij het oude systeem.</td><td>AB</td><td>Financiële instellingen</td></tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="modal-impact-process" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAllModals()">&times;</span>
+            <h3>Impact: Geautomatiseerde productieprocessen</h3>
+            <table>
+              <thead><tr><th>Bron</th><th>Resultaat</th><th>Type</th><th>Sector</th></tr></thead>
+              <tbody>
+                <tr><td>Lopes et al. (2015)</td><td>Single Use Technology vermindert benodigd personeel voor reiniging met een drievoud; arbeidstijd met 5% verminderd.</td><td>AB</td><td>Industrie</td></tr>
+                <tr><td>Faugno et al. (2017)</td><td>Machine voor mechanisch uitdunnen van bosgebieden leidt tot 36% vermindering in benodigde werktijd.</td><td>AB</td><td>Landbouw</td></tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Modal Logic
+        function openModal(modalId) {
+            closeAllModals(); // Close any open modals first
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeAllModals() {
+            let modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                modals[i].style.display = "none";
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                closeAllModals();
+            }
+        }
+
+        // Sector Tabs Logic
+        function openSector(evt, sectorName) {
+            let i, sectorcontent, tabbuttons;
+            sectorcontent = document.getElementsByClassName("sector-content");
+            for (i = 0; i < sectorcontent.length; i++) {
+                sectorcontent[i].style.display = "none";
+            }
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+            }
+            document.getElementById(sectorName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Chart.js Configuration
+        Chart.register(ChartDataLabels);
+        Chart.defaults.plugins.datalabels.display = false;
+        Chart.defaults.font.family = "'Poppins', sans-serif";
+
+        // Chart 1: Tech Usage
+        new Chart(document.getElementById('techUsageChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Workflow sw', 'Groupware', 'Big data', 'Robotisering', 'AI', 'Wearables'],
+                datasets: [{
+                    label: '% van werkgevers',
+                    data: [49, 39, 14, 11, 4, 4],
+                    backgroundColor: ['#5F4B8B', '#7E57C2', '#9575CD', '#B39DDB', '#D1C4E9', '#EDE7F6'],
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: 'Gebruik van technologieën in NL (%)' }
+                },
+                scales: { x: { max: 55 } }
+            }
+        });
+        
+        // Chart 2: Robotics Reasons
+        new Chart(document.getElementById('roboticsReasonsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Werk minder zwaar', 'Kwaliteitsverb.', 'Hogere productie', 'Kostenbesp.', 'Minder mentale belasting'],
+                datasets: [{
+                    label: '% van respondenten',
+                    data: [52, 46, 45, 26, 6],
+                    backgroundColor: ['#26a69a', '#4db6ac', '#80cbc4', '#b2dfdb', '#e0f2f1'],
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: 'Redenen voor inzet robotisering (%)' }
+                }
+            }
+        });
+
+        // Gauge Chart function
+        function createGaugeChart(canvasId, value, label, color) {
+            new Chart(document.getElementById(canvasId), {
+                type: 'doughnut',
+                data: {
+                    labels: [label, ''],
+                    datasets: [{
+                        data: [value, 100 - value],
+                        backgroundColor: [color, '#e0e0e0'],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false },
+                        datalabels: {
+                            formatter: (value, context) => {
+                                if (context.dataIndex === 0) {
+                                    return value + '%';
+                                }
+                                return '';
+                            },
+                            color: '#333',
+                            font: { size: 20, weight: 'bold' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Create Gauge Charts for sectors
+        createGaugeChart('gaugeZorg', 55.2, '% zet tech in', '#26a69a');
+        createGaugeChart('gaugeGroot', 52.6, '% zet tech in', '#26a69a');
+        createGaugeChart('gaugeIndustrie', 67.5, '% zet tech in', '#ffa726');
+        createGaugeChart('gaugeBouw', 55.9, '% zet tech in', '#ffa726');
+        createGaugeChart('gaugeHoreca', 34.2, '% zet tech in', '#ef5350');
+        createGaugeChart('gaugeLandbouw', 56.1, '% zet tech in', '#ffa726');
+
+    </script>
+
+</body>
+</html>
+```
