@@ -54,7 +54,7 @@
         .lessons-learned-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
         .lesson-node { background: var(--bg-light-gray); padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease; }
         .lesson-node:hover, .lesson-node.active { border-color: var(--tno-blue); background-color: #e9ecef; transform: translateY(-5px); }
-        .lesson-node .icon { font-size: 2.5rem; margin-bottom: 10px; color: var(--tno-blue); }
+        .lesson-node .icon svg { width: 48px; height: 48px; margin-bottom: 10px; color: var(--tno-blue); }
         .lesson-node h4 { margin: 0; font-size: 1.2rem; }
         #lesson-details { margin-top: 30px; padding: 20px; background-color: #fff; border-radius: 8px; border: 1px solid var(--border-color); min-height: 100px; }
 
@@ -168,15 +168,21 @@
                 <p class="text-center" style="max-width: 800px; margin: -20px auto 40px auto;">Analyse van vijf case studies (o.a. Erasmus MC, Haga Ziekenhuis, Politie) leidt tot drie kernlessen voor een succesvolle implementatie. Klik op een les voor details.</p>
                 <div class="lessons-learned-grid">
                     <div class="lesson-node" id="les1" onclick="showLesson(1)">
-                        <div class="icon">🔬</div>
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.25,4.5a.75.75,0,0,0-1.5,0v2.625c0,.414.336.75.75.75s.75-.336.75-.75V4.5Zm0,5.625a.75.75,0,0,0-1.5,0v.375a.75.75,0,0,0,1.5,0v-.375Zm0,4.5a.75.75,0,0,0-1.5,0V15a.75.75,0,0,0,1.5,0v-.375ZM12,2.25c5.385,0,9.75,4.365,9.75,9.75s-4.365,9.75-9.75,9.75S2.25,17.385,2.25,12,6.615,2.25,12,2.25ZM12,3.75a8.25,8.25,0,1,0,0,16.5,8.25,8.25,0,0,0,0-16.5Zm-5.25,8.25a.75.75,0,0,0,0,1.5h1.875a.75.75,0,0,0,0-1.5H6.75Zm4.5-3.375a.75.75,0,0,0-1.5,0V12a.75.75,0,0,0,1.5,0V8.625Zm-3,1.125a.75.75,0,0,0-1.5,0v.375a.75.75,0,0,0,1.5,0V9.75Z" /></svg>
+                        </div>
                         <h4>Investeer in een goede voorbereiding</h4>
                     </div>
                     <div class="lesson-node" id="les2" onclick="showLesson(2)">
-                        <div class="icon">👥</div>
+                        <div class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.75,12.75a.75.75,0,0,0-1.5,0v2.25a.75.75,0,0,0,1.5,0V12.75Zm0-4.5a.75.75,0,0,0-1.5,0v2.25a.75.75,0,0,0,1.5,0V8.25ZM12,3.75a8.25,8.25,0,1,0,0,16.5A8.25,8.25,0,0,0,12,3.75Zm-5.25,8.25a.75.75,0,0,0,0,1.5h1.875a.75.75,0,0,0,0-1.5H6.75Zm11.25,0a.75.75,0,0,0,0,1.5h1.875a.75.75,0,0,0,0-1.5H18Z" /></svg>
+                        </div>
                         <h4>Betrek medewerkers vanaf de start</h4>
                     </div>
                     <div class="lesson-node" id="les3" onclick="showLesson(3)">
-                        <div class="icon">🔧</div>
+                        <div class="icon">
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,8.25a.75.75,0,0,0-1.5,0V12a.75.75,0,0,0,1.5,0V8.25Zm0,6a.75.75,0,0,0-1.5,0v.375a.75.75,0,0,0,1.5,0V14.25ZM12,3.75a8.25,8.25,0,1,0,0,16.5A8.25,8.25,0,0,0,12,3.75Zm-5.25,8.25a.75.75,0,0,0,0,1.5h1.875a.75.75,0,0,0,0-1.5H6.75Zm6-1.125a.75.75,0,0,0-1.5,0v2.25a.75.75,0,0,0,1.5,0v-2.25Z" /></svg>
+                        </div>
                         <h4>Zorg voor onderhoud en bijsturing</h4>
                     </div>
                 </div>
@@ -312,8 +318,8 @@
                 datasets: [
                     {
                         label: 'Hoogwaardig Werkontwerp',
-                        data: [4.0, 3.8], // Fictieve data om trend te tonen
-                        borderColor: 'green',
+                        data: [4.0, 3.8], // Fictieve data om trend te tonen (gebaseerd op Figuur 1, p. 10)
+                        borderColor: 'var(--success-green)',
                         backgroundColor: 'rgba(40, 167, 69, 0.1)',
                         fill: false,
                         tension: 0.1
@@ -321,67 +327,34 @@
                     {
                         label: 'Laagwaardig Werkontwerp',
                         data: [3.5, 2.5], // Fictieve data om trend te tonen
-                        borderColor: 'red',
+                        borderColor: '#dc3545',
                         backgroundColor: 'rgba(220, 53, 69, 0.1)',
                         fill: false,
                         tension: 0.1
                     }
                 ]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Effect van Werkontwerp op Initiatief' } },
-                scales: { y: { beginAtZero: false, title: { display: true, text: 'Innovatie-, leer- & loopbaaninitiatief' } } }
-            }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Effect van Werkontwerp op Initiatief' } }, scales: { y: { beginAtZero: false, title: { display: true, text: 'Innovatie-, leer- & loopbaaninitiatief' } } } }
         });
 
-        // Promoting Factors Chart
+        // Werkgevers Charts (Data from Table 4, p. 20)
         new Chart(document.getElementById('promotingFactorsChart'), {
             type: 'bar',
             data: {
-                labels: ['Werking tech (86%)', 'Aansluiting op proces (83%)', 'Steun leiding (81%)', 'Gebruiksgemak (81%)', 'Maatwerk (81%)'],
-                datasets: [{
-                    label: 'Positieve Invloed (%)',
-                    data: [86, 83, 81, 81, 81],
-                    backgroundColor: '#28a745',
-                    borderRadius: 5,
-                }]
+                labels: ['Werking tech', 'Aansluiting op proces', 'Steun leiding', 'Gebruiksgemak', 'Maatwerk'],
+                datasets: [{ label: 'Positieve Invloed (%)', data: [86, 83, 81, 81, 81], backgroundColor: 'var(--success-green)', borderRadius: 5, }]
             },
-            options: {
-                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                plugins: { legend: { display: false }, title: { display: true, text: 'Top 5 Bevorderende Factoren' }, datalabels: { anchor: 'end', align: 'start' } },
-                scales: { x: { beginAtZero: true, max: 100 } }
-            }
+            options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, title: { display: true, text: 'Top 5 Bevorderende Factoren' }, datalabels: { anchor: 'end', align: 'start', formatter: (v) => v + '%' } }, scales: { x: { beginAtZero: true, max: 100 } } }
         });
 
-        // Hindering Factors Chart
         new Chart(document.getElementById('hinderingFactorsChart'), {
             type: 'bar',
             data: {
-                labels: ['Weerstand medewerkers (39%)', 'Angst voor baanverlies (38%)', 'Tijdsinvestering (20%)', 'Werkdruk (19%)', 'Beperkingen tech (19%)'],
-                datasets: [{
-                    label: 'Negatieve Invloed (%)',
-                    data: [39, 38, 20, 19, 19],
-                    backgroundColor: '#dc3545',
-                    borderRadius: 5,
-                }]
+                labels: ['Weerstand medewerkers', 'Angst voor baanverlies', 'Tijdsinvestering', 'Werkdruk', 'Beperkingen tech'],
+                datasets: [{ label: 'Negatieve Invloed (%)', data: [39, 38, 20, 19, 19], backgroundColor: '#dc3545', borderRadius: 5, }]
             },
-            options: {
-                responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-                plugins: { legend: { display: false }, title: { display: true, text: 'Top 5 Belemmerende Factoren' }, datalabels: { anchor: 'end', align: 'start' } },
-                scales: { x: { beginAtZero: true, max: 50 } }
-            }
+            options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false }, title: { display: true, text: 'Top 5 Belemmerende Factoren' }, datalabels: { anchor: 'end', align: 'start', formatter: (v) => v + '%' } }, scales: { x: { beginAtZero: true, max: 50 } } }
         });
-        
-        // Gauge Charts
-        function createGaugeChart(canvasId, value, label) { new Chart(document.getElementById(canvasId),{type:'doughnut',data:{labels:[label,''],datasets:[{data:[value,100-value],backgroundColor:[value > 60 ? '#28a745' : value > 40 ? '#ffc107' : '#dc3545', '#e9ecef'],borderWidth:0,circumference:180,rotation:270}]},options:{responsive:!0,maintainAspectRatio:!0,cutout:'70%',plugins:{legend:{display:!1},tooltip:{enabled:!1},datalabels:{formatter:(v,c)=>c.dataIndex===0?v+'%':'',color:var(--text-dark),font:{size:18,weight:'bold'}}}}});}
-        createGaugeChart('gaugeZorg',41, '% inzet AB/AO');
-        createGaugeChart('gaugeGroot',52, '% inzet AB/AO');
-        createGaugeChart('gaugeIndustrie',76, '% inzet AB/AO');
-        createGaugeChart('gaugeBouw', 56, '% inzet AB/AO'); // Hypothetical value, not in table
-        createGaugeChart('gaugeHoreca', 56, '% inzet AB/AO'); // Hypothetical value, not in table
-        createGaugeChart('gaugeLandbouw', 56, '% inzet AB/AO'); // Hypothetical value, not in table
     </script>
 </body>
 </html>
