@@ -153,12 +153,18 @@
         .finding-card .viz {
             width: 100%;
             height: 180px;
-            background-color: #f0f0f0;
             border-radius: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .finding-card .viz img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
         .finding-card .tooltip {
@@ -175,6 +181,7 @@
             font-size: 0.9rem;
             transition: visibility 0.2s, opacity 0.2s;
             pointer-events: none;
+            z-index: 10;
         }
         
         .finding-card:hover .tooltip {
@@ -288,22 +295,22 @@
             <div class="findings-grid">
                 <div class="finding-card">
                     <h4>Systematische Behoeften</h4>
-                    <div class="viz"><img src="https://i.imgur.com/r6C5fJv.png" alt="Grafiek van worker-centered needs" style="height:100%; object-fit: contain;"></div>
+                    <div class="viz"><img src="https://i.imgur.com/r6C5fJv.png" alt="Grafiek van worker-centered needs"></div>
                     <div class="tooltip">Werknemers willen vooral taken automatiseren die repetitief en van lage waarde zijn (bv. afspraken inplannen), terwijl ze creatieve en contact-intensieve taken (bv. verhalen schrijven) zelf willen blijven doen.</div>
                 </div>
                 <div class="finding-card">
                     <h4>Desire-Capability Landscape</h4>
-                    <div class="viz"><img src="https://i.imgur.com/zW3Bv9F.png" alt="Desire-Capability scatter plot" style="height:100%; object-fit: contain;"></div>
+                    <div class="viz"><img src="https://i.imgur.com/zW3Bv9F.png" alt="Desire-Capability scatter plot"></div>
                     <div class="tooltip">Taken worden ingedeeld in vier zones op basis van wens en capaciteit. Dit onthult waar AI direct kan worden ingezet (Green Light) en waar voorzichtigheid geboden is (Red Light).</div>
                 </div>
                 <div class="finding-card">
                     <h4>Human Agency Spectrum</h4>
-                    <div class="viz"><img src="https://i.imgur.com/P7b3YcW.png" alt="Human Agency Scale spectrum grafiek" style="height:100%; object-fit: contain;"></div>
+                    <div class="viz"><img src="https://i.imgur.com/P7b3YcW.png" alt="Human Agency Scale spectrum grafiek"></div>
                     <div class="tooltip">De meeste werknemers verkiezen een partnerschap met AI (niveau H3) boven volledige automatisering, wat wijst op een sterke wens om controle en autonomie te behouden.</div>
                 </div>
                 <div class="finding-card">
                     <h4>Verschuiving in Kernvaardigheden</h4>
-                    <div class="viz"><img src="https://i.imgur.com/7xQ7cQD.png" alt="Grafiek van de verschuiving in kernvaardigheden" style="height:100%; object-fit: contain;"></div>
+                    <div class="viz"><img src="https://i.imgur.com/7xQ7cQD.png" alt="Grafiek van de verschuiving in kernvaardigheden"></div>
                     <div class="tooltip">De waarde van vaardigheden verschuift. Puur analytische skills worden minder dominant, terwijl interpersoonlijke en organisatorische vaardigheden cruciaal worden.</div>
                 </div>
             </div>
@@ -326,18 +333,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlayClose = document.getElementById('overlay-close');
 
     document.querySelectorAll('.flow-item').forEach(item => {
-        if (!item.parentElement.classList.contains('considerations') && !item.parentElement.classList.contains('questions') && !item.parentElement.classList.contains('participants')) {
-             item.addEventListener('click', () => {
-                overlayTitle.textContent = item.dataset.title;
-                overlayText.textContent = item.dataset.text;
-                overlay.style.display = 'flex';
-            });
-        }
-    });
-    
-    // Add event listeners to nested items too
-    document.querySelectorAll('.considerations > .flow-item, .questions > .flow-item, .participants > .flow-item').forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+            // Prevent parent from firing if a nested item is clicked
+            e.stopPropagation(); 
             overlayTitle.textContent = item.dataset.title;
             overlayText.textContent = item.dataset.text;
             overlay.style.display = 'flex';
@@ -359,21 +357,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.getElementById('flowchart-grid');
 
     function drawConnectors() {
+        if (window.innerWidth <= 992) {
+            svg.innerHTML = '';
+            return;
+        }
         svg.innerHTML = ''; // Clear existing paths
         const gridRect = grid.getBoundingClientRect();
 
         const connections = [
             { from: '.considerations', to: '.automation-path', color: 'var(--accent-blue)', dashed: false },
             { from: '.considerations', to: '.augmentation-path', color: 'var(--accent-green)', dashed: false },
-            { from: '.automation-path', to: '.question-auto', color: 'var(--accent-blue)', dashed: true },
-            { from: '.augmentation-path', to: '.question-aug', color: 'var(--accent-green)', dashed: true },
-            { from: '.question-auto', to: '.participants', color: 'var(--accent-blue)', dashed: true },
-            { from: '.question-aug', to: '.participants', color: 'var(--accent-green)', dashed: true }
+            { from: '.automation-path', to: '.questions', color: 'var(--accent-blue)', dashed: true, endTarget: '.question-auto' },
+            { from: '.augmentation-path', to: '.questions', color: 'var(--accent-green)', dashed: true, endTarget: '.question-aug' },
+            { from: '.questions', to: '.participants', color: 'var(--accent-blue)', dashed: true, startTarget: '.question-auto' },
+            { from: '.questions', to: '.participants', color: 'var(--accent-green)', dashed: true, startTarget: '.question-aug' }
         ];
 
         connections.forEach(conn => {
-            const fromEl = document.querySelector(conn.from);
-            const toEl = document.querySelector(conn.to);
+            const fromParent = document.querySelector(conn.from);
+            const toParent = document.querySelector(conn.to);
+            if (!fromParent || !toParent) return;
+
+            const fromEl = conn.startTarget ? fromParent.querySelector(conn.startTarget) : fromParent;
+            const toEl = conn.endTarget ? toParent.querySelector(conn.endTarget) : toParent;
             if (!fromEl || !toEl) return;
 
             const fromRect = fromEl.getBoundingClientRect();
@@ -392,14 +398,24 @@ document.addEventListener('DOMContentLoaded', () => {
                  path.style.strokeDasharray = '5';
             } else {
                  path.style.animation = 'none';
+                 path.style.strokeDasharray = 'none';
             }
             svg.appendChild(path);
         });
     }
 
-    // Use requestAnimationFrame for robust rendering
+    const debouncedDrawConnectors = () => {
+        let timeout;
+        return () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => requestAnimationFrame(drawConnectors), 50);
+        };
+    };
+    
+    const resizeObserver = new ResizeObserver(debouncedDrawConnectors());
+    resizeObserver.observe(grid);
+
     requestAnimationFrame(drawConnectors);
-    window.addEventListener('resize', () => requestAnimationFrame(drawConnectors));
 });
 </script>
 
