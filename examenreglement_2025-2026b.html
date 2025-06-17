@@ -40,32 +40,11 @@
             text-align: left;
         }
 
-        .header-logo {
-            font-size: 2rem;
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: 20px;
-        }
-
-        .header-logo span {
-            font-weight: 400;
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            margin: 0;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            padding: 40px 0;
-        }
+        .header-logo { font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 20px; }
+        .header-logo span { font-weight: 400; }
+        .header h1 { font-size: 3rem; margin: 0; font-weight: 700; }
+        .header p { font-size: 1.2rem; max-width: 600px; opacity: 0.9; }
+        .main-content { padding: 40px 0; }
 
         .grid-container {
             display: grid;
@@ -86,46 +65,25 @@
             border-left: 5px solid var(--primary-green);
         }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .card h3 { margin: 0 0 10px 0; color: var(--primary-green); font-size: 1.4rem; }
+        .card p { margin: 0; font-size: 0.95rem; flex-grow: 1; }
+        .card-footer { margin-top: 15px; font-size: 0.8rem; font-weight: 600; color: var(--primary-green); opacity: 0.8; }
 
-        .card h3 {
-            margin: 0 0 10px 0;
-            color: var(--primary-green);
-            font-size: 1.4rem;
-        }
-
-        .card p {
-            margin: 0;
-            font-size: 0.95rem;
-            flex-grow: 1;
-        }
-        
-        .card-footer {
-            margin-top: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primary-green);
-            opacity: 0.8;
-        }
-
-        /* Modal Styles */
-        .modal {
+        /* Modal & Overlay Styles */
+        .modal, .glossary-overlay {
             display: none;
             position: fixed;
             z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
+            left: 0; top: 0; width: 100%; height: 100%;
             overflow: auto;
             background-color: rgba(0,0,0,0.6);
             animation: fadeIn 0.3s;
         }
 
-        .modal-content {
+        .glossary-overlay { z-index: 2000; background-color: rgba(0,0,0,0.7); }
+
+        .modal-content, .glossary-content {
             background-color: #fefefe;
             margin: 5% auto;
             padding: 30px;
@@ -136,281 +94,76 @@
             position: relative;
             animation: slideIn 0.4s;
         }
+        
+        .glossary-content {
+            margin: 15% auto;
+            max-width: 500px;
+        }
 
         .close-btn {
             color: #aaa;
             position: absolute;
-            top: 15px;
-            right: 25px;
-            font-size: 32px;
-            font-weight: bold;
+            top: 15px; right: 25px;
+            font-size: 32px; font-weight: bold;
             cursor: pointer;
             transition: color 0.2s;
         }
 
-        .close-btn:hover,
-        .close-btn:focus {
-            color: black;
-        }
-
-        .modal-body {
-            max-height: 60vh;
-            overflow-y: auto;
-            padding-right: 15px; /* for scrollbar */
-        }
+        .close-btn:hover, .close-btn:focus { color: black; }
+        .modal-body { max-height: 60vh; overflow-y: auto; padding-right: 15px; }
+        #modal-text-content h3, .glossary-content h3 { color: var(--primary-green); border-bottom: 2px solid var(--light-green); padding-bottom: 10px; }
+        .glossary-content p { margin-top: 15px; }
         
-        #modal-text-content h3 {
-            color: var(--primary-green);
-            border-bottom: 2px solid var(--light-green);
-            padding-bottom: 10px;
-        }
-
-        .ai-button {
-            background-color: var(--primary-green);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-            margin-top: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .ai-button:hover {
-            background-color: #4a8c2a;
-        }
-        
-        .ai-button .spinner {
-            display: none;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        .ai-summary {
-            background-color: var(--light-green);
-            border-left: 4px solid var(--primary-green);
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
-        
-        .ai-summary ul {
-            padding-left: 20px;
-            margin: 0;
-        }
-
+        /* Interactive word style */
         .ai-word {
             text-decoration: underline dotted var(--primary-green);
-            cursor: help;
-            position: relative;
+            cursor: pointer;
+            font-weight: 600;
         }
         
-        .tooltip {
-            visibility: hidden;
-            width: 220px;
-            background-color: var(--dark-text);
-            color: var(--light-text);
-            text-align: left;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1001;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -110px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        .ai-button {
+            background-color: var(--primary-green); color: white; border: none;
+            padding: 10px 20px; border-radius: 20px; cursor: pointer;
+            font-weight: 600; transition: background-color 0.3s;
+            margin-top: 20px; display: inline-flex; align-items: center; gap: 8px;
         }
-
-        .tooltip::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: var(--dark-text) transparent transparent transparent;
-        }
-        
-        .ai-word:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
+        .ai-button:hover { background-color: #4a8c2a; }
+        .ai-button .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
+        .ai-summary { background-color: var(--light-green); border-left: 4px solid var(--primary-green); padding: 15px; margin-top: 20px; border-radius: 5px; }
+        .ai-summary ul { padding-left: 20px; margin: 0; }
 
         /* AI Chat Assistant */
         .ai-chat-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 350px;
-            max-width: 90vw;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: height 0.3s ease-in-out;
-            z-index: 999;
-            height: 55px; /* Collapsed by default */
+            position: fixed; bottom: 20px; right: 20px; width: 350px;
+            max-width: 90vw; background-color: white; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column;
+            overflow: hidden; transition: height 0.3s ease-in-out; z-index: 999; height: 55px; /* Collapsed by default */
         }
-        
-        .ai-chat-header {
-            background-color: var(--primary-green);
-            color: white;
-            padding: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
+        .ai-chat-header { background-color: var(--primary-green); color: white; padding: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .ai-chat-content { flex-grow: 1; display: flex; flex-direction: column; min-height: 0; }
+        .ai-chat-body { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .ai-chat-footer { padding: 10px; border-top: 1px solid var(--border-color); background-color: #f9f9f9; flex-shrink: 0; }
+        .ai-chat-prompts { padding: 0 10px 10px; display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
+        .prompt-btn { background: var(--light-green); color: var(--primary-green); border: 1px solid var(--primary-green); padding: 5px 10px; font-size: 0.8rem; border-radius: 15px; cursor: pointer; transition: all 0.2s; }
+        .prompt-btn:hover { background: var(--primary-green); color: white; }
+        .chat-message { padding: 10px 15px; border-radius: 18px; max-width: 85%; line-height: 1.4; word-wrap: break-word; }
+        .user-message { background-color: var(--primary-green); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .bot-message { background-color: #e9ecef; color: var(--dark-text); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .bot-message .source-ref { display: block; margin-top: 8px; font-size: 0.8rem; font-style: italic; color: #6c757d; border-top: 1px solid #ddd; padding-top: 5px; }
+        .chat-input-area { display: flex; gap: 10px; }
+        #chat-input { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 15px; font-size: 0.9rem; }
+        #send-btn { background: var(--primary-green); border: none; color: white; font-weight: bold; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: background-color 0.2s; }
+        #send-btn:hover { background-color: #4a8c2a; }
 
-        .ai-chat-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        .ai-chat-body {
-            flex-grow: 1;
-            padding: 15px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .ai-chat-footer {
-            padding: 10px;
-            border-top: 1px solid var(--border-color);
-            background-color: #f9f9f9;
-            flex-shrink: 0;
-        }
-
-        .ai-chat-prompts {
-            padding: 0 10px 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-        
-        .prompt-btn {
-            background: var(--light-green);
-            color: var(--primary-green);
-            border: 1px solid var(--primary-green);
-            padding: 5px 10px;
-            font-size: 0.8rem;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .prompt-btn:hover {
-            background: var(--primary-green);
-            color: white;
-        }
-        
-        .chat-message {
-            padding: 10px 15px;
-            border-radius: 18px;
-            max-width: 85%;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
-        
-        .user-message {
-            background-color: var(--primary-green);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-        
-        .bot-message {
-            background-color: #e9ecef;
-            color: var(--dark-text);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-        
-        .bot-message .source-ref {
-            display: block;
-            margin-top: 8px;
-            font-size: 0.8rem;
-            font-style: italic;
-            color: #6c757d;
-            border-top: 1px solid #ddd;
-            padding-top: 5px;
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 10px;
-        }
-
-        #chat-input {
-            flex-grow: 1;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-        }
-        
-        #send-btn {
-            background: var(--primary-green);
-            border: none;
-            color: white;
-            font-weight: bold;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: background-color 0.2s;
-        }
-        #send-btn:hover {
-            background-color: #4a8c2a;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         @media (max-width: 768px) {
-            .header {
-                padding: 60px 20px;
-                clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
-            }
-            .header h1 {
-                font-size: 2.2rem;
-            }
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
+            .header { padding: 60px 20px; clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%); }
+            .header h1 { font-size: 2.2rem; }
+            .modal-content { width: 95%; margin: 10% auto; }
+            .glossary-content { width: 95%; margin: 20% auto; }
         }
     </style>
 </head>
@@ -424,16 +177,14 @@
 
     <div class="container">
         <div class="main-content">
-            <div id="grid-container" class="grid-container">
-                <!-- Cards will be injected here by JavaScript -->
-            </div>
+            <div id="grid-container" class="grid-container"></div>
         </div>
     </div>
     
     <div id="infoModal" class="modal">
       <div class="modal-content">
-        <span class="close-btn">×</span>
-        <div id="modal-body" class="modal-body">
+        <span class="close-btn" id="main-modal-close">×</span>
+        <div class="modal-body">
              <div id="modal-text-content"></div>
         </div>
         <button id="ai-summarize-btn" class="ai-button">
@@ -443,15 +194,21 @@
       </div>
     </div>
     
+    <div class="glossary-overlay" id="glossary-overlay">
+        <div class="glossary-content">
+            <span class="close-btn" id="glossary-close-btn">×</span>
+            <h3 id="glossary-term"></h3>
+            <p id="glossary-definition"></p>
+        </div>
+    </div>
+
     <div class="ai-chat-container" id="ai-chat-container">
         <div class="ai-chat-header" id="ai-chat-header">
             <span>AI Examen Assistent</span>
             <span id="chat-toggle-icon">▲</span>
         </div>
         <div class="ai-chat-content">
-            <div class="ai-chat-prompts">
-                 <!-- Prompt buttons will be injected here -->
-            </div>
+            <div id="chat-prompts-container" class="ai-chat-prompts"></div>
             <div id="ai-chat-body" class="ai-chat-body">
                 <div class="chat-message bot-message">Hallo! Ik ben je AI Examen Assistent. Stel een vraag over het reglement.</div>
             </div>
@@ -467,7 +224,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-    // --- DATA ---
     const glossary = {
         'onregelmatigheid': 'Elke handeling die het correcte verloop van een examen verstoort, zoals fraude, spieken, overlast veroorzaken of instructies niet opvolgen.',
         'fraude': 'Opzettelijk bedrog om een beter examenresultaat te krijgen. Voorbeelden zijn afkijken, valse documenten inleveren of een telefoon gebruiken.',
@@ -483,48 +239,12 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     const documentContent = [
-        {
-            id: 'ch1',
-            title: 'Examenreglement',
-            shortSummary: 'Geeft je alle informatie over examinering bij ROC van Twente en de regels die gelden bij examens.',
-            fullText: `<h3>1. Examenreglement</h3><p>Het examenreglement geeft je alle informatie over examinering bij ROC van Twente. In het examenreglement lees je welke regels er gelden bij examens. Dit reglement geldt voor alle studenten die vanaf 1 augustus 2025 deelnemen aan een BOL-, BBL- of derde leerweg opleiding (cohort 2025). Binnen elk college heeft een examencommissie aanvullende regels. Het reglement zorgt ervoor dat het hele proces van examineren tot diplomeren goed verloopt.</p>`,
-            aiSummary: `<ul><li>Dit document bevat alle examenregels van ROC van Twente.</li><li>Het geldt voor studenten die starten vanaf 1 augustus 2025 (cohort 2025).</li><li>Het doel is een eerlijk en soepel verloop van het examenproces.</li></ul>`
-        },
-        {
-            id: 'ch2',
-            title: 'De Examencommissie',
-            shortSummary: 'Een commissie die toeziet op de kwaliteit van examinering en diplomering.',
-            fullText: `<h3>2. De examencommissie</h3><p>Je college heeft een eigen examencommissie die toeziet op de kwaliteit van examinering en diplomering. Deze is ingesteld door het College van Bestuur. De belangrijkste taken voor jou zijn:</p><ul><li>Toezien op de kwaliteit van examens.</li><li>Vaststellen of je recht hebt op een diploma, certificaat of mbo-verklaring.</li><li>Behandelen van verzoeken om vrijstelling.</li><li>Behandelen van verzoeken voor aangepaste examens.</li><li>Beslissen bij onregelmatigheid en fraude.</li></ul>`,
-            aiSummary: `<ul><li>Elk college heeft een eigen examencommissie.</li><li>Zij bewaken de kwaliteit van alle examens en diploma's.</li><li>Ze beslissen over vrijstellingen, aanpassingen en fraudegevallen.</li><li>Zij stellen vast of je geslaagd bent.</li></ul>`
-        },
-        {
-            id: 'ch3',
-            title: 'Deelname aan examens',
-            shortSummary: 'Regels over toegang, hulpmiddelen, afwezigheid en identificatie bij examens.',
-            fullText: `<h3>3. Deelname aan examens</h3><p>Als je ingeschreven staat, moet je deelnemen aan de examens van je opleiding. In je examenplan staat welke onderdelen er zijn en hoe ze worden geëxamineerd.</p><h4>Toegang en Identificatie</h4><p>Je hebt toegang tot de examens van je opleiding. Bij binnenkomst op de examenlocatie moet je een geldig ID-bewijs tonen (ID-kaart, paspoort, rijbewijs). Bij een onvoldoende heb je recht op één herkansing.</p><h4>Hulpmiddelen</h4><p>Je mag alleen toegestane hulpmiddelen gebruiken. Mobiele telefoons en smartwatches zijn verboden. Gebruik van AI is niet toegestaan, tenzij expliciet vermeld.</p><h4>Afwezigheid</h4><p>Ben je ziek of afwezig om een andere geldige reden? Meld dit dan volgens de procedure in je opleidingsplan. Bij afwezigheid zonder geldige reden wordt dit gezien als een onregelmatigheid.</p><h4>Extraneus</h4><p>Een extraneus is iemand die alleen examens doet, zonder onderwijs te volgen. Hier zijn kosten aan verbonden.</p>`,
-            aiSummary: `<ul><li>Je moet meedoen aan de examens van je opleiding.</li><li>Neem altijd een geldig ID-bewijs mee naar een examen.</li><li>Gebruik van telefoons, smartwatches en ongeautoriseerde AI is verboden.</li><li>Meld je op tijd af als je ziek bent, anders telt het als fraude.</li><li>Bij een onvoldoende heb je recht op één herkansing.</li></ul>`
-        },
-        {
-            id: 'ch7',
-            title: 'Gang van zaken tijdens een examen',
-            shortSummary: 'Regels over onregelmatigheden zoals fraude, plagiaat en de gevolgen daarvan.',
-            fullText: `<h3>7. Gang van zaken tijdens een examen</h3><p>Tijdens instellingsexamens gelden strikte regels. Voor Centrale Examens geldt het protocol van het CvTE.</p><h4>7.1 Onregelmatigheden</h4><p>Een onregelmatigheid is alles wat niet mag. Voorbeelden zijn:</p><ul><li>Fraude, zoals spieken of ongeoorloofde hulpmiddelen gebruiken.</li><li>Instructies van surveillanten niet opvolgen.</li><li>Overlast veroorzaken.</li><li>Plagiaat of identiteitsfraude.</li><li>Afwezig zijn zonder geldige reden.</li></ul><p>Als een onregelmatigheid wordt geconstateerd, wordt er een procesverbaal opgemaakt. De examencommissie kan maatregelen opleggen, zoals het ongeldig verklaren van het examen, het ontzeggen van de herkansing, of uitsluiting van verdere deelname.</p>`,
-            aiSummary: `<ul><li>Tijdens het examen gelden strikte gedragsregels.</li><li>Spieken, afkijken, telefoons gebruiken of overlast veroorzaken is verboden.</li><li>De examencommissie bepaalt de straf bij een overtreding.</li><li>Mogelijke gevolgen: examen ongeldig, geen herkansing, of zelfs uitsluiting.</li></ul>`
-        },
-        {
-            id: 'ch8',
-            title: 'Uitslag en Inzagerecht',
-            shortSummary: 'Informatie over wanneer je de uitslag krijgt en hoe je je gemaakte examen kunt inzien.',
-            fullText: `<h3>8. Uitslag examens</h3><h4>8.1 Bekendmaking</h4><p>De uitslag van een examen wordt binnen 15 werkdagen na afname bekendgemaakt. Examens worden beoordeeld met een cijfer of een waarderingsschaal.</p><h4>8.4 Inzagerecht</h4><p>Je hebt het recht om je beoordeelde examenwerk in te zien. Een verzoek tot inzage moet je binnen 5 dagen na de bekendmaking van de uitslag indienen bij je onderwijsteam. Bij de inzage mag je geen telefoon of smartwatch meenemen en geen aantekeningen maken. Voor centrale examens is er een aparte procedure. De cesuur (zak-/slaaggrens) wordt landelijk vastgesteld en gepubliceerd op Examenbladmbo.nl.</p>`,
-            aiSummary: `<ul><li>Je ontvangt je examenresultaat binnen 15 werkdagen.</li><li>Je hebt het recht om je gemaakte werk in te zien.</li><li>Dien een verzoek voor inzage binnen 5 dagen na de uitslag in.</li><li>Tijdens inzage mag je geen opnameapparatuur gebruiken.</li></ul>`
-        },
-        {
-            id: 'ch9',
-            title: 'Waardepapieren',
-            shortSummary: 'De eisen voor het behalen van een diploma, certificaat of mbo-verklaring.',
-            fullText: `<h3>9. Waardepapieren</h3><h4>9.1 Diploma's</h4><p>Je ontvangt een diploma als je aan alle eisen hebt voldaan. De belangrijkste eisen zijn:</p><ul><li>Kerntaken: minimaal een 6.</li><li>Nederlands: minimaal een 5.</li><li>Rekenen: minimaal een 6 (of andersom met Nederlands).</li><li>Engels (niveau 4): minimaal een 6.</li><li>Beroepspraktijkvorming (bpv): met een 'voldoende' afgerond.</li><li>Keuzedelen: voldaan aan de keuzedeelverplichting.</li></ul><h4>9.1.2 Cum laude</h4><p>Je kunt 'cum laude' (met lof) slagen als je aan extra hoge eisen voldoet.</p><h4>9.3 Mbo-verklaring</h4><p>Als je de opleiding verlaat zonder diploma, maar wel examenonderdelen hebt behaald, kun je een mbo-verklaring of certificaten krijgen. Dit is een bewijs van wat je wel hebt bereikt.</p>`,
-            aiSummary: `<ul><li>Je krijgt een diploma als je voor alle onderdelen geslaagd bent.</li><li>Cruciaal zijn voldoendes voor kerntaken, generieke vakken (Nederlands, Rekenen, Engels) en de BPV.</li><li>Als je uitmuntend presteert, kun je 'cum laude' slagen.</li><li>Stop je voortijdig? Dan kun je een mbo-verklaring krijgen voor de behaalde onderdelen.</li></ul>`
-        }
+        { id: 'ch1', title: 'Examenreglement', shortSummary: 'Geeft je alle informatie over examinering bij ROC van Twente en de regels die gelden bij examens.', fullText: `<h3>1. Examenreglement</h3><p>Het examenreglement geeft je alle informatie over examinering bij ROC van Twente. In het examenreglement lees je welke regels er gelden bij examens. Dit reglement geldt voor alle studenten die vanaf 1 augustus 2025 deelnemen aan een BOL-, BBL- of derde leerweg opleiding (cohort 2025). Binnen elk college heeft een examencommissie aanvullende regels. Het reglement zorgt ervoor dat het hele proces van examineren tot diplomeren goed verloopt.</p>`, aiSummary: `<ul><li>Dit document bevat alle examenregels van ROC van Twente.</li><li>Het geldt voor studenten die starten vanaf 1 augustus 2025 (cohort 2025).</li><li>Het doel is een eerlijk en soepel verloop van het examenproces.</li></ul>` },
+        { id: 'ch2', title: 'De Examencommissie', shortSummary: 'Een commissie die toeziet op de kwaliteit van examinering en diplomering.', fullText: `<h3>2. De examencommissie</h3><p>Je college heeft een eigen examencommissie die toeziet op de kwaliteit van examinering en diplomering. Deze is ingesteld door het College van Bestuur. De belangrijkste taken voor jou zijn:</p><ul><li>Toezien op de kwaliteit van examens.</li><li>Vaststellen of je recht hebt op een diploma, certificaat of mbo-verklaring.</li><li>Behandelen van verzoeken om vrijstelling.</li><li>Behandelen van verzoeken voor aangepaste examens.</li><li>Beslissen bij onregelmatigheid en fraude.</li></ul>`, aiSummary: `<ul><li>Elk college heeft een eigen examencommissie.</li><li>Zij bewaken de kwaliteit van alle examens en diploma's.</li><li>Ze beslissen over vrijstellingen, aanpassingen en fraudegevallen.</li><li>Zij stellen vast of je geslaagd bent.</li></ul>` },
+        { id: 'ch3', title: 'Deelname aan examens', shortSummary: 'Regels over toegang, hulpmiddelen, afwezigheid en identificatie bij examens.', fullText: `<h3>3. Deelname aan examens</h3><p>Als je ingeschreven staat, moet je deelnemen aan de examens van je opleiding. In je examenplan staat welke onderdelen er zijn en hoe ze worden geëxamineerd.</p><h4>Toegang en Identificatie</h4><p>Je hebt toegang tot de examens van je opleiding. Bij binnenkomst op de examenlocatie moet je een geldig ID-bewijs tonen (ID-kaart, paspoort, rijbewijs). Bij een onvoldoende heb je recht op één herkansing.</p><h4>Hulpmiddelen</h4><p>Je mag alleen toegestane hulpmiddelen gebruiken. Mobiele telefoons en smartwatches zijn verboden. Gebruik van AI is niet toegestaan, tenzij expliciet vermeld.</p><h4>Afwezigheid</h4><p>Ben je ziek of afwezig om een andere geldige reden? Meld dit dan volgens de procedure in je opleidingsplan. Bij afwezigheid zonder geldige reden wordt dit gezien als een onregelmatigheid.</p><h4>Extraneus</h4><p>Een extraneus is iemand die alleen examens doet, zonder onderwijs te volgen. Hier zijn kosten aan verbonden.</p>`, aiSummary: `<ul><li>Je moet meedoen aan de examens van je opleiding.</li><li>Neem altijd een geldig ID-bewijs mee naar een examen.</li><li>Gebruik van telefoons, smartwatches en ongeautoriseerde AI is verboden.</li><li>Meld je op tijd af als je ziek bent, anders telt het als fraude.</li><li>Bij een onvoldoende heb je recht op één herkansing.</li></ul>` },
+        { id: 'ch7', title: 'Gang van zaken tijdens een examen', shortSummary: 'Regels over onregelmatigheden zoals fraude, plagiaat en de gevolgen daarvan.', fullText: `<h3>7. Gang van zaken tijdens een examen</h3><p>Tijdens instellingsexamens gelden strikte regels. Voor Centrale Examens geldt het protocol van het CvTE.</p><h4>7.1 Onregelmatigheden</h4><p>Een onregelmatigheid is alles wat niet mag. Voorbeelden zijn:</p><ul><li>Fraude, zoals spieken of ongeoorloofde hulpmiddelen gebruiken.</li><li>Instructies van surveillanten niet opvolgen.</li><li>Overlast veroorzaken.</li><li>Plagiaat of identiteitsfraude.</li><li>Afwezig zijn zonder geldige reden.</li></ul><p>Als een onregelmatigheid wordt geconstateerd, wordt er een procesverbaal opgemaakt. De examencommissie kan maatregelen opleggen, zoals het ongeldig verklaren van het examen, het ontzeggen van de herkansing, of uitsluiting van verdere deelname.</p>`, aiSummary: `<ul><li>Tijdens het examen gelden strikte gedragsregels.</li><li>Spieken, afkijken, telefoons gebruiken of overlast veroorzaken is verboden.</li><li>De examencommissie bepaalt de straf bij een overtreding.</li><li>Mogelijke gevolgen: examen ongeldig, geen herkansing, of zelfs uitsluiting.</li></ul>` },
+        { id: 'ch8', title: 'Uitslag en Inzagerecht', shortSummary: 'Informatie over wanneer je de uitslag krijgt en hoe je je gemaakte examen kunt inzien.', fullText: `<h3>8. Uitslag examens</h3><h4>8.1 Bekendmaking</h4><p>De uitslag van een examen wordt binnen 15 werkdagen na afname bekendgemaakt. Examens worden beoordeeld met een cijfer of een waarderingsschaal.</p><h4>8.4 Inzagerecht</h4><p>Je hebt het recht om je beoordeelde examenwerk in te zien. Een verzoek tot inzage moet je binnen 5 dagen na de bekendmaking van de uitslag indienen bij je onderwijsteam. Bij de inzage mag je geen telefoon of smartwatch meenemen en geen aantekeningen maken. Voor centrale examens is er een aparte procedure. De cesuur (zak-/slaaggrens) wordt landelijk vastgesteld en gepubliceerd op Examenbladmbo.nl.</p>`, aiSummary: `<ul><li>Je ontvangt je examenresultaat binnen 15 werkdagen.</li><li>Je hebt het recht om je gemaakte werk in te zien.</li><li>Dien een verzoek voor inzage binnen 5 dagen na de uitslag in.</li><li>Tijdens inzage mag je geen opnameapparatuur gebruiken.</li></ul>` },
+        { id: 'ch9', title: 'Waardepapieren', shortSummary: 'De eisen voor het behalen van een diploma, certificaat of mbo-verklaring.', fullText: `<h3>9. Waardepapieren</h3><h4>9.1 Diploma's</h4><p>Je ontvangt een diploma als je aan alle eisen hebt voldaan. De belangrijkste eisen zijn:</p><ul><li>Kerntaken: minimaal een 6.</li><li>Nederlands: minimaal een 5.</li><li>Rekenen: minimaal een 6 (of andersom met Nederlands).</li><li>Engels (niveau 4): minimaal een 6.</li><li>Beroepspraktijkvorming (bpv): met een 'voldoende' afgerond.</li><li>Keuzedelen: voldaan aan de keuzedeelverplichting.</li></ul><h4>9.1.2 Cum laude</h4><p>Je kunt 'cum laude' (met lof) slagen als je aan extra hoge eisen voldoet.</p><h4>9.3 Mbo-verklaring</h4><p>Als je de opleiding verlaat zonder diploma, maar wel examenonderdelen hebt behaald, kun je een mbo-verklaring of certificaten krijgen. Dit is een bewijs van wat je wel hebt bereikt.</p>`, aiSummary: `<ul><li>Je krijgt een diploma als je voor alle onderdelen geslaagd bent.</li><li>Cruciaal zijn voldoendes voor kerntaken, generieke vakken (Nederlands, Rekenen, Engels) en de BPV.</li><li>Als je uitmuntend presteert, kun je 'cum laude' slagen.</li><li>Stop je voortijdig? Dan kun je een mbo-verklaring krijgen voor de behaalde onderdelen.</li></ul>` }
     ];
 
     const qaPairs = {
@@ -547,18 +267,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- DOM Elements ---
     const gridContainer = document.getElementById('grid-container');
-    const modal = document.getElementById('infoModal');
+    const infoModal = document.getElementById('infoModal');
     const modalTextContent = document.getElementById('modal-text-content');
-    const closeModalBtn = document.querySelector('.close-btn');
+    const mainModalCloseBtn = document.getElementById('main-modal-close');
     const aiSummarizeBtn = document.getElementById('ai-summarize-btn');
     const chatContainer = document.getElementById('ai-chat-container');
     const chatHeader = document.getElementById('ai-chat-header');
     const chatBody = document.getElementById('ai-chat-body');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
-    const chatPromptsContainer = document.querySelector('.ai-chat-prompts');
+    const chatPromptsContainer = document.getElementById('chat-prompts-container');
     const chatToggleIcon = document.getElementById('chat-toggle-icon');
-
+    const glossaryOverlay = document.getElementById('glossary-overlay');
+    const glossaryCloseBtn = document.getElementById('glossary-close-btn');
+    const glossaryTermEl = document.getElementById('glossary-term');
+    const glossaryDefinitionEl = document.getElementById('glossary-definition');
+    
     // --- Functions ---
     function renderCards() {
         gridContainer.innerHTML = '';
@@ -567,27 +291,45 @@ document.addEventListener('DOMContentLoaded', function() {
             card.className = 'card';
             card.dataset.id = item.id;
             card.innerHTML = `<h3>${item.title}</h3><p>${item.shortSummary}</p><div class="card-footer">Klik voor meer info</div>`;
-            card.addEventListener('click', () => showModal(item.id));
+            card.addEventListener('click', () => showInfoModal(item.id));
             gridContainer.appendChild(card);
         });
     }
 
-    function showModal(id) {
+    function processGlossaryTerms(text) {
+        let processedText = text;
+        Object.keys(glossary).forEach(key => {
+            const regex = new RegExp(`\\b(${key})\\b`, 'gi');
+            processedText = processedText.replace(regex, `<span class="ai-word" data-term="${key}">$1</span>`);
+        });
+        return processedText;
+    }
+
+    function showInfoModal(id) {
         const item = documentContent.find(doc => doc.id === id);
         if (item) {
-            let processedText = item.fullText;
-            Object.keys(glossary).forEach(key => {
-                const regex = new RegExp(`\\b(${key})\\b`, 'gi');
-                processedText = processedText.replace(regex, (match) => `<span class="ai-word">${match}<span class="tooltip">${glossary[key]}</span></span>`);
-            });
-            modalTextContent.innerHTML = processedText;
+            modalTextContent.innerHTML = processGlossaryTerms(item.fullText);
             aiSummarizeBtn.dataset.id = id;
-            modal.style.display = 'block';
+            infoModal.style.display = 'block';
         }
     }
 
-    function hideModal() {
-        modal.style.display = 'none';
+    function hideInfoModal() {
+        infoModal.style.display = 'none';
+    }
+
+    function showGlossaryOverlay(termKey) {
+        const term = termKey.charAt(0).toUpperCase() + termKey.slice(1);
+        const definition = glossary[termKey];
+        if(definition) {
+            glossaryTermEl.textContent = term;
+            glossaryDefinitionEl.textContent = definition;
+            glossaryOverlay.style.display = 'block';
+        }
+    }
+
+    function hideGlossaryOverlay() {
+        glossaryOverlay.style.display = 'none';
     }
 
     function showAiSummary() {
@@ -663,17 +405,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Event Listeners ---
-    closeModalBtn.addEventListener('click', hideModal);
-    window.addEventListener('click', (event) => {
-        if (event.target == modal) hideModal();
-    });
+    mainModalCloseBtn.addEventListener('click', hideInfoModal);
     aiSummarizeBtn.addEventListener('click', showAiSummary);
     sendBtn.addEventListener('click', handleUserMessage);
-    chatInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') handleUserMessage();
-    });
+    chatInput.addEventListener('keypress', (event) => { if (event.key === 'Enter') handleUserMessage(); });
     chatHeader.addEventListener('click', toggleChat);
+    
+    // Event delegation for glossary terms
+    modalTextContent.addEventListener('click', (event) => {
+        const target = event.target.closest('.ai-word');
+        if (target && target.dataset.term) {
+            showGlossaryOverlay(target.dataset.term);
+        }
+    });
 
+    // Glossary overlay closing listeners
+    glossaryCloseBtn.addEventListener('click', hideGlossaryOverlay);
+    glossaryOverlay.addEventListener('click', (event) => {
+        if (event.target === glossaryOverlay) {
+            hideGlossaryOverlay();
+        }
+    });
+    
+    // Window-level closing listeners
+    window.addEventListener('click', (event) => {
+        if (event.target == infoModal) hideInfoModal();
+    });
+    window.addEventListener('keydown', (event) => {
+        if (event.key === "Escape") {
+            hideInfoModal();
+            hideGlossaryOverlay();
+        }
+    });
+    
     // --- Initialisation ---
     renderCards();
     renderSuggestedPrompts();
