@@ -159,7 +159,7 @@
             padding-right: 15px; /* for scrollbar */
         }
         
-        .modal-body h2 {
+        #modal-text-content h3 {
             color: var(--primary-green);
             border-bottom: 2px solid var(--light-green);
             padding-bottom: 10px;
@@ -261,8 +261,9 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            transition: all 0.3s ease-in-out;
+            transition: height 0.3s ease-in-out;
             z-index: 999;
+            height: 55px; /* Collapsed by default */
         }
         
         .ai-chat-header {
@@ -274,10 +275,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0;
+        }
+
+        .ai-chat-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
         }
 
         .ai-chat-body {
-            height: 300px;
+            flex-grow: 1;
             padding: 15px;
             overflow-y: auto;
             display: flex;
@@ -289,6 +298,7 @@
             padding: 10px;
             border-top: 1px solid var(--border-color);
             background-color: #f9f9f9;
+            flex-shrink: 0;
         }
 
         .ai-chat-prompts {
@@ -296,6 +306,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
+            flex-shrink: 0;
         }
         
         .prompt-btn {
@@ -419,12 +430,11 @@
         </div>
     </div>
     
-    <!-- The Modal -->
     <div id="infoModal" class="modal">
       <div class="modal-content">
         <span class="close-btn">×</span>
         <div id="modal-body" class="modal-body">
-            <!-- Modal content will be injected here -->
+             <div id="modal-text-content"></div>
         </div>
         <button id="ai-summarize-btn" class="ai-button">
             <div class="spinner"></div>
@@ -433,26 +443,26 @@
       </div>
     </div>
     
-    <!-- AI Chat Assistant -->
-    <div class="ai-chat-container">
-        <div class="ai-chat-header">
+    <div class="ai-chat-container" id="ai-chat-container">
+        <div class="ai-chat-header" id="ai-chat-header">
             <span>AI Examen Assistent</span>
-            <span id="chat-toggle-icon">▼</span>
+            <span id="chat-toggle-icon">▲</span>
         </div>
-        <div class="ai-chat-prompts">
-             <!-- Prompt buttons will be injected here -->
-        </div>
-        <div id="ai-chat-body" class="ai-chat-body">
-            <div class="chat-message bot-message">Hallo! Ik ben je AI Examen Assistent. Stel een vraag over het reglement.</div>
-        </div>
-        <div class="ai-chat-footer">
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Typ je vraag hier...">
-                <button id="send-btn">→</button>
+        <div class="ai-chat-content">
+            <div class="ai-chat-prompts">
+                 <!-- Prompt buttons will be injected here -->
+            </div>
+            <div id="ai-chat-body" class="ai-chat-body">
+                <div class="chat-message bot-message">Hallo! Ik ben je AI Examen Assistent. Stel een vraag over het reglement.</div>
+            </div>
+            <div class="ai-chat-footer">
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Typ je vraag hier...">
+                    <button id="send-btn">→</button>
+                </div>
             </div>
         </div>
     </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -472,7 +482,6 @@ document.addEventListener('DOMContentLoaded', function() {
         'kwalificatiedossier': 'Een document dat precies omschrijft wat je moet kennen en kunnen voor je beroep. Het is de basis voor je opleiding en examens.'
     };
 
-    // CORRECTED: documentContent now contains clean HTML without the glossary spans.
     const documentContent = [
         {
             id: 'ch1',
@@ -519,94 +528,45 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     const qaPairs = {
-        'ziek': {
-            answer: "Als je ziek bent, moet je dit zo snel mogelijk melden volgens de procedure van je opleiding. Je krijgt dan een nieuwe kans om het examen te doen. Meld je je niet af, dan wordt het gezien als een onregelmatigheid.",
-            source: "Pag. 7, par. 3.4"
-        },
-        'herkansing': {
-            answer: "Ja, bij een onvoldoende resultaat voor een instellingsexamen heb je recht op één herkansing. Een eventuele extra herkansing moet je aanvragen bij de examencommissie.",
-            source: "Pag. 6, par. 3.2"
-        },
-        'id': {
-            answer: "Ja, je moet bij elk examen een geldig identiteitsbewijs kunnen tonen. Dit kan een ID-kaart, paspoort of rijbewijs zijn.",
-            source: "Pag. 6, par. 3.2"
-        },
-        'identiteit': {
-            answer: "Ja, je moet bij elk examen een geldig identiteitsbewijs kunnen tonen. Dit kan een ID-kaart, paspoort of rijbewijs zijn.",
-            source: "Pag. 6, par. 3.2"
-        },
-        'uitslag': {
-            answer: "De uitslag van een examen wordt normaal gesproken binnen 15 werkdagen na afname bekendgemaakt. De examencommissie kan hier in bijzondere gevallen van afwijken.",
-            source: "Pag. 16, par. 8.1"
-        },
-        'fraude': {
-            answer: "Fraude is opzettelijk bedrog, zoals afkijken, een telefoon gebruiken of werk van een ander inleveren. De examencommissie kan zware straffen opleggen, zoals het ongeldig verklaren van je examen.",
-            source: "Pag. 14, par. 7.1.1"
-        },
-        'spieken': {
-            answer: "Spieken valt onder fraude. Als je betrapt wordt, stelt de surveillant een procesverbaal op. De examencommissie beslist over de maatregel, wat kan variëren van een ongeldig examen tot uitsluiting van herkansing.",
-            source: "Pag. 14, par. 7.1.1"
-        },
-        'telefoon': {
-            answer: "Nee, mobiele telefoons en smartwatches zijn verboden in de examenruimte. Het bij je hebben ervan wordt al gezien als een onregelmatigheid, zelfs als je het niet gebruikt.",
-            source: "Pag. 7, par. 3.3"
-        },
-        'cum laude': {
-            answer: "'Cum laude' betekent 'met lof'. Je kunt dit op je diploma krijgen als je uitzonderlijk hoge cijfers hebt gehaald voor alle examenonderdelen. De precieze voorwaarden staan in de cum laude regeling.",
-            source: "Pag. 19, par. 9.1.2"
-        },
-        'inzien': {
-            answer: "Ja, je hebt het recht om je examen in te zien. Je moet hiervoor binnen 5 dagen na de uitslag een verzoek indienen bij je onderwijsteam. Tijdens de inzage mag je geen foto's of kopieën maken.",
-            source: "Pag. 17, par. 8.4"
-        },
-        'vrijstelling': {
-            answer: "Je kunt een vrijstelling aanvragen bij de examencommissie als je kunt bewijzen dat je een bepaald onderdeel al beheerst, bijvoorbeeld door een eerder behaald diploma. Dit bewijs mag meestal niet te oud zijn.",
-            source: "Pag. 8, par. 4.2"
-        },
-        'klacht': {
-            answer: "Als je het niet eens bent met een beslissing van de examencommissie, kun je in beroep gaan bij de 'Commissie van Beroep voor de Examens'. De procedure hiervoor staat in de Handleiding Klacht en Bezwaar.",
-            source: "Pag. 20, Hfst. 10"
-        },
-        'beroep': {
-            answer: "Als je het niet eens bent met een beslissing van de examencommissie, kun je in beroep gaan bij de 'Commissie van Beroep voor de Examens'. De procedure hiervoor staat in de Handleiding Klacht en Bezwaar.",
-            source: "Pag. 20, Hfst. 10"
-        }
+        'ziek': { answer: "Als je ziek bent, moet je dit zo snel mogelijk melden volgens de procedure van je opleiding. Je krijgt dan een nieuwe kans om het examen te doen. Meld je je niet af, dan wordt het gezien als een onregelmatigheid.", source: "Pag. 7, par. 3.4" },
+        'herkansing': { answer: "Ja, bij een onvoldoende resultaat voor een instellingsexamen heb je recht op één herkansing. Een eventuele extra herkansing moet je aanvragen bij de examencommissie.", source: "Pag. 6, par. 3.2" },
+        'id': { answer: "Ja, je moet bij elk examen een geldig identiteitsbewijs kunnen tonen. Dit kan een ID-kaart, paspoort of rijbewijs zijn.", source: "Pag. 6, par. 3.2" },
+        'identiteit': { answer: "Ja, je moet bij elk examen een geldig identiteitsbewijs kunnen tonen. Dit kan een ID-kaart, paspoort of rijbewijs zijn.", source: "Pag. 6, par. 3.2" },
+        'uitslag': { answer: "De uitslag van een examen wordt normaal gesproken binnen 15 werkdagen na afname bekendgemaakt. De examencommissie kan hier in bijzondere gevallen van afwijken.", source: "Pag. 16, par. 8.1" },
+        'fraude': { answer: "Fraude is opzettelijk bedrog, zoals afkijken, een telefoon gebruiken of werk van een ander inleveren. De examencommissie kan zware straffen opleggen, zoals het ongeldig verklaren van je examen.", source: "Pag. 14, par. 7.1.1" },
+        'spieken': { answer: "Spieken valt onder fraude. Als je betrapt wordt, stelt de surveillant een procesverbaal op. De examencommissie beslist over de maatregel, wat kan variëren van een ongeldig examen tot uitsluiting van herkansing.", source: "Pag. 14, par. 7.1.1" },
+        'telefoon': { answer: "Nee, mobiele telefoons en smartwatches zijn verboden in de examenruimte. Het bij je hebben ervan wordt al gezien als een onregelmatigheid, zelfs als je het niet gebruikt.", source: "Pag. 7, par. 3.3" },
+        'cum laude': { answer: "'Cum laude' betekent 'met lof'. Je kunt dit op je diploma krijgen als je uitzonderlijk hoge cijfers hebt gehaald voor alle examenonderdelen. De precieze voorwaarden staan in de cum laude regeling.", source: "Pag. 19, par. 9.1.2" },
+        'inzien': { answer: "Ja, je hebt het recht om je examen in te zien. Je moet hiervoor binnen 5 dagen na de uitslag een verzoek indienen bij je onderwijsteam. Tijdens de inzage mag je geen foto's of kopieën maken.", source: "Pag. 17, par. 8.4" },
+        'vrijstelling': { answer: "Je kunt een vrijstelling aanvragen bij de examencommissie als je kunt bewijzen dat je een bepaald onderdeel al beheerst, bijvoorbeeld door een eerder behaald diploma. Dit bewijs mag meestal niet te oud zijn.", source: "Pag. 8, par. 4.2" },
+        'klacht': { answer: "Als je het niet eens bent met een beslissing van de examencommissie, kun je in beroep gaan bij de 'Commissie van Beroep voor de Examens'. De procedure hiervoor staat in de Handleiding Klacht en Bezwaar.", source: "Pag. 20, Hfst. 10" },
+        'beroep': { answer: "Als je het niet eens bent met een beslissing van de examencommissie, kun je in beroep gaan bij de 'Commissie van Beroep voor de Examens'. De procedure hiervoor staat in de Handleiding Klacht en Bezwaar.", source: "Pag. 20, Hfst. 10" }
     };
     
-    const suggestedPrompts = [
-        "Wat als ik ziek ben?",
-        "Mag ik mijn telefoon meenemen?",
-        "Hoeveel herkansingen krijg ik?",
-        "Wanneer krijg ik de uitslag?",
-        "Wat is fraude?",
-        "Kan ik mijn examen inzien?"
-    ];
+    const suggestedPrompts = [ "Wat als ik ziek ben?", "Mag ik mijn telefoon meenemen?", "Hoeveel herkansingen krijg ik?", "Wanneer krijg ik de uitslag?", "Wat is fraude?", "Kan ik mijn examen inzien?" ];
 
     // --- DOM Elements ---
     const gridContainer = document.getElementById('grid-container');
     const modal = document.getElementById('infoModal');
-    const modalBody = document.getElementById('modal-body');
+    const modalTextContent = document.getElementById('modal-text-content');
     const closeModalBtn = document.querySelector('.close-btn');
     const aiSummarizeBtn = document.getElementById('ai-summarize-btn');
+    const chatContainer = document.getElementById('ai-chat-container');
+    const chatHeader = document.getElementById('ai-chat-header');
     const chatBody = document.getElementById('ai-chat-body');
     const chatInput = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-btn');
-    const chatHeader = document.querySelector('.ai-chat-header');
     const chatPromptsContainer = document.querySelector('.ai-chat-prompts');
-
+    const chatToggleIcon = document.getElementById('chat-toggle-icon');
 
     // --- Functions ---
-    
     function renderCards() {
+        gridContainer.innerHTML = '';
         documentContent.forEach(item => {
             const card = document.createElement('div');
             card.className = 'card';
             card.dataset.id = item.id;
-            card.innerHTML = `
-                <h3>${item.title}</h3>
-                <p>${item.shortSummary}</p>
-                <div class="card-footer">Klik voor meer info</div>
-            `;
+            card.innerHTML = `<h3>${item.title}</h3><p>${item.shortSummary}</p><div class="card-footer">Klik voor meer info</div>`;
             card.addEventListener('click', () => showModal(item.id));
             gridContainer.appendChild(card);
         });
@@ -615,20 +575,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function showModal(id) {
         const item = documentContent.find(doc => doc.id === id);
         if (item) {
-            let fullTextWithTooltips = item.fullText;
-            
-            // This loop now correctly wraps the plain text terms with interactive spans.
+            let processedText = item.fullText;
             Object.keys(glossary).forEach(key => {
                 const regex = new RegExp(`\\b(${key})\\b`, 'gi');
-                fullTextWithTooltips = fullTextWithTooltips.replace(regex, (match, p1) => {
-                    const cleanKey = Object.keys(glossary).find(k => k.toLowerCase() === p1.toLowerCase());
-                    return `<span class="ai-word" data-key="${cleanKey}">${p1}<span class="tooltip">${glossary[cleanKey]}</span></span>`;
-                });
+                processedText = processedText.replace(regex, (match) => `<span class="ai-word">${match}<span class="tooltip">${glossary[key]}</span></span>`);
             });
-            
-            modalBody.innerHTML = `
-                <div id="modal-text-content">${fullTextWithTooltips}</div>
-            `;
+            modalTextContent.innerHTML = processedText;
             aiSummarizeBtn.dataset.id = id;
             modal.style.display = 'block';
         }
@@ -641,17 +593,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function showAiSummary() {
         const spinner = aiSummarizeBtn.querySelector('.spinner');
         spinner.style.display = 'inline-block';
-        
         setTimeout(() => {
             const id = aiSummarizeBtn.dataset.id;
             const item = documentContent.find(doc => doc.id === id);
             if (item) {
-                const modalTextContent = document.getElementById('modal-text-content');
-                const summaryDiv = document.createElement('div');
-                summaryDiv.className = 'ai-summary';
-                summaryDiv.innerHTML = `<strong>AI Samenvatting:</strong>${item.aiSummary}`;
-                modalTextContent.innerHTML = ''; // Clear old content
-                modalTextContent.appendChild(summaryDiv);
+                modalTextContent.innerHTML = `<div class="ai-summary"><strong>AI Samenvatting:</strong>${item.aiSummary}</div>`;
             }
             spinner.style.display = 'none';
         }, 800);
@@ -660,10 +606,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleUserMessage() {
         const userInput = chatInput.value.trim();
         if (userInput === '') return;
-
         addMessageToChat(userInput, 'user');
         chatInput.value = '';
-
         setTimeout(() => {
             const botResponse = getBotResponse(userInput);
             addMessageToChat(botResponse, 'bot');
@@ -686,28 +630,26 @@ document.addEventListener('DOMContentLoaded', function() {
         const lowerInput = userInput.toLowerCase();
         for (const keyword in qaPairs) {
             if (lowerInput.includes(keyword)) {
-                const responseObj = qaPairs[keyword];
-                return `<div>${responseObj.answer}</div><span class="source-ref">Bron: ${responseObj.source}</span>`;
+                const { answer, source } = qaPairs[keyword];
+                return `<div>${answer}</div><span class="source-ref">Bron: ${source}</span>`;
             }
         }
         return "Dat is een goede vraag. Ik heb hier geen direct antwoord op. Raadpleeg voor specifieke gevallen je studieloopbaanbegeleider of de volledige tekst van het examenreglement.";
     }
     
     function toggleChat() {
-        const chatContainer = document.querySelector('.ai-chat-container');
-        const icon = document.getElementById('chat-toggle-icon');
         const isCollapsed = chatContainer.style.height === '55px';
-
         if (isCollapsed) {
             chatContainer.style.height = '420px';
-            icon.textContent = '▼';
+            chatToggleIcon.textContent = '▼';
         } else {
             chatContainer.style.height = '55px';
-            icon.textContent = '▲';
+            chatToggleIcon.textContent = '▲';
         }
     }
     
     function renderSuggestedPrompts() {
+        chatPromptsContainer.innerHTML = '';
         suggestedPrompts.forEach(prompt => {
             const btn = document.createElement('button');
             btn.className = 'prompt-btn';
@@ -723,16 +665,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Event Listeners ---
     closeModalBtn.addEventListener('click', hideModal);
     window.addEventListener('click', (event) => {
-        if (event.target == modal) {
-            hideModal();
-        }
+        if (event.target == modal) hideModal();
     });
     aiSummarizeBtn.addEventListener('click', showAiSummary);
     sendBtn.addEventListener('click', handleUserMessage);
     chatInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            handleUserMessage();
-        }
+        if (event.key === 'Enter') handleUserMessage();
     });
     chatHeader.addEventListener('click', toggleChat);
 
