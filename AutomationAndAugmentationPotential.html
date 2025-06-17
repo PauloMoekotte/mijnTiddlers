@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     path.setAttribute('d', d);
                     path.setAttribute('stroke', map.color);
                     svg.appendChild(path);
-                });
+                });48
             });
         }
     };
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
         chatBody.scrollTop = chatBody.scrollHeight;
     }
     function getBotResponse(userInput) { const lowerInput = userInput.toLowerCase(); for (const key in qaPairs) { if (lowerInput.includes(key)) return qaPairs[key]; } return "Ik kon geen direct antwoord vinden. Probeer een vraag te stellen over 'toekomstige skills', 'weerstand tegen AI' of 'baanverandering'."; }
-    function toggleChat() { const isCollapsed = chatContainer.style.height === 'var(--chat-header-height)'; chatHeader.setAttribute('aria-expanded', !isCollapsed); chatContent.hidden = isCollapsed; chatContainer.style.height = isCollapsed ? '450px' : 'var(--chat-header-height)'; chatToggleIcon.textContent = isCollapsed ? '▼' : '▲'; }
+    function toggleChat() { const isCollapsed = chatContainer.style.height === 'var(--chat-header-height)'; chatHeader.setAttribute('aria-expanded', !isCollapsed); chatContent.hidden = isCollapsed; chatContainer.style.height = isCollapsed ? '650px' : 'var(--chat-header-height)'; chatToggleIcon.textContent = isCollapsed ? '▼' : '▲'; }
     function renderSuggestedPrompts() { chatPromptsContainer.innerHTML = suggestedPrompts.map(p => `<button class="prompt-btn">${p}</button>`).join(''); }
 
     function renderCards() {
