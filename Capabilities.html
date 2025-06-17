@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactieve Infographic: OECD AI Capability Indicators</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+        :root {
+            --oecd-blue: #003366;
+            --oecd-lightblue: #00A3E0;
+            --light-gray: #f4f4f4;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #333;
+            --level-1: #FFDDC1;
+            --level-2: #FFCBA4;
+            --level-3: #FFB987;
+            --level-4: #FFA76A;
+            --level-5: #FF954D;
+            --current-level-bg: #D4EDDA;
+            --current-level-text: #155724;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--oecd-blue);
+            color: white;
+            border-bottom: 5px solid var(--oecd-lightblue);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin: 0;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 10px auto 0;
+            font-weight: 300;
+        }
+        
+        section {
+            padding: 40px 20px;
+            background-color: white;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            color: var(--oecd-blue);
+            margin-bottom: 40px;
+        }
+        
+        .indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .indicator-card {
+            background-color: #ffffff;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .indicator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 51, 102, 0.15);
+        }
+
+        .indicator-card .icon {
+            font-size: 3rem;
+            color: var(--oecd-blue);
+            margin-bottom: 15px;
+        }
+
+        .indicator-card h3 {
+            margin: 0;
+            color: var(--oecd-blue);
+            font-size: 1.3rem;
+        }
+        
+        .indicator-card .current-level {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--current-level-text);
+            background-color: var(--current-level-bg);
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 900px;
+            border-radius: 8px;
+            position: relative;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from {opacity: 0; transform: scale(0.95);}
+            to {opacity: 1; transform: scale(1);}
+        }
+
+        .close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+        }
+
+        .modal-content h3 {
+            color: var(--oecd-blue);
+            font-size: 2rem;
+            margin-top: 0;
+        }
+
+        .modal-summary {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--light-gray);
+            border-left: 4px solid var(--oecd-lightblue);
+        }
+
+        .scale-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .scale-table th, .scale-table td {
+            border: 1px solid var(--medium-gray);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .scale-table th {
+            background-color: var(--oecd-blue);
+            color: white;
+        }
+        
+        .scale-table td:first-child {
+            font-weight: bold;
+            text-align: center;
+            width: 80px;
+        }
+
+        .scale-table tr[data-level="1"] td:first-child { background-color: var(--level-1); }
+        .scale-table tr[data-level="2"] td:first-child { background-color: var(--level-2); }
+        .scale-table tr[data-level="3"] td:first-child { background-color: var(--level-3); }
+        .scale-table tr[data-level="4"] td:first-child { background-color: var(--level-4); }
+        .scale-table tr[data-level="5"] td:first-child { background-color: var(--level-5); }
+        
+        .scale-table .current-level-row {
+            background-color: var(--current-level-bg);
+            border-left: 5px solid var(--current-level-text);
+        }
+
+        /* AI Assistant Chatbot Styles */
+        #chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+        
+        #chat-toggle-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--oecd-blue);
+            color: white;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #chat-container {
+            display: none;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        #chat-header {
+            background: var(--oecd-blue);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        #chat-body {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .bot-message {
+            background-color: var(--light-gray);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .user-message {
+            background-color: var(--oecd-lightblue);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        
+        #chat-suggestions {
+            padding: 10px 15px;
+            border-top: 1px solid var(--medium-gray);
+        }
+        #chat-suggestions p {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+        }
+        .suggestion-btn {
+            background: none;
+            border: 1px solid var(--oecd-lightblue);
+            color: var(--oecd-lightblue);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin: 3px;
+        }
+        .suggestion-btn:hover {
+            background: var(--oecd-lightblue);
+            color: white;
+        }
+
+        #chat-input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid var(--medium-gray);
+        }
+        
+        #chat-input {
+            flex-grow: 1;
+            border: 1px solid var(--medium-gray);
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 1em;
+        }
+        
+        #chat-send-btn {
+            background: var(--oecd-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            h2 { font-size: 1.8rem; }
+            .modal-content { width: 95%; margin: 10% auto; }
+            #chat-container { width: 90vw; height: 70vh; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">OECD</div>
+        <h1>Introductie van de OECD AI Capability Indicators</h1>
+        <p>Een interactieve verkenning van hoe de OESO de capaciteiten van Artificiële Intelligentie meet en vergelijkt met menselijke vaardigheden, om beleidsmakers te helpen de impact op onderwijs, werk en maatschappij te begrijpen.</p>
+    </header>
+
+    <div class="container">
+        <section id="introduction">
+            <h2>Wat zijn de AI Capability Indicators?</h2>
+            <p>Terwijl AI snel vordert, groeit de noodzaak om de capaciteiten ervan systematisch te meten. De OESO heeft een raamwerk ontwikkeld met negen indicatoren, gebaseerd op menselijke psychologie, om de ontwikkeling van AI te volgen. Deze indicatoren worden gepresenteerd op een schaal van vijf niveaus, waarbij niveau 5 gelijk is aan volledige menselijke bekwaamheid.</p>
+        </section>
+
+        <section id="indicators">
+            <h2>De 9 AI Capability Indicators</h2>
+            <p style="text-align: center; margin-top: -20px; margin-bottom: 40px;">Klik op een kaart om de details, de 5-niveauschaal en de huidige status te bekijken.</p>
+            <div class="indicators-grid">
+                <!-- Card 1 -->
+                <div class="indicator-card" data-modal-id="language">
+                    <div class="icon">🗣️</div>
+                    <h3>Taal</h3>
+                    <div class="current-level">Huidig niveau: 3</div>
+                </div>
+                <!-- Card 2 -->
+                <div class="indicator-card" data-modal-id="social">
+                    <div class="icon">👥</div>
+                    <h3>Sociale Interactie</h3>
+                    <div class="current-level">Huidig niveau: 2</div>
+                </div>
+                <!-- Card 3 -->
+                <div class="indicator-card" data-modal-id="problem">
+                    <div class="icon">🧩</div>
+                    <h3>Probleemoplossing</h3>
+                    <div class="current-level">Huidig niveau: 2</div>
+                </div>
+                <!-- Card 4 -->
+                <div class="indicator-card" data-modal-id="creativity">
+                    <div class="icon">🎨</div>
+                    <h3>Creativiteit</h3>
+                    <div class="current-level">Huidig niveau: 3</div>
+                </div>
+                <!-- Card 5 -->
+                <div class="indicator-card" data-modal-id="metacognition">
+                    <div class="icon">🧠</div>
+                    <h3>Metacognitie & Kritisch Denken</h3>
+                    <div class="current-level">Huidig niveau: 2</div>
+                </div>
+                <!-- Card 6 -->
+                <div class="indicator-card" data-modal-id="knowledge">
+                    <div class="icon">📚</div>
+                    <h3>Kennis, Leren & Geheugen</h3>
+                    <div class="current-level">Huidig niveau: 3</div>
+                </div>
+                <!-- Card 7 -->
+                <div class="indicator-card" data-modal-id="vision">
+                    <div class="icon">👁️</div>
+                    <h3>Visie</h3>
+                    <div class="current-level">Huidig niveau: 3</div>
+                </div>
+                <!-- Card 8 -->
+                <div class="indicator-card" data-modal-id="manipulation">
+                    <div class="icon">🦾</div>
+                    <h3>Manipulatie</h3>
+                    <div class="current-level">Huidig niveau: 2</div>
+                </div>
+                <!-- Card 9 -->
+                <div class="indicator-card" data-modal-id="robotic">
+                    <div class="icon">🤖</div>
+                    <h3>Robotische Intelligentie</h3>
+                    <div class="current-level">Huidig niveau: 2</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="application">
+            <h2>Toepassingen voor Beleid</h2>
+            <p>Deze indicatoren zijn niet alleen een academische oefening. Ze bieden een concreet instrument voor beleidsmakers om:</p>
+            <ul>
+                <li>De impact van AI op de <strong>arbeidsmarkt</strong> te analyseren door de vaardigheden van AI te vergelijken met de eisen van beroepen.</li>
+                <li>Het <strong>onderwijscurriculum</strong> aan te passen, door te bepalen welke menselijke vaardigheden (zoals kritisch denken en creativiteit) belangrijker worden naarmate AI meer taken overneemt.</li>
+                <li>Gefundeerde discussies te voeren over de <strong>ethische en maatschappelijke</strong> implicaties van steeds capabelere AI-systemen.</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <!-- Modals (Pop-ups) -->
+    <!-- Dynamically generated by JavaScript -->
+
+    <!-- AI Assistant Chatbot -->
+    <div id="chat-widget">
+        <div id="chat-container">
+            <div id="chat-header">AI Assistent</div>
+            <div id="chat-body">
+                <div class="chat-message bot-message">Hallo! Ik ben de AI-assistent voor dit rapport. Hoe kan ik u helpen? U kunt een van de suggesties hieronder proberen.</div>
+            </div>
+            <div id="chat-suggestions">
+                <p>Suggesties:</p>
+                <button class="suggestion-btn">Wat zijn de 9 indicatoren?</button>
+                <button class="suggestion-btn">Wat is het niveau van Creativiteit?</button>
+                <button class="suggestion-btn">Waarom is dit belangrijk?</button>
+                <button class="suggestion-btn">Wat is AGI?</button>
+            </div>
+            <div id="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Stel een vraag...">
+                <button id="chat-send-btn">➤</button>
+            </div>
+        </div>
+        <button id="chat-toggle-btn">💬</button>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- DATA FOR MODALS ---
+        const modalData = {
+            language: {
+                title: 'Taal',
+                level: 3,
+                summary: 'Het vermogen om menselijke taal te begrijpen, interpreteren en genereren. Dit omvat semantiek, grammatica, context en redeneren.',
+                scales: [
+                    { level: 1, desc: 'Gebaseerd op trefwoordmatching, zonder wereldkennis of redeneervermogen. Verwerkt alleen tekst.' },
+                    { level: 2, desc: 'Produceert grammaticaal correcte taal met basiskennis uit één corpus. Kan twee modaliteiten verwerken.' },
+                    { level: 3, desc: 'Begrijpt en genereert betekenis met kennis uit meerdere corpora. Toont logisch en sociaal redeneervermogen en ondersteunt diverse talen.' },
+                    { level: 4, desc: 'Interpreteert context correct met web-scale kennis. Leert continu en ondersteunt veel (ook low-resource) talen.' },
+                    { level: 5, desc: 'Begrijpt en gebruikt genuanceerde taal (stijl, humor) met real-time wereldkennis en kritisch denken. Leert levenslang en dynamisch.' }
+                ]
+            },
+            social: {
+                title: 'Sociale Interactie',
+                level: 2,
+                summary: 'Het vermogen om sociale signalen waar te nemen, te interpreteren en er gepast op te reageren in dynamische interpersoonlijke contexten.',
+                scales: [
+                    { level: 1, desc: 'Voert simpele, rigide sociale gedragingen uit met vaste reacties. Minimale perceptie en geen aanpassingsvermogen.' },
+                    { level: 2, desc: 'Begint zich sociaal aan te passen. Combineert simpele bewegingen om emoties te uiten en leert van interacties voor de toekomst.' },
+                    { level: 3, desc: 'Interpreteert lichaamstaal en groepinteracties. Heeft een consistente persoonlijkheid en kan basisemoties uitwisselen.' },
+                    { level: 4, desc: 'Vertoont zeer natuurlijk sociaal gedrag, past gebaren aan en begrijpt emotionele intensiteit en motieven.' },
+                    { level: 5, desc: 'Integreert naadloos in elke sociale omgeving, begrijpt diepe emotionele en contextuele nuances en anticipeert op sociale uitdagingen.' }
+                ]
+            },
+            problem: {
+                title: 'Probleemoplossing',
+                level: 2,
+                summary: 'Het integreren van kwalitatieve, kwantitatieve en logische informatie om complexe problemen op te lossen, inclusief analyse en contrafeitelijk denken.',
+                scales: [
+                    { level: 1, desc: 'Werkt in gestructureerde domeinen met precieze termen (logica, wiskunde). Analyseert data op afwijkingen.' },
+                    { level: 2, desc: 'Integreert kwalitatief redeneren (ruimtelijk, temporeel) met kwantitatieve analyse om complexere uitdagingen aan te gaan.' },
+                    { level: 3, desc: 'Kan problemen beschreven in alledaagse taal omzetten naar gestructureerde modellen. Gebruikt sociale cognitie en "theory of mind".' },
+                    { level: 4, desc: 'Lost alledaagse en professionele problemen op (bv. in de geneeskunde), bouwt een band op met gebruikers en leert van ervaringen.' },
+                    { level: 5, desc: 'Lost complexe, multidisciplinaire problemen op, integreert stilzwijgende, sociale en technische kennis en navigeert ethische dilemma\'s.' }
+                ]
+            },
+            creativity: {
+                title: 'Creativiteit',
+                level: 3,
+                summary: 'Het genereren van waardevolle, nieuwe en verrassende output. Hogere niveaus omvatten intentionaliteit, zelfevaluatie en aanpassingsvermogen.',
+                scales: [
+                    { level: 1, desc: 'Repliceert menselijke output (waardevol) maar zonder echte creatieve eigenschappen. Mimicry.' },
+                    { level: 2, desc: 'Creëert waardevolle en nieuwe oplossingen die afwijken van trainingsdata. Voldoet aan de basiscriteria van waarde en nieuwheid.' },
+                    { level: 3, desc: 'Genereert output die waardevol, nieuw én verrassend is. Generaliseert vaardigheden naar nieuwe taken en integreert ideeën over domeinen heen.' },
+                    { level: 4, desc: 'Incorporeert proces-georiënteerde creativiteit, past output aan evoluerende domeinen aan en balanceert innovatie met contextuele relevantie.' },
+                    { level: 5, desc: 'Bereikt intentionaliteit, authenticiteit en volledige autonomie. Creëert transformerende output die nieuwe paradigma\'s introduceert.' }
+                ]
+            },
+            metacognition: {
+                title: 'Metacognitie & Kritisch Denken',
+                level: 2,
+                summary: 'Het vermogen om het eigen redeneerproces te evalueren, het vertrouwen in eigen kennis te kalibreren en relevante informatie te identificeren in complexe taken.',
+                scales: [
+                    { level: 1, desc: 'Minimale metacognitie, gericht op basisinterpretatie. Het onderwerp is bekend, informatie is eenvoudig te identificeren.' },
+                    { level: 2, desc: 'Matige metacognitie. Monitort begrip en past aanpak aan. Werkt met bekende informatie die ambiguïteiten kan bevatten.' },
+                    { level: 3, desc: 'Aanzienlijke metacognitie. Evalueert kritisch eigen kennis en integreert complexe, genuanceerde informatie.' },
+                    { level: 4, desc: 'Hoog niveau van metacognitie. Actieve regulatie van denkprocessen in onbekende, complexe en ambigue problemen.' },
+                    { level: 5, desc: 'Geraffineerde metacognitie. Beheert complexe afwegingen tussen doelen, middelen en vaardigheden. Nauwkeurige zelfevaluatie.' }
+                ]
+            },
+            knowledge: {
+                title: 'Kennis, Leren & Geheugen',
+                level: 3,
+                summary: 'De processen voor het structureren, verwerven, opslaan en ophalen van informatie, cruciaal voor cognitieve functies.',
+                scales: [
+                    { level: 1, desc: 'Opslaan en ophalen van gestructureerde informatie (tabellen, regels). Vereist aanzienlijke engineering.' },
+                    { level: 2, desc: 'Zoeken in losjes georganiseerde informatie. Statistische inferentie verbindt zoektermen met relevante resultaten.' },
+                    { level: 3, desc: 'Leert de semantiek van informatie via gedistribueerde representaties. Generaliseert naar nieuwe situaties maar mist real-time leervermogen.' },
+                    { level: 4, desc: 'Leert stapsgewijs door interactie met de wereld. Gebruikt metacognitief bewustzijn om kennishiaten te identificeren.' },
+                    { level: 5, desc: 'Integreert diverse kennis-, leer- en geheugensystemen voor robuuste, real-time aanpassing en redenering.' }
+                ]
+            },
+            vision: {
+                title: 'Visie',
+                level: 3,
+                summary: 'Het interpreteren van visuele scènes in hun volle complexiteit, onder verschillende omstandigheden en voor een breed scala aan objecten en scènes.',
+                scales: [
+                    { level: 1, desc: 'Voert één taak uit in sterk gecontroleerde omgevingen met minimale variatie. Niet flexibel.' },
+                    { level: 2, desc: 'Kan omgaan met variaties in belichting en positie. Flexibeler, maar nog steeds gespecialiseerd voor specifieke taken.' },
+                    { level: 3, desc: 'Kan meerdere datatypes en enige variatie in objectuiterlijk aan. Voert meerdere subtaken uit, maar matcht menselijk vermogen niet volledig.' },
+                    { level: 4, desc: 'Kan omgaan met een breed scala aan datatypes en aanzienlijke variaties. Verbetert prestaties door feedback en kan veel verschillende taken uitvoeren.' },
+                    { level: 5, desc: 'Presteert op menselijk niveau. Kan alle visuele variaties aan, leert van zelf-feedback en begrijpt objectinteracties volledig.' }
+                ]
+            },
+            manipulation: {
+                title: 'Manipulatie',
+                level: 2,
+                summary: 'De fysieke interactie met objecten in de omgeving, inclusief de perceptie, planning en uitvoering van bewegingen.',
+                scales: [
+                    { level: 1, desc: 'Beperkt tot simpele pick-and-place taken in goed georganiseerde omgevingen. Manipuleert rigide, makkelijk vast te pakken objecten.' },
+                    { level: 2, desc: 'Werkt in omgevingen met lichte tot matige rommel. Kan omgaan met diverse objectvormen en enkele buigzame materialen.' },
+                    { level: 3, desc: 'Past zich aan matig rommelige omgevingen aan. Kan een breder scala aan objectgeometrieën en -materialen aan.' },
+                    { level: 4, desc: 'Functioneert in omgevingen met aanzienlijke rommel. Kan zowel rigide als niet-rigide objecten met bewegende delen hanteren.' },
+                    { level: 5, desc: 'Evenaart menselijke vaardigheden. Werkt efficiënt in elke omgeving, hanteert diverse objecten met uitzonderlijk aanpassingsvermogen.' }
+                ]
+            },
+            robotic: {
+                title: 'Robotische Intelligentie',
+                level: 2,
+                summary: 'Het autonoom uitvoeren van diverse taken in een omgeving, gedreven door hogere doelen. Vereist coördinatie van sensorische, motorische en cognitieve systemen.',
+                scales: [
+                    { level: 1, desc: 'Voert simpele, repetitieve taken uit in sterk gestructureerde, voorspelbare omgevingen. Volgt vooraf gespecificeerde instructies.' },
+                    { level: 2, desc: 'Voert vooraf gedefinieerde taken uit in semi-gestructureerde omgevingen met enige variabiliteit. Beperkte interactie met mensen.' },
+                    { level: 3, desc: 'Voert multi-stap taken uit die enige flexibiliteit vereisen. Kan samenwerken met mensen en zich aanpassen aan matige onzekerheid.' },
+                    { level: 4, desc: 'Voert meerdere complexe taken uit. Past zich aan dynamische omstandigheden aan en begrijpt zijn beperkingen.' },
+                    { level: 5, desc: 'Voert meerdere complexe taken uit in ongestructureerde omgevingen met creatieve doelstellingen. Begrijpt ethische richtlijnen.' }
+                ]
+            }
+        };
+
+        function createModal(id) {
+            const data = modalData[id];
+            if (!data) return '';
+
+            let tableRows = data.scales.map(scale => `
+                <tr data-level="${scale.level}" class="${scale.level === data.level ? 'current-level-row' : ''}">
+                    <td>Niveau ${scale.level}</td>
+                    <td>${scale.desc}</td>
+                </tr>
+            `).join('');
+
+            return `
+            <div id="${id}-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn">×</span>
+                    <h3>${data.title}</h3>
+                    <div class="modal-summary">
+                        <p><strong>Samenvatting:</strong> ${data.summary}</p>
+                        <p><strong>Huidig geschat niveau: ${data.level}</strong></p>
+                    </div>
+                    <h4>Volledige Vaardigheidsschaal</h4>
+                    <table class="scale-table">
+                        <thead>
+                            <tr>
+                                <th>Niveau</th>
+                                <th>Beschrijving</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+            </div>`;
+        }
+        
+        // --- MODAL LOGIC ---
+        const modalContainer = document.createElement('div');
+        Object.keys(modalData).forEach(id => {
+            modalContainer.innerHTML += createModal(id);
+        });
+        document.body.appendChild(modalContainer);
+
+        const indicatorCards = document.querySelectorAll('.indicator-card');
+        indicatorCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const modalId = card.getAttribute('data-modal-id');
+                const modal = document.getElementById(`${modalId}-modal`);
+                if(modal) modal.style.display = 'block';
+            });
+        });
+
+        const closeButtons = document.querySelectorAll('.close-btn');
+        closeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.closest('.modal').style.display = 'none';
+            });
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+
+        // --- CHATBOT LOGIC ---
+        const chatToggleBtn = document.getElementById('chat-toggle-btn');
+        const chatContainer = document.getElementById('chat-container');
+        const chatBody = document.getElementById('chat-body');
+        const chatInput = document.getElementById('chat-input');
+        const chatSendBtn = document.getElementById('chat-send-btn');
+        const suggestionBtns = document.querySelectorAll('.suggestion-btn');
+
+        chatToggleBtn.addEventListener('click', () => {
+            const isHidden = chatContainer.style.display === 'none' || chatContainer.style.display === '';
+            chatContainer.style.display = isHidden ? 'flex' : 'none';
+            chatToggleBtn.textContent = isHidden ? '✕' : '💬';
+        });
+
+        const knowledgeBase = {
+            'indicatoren': "Er zijn 9 OECD AI Capability Indicators: Taal, Sociale Interactie, Probleemoplossing, Creativiteit, Metacognitie & Kritisch Denken, Kennis, Leren & Geheugen, Visie, Manipulatie, en Robotische Intelligentie.",
+            'taal': "Het huidige niveau voor Taal is 3. AI kan betekenis begrijpen met kennis uit meerdere bronnen, maar worstelt met echt kritisch denken en dynamisch leren.",
+            'creativiteit': "Het huidige niveau voor Creativiteit is 3. AI kan waardevolle, nieuwe en verrassende output genereren (bv. onverwachte strategieën in een spel), maar mist de intentionaliteit en zelfreflectie van een menselijke kunstenaar.",
+            'belangrijk': "Deze indicatoren zijn belangrijk omdat ze beleidsmakers een duidelijk, op bewijs gebaseerd raamwerk bieden om de impact van AI op banen, onderwijs en de samenleving te begrijpen en te anticiperen op toekomstige veranderingen.",
+            'agi': "AGI staat voor Artificial General Intelligence, een hypothetische AI die elke intellectuele taak kan begrijpen of leren die een mens kan. Dit rapport biedt een raamwerk om de voortgang richting AGI systematisch te meten door AI-capaciteiten te vergelijken met het volledige spectrum van menselijke vaardigheden (Niveau 5).",
+            'hallo': "Hallo! Hoe kan ik u helpen met informatie over de OECD AI-indicatoren?",
+            'niveau': "Welk niveau bedoelt u? U kunt bijvoorbeeld vragen: 'Wat is het niveau van Visie?'",
+            'visie': 'Het huidige niveau voor Visie is 3. AI kan omgaan met enige variatie in belichting en objecten en kan meerdere subtaken uitvoeren, maar haalt nog niet de flexibiliteit van het menselijk zicht.',
+            'probleemoplossing': 'Het huidige niveau voor Probleemoplossing is 2. AI is zeer goed in gestructureerde problemen (zoals logistiek), maar worstelt met ongestructureerde, alledaagse problemen die gezond verstand vereisen.'
+        };
+        
+        function getBotResponse(userInput) {
+            const lowerInput = userInput.toLowerCase();
+            for (const key in knowledgeBase) {
+                if (lowerInput.includes(key)) {
+                    return knowledgeBase[key];
+                }
+            }
+            return "Dat begrijp ik niet. Kunt u uw vraag anders formuleren? U kunt ook een van de suggesties proberen.";
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', `${sender}-message`);
+            messageDiv.textContent = text;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function handleSend() {
+            const userInput = chatInput.value.trim();
+            if (userInput === '') return;
+            
+            addMessage(userInput, 'user');
+            chatInput.value = '';
+            
+            setTimeout(() => {
+                const botResponse = getBotResponse(userInput);
+                addMessage(botResponse, 'bot');
+            }, 500);
+        }
+
+        chatSendBtn.addEventListener('click', handleSend);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSend();
+            }
+        });
+
+        suggestionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                chatInput.value = btn.textContent;
+                handleSend();
+            });
+        });
+    });
+    </script>
+</body>
+</html>
