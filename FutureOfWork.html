@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: De Toekomst van Werk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Teko:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-dark: #1a1a2e;
+            --card-dark: #16213e;
+            --primary-accent: #0f3460;
+            --secondary-accent: #e94560;
+            --text-light: #e0e0e0;
+            --text-strong: #ffffff;
+            --glow: 0 0 15px rgba(233, 69, 96, 0.5);
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .header h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 4.5rem;
+            color: var(--text-strong);
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: var(--glow);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 10px auto 0;
+            font-weight: 300;
+        }
+
+        #infographic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 380px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.7s;
+            transform-style: preserve-3d;
+            border-radius: var(--border-radius);
+        }
+
+        .flip-card.is-flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            box-sizing: border-box;
+            background-color: var(--card-dark);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--primary-accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+            justify-content: space-between;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-family: 'Teko', sans-serif;
+            font-size: 3rem;
+            color: var(--secondary-accent);
+            opacity: 0.5;
+        }
+
+        .flip-card-front h2 {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.2rem;
+            margin: 0;
+            color: var(--text-strong);
+        }
+
+        .card-stat {
+            font-size: 1.1rem;
+            font-weight: 300;
+            margin-top: 10px;
+            border-top: 1px solid var(--secondary-accent);
+            padding-top: 10px;
+        }
+
+        .flip-card-back p {
+            font-size: 0.95rem;
+            text-align: left;
+            margin: 0;
+        }
+        
+        .ai-term {
+            text-decoration: underline dotted var(--secondary-accent);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .ai-advice-btn {
+            background-color: var(--secondary-accent);
+            color: var(--text-strong);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: var(--glow);
+            align-self: center;
+            margin-top: 15px;
+        }
+        
+        .ai-advice-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(233, 69, 96, 0.7);
+        }
+
+        /* Overlay Styles */
+        .overlay {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay-content {
+            background: var(--card-dark);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: slideIn 0.4s;
+            border: 1px solid var(--secondary-accent);
+        }
+        
+        .overlay-content h3 {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.5rem;
+            color: var(--secondary-accent);
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        
+        .advice-section {
+            margin-top: 20px;
+        }
+        .advice-section h4 {
+            color: var(--text-strong);
+            border-bottom: 1px solid var(--primary-accent);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .advice-section ul {
+            padding-left: 20px;
+            margin: 0;
+            list-style-type: '✓ ';
+        }
+
+        .close-btn {
+            color: #aaa; position: absolute;
+            top: 15px; right: 25px;
+            font-size: 32px; font-weight: bold;
+            cursor: pointer; transition: color 0.2s;
+        }
+        .close-btn:hover { color: var(--text-strong); }
+        
+        /* Chat Assistant */
+        .ai-chat-container {
+            position: fixed; bottom: 20px; right: 20px; width: 350px;
+            max-width: 90vw; background-color: var(--card-dark); border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column;
+            overflow: hidden; transition: height 0.3s ease-in-out; z-index: 999; height: 58px;
+            border: 1px solid var(--primary-accent);
+        }
+        .ai-chat-header { background-color: var(--primary-accent); color: var(--text-strong); padding: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .ai-chat-content { flex-grow: 1; display: flex; flex-direction: column; min-height: 0; }
+        .ai-chat-body { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .ai-chat-footer { padding: 10px; border-top: 1px solid var(--primary-accent); background-color: rgba(0,0,0,0.2); flex-shrink: 0; }
+        .ai-chat-prompts { padding: 0 10px 10px; display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
+        .prompt-btn { background: var(--primary-accent); color: var(--text-light); border: none; padding: 5px 12px; font-size: 0.8rem; border-radius: 15px; cursor: pointer; transition: all 0.2s; }
+        .prompt-btn:hover { background: var(--secondary-accent); color: var(--text-strong); }
+        .chat-message { padding: 10px 15px; border-radius: 18px; max-width: 85%; line-height: 1.4; word-wrap: break-word; }
+        .user-message { background-color: var(--secondary-accent); color: var(--text-strong); align-self: flex-end; border-bottom-right-radius: 4px; }
+        .bot-message { background-color: var(--primary-accent); color: var(--text-light); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .chat-input-area { display: flex; gap: 10px; }
+        #chat-input { flex-grow: 1; border: 1px solid var(--primary-accent); background-color: var(--background-dark); color: var(--text-light); border-radius: 20px; padding: 8px 15px; font-size: 0.9rem; }
+        #send-btn { background: var(--secondary-accent); border: none; color: white; font-weight: bold; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: background-color 0.2s; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 3rem; }
+            .flip-card { height: 420px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>De Toekomst van Werk</h1>
+        <p>Ons werklandschap verandert razendsnel door technologie en nieuwe verwachtingen. Ontdek de 8 cruciale verschuivingen die nu plaatsvinden. Klik op een kaart voor meer details.</p>
+    </header>
+
+    <div class="container">
+        <div id="infographic-grid"></div>
+    </div>
+    
+    <!-- AI Advice & Glossary Overlay -->
+    <div class="overlay" id="info-overlay">
+        <div class="overlay-content" id="overlay-content">
+            <span class="close-btn" id="overlay-close-btn">×</span>
+            <!-- Content will be injected here -->
+        </div>
+    </div>
+    
+    <!-- AI Chat Assistant -->
+    <div class="ai-chat-container" id="ai-chat-container">
+        <div class="ai-chat-header" id="ai-chat-header">
+            <span>AI Werkplek Assistent</span>
+            <span id="chat-toggle-icon">▲</span>
+        </div>
+        <div class="ai-chat-content">
+            <div id="chat-prompts-container" class="ai-chat-prompts"></div>
+            <div id="ai-chat-body" class="ai-chat-body">
+                <div class="chat-message bot-message">Hallo! Stel me een vraag over de toekomst van werk.</div>
+            </div>
+            <div class="ai-chat-footer">
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Typ je vraag hier...">
+                    <button id="send-btn">→</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const futureOfWorkData = [
+        {
+            id: 1,
+            title: "AI: Vriend of Vijand?",
+            stat: "40% van werknemers moet om- of bijscholen door AI.",
+            description: "Artificiële Intelligentie automatiseert taken, maar creëert ook nieuwe rollen. De focus verschuift van routinematig werk naar taken die creativiteit, kritisch denken en emotionele intelligentie vereisen. <span class='ai-term' data-term='Upskilling'>Upskilling</span> is geen keuze meer, maar een noodzaak.",
+            aiAdvice: {
+                employee: ["Specialiseer in 'human-in-the-loop' rollen: leer samenwerken met AI.", "Ontwikkel je 'soft skills' zoals communicatie en probleemoplossing.", "Leer de basis van data-analyse en AI-tools in jouw vakgebied."],
+                employer: ["Investeer in continue AI-training voor je personeel.", "Herdefinieer functies rondom mens-AI samenwerking.", "Implementeer AI ethisch en transparant om angst bij werknemers weg te nemen."]
+            }
+        },
+        {
+            id: 2,
+            title: "Het Hybride Model is de Norm",
+            stat: "87% van de bedrijven omarmt een hybride werkmodel.",
+            description: "De 9-tot-5 op kantoor is voorbij. Flexibiliteit in waar en wanneer men werkt, is de nieuwe standaard. Dit vereist een andere aanpak van management, communicatie en het bewaken van de bedrijfscultuur.",
+            aiAdvice: {
+                employee: ["Optimaliseer je thuiswerkplek voor productiviteit en ergonomie.", "Wees proactief in je communicatie met collega's en managers.", "Zet duidelijke grenzen tussen werk en privé om een burn-out te voorkomen."],
+                employer: ["Focus op resultaten in plaats van op aanwezigheid.", "Investeer in digitale tools die naadloze samenwerking mogelijk maken.", "Organiseer bewuste 'kantoordagen' voor teambuilding en creativiteit."]
+            }
+        },
+        {
+            id: 3,
+            title: "Generatie Z Herschrijft de Regels",
+            stat: "Flexibiliteit & zingeving zijn belangrijker dan salaris.",
+            description: "De nieuwste generatie op de werkvloer hecht veel waarde aan een goede werk-privébalans, mentale gezondheid, en werken voor een organisatie met een duidelijke missie. Authentiek leiderschap en ontwikkelingsmogelijkheden zijn cruciaal.",
+            aiAdvice: {
+                employee: ["Wees duidelijk over je waarden en verwachtingen tijdens sollicitatiegesprekken.", "Zoek een mentor binnen de organisatie om sneller te groeien.", "Gebruik je digitale vaardigheden om innovatie te stimuleren."],
+                employer: ["Creëer flexibele carrièrepaden in plaats van een rigide ladder.", "Biedt transparantie over de impact en de missie van het bedrijf.", "Zorg voor een sterke feedbackcultuur met regelmatige check-ins."]
+            }
+        },
+        {
+            id: 4,
+            title: "De 'Skill-Gap' Groeit",
+            stat: "Focus op soft skills & digitale vaardigheden.",
+            description: "De snelheid waarmee technologie evolueert, zorgt voor een groeiende kloof tussen de vaardigheden die werknemers hebben en die bedrijven nodig hebben. Levenslang leren, ofwel <span class='ai-term' data-term='Upskilling'>upskilling</span> en reskilling, wordt de kern van elke carrière.",
+            aiAdvice: {
+                employee: ["Maak een persoonlijk ontwikkelingsplan en reserveer tijd om te leren.", "Volg online cursussen (Coursera, LinkedIn Learning) voor specifieke skills.", "Vraag je werkgever om een opleidingsbudget."],
+                employer: ["Implementeer een 'interne talentmarktplaats' om vaardigheden te matchen met projecten.", "Bied micro-learnings en certificeringstrajecten aan.", "Stimuleer een cultuur waarin fouten maken en leren wordt aangemoedigd."]
+            }
+        },
+        {
+            id: 5,
+            title: "Mentale Gezondheid is Prioriteit",
+            stat: "52% van de werknemers voelt zich 'burned-out'.",
+            description: "De 'altijd aan'-cultuur en de vervagende grenzen door thuiswerk hebben geleid tot een burn-out epidemie. Organisaties die welzijn serieus nemen en een psychologisch veilige omgeving creëren, hebben een groot voordeel.",
+            aiAdvice: {
+                employee: ["Neem je pauzes serieus en plan 'digitale detox'-momenten in.", "Leer 'nee' zeggen en communiceer je grenzen duidelijk.", "Maak gebruik van de welzijnsresources die je werkgever aanbiedt."],
+                employer: ["Train managers in het herkennen van stress-signalen.", "Promoot flexibele werktijden en moedig het opnemen van vakantiedagen aan.", "Stel welzijn als een meetbaar bedrijfsdoel (KPI)."]
+            }
+        },
+        {
+            id: 6,
+            title: "Loyaliteit in een Nieuw Jasje",
+            stat: "Werknemers zoeken groei, niet een 'baan voor het leven'.",
+            description: "De 'Great Resignation' was slechts een symptoom. Werknemersloyaliteit is nu transactioneel: zolang een werknemer kan groeien en zich kan ontwikkelen, blijft hij/zij. Stilstand betekent vertrek. Dit wordt ook wel de 'tour of duty'-mentaliteit genoemd.",
+            aiAdvice: {
+                employee: ["Bekijk je huidige baan als een 'tour of duty': wat wil je hier leren en bereiken?", "Houd je netwerk en CV up-to-date, ook als je tevreden bent.", "Wees proactief in het vragen naar nieuwe uitdagingen en projecten."],
+                employer: ["Bied interne mobiliteit en project-gebaseerd werk aan.", "Voer 'stay interviews' in plaats van alleen 'exit interviews'.", "Investeer in de 'alumni'-relatie; vertrekkende werknemers kunnen ambassadeurs of toekomstige klanten worden."]
+            }
+        },
+        {
+            id: 7,
+            title: "Diversiteit, Gelijkheid & Inclusie",
+            stat: "Inclusieve teams zijn significant innovatiever.",
+            description: "Een divers personeelsbestand is niet langer een 'nice-to-have', maar een zakelijke noodzaak. <span class='ai-term' data-term='DEI'>DEI</span> (Diversity, Equity, and Inclusion) leidt tot betere besluitvorming, hogere innovatie en een sterkere aantrekkingskracht op talent.",
+            aiAdvice: {
+                employee: ["Word een 'ally': ondersteun collega's uit ondervertegenwoordigde groepen.", "Neem deel aan 'Employee Resource Groups' (ERGs).", "Spreek je uit (op een constructieve manier) als je niet-inclusief gedrag ziet."],
+                employer: ["Verwijder 'bias' uit het wervingsproces met geanonimiseerde CV's en gestructureerde interviews.", "Zorg voor representatie in leidinggevende posities.", "Koppel DEI-doelstellingen aan de bonussen van het management."]
+            }
+        },
+        {
+            id: 8,
+            title: "Opkomst van de 'Gig Economy'",
+            stat: "Meer dan 1/3 van de beroepsbevolking is freelancer.",
+            description: "De <span class='ai-term' data-term='Gig Economy'>Gig Economy</span>, aangedreven door digitale platforms, biedt ongekende flexibiliteit. Steeds meer professionals kiezen voor freelance werk. Bedrijven maken gebruik van deze flexibele schil van experts voor specifieke projecten.",
+            aiAdvice: {
+                employee: ["Bouw een sterk persoonlijk merk en een portfolio op.", "Ontwikkel zakelijke vaardigheden: administratie, marketing en onderhandelen.", "Netwerk actief, zowel online als offline."],
+                employer: ["Ontwikkel een strategie voor het effectief onboarden en managen van freelancers.", "Zorg voor eerlijke contracten en tijdige betalingen om een goede reputatie op te bouwen.", "Integreer freelancers in de teamcommunicatie om silo's te voorkomen."]
+            }
+        }
+    ];
+
+    const glossary = {
+        'Upskilling': "Het proces van het leren van nieuwe, geavanceerde vaardigheden om relevant te blijven in je huidige functie of te groeien naar een volgende rol. Het is een reactie op technologische veranderingen.",
+        'DEI': "Staat voor Diversity, Equity, and Inclusion (Diversiteit, Gelijkheid en Inclusie). Het is een bedrijfsstrategie die erop gericht is een werkomgeving te creëren waarin alle individuen en groepen zich welkom, ondersteund en gewaardeerd voelen om volledig deel te nemen.",
+        'Gig Economy': "Een arbeidsmarkt gekenmerkt door de prevalentie van kortlopende contracten of freelancewerk, in tegenstelling tot vaste, fulltime banen. Werknemers zijn 'on-demand' en werken vaak voor meerdere opdrachtgevers tegelijk."
+    };
+    
+    const qaPairs = {
+        'skills': "De belangrijkste skills zijn een mix van 'soft skills' (zoals kritisch denken, communicatie, creativiteit) en 'hard skills' (zoals data-analyse en digitale geletterdheid). Levenslang leren is cruciaal.",
+        'hybride': "Ja, alle data wijst erop dat hybride werken een blijvende norm is. Bedrijven die flexibiliteit bieden, zijn aantrekkelijker voor talent.",
+        'ai': "AI zal veel routinetaken automatiseren, maar ook nieuwe banen creëren die gericht zijn op samenwerking met AI-systemen, data-analyse en creatieve probleemoplossing. De noodzaak om bij te scholen is groot.",
+        'burnout': "Een burn-out wordt vaak veroorzaakt door een combinatie van een hoge werkdruk, een 'altijd aan'-cultuur en een gebrek aan autonomie en duidelijke grenzen tussen werk en privé.",
+    };
+    
+    const suggestedPrompts = ["Wat zijn de belangrijkste skills?", "Is hybride werken blijvend?", "Neemt AI mijn baan over?", "Hoe voorkom ik een burnout?"];
+
+    // DOM Elements
+    const grid = document.getElementById('infographic-grid');
+    const overlay = document.getElementById('info-overlay');
+    const overlayContent = document.getElementById('overlay-content');
+    const overlayCloseBtn = document.getElementById('overlay-close-btn');
+    const chatContainer = document.getElementById('ai-chat-container');
+    const chatHeader = document.getElementById('ai-chat-header');
+    const chatBody = document.getElementById('ai-chat-body');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const chatPromptsContainer = document.getElementById('chat-prompts-container');
+    const chatToggleIcon = document.getElementById('chat-toggle-icon');
+
+    function renderCards() {
+        grid.innerHTML = futureOfWorkData.map(item => `
+            <div class="flip-card" data-id="${item.id}">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <span class="card-number">0${item.id}</span>
+                        <h2>${item.title}</h2>
+                        <p class="card-stat">${item.stat}</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <p>${item.description}</p>
+                        <button class="ai-advice-btn" data-action="show-advice">Genereer AI Advies</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function handleGridClick(event) {
+        const card = event.target.closest('.flip-card');
+        if (!card) return;
+
+        const adviceBtn = event.target.closest('.ai-advice-btn');
+        const termSpan = event.target.closest('.ai-term');
+
+        if (adviceBtn) {
+            const id = card.dataset.id;
+            const data = futureOfWorkData.find(item => item.id == id);
+            showAdviceOverlay(data);
+        } else if (termSpan) {
+            const term = termSpan.dataset.term;
+            showGlossaryOverlay(term);
+        } else {
+            card.classList.toggle('is-flipped');
+        }
+    }
+
+    function showAdviceOverlay(data) {
+        overlayContent.innerHTML = `
+            <span class="close-btn">×</span>
+            <h3>AI Advies: ${data.title}</h3>
+            <div class="advice-section">
+                <h4>Voor Werknemers</h4>
+                <ul>${data.aiAdvice.employee.map(tip => `<li>${tip}</li>`).join('')}</ul>
+            </div>
+            <div class="advice-section">
+                <h4>Voor Werkgevers</h4>
+                <ul>${data.aiAdvice.employer.map(tip => `<li>${tip}</li>`).join('')}</ul>
+            </div>
+        `;
+        overlay.style.display = 'flex';
+    }
+
+    function showGlossaryOverlay(term) {
+        overlayContent.innerHTML = `
+            <span class="close-btn">×</span>
+            <h3>${term}</h3>
+            <p>${glossary[term]}</p>
+        `;
+        overlay.style.display = 'flex';
+    }
+
+    function hideOverlay() {
+        overlay.style.display = 'none';
+    }
+
+    // Chatbot Logic
+    function handleUserMessage() {
+        const userInput = chatInput.value.trim();
+        if (userInput === '') return;
+        addMessageToChat(userInput, 'user');
+        chatInput.value = '';
+        setTimeout(() => {
+            const botResponse = getBotResponse(userInput);
+            addMessageToChat(botResponse, 'bot');
+        }, 600);
+    }
+
+    function addMessageToChat(message, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.className = `chat-message ${sender}-message`;
+        messageElement.textContent = message;
+        chatBody.appendChild(messageElement);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function getBotResponse(userInput) {
+        const lowerInput = userInput.toLowerCase();
+        for (const keyword in qaPairs) {
+            if (lowerInput.includes(keyword)) return qaPairs[keyword];
+        }
+        return "Dat is een interessante vraag. De toekomst van werk is complex. Probeer je vraag anders te formuleren of focus op thema's als 'skills', 'AI' of 'hybride werken'.";
+    }
+
+    function toggleChat() {
+        const isCollapsed = chatContainer.style.height === '58px';
+        chatContainer.style.height = isCollapsed ? '450px' : '58px';
+        chatToggleIcon.textContent = isCollapsed ? '▼' : '▲';
+    }
+
+    function renderSuggestedPrompts() {
+        chatPromptsContainer.innerHTML = suggestedPrompts.map(prompt => 
+            `<button class="prompt-btn">${prompt}</button>`
+        ).join('');
+    }
+    
+    // Event Listeners
+    grid.addEventListener('click', handleGridClick);
+    overlay.addEventListener('click', (event) => {
+        if (event.target.classList.contains('overlay') || event.target.classList.contains('close-btn')) {
+            hideOverlay();
+        }
+    });
+    chatHeader.addEventListener('click', toggleChat);
+    sendBtn.addEventListener('click', handleUserMessage);
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
+    chatPromptsContainer.addEventListener('click', (e) => {
+        if(e.target.classList.contains('prompt-btn')) {
+            chatInput.value = e.target.textContent;
+            handleUserMessage();
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") hideOverlay();
+    });
+
+    // Initialisation
+    renderCards();
+    renderSuggestedPrompts();
+});
+</script>
+
+</body>
+</html>
