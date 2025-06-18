@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactieve Infographic: AI in Werk</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Interactieve AI Audit Framework</h1>
+            <p>Gebaseerd op het O*NET & WORKBank onderzoek. Gebruik deze tool om te analyseren of een taak geschikt is voor automatisering of augmentatie (samenwerking met AI).</p>
+        </header>
+
+        <main>
+            <section class="auditor-section">
+                <h2>1. Analyseer een Taak</h2>
+                <form id="ai-audit-form">
+                    <div class="form-group">
+                        <label for="task-select">Kies een voorbeeldtaak:</label>
+                        <select id="task-select">
+                            <option value="appointments">Afspraken inplannen met klanten</option>
+                            <option value="files">Informatiebestanden onderhouden</option>
+                            <option value="baggage">Verloren bagage traceren voor klanten</option>
+                            <option value="stories">Verhalen schrijven</option>
+                            <option value="teaching">Anderen trainen of onderwijzen</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group slider-group">
+                        <label for="desire-slider">Wens tot Automatisering (Hoe graag wilt u dat AI dit overneemt?)</label>
+                        <input type="range" id="desire-slider" min="0" max="100" value="50">
+                        <span id="desire-value">50</span>
+                    </div>
+
+                    <div class="form-group slider-group">
+                        <label for="capability-slider">Technologische Capaciteit (Hoe goed kan de huidige AI dit, denkt u?)</label>
+                        <input type="range" id="capability-slider" min="0" max="100" value="50">
+                        <span id="capability-value">50</span>
+                    </div>
+
+                    <div class="form-group slider-group context-slider">
+                        <label for="enjoyment-slider">Werkplezier (Hoe plezierig is deze taak?)</label>
+                        <input type="range" id="enjoyment-slider" min="0" max="100" value="50">
+                         <span id="enjoyment-value">50</span>
+                    </div>
+
+                     <div class="form-group slider-group context-slider">
+                        <label for="expertise-slider">Domeinexpertise (Hoeveel specialistische kennis is nodig?)</label>
+                        <input type="range" id="expertise-slider" min="0" max="100" value="50">
+                         <span id="expertise-value">50</span>
+                    </div>
+
+                     <div class="form-group slider-group context-slider">
+                        <label for="communication-slider">Interpersoonlijke Communicatie (Hoeveel interactie met mensen is nodig?)</label>
+                        <input type="range" id="communication-slider" min="0" max="100" value="50">
+                         <span id="communication-value">50</span>
+                    </div>
+
+                    <button type="submit">Analyseer Taak</button>
+                </form>
+            </section>
+
+            <section id="results-section" class="results-section hidden">
+                <h2>2. Resultaten & Inzichten</h2>
+                
+                <div class="result-box" id="main-recommendation">
+                    <h3>Aanbeveling</h3>
+                    <p id="recommendation-text">Analyseer een taak om een aanbeveling te zien.</p>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Landschap: Wens vs. Capaciteit</h3>
+                    <p>Hier wordt uw taak geplot. De gekleurde zones tonen de ideale aanpak.</p>
+                    <div class="landscape-chart-wrapper">
+                        <div class="quadrant top-left">Lage Prioriteit</div>
+                        <div class="quadrant top-right">Kans voor Augmentatie</div>
+                        <div class="quadrant bottom-left">Ideaal voor Automatisering</div>
+                        <div class="quadrant bottom-right">Focus op Samenwerking</div>
+                        <canvas id="desireCapabilityChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="insights-grid">
+                    <div class="chart-container">
+                        <h3>Human Agency Spectrum</h3>
+                        <p>Toont het verschil in wens (werknemer) en inschatting (AI-expert) voor de rol "Programmeur".</p>
+                        <canvas id="humanAgencyChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Verschuiving in Menselijke Kernvaardigheden</h3>
+                        <p>Naarmate AI meer taken overneemt, worden analyse en training belangrijker.</p>
+                        <canvas id="skillShiftChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="result-box" id="final-insight">
+                    <h3>Belangrijkste Inzicht</h3>
+                    <p id="insight-text">De context, zoals werkplezier en communicatie, is cruciaal. Een taak die technisch geautomatiseerd kan worden, is niet altijd een taak die werknemers *willen* of *moeten* afstaan. Augmentatie, waarbij AI de mens ondersteunt, is vaak de meest effectieve oplossing.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Interactieve infographic door een AI-assistent. Gebaseerd op de afbeelding "Overview of the auditing framework and key insights".</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
