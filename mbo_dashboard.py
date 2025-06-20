@@ -18,7 +18,7 @@ def load_data():
     url = "https://duo.nl/open_onderwijsdata/images/studenten-per-type-mbo-niveau-woongemeente-provincie-deelnemer-leeftijd-2020-2024.csv"
     try:
         # De data van DUO gebruikt een puntkomma (;) als scheidingsteken.
-        df = pd.read_csv(url, sep=';')
+        df = pd.read_csv(url, sep=';', encoding='latin1')
         
         # Hernoem kolommen voor beter leesbare code
         df.rename(columns={
