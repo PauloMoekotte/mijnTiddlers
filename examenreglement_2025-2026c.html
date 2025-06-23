@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactief Examenreglement met Workflows - ROC van Twente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #65b438;
+            --light-green: #e9f5e3;
+            --dark-text: #333;
+            --light-text: #f8f9fa;
+            --border-color: #ddd;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background-color: var(--primary-green); color: white; padding: 80px 40px; position: relative; clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%); text-align: left; }
+        .header-logo { font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 20px; }
+        .header-logo span { font-weight: 400; }
+        .header h1 { font-size: 3rem; margin: 0; font-weight: 700; }
+        .header p { font-size: 1.2rem; max-width: 600px; opacity: 0.9; }
+
+        /* New Layout Structure */
+        .main-content { padding: 40px 20px; }
+        .chapter-block { background: white; border-radius: 12px; margin-bottom: 25px; box-shadow: var(--shadow); overflow: hidden; }
+        .chapter-title { background-color: var(--primary-green); color: white; padding: 15px 25px; font-size: 1.5rem; font-weight: 600; }
+        .sub-item { border-bottom: 1px solid var(--border-color); }
+        .sub-item:last-child { border-bottom: none; }
+        .sub-item-header { padding: 15px 25px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+        .sub-item-header:hover { background-color: var(--light-green); }
+        .sub-item-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out; padding: 0 25px; }
+        .sub-item-content.active { max-height: 1000px; padding: 15px 25px 25px; }
+        .sub-item-header .toggle-icon { font-size: 1.5rem; transition: transform 0.3s; }
+        .sub-item-header.active .toggle-icon { transform: rotate(45deg); }
+
+        /* Modal & Overlay Styles */
+        .glossary-overlay { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); animation: fadeIn 0.3s; }
+        .glossary-content { background-color: #fefefe; margin: 15% auto; padding: 30px; border-radius: 12px; width: 80%; max-width: 500px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); position: relative; animation: slideIn 0.4s; }
+        .close-btn { color: #aaa; position: absolute; top: 15px; right: 25px; font-size: 32px; font-weight: bold; cursor: pointer; transition: color 0.2s; }
+        .close-btn:hover, .close-btn:focus { color: black; }
+        .glossary-content h3 { color: var(--primary-green); border-bottom: 2px solid var(--light-green); padding-bottom: 10px; }
+        .glossary-content p { margin-top: 15px; }
+
+        /* Interactive word style */
+        .ai-word { text-decoration: underline dotted var(--primary-green); cursor: pointer; font-weight: 600; }
+        
+        /* AI Buttons */
+        .ai-button { background-color: var(--primary-green); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: background-color 0.3s; margin-top: 20px; display: inline-flex; align-items: center; gap: 8px; }
+        .ai-button:hover { background-color: #4a8c2a; }
+        .ai-button.secondary { background-color: #555; }
+        .ai-button.secondary:hover { background-color: #333; }
+        .ai-button .spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; }
+        
+        .ai-summary { background-color: var(--light-green); border-left: 4px solid var(--primary-green); padding: 15px; margin-top: 20px; border-radius: 5px; }
+        .ai-summary ul { padding-left: 20px; margin: 0; }
+
+        /* AI Workflow Visualisation */
+        .workflow-container { background-color: #f9f9f9; border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-top: 20px; display: none; }
+        .workflow-container.active { display: block; animation: fadeIn 0.5s; }
+        .workflow-title { font-weight: bold; font-size: 1.1rem; color: var(--primary-green); text-align: center; margin-bottom: 20px; }
+        .workflow-steps { display: flex; justify-content: space-around; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+        .workflow-step { flex: 1; min-width: 120px; text-align: center; position: relative; padding: 0 10px; }
+        .workflow-step:not(:last-child)::after { content: '→'; font-size: 2rem; color: var(--primary-green); position: absolute; right: -25px; top: 25px; }
+        .workflow-icon { font-size: 3rem; color: var(--primary-green); margin-bottom: 10px; }
+        .workflow-step-title { font-weight: bold; }
+        .workflow-step-desc { font-size: 0.85rem; color: #666; }
+
+        /* AI Chat Assistant */
+        .ai-chat-container { position: fixed; bottom: 20px; right: 20px; width: 350px; max-width: 90vw; background-color: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; transition: height 0.3s ease-in-out; z-index: 999; height: 55px; }
+        .ai-chat-header { background-color: var(--primary-green); color: white; padding: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .ai-chat-content { flex-grow: 1; display: flex; flex-direction: column; min-height: 0; }
+        .ai-chat-body { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .ai-chat-footer { padding: 10px; border-top: 1px solid var(--border-color); background-color: #f9f9f9; flex-shrink: 0; }
+        .ai-chat-prompts { padding: 0 10px 10px; display: flex; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
+        .prompt-btn { background: var(--light-green); color: var(--primary-green); border: 1px solid var(--primary-green); padding: 5px 10px; font-size: 0.8rem; border-radius: 15px; cursor: pointer; transition: all 0.2s; }
+        .prompt-btn:hover { background: var(--primary-green); color: white; }
+        .chat-message { padding: 10px 15px; border-radius: 18px; max-width: 85%; line-height: 1.4; word-wrap: break-word; }
+        .user-message { background-color: var(--primary-green); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .bot-message { background-color: #e9ecef; color: var(--dark-text); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .bot-message .source-ref { display: block; margin-top: 8px; font-size: 0.8rem; font-style: italic; color: #6c757d; border-top: 1px solid #ddd; padding-top: 5px; }
+        .chat-input-area { display: flex; gap: 10px; }
+        #chat-input { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 15px; font-size: 0.9rem; }
+        #send-btn { background: var(--primary-green); border: none; color: white; font-weight: bold; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: background-color 0.2s; }
+        #send-btn:hover { background-color: #4a8c2a; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        @media (max-width: 768px) {
+            .header { padding: 60px 20px; clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%); }
+            .header h1 { font-size: 2.2rem; }
+            .workflow-steps { flex-direction: column; align-items: center; gap: 30px; }
+            .workflow-step:not(:last-child)::after { content: '↓'; right: 50%; top: 100%; transform: translateX(50%); }
+            .glossary-content { width: 95%; margin: 20% auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-logo">roc <span>van</span> twente</div>
+        <h1>Interactief Examenreglement</h1>
+        <p>Beroepsgericht Onderwijs 2025-2026. Klik op een onderwerp voor een duidelijke uitleg, samenvatting of visuele workflow.</p>
+    </header>
+
+    <div class="container">
+        <div class="main-content" id="main-content">
+            <!-- Chapters will be injected here by JavaScript -->
+        </div>
+    </div>
+    
+    <div class="glossary-overlay" id="glossary-overlay">
+        <div class="glossary-content">
+            <span class="close-btn" id="glossary-close-btn">×</span>
+            <h3 id="glossary-term"></h3>
+            <p id="glossary-definition"></p>
+        </div>
+    </div>
+
+    <div class="ai-chat-container" id="ai-chat-container">
+        <div class="ai-chat-header" id="ai-chat-header">
+            <span>AI Examen Assistent</span>
+            <span id="chat-toggle-icon">▲</span>
+        </div>
+        <div class="ai-chat-content">
+            <div id="chat-prompts-container" class="ai-chat-prompts"></div>
+            <div id="ai-chat-body" class="ai-chat-body">
+                <div class="chat-message bot-message">Hallo! Ik ben je AI Examen Assistent. Stel een vraag.</div>
+            </div>
+            <div class="ai-chat-footer">
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Typ je vraag hier...">
+                    <button id="send-btn">→</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const glossary = { /* ... same glossary data as before ... */ };
+    const qaPairs = { /* ... same qaPairs data as before ... */ };
+    const suggestedPrompts = [ /* ... same prompts data as before ... */ ];
+
+    // NEW HIERARCHICAL DATA STRUCTURE
+    const chaptersData = [
+        {
+            title: '1-3. Algemeen & Deelname',
+            subsections: [
+                { title: 'Examenreglement (1)', content: `<p>Het examenreglement geeft je alle informatie over examinering bij ROC van Twente. Dit reglement geldt voor alle studenten die vanaf 1 augustus 2025 deelnemen aan een BOL-, BBL- of derde leerweg opleiding (cohort 2025).</p>` },
+                { title: 'De Examencommissie (2)', content: `<p>Je college heeft een eigen examencommissie die toeziet op de kwaliteit van examinering. De belangrijkste taken zijn: beslissen over vrijstellingen, aanpassingen, fraudegevallen en het vaststellen of je geslaagd bent.</p>` },
+                { title: 'Deelname aan examens (3)', content: `<p>Als ingeschreven student moet je deelnemen aan de examens. Neem een geldig ID-bewijs mee. Ongeoorloofde hulpmiddelen (telefoon, smartwatch, ongeautoriseerde AI) zijn verboden. Meld afwezigheid door ziekte altijd op tijd. Bij een onvoldoende heb je recht op één herkansing.</p>` }
+            ]
+        },
+        {
+            title: '7. Gang van zaken tijdens een examen',
+            subsections: [
+                { 
+                    title: 'Onregelmatigheden & Fraude (7.1)', 
+                    content: `<p>Een onregelmatigheid is alles wat niet mag, zoals fraude (spieken, verboden hulpmiddelen), overlast of instructies negeren. Als dit wordt geconstateerd, wordt er een proces-verbaal opgemaakt. De examencommissie kan maatregelen opleggen, zoals het ongeldig verklaren van het examen of het ontzeggen van de herkansing.</p>`,
+                    workflow: {
+                        title: 'AI Workflow: Protocol bij Fraude',
+                        steps: [
+                            { icon: '👁️', title: '1. Constatering', desc: 'Surveillant constateert of vermoedt fraude.' },
+                            { icon: '🗣️', title: '2. Melding & Bewijs', desc: 'Student wordt aangesproken, bewijsmateriaal wordt ingenomen.' },
+                            { icon: '📝', title: '3. Proces-verbaal', desc: 'Surveillant stelt een officieel verslag op van de gebeurtenis.' },
+                            { icon: '⚖️', title: '4. Beslissing', desc: 'Examencommissie beoordeelt het verslag en hoort betrokkenen.' },
+                            { icon: '❗', title: '5. Maatregel', desc: 'De commissie legt een passende straf op (bv. cijfer 1, uitsluiting).' }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            title: '8. Uitslag & Inzagerecht',
+            subsections: [
+                { title: 'Uitslag examens (8.1 - 8.3)', content: `<p>De uitslag van een examen wordt binnen 15 werkdagen bekendgemaakt. Uitslagen worden digitaal vastgelegd en via e-mail aan je bekendgemaakt.</p>` },
+                { 
+                    title: 'Inzagerecht (8.4)', 
+                    content: `<p>Je hebt het recht om je beoordeelde examenwerk in te zien. Je moet hiervoor binnen 5 dagen na de uitslag een verzoek indienen bij je onderwijsteam. Bij de inzage mag je geen telefoon, smartwatch of andere opnameapparatuur gebruiken.</p>`,
+                    workflow: {
+                        title: 'AI Workflow: Examen Inzien',
+                        steps: [
+                            { icon: '📊', title: '1. Uitslag', desc: 'Je ontvangt het resultaat van je examen.' },
+                            { icon: '🗓️', title: '2. Verzoek', desc: 'Dien binnen 5 werkdagen een verzoek tot inzage in.' },
+                            { icon: '🤝', title: '3. Afspraak', desc: 'Je opleiding plant een moment voor de inzage.' },
+                            { icon: '🔍', title: '4. Inzage', desc: 'Je bekijkt je examen onder toezicht van een docent.' }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            title: '9. Waardepapieren (Diploma)',
+            subsections: [
+                { 
+                    title: 'Diploma-eisen (9.1)', 
+                    content: `<p>Je ontvangt een diploma als je aan alle eisen hebt voldaan. Dit omvat de kerntaken, de generieke vakken (Nederlands, Rekenen, Engels), de beroepspraktijkvorming (bpv) en de keuzedelen.</p>`,
+                    workflow: {
+                        title: 'AI Checklist: Diploma Behaald',
+                        steps: [
+                            { icon: '🎯', title: 'Kerntaken', desc: 'Allemaal voldoende afgerond.' },
+                            { icon: '🧮', title: 'NL/RE/EN', desc: 'Voldaan aan de slaag-/zakregeling.' },
+                            { icon: '🏢', title: 'BPV', desc: 'Stage met een voldoende beoordeeld.' },
+                            { icon: '✅', title: 'Keuzedelen', desc: 'Voldaan aan de verplichting.' }
+                        ]
+                    }
+                }
+            ]
+        }
+    ];
+
+    // --- DOM Elements ---
+    const mainContent = document.getElementById('main-content');
+    const glossaryOverlay = document.getElementById('glossary-overlay');
+    const glossaryCloseBtn = document.getElementById('glossary-close-btn');
+    const glossaryTermEl = document.getElementById('glossary-term');
+    const glossaryDefinitionEl = document.getElementById('glossary-definition');
+    const chatContainer = document.getElementById('ai-chat-container');
+    const chatHeader = document.getElementById('ai-chat-header');
+    const chatBody = document.getElementById('ai-chat-body');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-btn');
+    const chatPromptsContainer = document.getElementById('chat-prompts-container');
+    const chatToggleIcon = document.getElementById('chat-toggle-icon');
+
+    // --- Main Rendering Function ---
+    function renderContent() {
+        mainContent.innerHTML = ''; // Clear previous content
+        chaptersData.forEach((chapter, chapterIndex) => {
+            const chapterBlock = document.createElement('div');
+            chapterBlock.className = 'chapter-block';
+
+            const chapterTitle = document.createElement('div');
+            chapterTitle.className = 'chapter-title';
+            chapterTitle.textContent = chapter.title;
+            chapterBlock.appendChild(chapterTitle);
+
+            chapter.subsections.forEach((subsection, subIndex) => {
+                const subItem = document.createElement('div');
+                subItem.className = 'sub-item';
+
+                const header = document.createElement('div');
+                header.className = 'sub-item-header';
+                header.innerHTML = `<span>${subsection.title}</span><span class="toggle-icon">+</span>`;
+                
+                const content = document.createElement('div');
+                content.className = 'sub-item-content';
+                
+                let contentHTML = processGlossaryTerms(subsection.content);
+                const buttonContainer = document.createElement('div');
+
+                // Add AI Summarize Button
+                const summaryBtn = document.createElement('button');
+                summaryBtn.className = 'ai-button';
+                summaryBtn.innerHTML = `<div class="spinner"></div>Vat samen met AI`;
+                summaryBtn.onclick = () => { /* AI Summary logic would go here, simplified for this example */ alert('AI Samenvatting: ' + subsection.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...'); };
+                buttonContainer.appendChild(summaryBtn);
+                
+                // Add AI Workflow Button if workflow exists
+                if (subsection.workflow) {
+                    const workflowBtn = document.createElement('button');
+                    workflowBtn.className = 'ai-button secondary';
+                    workflowBtn.textContent = 'Toon Workflow met AI';
+                    workflowBtn.onclick = (e) => {
+                        e.stopPropagation(); // prevent accordion from closing
+                        toggleWorkflow(content, subsection.workflow);
+                    };
+                    buttonContainer.appendChild(workflowBtn);
+                }
+                
+                content.innerHTML = contentHTML;
+                content.appendChild(buttonContainer);
+                
+                // Workflow container
+                const workflowContainer = document.createElement('div');
+                workflowContainer.className = 'workflow-container';
+                content.appendChild(workflowContainer);
+
+                subItem.appendChild(header);
+                subItem.appendChild(content);
+                chapterBlock.appendChild(subItem);
+
+                header.addEventListener('click', () => {
+                    const isActive = content.classList.contains('active');
+                    // Close all others
+                    document.querySelectorAll('.sub-item-content.active').forEach(el => {
+                        el.classList.remove('active');
+                        el.previousElementSibling.classList.remove('active');
+                    });
+                    // Toggle current
+                    if (!isActive) {
+                        content.classList.add('active');
+                        header.classList.add('active');
+                    }
+                });
+            });
+            mainContent.appendChild(chapterBlock);
+        });
+    }
+
+    // --- Helper Functions ---
+    function processGlossaryTerms(text) {
+        let processedText = text;
+        Object.keys(glossary).forEach(key => {
+            const regex = new RegExp(`\\b(${key})\\b`, 'gi');
+            processedText = processedText.replace(regex, `<span class="ai-word" data-term="${key}">$1</span>`);
+        });
+        return processedText;
+    }
+
+    function toggleWorkflow(contentElement, workflowData) {
+        const container = contentElement.querySelector('.workflow-container');
+        const isActive = container.classList.contains('active');
+
+        if (isActive) {
+            container.classList.remove('active');
+        } else {
+            container.innerHTML = `<div class="workflow-title">${workflowData.title}</div>
+                <div class="workflow-steps">
+                    ${workflowData.steps.map(step => `
+                        <div class="workflow-step">
+                            <div class="workflow-icon">${step.icon}</div>
+                            <div class="workflow-step-title">${step.title}</div>
+                            <div class="workflow-step-desc">${step.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            container.classList.add('active');
+        }
+    }
+
+    function showGlossaryOverlay(termKey) { /* ... same as before ... */ }
+    function hideGlossaryOverlay() { /* ... same as before ... */ }
+    function handleUserMessage() { /* ... same as before ... */ }
+    function addMessageToChat(message, sender) { /* ... same as before ... */ }
+    function getBotResponse(userInput) { /* ... same as before ... */ }
+    function toggleChat() { /* ... same as before ... */ }
+    function renderSuggestedPrompts() { /* ... same as before ... */ }
+
+    // --- Event Listeners ---
+    // Event delegation for glossary terms (now on main content area)
+    mainContent.addEventListener('click', (event) => {
+        const target = event.target.closest('.ai-word');
+        if (target && target.dataset.term) {
+            const termKey = Object.keys(glossary).find(k => k.toLowerCase() === target.dataset.term.toLowerCase()) || target.dataset.term;
+            showGlossaryOverlay(termKey);
+        }
+    });
+    
+    // (Re-adding the other listeners for completeness)
+    glossaryCloseBtn.addEventListener('click', hideGlossaryOverlay);
+    glossaryOverlay.addEventListener('click', (e) => { if(e.target === glossaryOverlay) hideGlossaryOverlay(); });
+    sendBtn.addEventListener('click', handleUserMessage);
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
+    chatHeader.addEventListener('click', toggleChat);
+    window.addEventListener('keydown', (e) => { if (e.key === "Escape") hideGlossaryOverlay(); });
+
+    // --- Initialisation ---
+    renderContent();
+    renderSuggestedPrompts();
+});
+</script>
+</body>
+</html>
