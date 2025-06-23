@@ -14,3 +14,5 @@ https:/paulomoekotte.github.io/mijnTiddlers/
 [Auditing raamwerk](https://paulomoekotte.github.io/mijnTiddlers/AuditingFramework.html)
 
 [Future of work](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
+
+[AI geletterdheid raamwerk](https://paulomoekotte.github.io/mijnTiddlers/AIGeletterdheidRaamwerk.html)
