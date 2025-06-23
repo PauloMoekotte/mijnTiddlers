@@ -17,6 +17,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Future of work](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
 
+[Future of work versie b](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWorkb.html)
+
 [AI geletterdheid raamwerk](https://paulomoekotte.github.io/mijnTiddlers/AIGeletterdheidRaamwerk.html)
 
 [MBO Verkenner](https://paulomoekotte.github.io/mijnTiddlers/MBOVerkenner.html)
