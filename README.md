@@ -18,3 +18,5 @@ https://paulomoekotte.github.io/mijnTiddlers/
 [AI geletterdheid raamwerk](https://paulomoekotte.github.io/mijnTiddlers/AIGeletterdheidRaamwerk.html)
 
 [MBO Verkenner](https://paulomoekotte.github.io/mijnTiddlers/MBOVerkenner.html)
+
+[Taakanalyse](https://paulomoekotte.github.io/mijnTiddlers/TaakAnalyse.html)
