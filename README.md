@@ -7,6 +7,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Examenreglement 2025-2026 versie b](https://paulomoekotte.github.io/mijnTiddlers/examenreglement_2025-2026b.html)
 
+[Examenreglement 2025-2026 versie c](https://paulomoekotte.github.io/mijnTiddlers/examenreglement_2025-2026c.html)
+
 [AI en werk - infographic](https://paulomoekotte.github.io/mijnTiddlers//AI%20en%20werk.html)
 
 [AI capability indicatoren - OECD](https://paulomoekotte.github.io/mijnTiddlers/AI_CapabilityIndicators.html)
