@@ -7,10 +7,10 @@ https:/paulomoekotte.github.io/mijnTiddlers/
 
 [Examenreglement 2025-2026 versie b](https://paulomoekotte.github.io/mijnTiddlers/examenreglement_2025-2026b.html)
 
-(https://paulomoekotte.github.io/mijnTiddlers//AI%20en%20werk.html)
+[AI en werk - infographic](https://paulomoekotte.github.io/mijnTiddlers//AI%20en%20werk.html)
 
-(https://paulomoekotte.github.io/mijnTiddlers/AI_CapabilityIndicators.html)
+[AI capability indicatoren - OECD](https://paulomoekotte.github.io/mijnTiddlers/AI_CapabilityIndicators.html)
 
-(https://paulomoekotte.github.io/mijnTiddlers/AuditingFramework.html)
+[Auditing raamwerk](https://paulomoekotte.github.io/mijnTiddlers/AuditingFramework.html)
 
-(https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
+[Future of work](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
