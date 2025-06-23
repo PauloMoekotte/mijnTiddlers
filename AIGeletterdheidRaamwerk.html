@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactieve Infographic: AI Geletterdheid Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 40;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            max-height: 90vh;
+        }
+        .chat-bubble-user {
+            background-color: #3B82F6; /* blue-500 */
+            color: white;
+            align-self: flex-end;
+        }
+        .chat-bubble-ai {
+            background-color: #E5E7EB; /* gray-200 */
+            color: #1F2937; /* gray-800 */
+            align-self: flex-start;
+        }
+        .chat-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-2">Empowering Learners for the Age of AI</h1>
+            <p class="text-xl text-gray-600">Een interactief overzicht van het AI Geletterdheid Framework</p>
+        </header>
+
+        <!-- Inleiding Sectie -->
+        <section id="intro" class="mb-16 bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 text-center">Wat is AI Geletterdheid?</h2>
+            <p class="text-lg text-center max-w-4xl mx-auto">
+                AI-geletterdheid omvat de technische kennis, duurzame vaardigheden en toekomstgerichte houdingen die nodig zijn om te gedijen in een wereld die wordt beïnvloed door AI. Het stelt lerenden in staat om AI te gebruiken, ermee te creëren, het te beheren en te ontwerpen, terwijl ze de voordelen, risico's en ethische implicaties kritisch evalueren.
+            </p>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-blue-100 p-6 rounded-xl">
+                    <h3 class="font-bold text-xl mb-2">74%</h3>
+                    <p>van de jongeren gelooft dat AI een belangrijke rol zal spelen in hun professionele leven.</p>
+                </div>
+                <div class="bg-green-100 p-6 rounded-xl">
+                    <h3 class="font-bold text-xl mb-2">46%</h3>
+                    <p>denkt dat hun school hen adequaat voorbereidt op AI.</p>
+                </div>
+                <div class="bg-red-100 p-6 rounded-xl">
+                    <h3 class="font-bold text-xl mb-2">49%</h3>
+                    <p>maakt zich zorgen dat AI de kloof in academisch succes tussen leeftijdsgenoten zal vergroten.</p>
+                </div>
+            </div>
+             <p class="text-sm text-gray-500 mt-4 text-center">Bron: AI in European Schools (Vodafone Foundation, 2024)</p>
+        </section>
+
+        <!-- Domeinen Sectie -->
+        <section id="domains" class="mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">De Vier Domeinen van AI Geletterdheid</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Kaart 1: Hanteren -->
+                <div class="card bg-white p-6 rounded-2xl shadow-md cursor-pointer" onclick="openModal('modal-engaging')">
+                    <div class="flex items-center mb-4">
+                        <svg class="w-12 h-12 text-blue-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        <h3 class="text-2xl font-bold">Hanteren</h3>
+                    </div>
+                    <p>AI gebruiken als hulpmiddel om toegang te krijgen tot nieuwe inhoud, informatie of aanbevelingen.</p>
+                </div>
+                <!-- Kaart 2: Creëren -->
+                <div class="card bg-white p-6 rounded-2xl shadow-md cursor-pointer" onclick="openModal('modal-creating')">
+                    <div class="flex items-center mb-4">
+                        <svg class="w-12 h-12 text-green-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                        <h3 class="text-2xl font-bold">Creëren</h3>
+                    </div>
+                    <p>Samenwerken met een AI-systeem in een creatief of probleemoplossend proces.</p>
+                </div>
+                <!-- Kaart 3: Beheren -->
+                <div class="card bg-white p-6 rounded-2xl shadow-md cursor-pointer" onclick="openModal('modal-managing')">
+                     <div class="flex items-center mb-4">
+                        <svg class="w-12 h-12 text-purple-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 0a2 2 0 100-4m0 4a2 2 0 110-4M6 12a2 2 0 100-4m0 4a2 2 0 110-4m6 0a2 2 0 100-4m0 4a2 2 0 110-4m6 0a2 2 0 100-4m0 4a2 2 0 110-4"></path></svg>
+                        <h3 class="text-2xl font-bold">Beheren</h3>
+                    </div>
+                    <p>Bewust kiezen hoe AI menselijk werk kan ondersteunen en verbeteren.</p>
+                </div>
+                <!-- Kaart 4: Ontwerpen -->
+                <div class="card bg-white p-6 rounded-2xl shadow-md cursor-pointer" onclick="openModal('modal-designing')">
+                     <div class="flex items-center mb-4">
+                        <svg class="w-12 h-12 text-red-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        <h3 class="text-2xl font-bold">Ontwerpen</h3>
+                    </div>
+                    <p>Vormgeven hoe AI-systemen functioneren om de sociale en ethische impact te begrijpen.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Assistent Sectie -->
+        <section id="assistant" class="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-4 text-center">Vraag het de AI Assistent</h2>
+            <p class="text-lg text-center max-w-2xl mx-auto mb-6">Heb je een vraag over het framework? Stel hem hier! Deze assistent is getraind op de belangrijkste informatie uit het rapport.</p>
+            <div class="max-w-2xl mx-auto">
+                <div id="chat-window" class="h-80 bg-gray-100 rounded-t-lg p-4 overflow-y-auto flex flex-col space-y-2">
+                    <!-- Chatberichten komen hier -->
+                    <div class="chat-bubble chat-bubble-ai">
+                        Hallo! Hoe kan ik je helpen met het AI Geletterdheid Framework? Stel een vraag over bijvoorbeeld 'Wat is AI?' of 'domeinen'.
+                    </div>
+                </div>
+                <div class="bg-white rounded-b-lg p-2 border-t border-gray-200">
+                    <form id="chat-form" class="flex items-center">
+                        <input type="text" id="chat-input" placeholder="Typ je vraag..." class="flex-grow p-2 border-none focus:ring-0 rounded-md">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md ml-2">
+                            Verstuur
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Modals voor Domeinen -->
+    <!-- Modal 1: Hanteren -->
+    <div id="modal-engaging" class="modal-backdrop" onclick="closeAllModals()">
+        <div class="modal-content bg-white w-11/12 md:w-2/3 lg:w-1/2 p-8 rounded-2xl shadow-xl overflow-y-auto" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-bold mb-4">Domein: AI Hanteren</h3>
+            <p class="mb-6">AI gebruiken als hulpmiddel om toegang te krijgen tot nieuwe inhoud, informatie of aanbevelingen. Dit vereist dat lerenden de aanwezigheid van AI herkennen en de nauwkeurigheid en relevantie van de output evalueren.</p>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+                <li>De rol en invloed van AI in verschillende contexten herkennen.</li>
+                <li>Evalueren of AI-outputs moeten worden geaccepteerd, herzien of verworpen.</li>
+                <li>Onderzoeken hoe voorspellende AI-systemen aanbevelingen doen.</li>
+                <li>Uitleggen hoe AI maatschappelijke vooroordelen kan versterken.</li>
+                <li>Beschrijven hoe AI-systemen energie en natuurlijke hulpbronnen verbruiken.</li>
+                <li>Analyseren hoe goed het gebruik van een AI-systeem overeenkomt met ethische principes.</li>
+                <li>De sociale en ethische impact van AI verbinden met de technische mogelijkheden.</li>
+            </ul>
+            <button class="mt-6 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg float-right" onclick="closeModal('modal-engaging')">Sluiten</button>
+        </div>
+    </div>
+    
+    <!-- Modal 2: Creëren -->
+    <div id="modal-creating" class="modal-backdrop" onclick="closeAllModals()">
+        <div class="modal-content bg-white w-11/12 md:w-2/3 lg:w-1/2 p-8 rounded-2xl shadow-xl overflow-y-auto" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-bold mb-4">Domein: Creëren met AI</h3>
+            <p class="mb-6">Samenwerken met een AI-systeem in een creatief of probleemoplossend proces. Dit omvat het begeleiden en verfijnen van AI-output en ethische overwegingen met betrekking tot eigendom en attributie.</p>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+                <li>AI-systemen gebruiken om nieuwe perspectieven te verkennen.</li>
+                <li>Ideeën visualiseren, prototypen en combineren met verschillende AI-systemen.</li>
+                <li>Samenwerken met generatieve AI om feedback te krijgen en resultaten te verfijnen.</li>
+                <li>Analyseren hoe AI de authenticiteit en het intellectueel eigendom van content kan beschermen of schenden.</li>
+                <li>Uitleggen hoe AI-systemen taken uitvoeren met precieze taal, zonder antropomorfisme.</li>
+            </ul>
+            <button class="mt-6 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg float-right" onclick="closeModal('modal-creating')">Sluiten</button>
+        </div>
+    </div>
+
+    <!-- Modal 3: Beheren -->
+    <div id="modal-managing" class="modal-backdrop" onclick="closeAllModals()">
+        <div class="modal-content bg-white w-11/12 md:w-2/3 lg:w-1/2 p-8 rounded-2xl shadow-xl overflow-y-auto" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-bold mb-4">Domein: AI Beheren</h3>
+            <p class="mb-6">Bewust kiezen hoe AI menselijk werk kan ondersteunen en verbeteren. Dit omvat het toewijzen van gestructureerde taken aan AI, zodat mensen zich kunnen richten op creativiteit, empathie en oordeelsvorming.</p>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+                <li>Beslissen of AI-systemen moeten worden gebruikt op basis van de aard van de taak.</li>
+                <li>Een probleem opdelen op basis van de capaciteiten van AI en mensen.</li>
+                <li>Generatieve AI-systemen aansturen met specifieke instructies.</li>
+                <li>Taken delegeren aan AI-systemen om menselijke workflows te automatiseren.</li>
+                <li>Richtlijnen ontwikkelen en communiceren voor het gebruik van AI-systemen.</li>
+            </ul>
+            <button class="mt-6 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg float-right" onclick="closeModal('modal-managing')">Sluiten</button>
+        </div>
+    </div>
+    
+    <!-- Modal 4: Ontwerpen -->
+    <div id="modal-designing" class="modal-backdrop" onclick="closeAllModals()">
+        <div class="modal-content bg-white w-11/12 md:w-2/3 lg:w-1/2 p-8 rounded-2xl shadow-xl overflow-y-auto" onclick="event.stopPropagation()">
+            <h3 class="text-2xl font-bold mb-4">Domein: AI Ontwerpen</h3>
+            <p class="mb-6">Lerenden in staat stellen te begrijpen hoe AI werkt en dit te verbinden met de sociale en ethische impact ervan door vorm te geven aan hoe AI-systemen functioneren.</p>
+            <ul class="list-disc list-inside space-y-2 text-lg">
+                <li>Beschrijven hoe AI-systemen kunnen worden ontworpen om een probleem op te lossen.</li>
+                <li>De capaciteiten van op regels gebaseerde AI vergelijken met data-gedreven AI.</li>
+                <li>Data verzamelen en cureren die gebruikt kan worden om een AI-model te trainen.</li>
+                <li>AI-systemen evalueren aan de hand van gedefinieerde criteria en gebruikersfeedback.</li>
+                <li>Het doel, de gebruikers en de beperkingen van een AI-model beschrijven.</li>
+            </ul>
+            <button class="mt-6 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg float-right" onclick="closeModal('modal-designing')">Sluiten</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Modal Logica ---
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function closeAllModals() {
+            const modals = document.querySelectorAll('.modal-backdrop');
+            modals.forEach(modal => modal.style.display = 'none');
+        }
+
+        // --- AI Assistent Logica ---
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const chatWindow = document.getElementById('chat-window');
+
+        // Kennisbank voor de AI assistent, gebaseerd op het rapport
+        const knowledgeBase = {
+            "wat is ai": "Volgens het rapport is Artificiële Intelligentie (AI) een 'machine-gebaseerd systeem dat, voor expliciete of impliciete doelstellingen, afleidt uit de input die het ontvangt hoe het outputs zoals voorspellingen, content, aanbevelingen of beslissingen kan genereren die fysieke of virtuele omgevingen kunnen beïnvloeden' (OECD, 2024).",
+            "wat is ai geletterdheid": "AI-geletterdheid omvat de technische kennis, duurzame vaardigheden en toekomstgerichte houdingen die nodig zijn om te gedijen in een wereld die wordt beïnvloed door AI. Het stelt lerenden in staat om AI te gebruiken, ermee te creëren, het te beheren en te ontwerpen, terwijl ze de voordelen, risico's en ethische implicaties kritisch evalueren.",
+            "waarom is ai geletterdheid belangrijk": "Omdat AI steeds meer invloed heeft op hoe we informatie openen, communiceren en beslissingen nemen, wordt AI-geletterdheid essentieel voor het dagelijks leven, om met een doel te creëren en om ons voor te bereiden op de toekomst van leren en werken.",
+            "domeinen": "Er zijn vier domeinen van AI Geletterdheid: Hanteren, Creëren, Beheren en Ontwerpen. Je kunt op de kaarten hierboven klikken voor meer details over elk domein.",
+            "hanteren": "AI Hanteren betekent AI gebruiken als hulpmiddel om toegang te krijgen tot nieuwe inhoud, informatie of aanbevelingen. Lerenden moeten AI herkennen en de nauwkeurigheid en relevantie van de output beoordelen.",
+            "creëren": "Creëren met AI is het samenwerken met een AI-systeem in een creatief of probleemoplossend proces. Dit omvat het begeleiden van AI-output en ethische overwegingen rond eigendom.",
+            "beheren": "AI Beheren vereist het bewust kiezen hoe AI menselijk werk kan ondersteunen. Dit houdt in dat gestructureerde taken aan AI worden toegewezen, zodat mensen zich kunnen richten op creativiteit en oordeelsvorming.",
+            "ontwerpen": "AI Ontwerpen stelt lerenden in staat te begrijpen hoe AI werkt door zelf vorm te geven aan hoe AI-systemen functioneren. Het doel is niet om commerciële producten te ontwikkelen, maar om de principes achter het ontwerp te begrijpen.",
+            "ethiek": "Ethiek is een integraal onderdeel van het framework. Het wordt benadrukt dat AI menselijke keuzes en perspectieven weerspiegelt en dat er risico's zijn zoals desinformatie en vooringenomenheid. Lerenden moeten AI kritisch evalueren en verantwoordelijk gebruiken.",
+            "vaardigheden": "Het framework benadrukt vaardigheden zoals kritisch denken (evalueren van AI-content), creativiteit (samenwerken met AI), computationeel denken (problemen opdelen voor AI), en communicatie (uitleggen hoe AI wordt gebruikt).",
+            "kennis": "Belangrijke kennisgebieden zijn: de aard van AI (hoe het 'leert'), hoe AI menselijke keuzes weerspiegelt (inclusief vooroordelen), de capaciteiten en beperkingen van AI, en de rol van AI in de samenleving.",
+            "houdingen": "Essentiële houdingen zijn onder andere verantwoordelijk, nieuwsgierig, innovatief, aanpasbaar en empathisch zijn bij het omgaan met AI."
+        };
+        
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userInput = chatInput.value.trim().toLowerCase();
+            if (userInput === '') return;
+
+            addMessageToChat(userInput, 'user');
+            chatInput.value = '';
+
+            setTimeout(() => {
+                const aiResponse = getAIResponse(userInput);
+                addMessageToChat(aiResponse, 'ai');
+            }, 500);
+        });
+
+        function addMessageToChat(message, sender) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('chat-bubble');
+            if (sender === 'user') {
+                bubble.classList.add('chat-bubble-user');
+            } else {
+                bubble.classList.add('chat-bubble-ai');
+            }
+            bubble.textContent = message;
+            chatWindow.appendChild(bubble);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function getAIResponse(input) {
+            // Zoek naar trefwoorden in de input van de gebruiker
+            for (const keyword in knowledgeBase) {
+                if (input.includes(keyword)) {
+                    return knowledgeBase[keyword];
+                }
+            }
+            return "Sorry, ik heb geen informatie kunnen vinden over dat onderwerp in het rapport. Probeer je vraag anders te formuleren. Je kunt bijvoorbeeld vragen 'wat is AI geletterdheid?' of 'vertel me over de domeinen'.";
+        }
+    </script>
+</body>
+</html>
