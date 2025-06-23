@@ -1,7 +1,7 @@
 Welke voorbeelden kon ik hier tegen
 
 
-https:/paulomoekotte.github.io/mijnTiddlers/
+https://paulomoekotte.github.io/mijnTiddlers/
 
 [Examenreglement 2025-2026](https://paulomoekotte.github.io/mijnTiddlers/examenreglement_2025-2026.html)
 
@@ -16,3 +16,5 @@ https:/paulomoekotte.github.io/mijnTiddlers/
 [Future of work](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
 
 [AI geletterdheid raamwerk](https://paulomoekotte.github.io/mijnTiddlers/AIGeletterdheidRaamwerk.html)
+
+[MBO Verkenner](https://paulomoekotte.github.io/mijnTiddlers/MBOVerkenner.html)
