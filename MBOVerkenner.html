@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-T">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactieve MBO Opleidingen Verkenner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F0; /* Off-White */
+            color: #4A4A4A; /* Dark Gray */
+            scroll-behavior: smooth;
+        }
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(245, 245, 240, 0.8); /* Semi-transparent Off-White */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .nav-link {
+            color: #4A4A4A;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #7B8F83; /* Muted Green */
+        }
+        .section-card {
+            background-color: #D9D9C7; /* Light Beige */
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .section-title {
+            color: #A0A083; /* Earthy Green/Gray */
+            border-bottom: 2px solid #7B8F83; /* Muted Green */
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .sector-button {
+            background-color: #A0A083; /* Earthy Green/Gray */
+            color: #F5F5F0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .sector-button:hover {
+            background-color: #7B8F83; /* Muted Green */
+        }
+        .sector-button.active {
+            background-color: #F5F5F0;
+            color: #7B8F83;
+            border-color: #7B8F83;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; 
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+        .flow-step {
+            background-color: #EAEAE2; /* Lighter beige for steps */
+            color: #4A4A4A;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            position: relative;
+            border: 1px solid #D9D9C7;
+        }
+        .flow-arrow::after {
+            content: '▼'; /* Unicode arrow */
+            font-size: 1.5rem;
+            color: #A0A083;
+            display: block;
+            text-align: center;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .flow-step:last-of-type + .flow-arrow::after {
+             display: none; /* No arrow after the last step's container */
+        }
+
+        /* Chart.js specific colors from palette */
+        :root {
+            --chart-color-1: #A0A083; /* Earthy Green/Gray */
+            --chart-color-2: #7B8F83; /* Muted Green */
+            --chart-color-3: #B8B8A2; /* Lighter Earthy Green/Gray */
+            --chart-color-4: #C8C8B9; /* Even Lighter Earthy Green/Gray */
+            --chart-text-color: #4A4A4A;
+            --chart-grid-color: rgba(74, 74, 74, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+        Chosen Palette: Soft & Inviting (Background: #F5F5F0, Container: #D9D9C7, Text: #4A4A4A, Accent1: #A0A083, Accent2: #7B8F83)
+    -->
+    <!-- 
+        Application Structure Plan: Single-page SPA met scroll-gebaseerde navigatie en een sticky top-bar voor sectie-sprongen. 
+        Secties: Introductie, Algemene Bronnen, MBO Sectoren (interactieve knoppen die details tonen in een dynamisch gebied), Studiekeuze Proces (HTML flowchart), Disclaimer. 
+        Sector details omvatten: focus, voorbeelden van opleidingen (lijst), MBO-instellingen (tekst), en een illustratieve Chart.js bar chart voor populariteit van voorbeeldopleidingen. 
+        Deze structuur biedt een heldere, progressieve onthulling van informatie, wat de bruikbaarheid verbetert en cognitieve overbelasting vermindert.
+    -->
+    <!-- 
+        Visualization & Content Choices:
+        - Algemene Bronnen: Lijst -> Informeren -> HTML Lijst -> Duidelijkheid voor bronnen.
+        - MBO Sectoren Overzicht: Interactieve Knoppen -> Organiseren/Navigeren -> HTML/JS -> Gebruikersgestuurde verkenning.
+        - Sector - Focus: Tekst -> Informeren -> HTML Paragraaf -> Directe info.
+        - Sector - Voorbeeld Opleidingen: Lijst -> Informeren/Organiseren -> HTML Lijst -> Heldere presentatie van voorbeelden.
+        - Sector - MBO Instellingen: Tekst -> Informeren -> HTML Paragraaf -> Directe info.
+        - Sector - Illustratieve Opleiding Populariteit: Horizontale Bar Chart -> Vergelijken (illustratief) -> Chart.js Canvas -> Visuele betrokkenheid, vergelijking van voorbeelditems. Data expliciet gemarkeerd als illustratief.
+        - Studiekeuze Proces: Flowchart -> Organiseren -> HTML/CSS (Tailwind) -> Visuele gids voor gebruikers.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+
+    <nav class="sticky-nav shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold" style="color: #A0A083;">MBO Verkenner</div>
+            <div class="space-x-4">
+                <a href="#intro" class="nav-link">Intro</a>
+                <a href="#bronnen" class="nav-link">Bronnen</a>
+                <a href="#sectoren" class="nav-link">Sectoren</a>
+                <a href="#studiekeuze" class="nav-link">Studiekeuze</a>
+                <a href="#disclaimer" class="nav-link">Disclaimer</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="py-12 md:py-20 text-center" style="background-color: #D9D9C7;">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: #A0A083;">Ontdek Jouw Toekomst in het MBO</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto" style="color: #4A4A4A;">
+                Een interactieve gids om het brede aanbod van MBO-opleidingen in Nederland te verkennen.
+            </p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="intro" class="section-card">
+            <h2 class="text-3xl font-semibold section-title">Welkom bij de MBO Opleidingen Verkenner</h2>
+            <p class="mb-4">
+                Dit document biedt een overzicht van MBO-opleidingen per sector in Nederland. Het is bedoeld als een startpunt voor oriëntatie en onderzoek. Het Middelbaar Beroepsonderwijs (MBO) is een cruciale pijler van de Nederlandse samenleving en biedt talloze mogelijkheden voor persoonlijke en professionele ontwikkeling.
+            </p>
+            <p>
+                Of je nu aan het begin van je carrière staat, een carrièreswitch overweegt, of gewoon nieuwsgierig bent naar de mogelijkheden, deze interactieve gids helpt je op weg. Ontdek de diverse sectoren, de soorten opleidingen en de instellingen die het MBO te bieden heeft.
+            </p>
+        </section>
+
+        <section id="bronnen" class="section-card">
+            <h2 class="text-3xl font-semibold section-title">Algemene Bronnen</h2>
+            <p class="mb-6">
+                Voordat we de sectoren induiken, hier enkele centrale websites waar je gedetailleerde en actuele informatie kunt vinden over MBO-opleidingen en -instellingen:
+            </p>
+            <ul class="list-none space-y-3">
+                <li><a href="https://www.kiesmbo.nl" target="_blank" class="font-semibold hover:underline" style="color: #7B8F83;">🔗 KiesMBO.nl:</a> De officiële voorlichtingssite over het MBO.</li>
+                <li><a href="https://www.s-bb.nl" target="_blank" class="font-semibold hover:underline" style="color: #7B8F83;">🔗 SBB (Samenwerkingsorganisatie Beroepsonderwijs Bedrijfsleven):</a> Informatie over erkende opleidingen en beroepsprofielen.</li>
+                <li><strong style="color: #7B8F83;">🔗 Websites van MBO-instellingen:</strong> Zoek naar ROC's, AOC's en vakscholen in jouw regio.</li>
+                <li><a href="https://duo.nl/particulier/erkende-opleidingen/" target="_blank" class="font-semibold hover:underline" style="color: #7B8F83;">🔗 DUO (Dienst Uitvoering Onderwijs):</a> Register van erkende opleidingen.</li>
+            </ul>
+        </section>
+
+        <section id="sectoren" class="section-card">
+            <h2 class="text-3xl font-semibold section-title">Verken de MBO Sectoren</h2>
+            <p class="mb-6">
+                Klik op een sector hieronder om meer te weten te komen over de focus, voorbeeldopleidingen, en een illustratieve weergave van de populariteit van enkele opleidingen binnen die sector.
+            </p>
+            <div id="sectorButtonsContainer" class="flex flex-wrap gap-3 mb-8 justify-center">
+                </div>
+
+            <div id="sectorDetailContainer" class="mt-6 p-6 rounded-lg" style="background-color: #F5F5F0; border: 1px solid #D9D9C7; display: none;">
+                <h3 id="sectorDetailTitle" class="text-2xl font-bold mb-4" style="color: #A0A083;"></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-xl font-semibold mb-2">Focus van de sector:</h4>
+                        <p id="sectorDetailFocus" class="mb-4 text-sm"></p>
+                        
+                        <h4 class="text-xl font-semibold mb-2">Voorbeelden van MBO-opleidingen:</h4>
+                        <ul id="sectorDetailOpleidingen" class="list-disc list-inside mb-4 text-sm space-y-1"></ul>
+                        
+                        <h4 class="text-xl font-semibold mb-2">MBO-instellingen:</h4>
+                        <p id="sectorDetailInstellingen" class="text-sm"></p>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 text-center">Illustratieve Populariteit Voorbeeldopleidingen</h4>
+                        <div class="chart-container">
+                            <canvas id="sectorChart"></canvas>
+                        </div>
+                        <p class="text-xs text-center mt-2" style="color: #7B8F83;">Let op: De data in deze grafiek is illustratief en niet gebaseerd op werkelijke statistieken.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="studiekeuze" class="section-card">
+            <h2 class="text-3xl font-semibold section-title">Stappenplan Studiekeuze MBO</h2>
+            <p class="mb-6">Het kiezen van de juiste MBO-opleiding is een belangrijk proces. Hier is een eenvoudig stappenplan om je op weg te helpen:</p>
+            <div class="max-w-2xl mx-auto space-y-0">
+                <div class="flow-step">
+                    <h3 class="font-semibold text-lg">Stap 1: Oriënteren</h3>
+                    <p class="text-sm">Ontdek je interesses en talenten. Welke sectoren en werkzaamheden spreken je aan? Gebruik online tools en praat met mensen in je omgeving.</p>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step">
+                    <h3 class="font-semibold text-lg">Stap 2: Verdiepen</h3>
+                    <p class="text-sm">Bezoek open dagen van MBO-scholen. Lees over specifieke opleidingen, beroepsperspectieven (bijv. via SBB.nl) en praat met studenten en docenten.</p>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-step">
+                    <h3 class="font-semibold text-lg">Stap 3: Vergelijken & Kiezen</h3>
+                    <p class="text-sm">Vergelijk opleidingen en MBO-instellingen. Let op de inhoud van de studie, de sfeer op school, locatie, en extra faciliteiten of begeleiding.</p>
+                </div>
+                 <div class="flow-arrow"></div>
+                <div class="flow-step">
+                    <h3 class="font-semibold text-lg">Stap 4: Aanmelden</h3>
+                    <p class="text-sm">Heb je een keuze gemaakt? Zorg dat je je op tijd aanmeldt voor de opleiding. Controleer de aanmelddeadlines van de betreffende MBO-instelling.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="disclaimer" class="section-card">
+            <h2 class="text-3xl font-semibold section-title">Disclaimer</h2>
+            <p class="mb-4">
+                De in deze applicatie gepresenteerde informatie, inclusief de voorbeelden van opleidingen, is bedoeld als een algemene leidraad. Binnen elke opleiding kunnen verschillende specialisaties (uitstroomprofielen) en niveaus bestaan.
+            </p>
+            <p>
+                Het aanbod van opleidingen kan per MBO-instelling en per jaar verschillen. Het is essentieel om altijd de meest actuele en gedetailleerde informatie te raadplegen via de officiële websites van MBO-instellingen en bronnen zoals KiesMBO.nl en SBB.nl. De grafische weergaven van populariteit zijn puur illustratief.
+            </p>
+        </section>
+    </main>
+
+    <footer class="text-center py-8 mt-8 border-t" style="border-color: #D9D9C7;">
+        <p>&copy; <span id="currentYear"></span> Interactieve MBO Opleidingen Verkenner. Gebaseerd op openbare informatie.</p>
+    </footer>
+
+<script>
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Data for sectors (based on the provided Markdown)
+    const sectorData = {
+        "Techniek": {
+            focus: "Ontwerpen, ontwikkelen, installeren, onderhouden en repareren van technische producten, systemen en processen. Dit omvat o.a. metaaltechniek, elektrotechniek, installatietechniek, bouw, automotive, ICT, mechatronica en procestechniek.",
+            opleidingen: [
+                "Monteur Elektrotechnische Installaties", "Allround Constructiewerker", "Software Developer", 
+                "(Eerste) Autotechnicus", "Operator C / Procesoperator", "Timmerman / Allround Timmerman", 
+                "Servicemedewerker Gebouwen", "Middenkaderfunctionaris Bouw", "Expert IT Systems and Devices", 
+                "Mechatronica Monteur / Technicus"
+            ],
+            instellingen: "Deze opleidingen worden aangeboden door vrijwel alle ROC's en enkele gespecialiseerde technische vakscholen. Raadpleeg KiesMBO.nl en websites van ROC's.",
+            chartLabels: ["Software Dev.", "Elektrotechniek", "Bouw", "Automotive", "Mechatronica"],
+            chartData: [90, 75, 70, 65, 80] // Illustrative data
+        },
+        "Zorg, Welzijn & Sport": {
+            focus: "Het bieden van zorg, ondersteuning, begeleiding en activiteiten aan mensen van alle leeftijden om hun gezondheid, welzijn en participatie in de samenleving te bevorderen. Ook sportopleidingen vallen hieronder.",
+            opleidingen: [
+                "Helpende Zorg en Welzijn", "Verzorgende IG", "MBO-Verpleegkundige", "Sociaal Werker", 
+                "Pedagogisch Medewerker Kinderopvang", "Onderwijsassistent", "Sport- en Bewegingsleider", 
+                "Doktersassistent", "Apothekersassistent", "Maatschappelijke Zorg"
+            ],
+            instellingen: "Aangeboden door de meeste ROC's. Sommige hebben specifieke academies. Gebruik KiesMBO.nl.",
+            chartLabels: ["Verpleegkunde", "Pedagogisch Werk", "Sociaal Werk", "Sport & Bewegen", "Verzorgende IG"],
+            chartData: [95, 80, 75, 70, 85]
+        },
+        "Economie & Dienstverlening": {
+            focus: "Commerciële, administratieve, financiële, logistieke, secretariële, juridische, beveiligings-, horeca-, toerisme- en facilitaire dienstverlening.",
+            opleidingen: [
+                "Medewerker Marketing en Communicatie", "Logistiek Medewerker / Supervisor", "Financieel Administratief Medewerker", 
+                "Verkoper / Manager Retail", "Beveiliger", "Medewerker Horeca / Kok", 
+                "Medewerker Toerisme", "Medewerker Facilitaire Dienstverlening", "Juridisch-Administratief Dienstverlener", 
+                "Managementassistent"
+            ],
+            instellingen: "Breed aanbod bij vrijwel alle ROC's. Ook specifieke vakscholen (horeca, toerisme). Zoek via KiesMBO.nl.",
+            chartLabels: ["Marketing & Com.", "Logistiek", "Financieel Adm.", "Retail", "Horeca"],
+            chartData: [80, 78, 85, 70, 72]
+        },
+        "Educatie & Participatie": {
+            focus: "Het ondersteunen van leer- en ontwikkelingsprocessen en het bevorderen van maatschappelijke participatie. Overlapt deels met Zorg & Welzijn, met meer nadruk op educatieve en sociaal-culturele contexten.",
+            opleidingen: [
+                "Onderwijsassistent", "Pedagogisch Medewerker Kinderopvang", "Sociaal-Cultureel Werker", 
+                "Gespecialiseerd Pedagogisch Medewerker", "Medewerker Human Resource Management (HRM)"
+            ],
+            instellingen: "Te vinden bij de meeste ROC's, vaak binnen afdelingen voor maatschappelijke zorg, welzijn of pedagogiek. Controleer KiesMBO.nl.",
+            chartLabels: ["Onderwijsassistent", "Ped. Med. Kinderopvang", "Sociaal-Cultureel Werk", "HRM Medewerker"],
+            chartData: [90, 85, 70, 65]
+        },
+        "Creatieve Industrie": {
+            focus: "Het bedenken, ontwerpen en realiseren van creatieve producten en diensten. Denk aan media, vormgeving, mode, kunst, gaming, podiumkunsten en evenementen.",
+            opleidingen: [
+                "Mediavormgever (Grafisch, Interactief, Audiovisueel)", "Gamedeveloper / Game Artist", "Fashion Designer / Tailor", 
+                "Interieuradviseur / Ruimtelijk Vormgever", "Mediamaker", "Podium- en Evenemententechnicus", 
+                "Audiovisueel Specialist", "Fotograaf", "Signmaker"
+            ],
+            instellingen: "Diverse ROC's en gespecialiseerde vakscholen (Grafisch Lyceum, Mediacollege Amsterdam, SintLucas, Cibap, HMC). Zie KiesMBO.nl en vakschool websites.",
+            chartLabels: ["Mediavormgeving", "Game Development", "Fashion Design", "Eventtechniek", "Fotografie"],
+            chartData: [88, 82, 70, 75, 68]
+        },
+        "Groen": {
+            focus: "Alles wat te maken heeft met planten, dieren, natuur, milieu, voeding en de leefomgeving. Van teelt en verzorging tot verwerking, beheer en ontwerp.",
+            opleidingen: [
+                "Vakbekwaam Medewerker Groen, Grond en Infra / Teelt / Dierhouderij", "Dierenverzorger / Paraveterinair", 
+                "Hovenier / Opzichter Groene Ruimte", "Medewerker Agrarisch Loonwerk", "Medewerker Bos- en Natuurbeheer", 
+                "Voeding en Kwaliteit / Kwaliteitsmedewerker", "Urban Green Development", "Bloemist / Bloemstylist"
+            ],
+            instellingen: "Voornamelijk AOC's (Yuverta, Zone.college, Terra MBO, Curio, Lentiz). Sommige ROC's ook. Raadpleeg KiesMBO.nl en AOC websites.",
+            chartLabels: ["Dierverzorging", "Hovenier", "Voeding & Kwaliteit", "Bos & Natuur", "Bloemstyling"],
+            chartData: [92, 80, 70, 78, 65]
+        }
+    };
+
+    const sectorButtonsContainer = document.getElementById('sectorButtonsContainer');
+    const sectorDetailContainer = document.getElementById('sectorDetailContainer');
+    const sectorDetailTitle = document.getElementById('sectorDetailTitle');
+    const sectorDetailFocus = document.getElementById('sectorDetailFocus');
+    const sectorDetailOpleidingen = document.getElementById('sectorDetailOpleidingen');
+    const sectorDetailInstellingen = document.getElementById('sectorDetailInstellingen');
+    const chartCanvas = document.getElementById('sectorChart');
+    let currentChart = null;
+
+    // Helper function for label wrapping (Chart.js)
+    function wrapChartLabels(labels, maxLength = 16) {
+        return labels.map(label => {
+            if (typeof label === 'string' && label.length > maxLength) {
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine.trim());
+                        currentLine = word + ' ';
+                    } else {
+                        currentLine += word + ' ';
+                    }
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            }
+            return label;
+        });
+    }
+    
+    // Shared tooltip configuration for Chart.js
+    const chartTooltipOptions = {
+        callbacks: {
+            title: function(tooltipItems) {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                }
+                return label;
+            }
+        }
+    };
+
+    Object.keys(sectorData).forEach(sectorName => {
+        const button = document.createElement('button');
+        button.textContent = sectorName;
+        button.className = 'sector-button';
+        button.onclick = () => displaySectorDetail(sectorName);
+        sectorButtonsContainer.appendChild(button);
+    });
+
+    function displaySectorDetail(sectorName) {
+        const data = sectorData[sectorName];
+        if (!data) return;
+
+        sectorDetailTitle.textContent = sectorName;
+        sectorDetailFocus.textContent = data.focus;
+        
+        sectorDetailOpleidingen.innerHTML = ''; // Clear previous list
+        data.opleidingen.forEach(opl => {
+            const li = document.createElement('li');
+            li.textContent = opl;
+            sectorDetailOpleidingen.appendChild(li);
+        });
+
+        sectorDetailInstellingen.textContent = data.instellingen;
+        sectorDetailContainer.style.display = 'block';
+
+        // Update active button state
+        Array.from(sectorButtonsContainer.children).forEach(btn => {
+            if (btn.textContent === sectorName) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        
+        // Scroll to the detail container if it's not fully visible
+        // Small timeout to allow DOM update before scrolling
+        setTimeout(() => {
+            const detailTop = sectorDetailContainer.getBoundingClientRect().top + window.pageYOffset - 80; // 80px for sticky nav offset
+             if (detailTop < window.pageYOffset || sectorDetailContainer.getBoundingClientRect().bottom > window.innerHeight) {
+                window.scrollTo({ top: detailTop, behavior: 'smooth' });
+            }
+        }, 100);
+
+
+        if (currentChart) {
+            currentChart.destroy();
+        }
+        
+        const chartRootStyle = getComputedStyle(document.documentElement);
+
+        currentChart = new Chart(chartCanvas.getContext('2d'), {
+            type: 'bar', // Horizontal bar chart
+            data: {
+                labels: wrapChartLabels(data.chartLabels),
+                datasets: [{
+                    label: 'Illustratieve Populariteit',
+                    data: data.chartData,
+                    backgroundColor: chartRootStyle.getPropertyValue('--chart-color-1').trim(),
+                    borderColor: chartRootStyle.getPropertyValue('--chart-color-2').trim(),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y', // This makes it a horizontal bar chart
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { color: chartRootStyle.getPropertyValue('--chart-text-color').trim() },
+                        grid: { color: chartRootStyle.getPropertyValue('--chart-grid-color').trim() }
+                    },
+                    y: {
+                        ticks: { color: chartRootStyle.getPropertyValue('--chart-text-color').trim() },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Hiding legend as it's clear from chart title/context
+                    },
+                    tooltip: chartTooltipOptions
+                }
+            }
+        });
+    }
+
+    // Sticky Nav active link highlighting
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section[id]');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 100) { // 100 for nav height + some offset
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').substring(1) === current) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+</script>
+</body>
+</html>
