@@ -5,7 +5,7 @@ roadmap_modules = {
     "Introductie": {
         "text": """
 Welkom bij de interactieve e-cursus **AI & Data Science**!  
-Deze cursus volgt de [AI and Data Scientist Roadmap](https://roadmap.sh/ai-data-scientist).  
+Deze cursus volgt de [AI and Data Scientist Roadmap](https://roadmap.sh/ai-data-scientist) van [Roadmap.sh](https://roadmap.sh/).  
 Je maakt kennis met de belangrijkste stappen, van wiskunde tot machine learning, en van data engineering tot deep learning.
 """,
     },
