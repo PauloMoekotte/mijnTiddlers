@@ -13,7 +13,7 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [AI en werk - SER infographic](https://paulomoekotte.github.io/mijnTiddlers/AI%20en%20werk.html)
 
-[Ondersteunen of vervangen](https://paulomoekotte.github.io/mijnTiddlers/AutomationAndAugmentationPotential.html)
+[Ondersteunen of vervangen - Stanford](https://paulomoekotte.github.io/mijnTiddlers/AutomationAndAugmentationPotential.html)
 
 [Future of work - MIT](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
 
