@@ -11,7 +11,9 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Examenreglement 2025-2026 versie d](https://paulomoekotte.github.io/mijnTiddlers/examenreglement_2025-2026d.html)
 
-[AI en werk - SER infographic](https://paulomoekotte.github.io/mijnTiddlers//AI%20en%20werk.html)
+[AI en werk - SER infographic](https://paulomoekotte.github.io/mijnTiddlers/AI%20en%20werk.html)
+
+[Ondersteunen of vervangen](https://paulomoekotte.github.io/mijnTiddlers/AutomationAndAugmentationPotential.html)
 
 [Future of work - MIT](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
 
@@ -27,7 +29,7 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [MBO Verkenner](https://paulomoekotte.github.io/mijnTiddlers/MBOVerkenner.html)
 
-# Streamlig apps
+# Streamlit apps
 
 [AI & Data Science e-Cursus volgens de Roadmap](https://ecursus-datascience.streamlit.app/)
 
