@@ -217,3 +217,4 @@ Ontdek verschillende rollen en hoe je verder kunt leren.
 Hier kun je je verder specialiseren, bijvoorbeeld in computer vision, reinforcement learning, big data, enzovoorts.
 """
      }
+}
