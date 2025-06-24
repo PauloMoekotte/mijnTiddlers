@@ -27,4 +27,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [MBO Verkenner](https://paulomoekotte.github.io/mijnTiddlers/MBOVerkenner.html)
 
+# Streamlig apps
+
+[AI & Data Science e-Cursus volgens de Roadmap](https://ecursus-datascience.streamlit.app/)
+
 
