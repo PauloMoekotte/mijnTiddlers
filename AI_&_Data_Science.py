@@ -212,6 +212,8 @@ Ontdek verschillende rollen en hoe je verder kunt leren.
 - [LinkedIn Learning: Data Science Paths](https://www.linkedin.com/learning/paths/advance-your-skills-in-data-science)
 """,
     },
-    "Specialisaties & Vervolg": {
-        "
-
+  "Specialisaties & Vervolg": {
+     "text": """
+Hier kun je je verder specialiseren, bijvoorbeeld in computer vision, reinforcement learning, big data, enzovoorts.
+"""
+     }
