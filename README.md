@@ -11,16 +11,18 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [AI en werk - infographic](https://paulomoekotte.github.io/mijnTiddlers//AI%20en%20werk.html)
 
+[Future of work](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
+
+[Future of work versie b](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWorkb.html)
+
 [AI capability indicatoren - OECD](https://paulomoekotte.github.io/mijnTiddlers/AI_CapabilityIndicators.html)
 
 [Auditing raamwerk](https://paulomoekotte.github.io/mijnTiddlers/AuditingFramework.html)
 
-[Future of work](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
-
-[Future of work versie b](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWorkb.html)
+[Taakanalyse](https://paulomoekotte.github.io/mijnTiddlers/TaakAnalyse.html)
 
 [AI geletterdheid raamwerk](https://paulomoekotte.github.io/mijnTiddlers/AIGeletterdheidRaamwerk.html)
 
 [MBO Verkenner](https://paulomoekotte.github.io/mijnTiddlers/MBOVerkenner.html)
 
-[Taakanalyse](https://paulomoekotte.github.io/mijnTiddlers/TaakAnalyse.html)
+
