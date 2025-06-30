@@ -301,5 +301,28 @@
     }
     // (Eventueel: Modal functionaliteit en andere scripts toevoegen)
     </script>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const toggleBtn = document.getElementById('chatbot-toggle');
+    const chatContainer = document.getElementById('chatbot-container');
+
+    if(toggleBtn && chatContainer) {
+        toggleBtn.addEventListener('click', function() {
+            if(chatContainer.style.display === "none" || chatContainer.style.display === "") {
+                chatContainer.style.display = "flex";
+            } else {
+                chatContainer.style.display = "none";
+            }
+        });
+    }
+
+    // Optioneel: klik buiten het venster sluit het ook
+    document.addEventListener('click', function(event) {
+        if(chatContainer.style.display === "flex" && !chatContainer.contains(event.target) && event.target !== toggleBtn) {
+            chatContainer.style.display = "none";
+        }
+    });
+});
+</script>
 </body>
 </html>
