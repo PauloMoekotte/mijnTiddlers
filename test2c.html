@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Impact van Technologie op Krapte</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+    }
+    h2.section-title {
+      text-align: center;
+      margin-bottom: 16px;
+      font-size: 2rem;
+    }
+    .tech-accordion {
+      margin: 0 auto;
+      max-width: 650px;
+    }
+    .accordion-item {
+      border-radius: 6px;
+      margin-bottom: 10px;
+      background: #f1f4f8;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .accordion-header {
+      cursor: pointer;
+      padding: 18px 24px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .accordion-header:hover {
+      background: #e0e9f6;
+    }
+    .accordion-icon {
+      font-size: 1.6em;
+      margin-right: 14px;
+      transition: transform 0.2s;
+    }
+    .accordion-header.open .accordion-icon {
+      transform: rotate(90deg) scale(1.2);
+    }
+    .accordion-content {
+      display: none;
+      background: #fff;
+      padding: 18px 34px 18px 56px;
+      border-top: 1px solid #e0e0e0;
+      animation: fadeIn .25s;
+    }
+    .accordion-item.open .accordion-content {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+    @media (max-width: 700px) {
+      .container {padding: 10px;}
+      .accordion-content {padding: 12px 14px 12px 38px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="section-title">Impact van Technologie op Krapte</h2>
+    <p style="text-align:center; max-width: 800px; margin: -20px auto 40px auto;">
+      Klik op een categorie om de gevonden empirische resultaten te zien.
+    </p>
+    <div class="tech-accordion">
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-icon">⚙️</span>
+          Persoonlijke assistentie & monitoring
+        </div>
+        <div class="accordion-content">
+          <ul>
+            <li>Voorbeeldresultaat 1 over persoonlijke assistentie</li>
+            <li>Voorbeeldresultaat 2 (empirisch)</li>
+            <!-- Voeg meer empirische resultaten toe -->
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-icon">👓</span>
+          AR & VR
+        </div>
+        <div class="accordion-content">
+          <ul>
+            <li>Effecten van AR op training en productiviteit</li>
+            <li>Toepassing van VR in onboarding</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-icon">🤖</span>
+          Robots & cobots
+        </div>
+        <div class="accordion-content">
+          <ul>
+            <li>Reductie van fysieke belasting bij assemblage</li>
+            <li>Efficiëntieverbetering in productie</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-icon">🦾</span>
+          Exoskeletten
+        </div>
+        <div class="accordion-content">
+          <ul>
+            <li>Verlaging van ziekteverzuim in logistiek</li>
+            <li>Bevindingen pilotproject bouwsector</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-icon">🖨️</span>
+          Maatwerkproductie
+        </div>
+        <div class="accordion-content">
+          <ul>
+            <li>Snellere levertijden door 3D-printing</li>
+            <li>Besparing op arbeid bij patroonontwerp</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-icon">📊</span>
+          Autonome systemen & data-analyse
+        </div>
+        <div class="accordion-content">
+          <ul>
+            <li>Optimalisatie van planningen via AI</li>
+            <li>Automatische kwaliteitscontrole in productie</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <span class="accordion-icon">🏭</span>
+          Geautomatiseerde productieprocessen
+        </div>
+        <div class="accordion-content">
+          <ul>
+            <li>Arbeidsbesparing bij assemblagelijn</li>
+            <li>Voorbeeldcase automatisering in groothandel</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function toggleAccordion(header) {
+      const item = header.parentElement;
+      item.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
