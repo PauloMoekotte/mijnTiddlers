@@ -324,5 +324,49 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('techUsageChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Workflow sw', 'Groupware', 'Big data', 'Robotisering', 'AI', 'Wearables'],
+        datasets: [{
+            label: '% van werkgevers',
+            data: [49, 39, 14, 11, 4, 4],
+            backgroundColor: ['#5F4B8B', '#7E57C2', '#9575CD', '#B39DDB', '#D1C4E9', '#EDE7F6'],
+            borderRadius: 5,
+        }]
+    },
+    options: {
+        responsive: true,
+        indexAxis: 'y',
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Gebruik van technologieën in NL (%)' }
+        },
+        scales: { x: { max: 55 } }
+    }
+});
+
+new Chart(document.getElementById('roboticsReasonsChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Werk minder zwaar', 'Kwaliteitsverb.', 'Hogere productie', 'Kostenbesp.', 'Minder mentale belasting'],
+        datasets: [{
+            label: '% van respondenten',
+            data: [52, 46, 45, 26, 6],
+            backgroundColor: ['#26a69a', '#4db6ac', '#80cbc4', '#b2dfdb', '#e0f2f1'],
+            borderRadius: 5,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false },
+            title: { display: true, text: 'Redenen voor inzet robotisering (%)' }
+        }
+    }
+});
+</script>
 </body>
 </html>
