@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Infographic | Van krapte naar kans</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #5F4B8B;
+            --dark-text: #333;
+            --light-text: #fff;
+            --bg-light: #f8f9fa;
+            --border-color: #e0e0e0;
+            --gradient-start: #ff8a8a;
+            --gradient-end: #4dd0e1;
+            --accent-green: #26a69a;
+            --accent-blue: #42a5f5;
+            --accent-orange: #ffa726;
+            --ai-gradient: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; color: var(--dark-text); background-color: var(--light-text); line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #a664c1, #8e7ce1, #7b99f8, #69b4fa, #59cffc, #48e9d6); color: var(--light-text); padding: 60px 20px; text-align: center; }
+        header h1 { font-size: 3rem; font-weight: 700; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        header h2 { font-size: 2rem; font-weight: 600; margin-top: 10px; }
+        header p { font-size: 1.2rem; margin-top: 5px; }
+        section { padding: 60px 0; border-bottom: 1px solid var(--border-color); }
+        section:last-of-type { border-bottom: none; }
+        h2.section-title { font-size: 2.5rem; color: var(--primary-purple); text-align: center; margin-bottom: 40px; position: relative; }
+        h2.section-title::after { content: ''; display: block; width: 80px; height: 4px; background: var(--primary-purple); margin: 10px auto 0; border-radius: 2px; }
+        h3.subsection-title { font-size: 1.8rem; color: var(--primary-purple); margin-top: 30px; margin-bottom: 20px; }
+        .card { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        /* AI Advisor Section */
+        #ai-advisor { background: var(--ai-gradient); color: white; }
+        #ai-advisor h2.section-title, #ai-advisor h3.subsection-title { color: white; }
+        #ai-advisor h2.section-title::after { background: white; }
+        .advisor-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .advisor-form { display: grid; grid-template-columns: 1fr 1fr 150px; gap: 20px; align-items: end; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; }
+        .form-group select, .form-group button { padding: 12px; border-radius: 8px; border: none; font-size: 1rem; }
+        .form-group button { background: var(--accent-green); color: white; cursor: pointer; transition: background 0.3s; }
+        .form-group button:hover { background: #1e8e81; }
+        #ai-result { margin-top: 30px; background: rgba(255, 255, 255, 0.9); color: var(--dark-text); padding: 25px; border-radius: 10px; display: none; }
+        #ai-result h4 { margin-top: 0; color: var(--primary-purple); }
+        .confidence-bar { width: 100%; background: #e0e0e0; border-radius: 5px; overflow: hidden; height: 20px; margin-top: 10px; }
+        .confidence-level { height: 100%; background: var(--accent-green); border-radius: 5px; transition: width 0.5s ease-out; }
+        /* Interactive Index */
+        #index .flowchart { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; text-align: center; }
+        #index .flowchart-item { background: linear-gradient(135deg, #f3e5f5, #e8eaf6); padding: 20px; border-radius: 15px; border: 2px solid #ce93d8; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s; }
+        #index .flowchart-item:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(95, 75, 139, 0.2); }
+        #index .flowchart-item h3 { margin: 0; font-size: 1.5rem; color: var(--primary-purple); }
+        /* Technology & Impact Grids */
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .tech-card { background: var(--bg-light); padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; transition: background-color 0.3s, transform 0.3s; }
+        .tech-card:hover { background-color: #e9e5f1; transform: scale(1.03); }
+        .tech-card .icon { font-size: 2.5rem; margin-bottom: 10px; color: var(--primary-purple); }
+        .tech-card h4 { margin: 0; font-size: 1.1rem; }
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); animation: fadeIn 0.4s; }
+        .modal-content { position: relative; background-color: #fff; margin: 5% auto; padding: 30px; border: 1px solid #888; width: 80%; max-width: 900px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s; }
+        .close-btn { color: #aaa; position: absolute; top: 15px; right: 25px; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover, .close-btn:focus { color: #000; }
+        .modal h3 { color: var(--primary-purple); margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid var(--border-color); padding: 12px; text-align: left; }
+        th { background-color: var(--bg-light); font-weight: 600; }
+        /* Sector Potential */
+        .sector-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; justify-content: center; }
+        .tab-button { padding: 10px 20px; border: 2px solid var(--primary-purple); background: #fff; color: var(--primary-purple); border-radius: 25px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .tab-button.active, .tab-button:hover { background: var(--primary-purple); color: #fff; }
+        .sector-content { display: none; }
+        .sector-content.active { display: block; animation: fadeIn 0.5s; }
+        .sector-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .dashboard-card { background-color: var(--bg-light); padding: 20px; border-radius: 10px; display: flex;*
+
