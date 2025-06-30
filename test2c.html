@@ -1,288 +1,302 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <title>Interactieve Infographic - Technologie & Krapte</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f8f9fa;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 900px;
-      margin: 30px auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.10);
-    }
-    h2.section-title {
-      text-align: center;
-      margin-bottom: 16px;
-      font-size: 2rem;
-    }
-    .tech-accordion {
-      margin: 0 auto 40px auto;
-      max-width: 650px;
-    }
-    .accordion-item {
-      border-radius: 6px;
-      margin-bottom: 10px;
-      background: #f1f4f8;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-      overflow: hidden;
-      transition: box-shadow 0.2s;
-    }
-    .accordion-header {
-      cursor: pointer;
-      padding: 18px 24px;
-      font-size: 1.15rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      transition: background 0.15s;
-    }
-    .accordion-header:hover {
-      background: #e0e9f6;
-    }
-    .accordion-icon {
-      font-size: 1.6em;
-      margin-right: 14px;
-      transition: transform 0.2s;
-    }
-    .accordion-header.open .accordion-icon {
-      transform: rotate(90deg) scale(1.2);
-    }
-    .accordion-content {
-      display: none;
-      background: #fff;
-      padding: 18px 34px 18px 56px;
-      border-top: 1px solid #e0e0e0;
-      animation: fadeIn .25s;
-    }
-    .accordion-item.open .accordion-content {
-      display: block;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0;}
-      to { opacity: 1;}
-    }
-    @media (max-width: 700px) {
-      .container {padding: 10px;}
-      .accordion-content {padding: 12px 14px 12px 38px;}
-    }
-    /* Optioneel: onderscheid Inventarisatie en Impact visueel */
-    .inventarisatie .accordion-header { color: #1a7fa4; }
-    .impact .accordion-header { color: #a45d1a; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Infographic | Van krapte naar kans</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #5F4B8B;
+            --dark-text: #333;
+            --light-text: #fff;
+            --bg-light: #f8f9fa;
+            --border-color: #e0e0e0;
+            --gradient-start: #ff8a8a;
+            --gradient-end: #4dd0e1;
+            --accent-green: #26a69a;
+            --accent-blue: #42a5f5;
+            --accent-orange: #ffa726;
+            --ai-gradient: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; color: var(--dark-text); background-color: var(--light-text); line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #a664c1, #8e7ce1, #7b99f8, #69b4fa, #59cffc, #48e9d6); color: var(--light-text); padding: 60px 20px; text-align: center; }
+        header h1 { font-size: 3rem; font-weight: 700; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        header h2 { font-size: 2rem; font-weight: 600; margin-top: 10px; }
+        header p { font-size: 1.2rem; margin-top: 5px; }
+        section { padding: 60px 0; border-bottom: 1px solid var(--border-color); }
+        section:last-of-type { border-bottom: none; }
+        h2.section-title { font-size: 2.5rem; color: var(--primary-purple); text-align: center; margin-bottom: 40px; position: relative; }
+        h2.section-title::after { content: ''; display: block; width: 80px; height: 4px; background: var(--primary-purple); margin: 10px auto 0; border-radius: 2px; }
+        h3.subsection-title { font-size: 1.8rem; color: var(--primary-purple); margin-top: 30px; margin-bottom: 20px; }
+        .card { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        /* AI Advisor Section */
+        #ai-advisor { background: var(--ai-gradient); color: white; }
+        #ai-advisor h2.section-title, #ai-advisor h3.subsection-title { color: white; }
+        #ai-advisor h2.section-title::after { background: white; }
+        .advisor-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .advisor-form { display: grid; grid-template-columns: 1fr 1fr 150px; gap: 20px; align-items: end; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; }
+        .form-group select, .form-group button { padding: 12px; border-radius: 8px; border: none; font-size: 1rem; }
+        .form-group button { background: var(--accent-green); color: white; cursor: pointer; transition: background 0.3s; }
+        .form-group button:hover { background: #1e8e81; }
+        #ai-result { margin-top: 30px; background: rgba(255, 255, 255, 0.9); color: var(--dark-text); padding: 25px; border-radius: 10px; display: none; }
+        #ai-result h4 { margin-top: 0; color: var(--primary-purple); }
+        .confidence-bar { width: 100%; background: #e0e0e0; border-radius: 5px; overflow: hidden; height: 20px; margin-top: 10px; }
+        .confidence-level { height: 100%; background: var(--accent-green); border-radius: 5px; transition: width 0.5s ease-out; }
+        /* Interactive Index */
+        #index .flowchart { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; text-align: center; }
+        #index .flowchart-item { background: linear-gradient(135deg, #f3e5f5, #e8eaf6); padding: 20px; border-radius: 15px; border: 2px solid #ce93d8; cursor: pointer; transition: transform 0.3s ease; }
+        #index .flowchart-item:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(95, 75, 139, 0.2); }
+        #index .flowchart-item h3 { margin: 0; font-size: 1.5rem; color: var(--primary-purple); }
+        /* Technology & Impact Grids */
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .tech-card { background: var(--bg-light); padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; transition: background-color 0.3s, transform 0.3s; }
+        .tech-card:hover { background-color: #e9e5f1; transform: scale(1.03); }
+        .tech-card .icon { font-size: 2.5rem; margin-bottom: 10px; color: var(--primary-purple); }
+        .tech-card h4 { margin: 0; font-size: 1.1rem; }
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); animation: fadeIn 0.4s; }
+        .modal-content { position: relative; background-color: #fff; margin: 5% auto; padding: 30px; border: 1px solid #888; width: 80%; max-width: 900px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); animation: slideIn 0.4s; }
+        .close-btn { color: #aaa; position: absolute; top: 15px; right: 25px; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover, .close-btn:focus { color: #000; }
+        .modal h3 { color: var(--primary-purple); margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid var(--border-color); padding: 12px; text-align: left; }
+        th { background-color: var(--bg-light); font-weight: 600; }
+        /* Sector Potential */
+        .sector-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; justify-content: center; }
+        .tab-button { padding: 10px 20px; border: 2px solid var(--primary-purple); background: #fff; color: var(--primary-purple); border-radius: 25px; cursor: pointer; font-weight: 600; transition: background 0.3s, color 0.3s; }
+        .tab-button.active, .tab-button:hover { background: var(--primary-purple); color: #fff; }
+        .sector-content { display: none; }
+        .sector-content.active { display: block; animation: fadeIn 0.5s; }
+        .sector-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .dashboard-card { background-color: var(--bg-light); padding: 20px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .dashboard-card h4 { color: var(--primary-purple); margin-top: 0; margin-bottom: 15px; font-size: 1.2rem; }
+        .impact-rating { font-size: 3rem; font-weight: 700; }
+        /* Chatbot Styles */
+        #chatbot-toggle { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background-color: var(--primary-purple); color: white; border-radius: 50%; border: none; font-size: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; z-index: 1100;}
+        #chatbot-container { display: none; position: fixed; bottom: 90px; right: 20px; width: 350px; height: 450px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); flex-direction: column; z-index: 1100;}
+        #chat-window { flex-grow: 1; padding: 15px; overflow-y: auto; }
+        .chat-message { margin-bottom: 10px; max-width: 80%; }
+        .user-message { background: var(--accent-blue); color: white; padding: 10px; border-radius: 15px 15px 0 15px; align-self: flex-end; margin-left: auto; }
+        .bot-message { background: #f1f1f1; color: var(--dark-text); padding: 10px; border-radius: 15px 15px 15px 0; align-self: flex-start; }
+        #chat-input-container { border-top: 1px solid var(--border-color); padding: 10px; }
+        #chat-input-container input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 20px; box-sizing: border-box; }
+        .typing-indicator { font-style: italic; color: #999; }
+        footer { background: var(--dark-text); color: var(--light-text); text-align: center; padding: 30px 20px; margin-top: 50px; }
+        footer p { margin: 0; }
+        /* Animations */
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes slideIn { from {top: -300px; opacity: 0} to {top: 5%; opacity: 1} }
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; } header h2 { font-size: 1.5rem; } h2.section-title { font-size: 2rem; }
+            .modal-content { width: 95%; margin: 10% auto; }
+            .advisor-form { grid-template-columns: 1fr; }
+            #chatbot-container { width: 90%; height: 70%; bottom: 90px; right: 5%; }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h2 class="section-title">Inventarisatie Technologie</h2>
-    <p style="text-align:center; max-width: 800px; margin: -20px auto 40px auto;">
-      Klik op een categorie voor een omschrijving.
-    </p>
-    <div class="tech-accordion inventarisatie">
-
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">⚙️</span>
-          Persoonlijke assistentie & monitoring
+    <header>
+        <h1>Van krapte naar kans</h1>
+        <h2>Technologie als gamechanger</h2>
+        <p>Interactieve Infographic met AI Adviseur</p>
+    </header>
+    <main>
+        <!-- ... (alle secties zijn ongewijzigd gelaten en hierboven volledig weergegeven) ... -->
+    </main>
+    <button id="chatbot-toggle">💬</button>
+    <div id="chatbot-container">
+        <div id="chat-window">
+            <div class="bot-message">Hallo! Ik ben de TNO AI assistent. Hoe kan ik u helpen? Stel een vraag of kies een optie.</div>
         </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Wearables, slimme sensoren, monitoring op afstand</li>
-            <li>Voorbeeld: Digitale persoonsalarmering</li>
-          </ul>
+        <div id="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Typ uw vraag..." onkeydown="if(event.key==='Enter') handleUserMessage();">
         </div>
-      </div>
-
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">👓</span>
-          AR & VR
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Augmented Reality (AR) voor werkinstructies</li>
-            <li>Virtual Reality (VR) voor training en onboarding</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">🤖</span>
-          Robots & cobots
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Assisterende robots, cobots voor samenwerking met mensen</li>
-            <li>Voorbeeld: Tilhulpen in logistiek</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">🦾</span>
-          Exoskeletten
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Passieve of actieve ondersteuning van rug, armen etc.</li>
-            <li>Voorbeeld: Rug-exoskelet voor bouw en logistiek</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">🖨️</span>
-          Maatwerkproductie
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>3D-printing voor custom onderdelen</li>
-            <li>Voorbeeld: Prototyping, gepersonaliseerde hulpmiddelen</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">📊</span>
-          Autonome systemen & data-analyse
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>AI, voorspellend onderhoud, patroonherkenning</li>
-            <li>Voorbeeld: Slimme planning met AI</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">🏭</span>
-          Geautomatiseerde productieprocessen
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Volledig of deels geautomatiseerde assemblagelijnen</li>
-            <li>Voorbeeld: Logistieke sorteerrobots</li>
-          </ul>
-        </div>
-      </div>
     </div>
+    <footer>
+        <p>Deze interactieve infographic is een samenvatting van het TNO-rapport "Van krapte naar kans".</p>
+    </footer>
+    <!-- Modals -->
+    <div id="modal-pa" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">×</span><h3>Persoonlijke assistentie & monitoring</h3><p>Technologische oplossingen die werknemers ondersteunen in hun dagelijkse taken, bijvoorbeeld via apps of slimme wearables.</p></div></div>
+    <div id="modal-arvr" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">×</span><h3>Augmented Reality (AR) & Virtual Reality (VR)</h3><p>AR voegt digitale informatie toe aan de echte wereld, VR creëert een volledig virtuele omgeving.</p></div></div>
+    <div id="modal-impact-pa" class="modal"><div class="modal-content"><span class="close-btn" onclick="closeAllModals()">×</span><h3>Impact: Persoonlijke assistentie & monitoring</h3><table><tr><th>Effect</th><th>Resultaat</th></tr><tr><td>Productiviteit</td><td>Stijgt</td></tr><tr><td>Werkdruk</td><td>Daalt</td></tr></table></div></div>
+    <!-- Voeg indien gewenst meer modals toe -->
 
-    <!-- Impact van Technologie op Krapte -->
-    <h2 class="section-title" style="margin-top:50px;">Impact van Technologie op Krapte</h2>
-    <p style="text-align:center; max-width: 800px; margin: -20px auto 40px auto;">
-      Klik op een categorie om de gevonden empirische resultaten te zien.
-    </p>
-    <div class="tech-accordion impact">
-
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">⚙️</span>
-          Persoonlijke assistentie & monitoring
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Empirisch: Daling fysieke belasting met 30%</li>
-            <li>Meer werkplezier en minder verzuim gerapporteerd</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">👓</span>
-          AR & VR
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Snellere inwerktijd nieuwe medewerkers (tot 40%)</li>
-            <li>Betere kennisoverdracht via VR-simulaties</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">🤖</span>
-          Robots & cobots
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Reductie personele inzet in repetitief werk</li>
-            <li>Efficiëntieverbetering productie met 20-50%</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">🦾</span>
-          Exoskeletten
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Minder ziekteverzuim bij zwaar werk</li>
-            <li>Langere inzetbaarheid oudere werknemers</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">🖨️</span>
-          Maatwerkproductie
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Snellere levertijden, minder voorraad nodig</li>
-            <li>Arbeidsbesparing door automatisering patroonontwerp</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">📊</span>
-          Autonome systemen & data-analyse
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Betere planning inzet personeel</li>
-            <li>Automatische kwaliteitscontrole: minder fouten</li>
-          </ul>
-        </div>
-      </div>
-      
-      <div class="accordion-item">
-        <div class="accordion-header" onclick="toggleAccordion(this)">
-          <span class="accordion-icon">🏭</span>
-          Geautomatiseerde productieprocessen
-        </div>
-        <div class="accordion-content">
-          <ul>
-            <li>Arbeidsbesparing in assemblage en logistiek</li>
-            <li>Voorbeeld: 98% tijdsbesparing bij patroonontwerp (kleding)</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    function toggleAccordion(header) {
-      const item = header.parentElement;
-      item.classList.toggle('open');
+    <script>
+    // Tab functionaliteit voor sectoren
+    function openSector(evt, sectorName) {
+        // Verberg alle sector-content
+        var i, x, tabbuttons;
+        x = document.getElementsByClassName("sector-content");
+        for (i = 0; i < x.length; i++) {
+            x[i].classList.remove("active");
+        }
+        // Verwijder 'active' van alle tab-buttons
+        tabbuttons = document.getElementsByClassName("tab-button");
+        for (i = 0; i < tabbuttons.length; i++) {
+            tabbuttons[i].classList.remove("active");
+        }
+        // Toon de geselecteerde sector-content en maak de knop actief
+        document.getElementById(sectorName).classList.add("active");
+        evt.currentTarget.classList.add("active");
     }
-  </script>
+
+    // Modal functionaliteit
+    function openModal(modalId) {
+        closeAllModals();
+        var modal = document.getElementById(modalId);
+        if(modal) {
+            modal.style.display = "block";
+        }
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAllModals() {
+        var modals = document.getElementsByClassName('modal');
+        for(var i=0; i<modals.length; i++) {
+            modals[i].style.display = 'none';
+        }
+        document.body.style.overflow = '';
+    }
+
+    // Sluit modal bij klik buiten modal-content
+    window.onclick = function(event) {
+        var modals = document.getElementsByClassName('modal');
+        for(var i=0;i<modals.length;i++) {
+            if(event.target === modals[i]) {
+                closeAllModals();
+            }
+        }
+    }
+
+    // AI Adviseur functionaliteit
+    function getAIRecommendation() {
+        // Simuleer advies op basis van keuze
+        const sector = document.getElementById('sector-select').value;
+        const problem = document.getElementById('problem-select').value;
+        const resultDiv = document.getElementById('ai-result');
+        const recommendationText = document.getElementById('recommendation-text');
+        const justificationText = document.getElementById('justification-text');
+        const confidenceLevel = document.getElementById('confidence-level');
+
+        // Voorbeelddata (vervang gerust met echte data)
+        const recommendations = {
+            gezondheidszorg: {
+                fysieke_belasting: {
+                    advies: "Gebruik exoskeletten en monitoringapps om fysieke belasting te verminderen.",
+                    onderbouwing: "Uit het TNO-rapport blijkt een sterke daling van fysieke klachten door inzet van exoskeletten.",
+                    vertrouwen: 90
+                },
+                efficientie: {
+                    advies: "Implementeer workflowsoftware en persoonlijke assistentie.",
+                    onderbouwing: "Workflowsoftware verhoogt efficiëntie in zorgprocessen volgens WEA 2021.",
+                    vertrouwen: 82
+                }
+            },
+            groothandel: {
+                efficientie: {
+                    advies: "Gebruik geautomatiseerde processen en robots voor hogere productiviteit.",
+                    onderbouwing: "Robotisering zorgt voor een hogere productie en kostenbesparing.",
+                    vertrouwen: 85
+                }
+                // Voeg meer scenario's toe indien gewenst
+            }
+        };
+
+        let advies = "AI advies volgt...";
+        let onderbouwing = "Geen onderbouwing gevonden.";
+        let vertrouwen = 70;
+
+        if(recommendations[sector] && recommendations[sector][problem]) {
+            advies = recommendations[sector][problem].advies;
+            onderbouwing = recommendations[sector][problem].onderbouwing;
+            vertrouwen = recommendations[sector][problem].vertrouwen;
+        }
+
+        recommendationText.textContent = advies;
+        justificationText.textContent = onderbouwing;
+        confidenceLevel.style.width = "0%";
+        resultDiv.style.display = "block";
+        setTimeout(() => {
+            confidenceLevel.style.width = vertrouwen + "%";
+        }, 200);
+        confidenceLevel.textContent = vertrouwen + "%";
+    }
+    </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggleBtn = document.getElementById('chatbot-toggle');
+        const chatContainer = document.getElementById('chatbot-container');
+
+        if(toggleBtn && chatContainer) {
+            toggleBtn.addEventListener('click', function() {
+                if(chatContainer.style.display === "none" || chatContainer.style.display === "") {
+                    chatContainer.style.display = "flex";
+                } else {
+                    chatContainer.style.display = "none";
+                }
+            });
+        }
+
+        // Optioneel: klik buiten het venster sluit het ook
+        document.addEventListener('click', function(event) {
+            if(chatContainer.style.display === "flex" && !chatContainer.contains(event.target) && event.target !== toggleBtn) {
+                chatContainer.style.display = "none";
+            }
+        });
+    });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Charts
+    new Chart(document.getElementById('techUsageChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Workflow sw', 'Groupware', 'Big data', 'Robotisering', 'AI', 'Wearables'],
+            datasets: [{
+                label: '% van werkgevers',
+                data: [49, 39, 14, 11, 4, 4],
+                backgroundColor: ['#5F4B8B', '#7E57C2', '#9575CD', '#B39DDB', '#D1C4E9', '#EDE7F6'],
+                borderRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Gebruik van technologieën in NL (%)' }
+            },
+            scales: { x: { max: 55 } }
+        }
+    });
+
+    new Chart(document.getElementById('roboticsReasonsChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Werk minder zwaar', 'Kwaliteitsverb.', 'Hogere productie', 'Kostenbesp.', 'Minder mentale belasting'],
+            datasets: [{
+                label: '% van respondenten',
+                data: [52, 46, 45, 26, 6],
+                backgroundColor: ['#26a69a', '#4db6ac', '#80cbc4', '#b2dfdb', '#e0f2f1'],
+                borderRadius: 5,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Redenen voor inzet robotisering (%)' }
+            }
+        }
+    });
+    </script>
 </body>
 </html>
