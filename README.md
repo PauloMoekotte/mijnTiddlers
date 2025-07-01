@@ -33,6 +33,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Van krapte naar kans 2](https://paulomoekotte.github.io/mijnTiddlers/VanKraptenaarKans-2.html)
 
+[Rapport ICT-krapte -SEO](https://paulomoekotte.github.io/mijnTiddlers/test6.html)
+
 # Streamlit apps
 
 [AI & Data Science e-Cursus volgens de Roadmap](https://ecursus-datascience.streamlit.app/)
