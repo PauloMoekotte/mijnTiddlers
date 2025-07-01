@@ -29,6 +29,10 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [MBO Verkenner](https://paulomoekotte.github.io/mijnTiddlers/MBOVerkenner.html)
 
+[Van krapte naar kans](https://paulomoekotte.github.io/mijnTiddlers/VanKraptenaarKans.html)
+
+[Van krapte naar kans 2](https://paulomoekotte.github.io/mijnTiddlers/VanKraptenaarKans-2.html)
+
 # Streamlit apps
 
 [AI & Data Science e-Cursus volgens de Roadmap](https://ecursus-datascience.streamlit.app/)
