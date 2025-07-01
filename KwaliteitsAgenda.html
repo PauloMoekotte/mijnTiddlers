@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Kwaliteitsafspraken MBO 2024-2027</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
+
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #007bff;
+            --accent-color: #ffc107;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --light-text-color: #fff;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .infographic-container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            color: var(--primary-color);
+            font-weight: 900;
+            margin: 0;
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: #666;
+            max-width: 700px;
+            margin: 10px auto 0;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 15px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 1.4em;
+            color: var(--secondary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .card ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+        
+        .card li {
+            margin-bottom: 10px;
+        }
+        
+        /* AI Functionaliteit Hint */
+        .ai-hint {
+            background-color: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 0.9em;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .ai-hint strong { color: var(--primary-color); }
+        /* Hier zou JavaScript de inhoud van de kaart kunnen uitbreiden of een pop-up tonen */
+        
+        .budget-section .year {
+            background-color: #e9ecef;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1em;
+        }
+        .budget-section .year span {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        /* AI Assistent */
+        .ai-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .ai-assistant-header {
+            background: var(--primary-color);
+            color: var(--light-text-color);
+            padding: 15px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .ai-assistant-body {
+            padding: 15px;
+            height: 250px;
+            overflow-y: auto;
+            background: #f4f7f9;
+        }
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+        .bot-message {
+            background: #d1e7fd;
+            text-align: left;
+            margin-right: auto;
+        }
+        
+        .ai-assistant-footer {
+            padding: 10px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+        }
+
+        .ai-assistant-footer input {
+            flex-grow: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .ai-assistant-footer button {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="infographic-container">
+        <header>
+            <h1>Kwaliteitsafspraken MBO 2024-2027</h1>
+            <p>Een interactief overzicht van de regeling die de kwaliteit, kansengelijkheid en aansluiting op de arbeidsmarkt in het MBO moet versterken.</p>
+        </header>
+
+        <main>
+            <section id="pijlers">
+                <h2>De Drie Pijlers van de Kwaliteitsagenda</h2>
+                <div class="grid-container">
+                    <div class="card" onclick="alert('Hier kan een pop-up of meer informatie worden getoond over Kansengelijkheid.');">
+                        <h3>1. Vergroten Kansengelijkheid</h3>
+                        <ul>
+                            <li>Focus op studentenwelzijn</li>
+                            <li>Aanpak van stagediscriminatie</li>
+                            <li>Intensieve begeleiding (m.n. niveau 2)</li>
+                        </ul>
+                        <div class="ai-hint"><strong>AI Tip:</strong> Klik voor een samenvatting van maatregelen.</div>
+                    </div>
+                    <div class="card" onclick="alert('Hier kan een pop-up of meer informatie worden getoond.');">
+                        <h3>2. Verbeteren Onderwijs-Arbeidsmarkt</h3>
+                        <ul>
+                            <li>Hulp bij keuze voor kansrijk beroep</li>
+                            <li>Kwalitatieve stages (BPV)</li>
+                            <li>Ontwikkeling Leven Lang Ontwikkelen (LLO)</li>
+                        </ul>
+                         <div class="ai-hint"><strong>AI Tip:</strong> Klik om de belangrijkste doelen te zien.</div>
+                    </div>
+                    <div class="card" onclick="alert('Hier kan een pop-up of meer informatie worden getoond.');">
+                        <h3>3. Toekomstgericht Onderwijs</h3>
+                        <ul>
+                            <li>Versterken basisvaardigheden</li>
+                            <li>Impuls voor burgerschapsonderwijs</li>
+                            <li>Aantrekken en behouden van personeel</li>
+                        </ul>
+                         <div class="ai-hint"><strong>AI Tip:</strong> Klik en vraag de AI-assistent om voorbeelden.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="budget" class="budget-section">
+                <h2>Beschikbaar Budget (Bekostigingsplafond)</h2>
+                <div class="year">Jaar 2024 <span>€ 704.330.000</span></div>
+                <div class="year">Jaar 2025 <span>€ 538.984.000</span></div>
+                <div class="year">Jaar 2026 <span>€ 538.984.000</span></div>
+                <div class="year">Jaar 2027 <span>€ 540.033.000</span></div>
+                <!-- Developer Note: Dit kan worden omgezet naar een interactieve grafiek met D3.js of Chart.js -->
+            </section>
+
+        </main>
+        
+        <footer>
+            <p>Bron: Regeling kwaliteitsafspraken mbo 2024–2027. Dit is een visuele interpretatie en geen juridisch document.</p>
+        </footer>
+    </div>
+    
+    <!-- AI Assistent Mockup -->
+    <div class="ai-assistant">
+        <div class="ai-assistant-header">
+            <span>AI Assistent MBO Kwaliteit</span>
+            <span>×</span>
+        </div>
+        <div class="ai-assistant-body">
+            <!-- Developer Note: Chatberichten worden hier dynamisch ingeladen met JavaScript -->
+            <div class="chat-message bot-message">
+                Hallo! Stel hier je vraag over de kwaliteitsafspraken. Bijvoorbeeld: "Wat zijn de deadlines?"
+            </div>
+        </div>
+        <div class="ai-assistant-footer">
+            <!-- Developer Note: Koppel dit inputveld aan een AI-backend (taalmodel API) -->
+            <input type="text" placeholder="Stel een vraag...">
+            <button>➤</button>
+        </div>
+    </div>
+
+</body>
+</html>
