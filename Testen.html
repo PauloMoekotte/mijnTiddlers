@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactieve Infographic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .info {
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .details {
+            display: none;
+            margin-top: 10px;
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Digitale Broer Helpt Artsen</h1>
+    <div class="info">
+        <p>Een computermodel met daarin alle relevante gegevens van iemand met hartfalen kan voorspellen hoe het uitpakt als die persoon een pacemaker krijgt.</p>
+        <p>Wetenschappers van de Universiteit Maastricht en het UMC Utrecht hebben het succes van zo’n ‘digitale tweelingbroer’ aangetoond.</p>
+    </div>
+    <a class="button" onclick="toggleDetails()">Bekijk Meer Informatie</a>
+    <div class="details" id="moreInfo">
+        <p>Het computermodel, voorspelbroer genoemd, laat precies wat de gevolgen zijn van kleine veranderingen in bijvoorbeeld de pompkracht van het hart. Het kan de cardiologen ook helpen om een betere diagnose te stellen.</p>
+    </div>
+</div>
+
+<script>
+    function toggleDetails() {
+        var details = document.getElementById("moreInfo");
+        if (details.style.display === "none" || details.style.display === "") {
+            details.style.display = "block";
+        } else {
+            details.style.display = "none";
+        }
+    }
+</script>
+
+</body>
+</html>
