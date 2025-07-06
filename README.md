@@ -35,6 +35,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Van krapte naar kans 2](https://paulomoekotte.github.io/mijnTiddlers/VanKraptenaarKans-2.html)
 
+[Van krapte naar kans 3](https://paulomoekotte.github.io/mijnTiddlers/VanKraptenaarKans3.html)
+
 [Rapport ICT-krapte -SEO](https://paulomoekotte.github.io/mijnTiddlers/test6.html)
 
 # Streamlit apps
