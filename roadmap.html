@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .roadmap-selector {
+            margin-bottom: 20px;
+        }
+
+        .roadmap-container {
+            padding: 20px;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            cursor: pointer;
+        }
+
+        .step h2 {
+            margin-top: 0;
+        }
+
+        .step ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+        }
+
+        .step.active ul {
+            display: block;
+        }
+
+        .step li {
+            margin-bottom: 10px;
+        }
+
+        .step li::before {
+            content: "\2022";
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Roadmap</h1>
+        <div class="roadmap-selector">
+            <select id="roadmap-select">
+                <option value="backend">Backend Ontwikkelaar</option>
+                <option value="data-science">Data Science</option>
+            </select>
+        </div>
+        <div class="roadmap-container">
+            <!-- Roadmap content wordt hier ingevoegd -->
+        </div>
+    </div>
+
+    <script>
+        const roadmapSelect = document.getElementById('roadmap-select');
+        const roadmapContainer = document.querySelector('.roadmap-container');
+
+        const roadmaps = {
+            backend: [
+                {
+                    title: 'Programmeertalen',
+                    description: 'Leer een programmeertaal zoals Python, Java, JavaScript (Node.js) of Ruby.',
+                    items: ['Python', 'Java', 'JavaScript (Node.js)', 'Ruby']
+                },
+                {
+                    title: 'Frameworks',
+                    description: 'Leer een framework zoals Django, Spring, Express.js of Ruby on Rails.',
+                    items: ['Django', 'Spring', 'Express.js', 'Ruby on Rails']
+                },
+            ],
+            'data-science': [
+                {
+                    title: 'Wiskunde en Statistiek',
+                    description: 'Leer over lineaire algebra, kansrekening en statistiek, differentiaal- en integraalrekening.',
+                    items: ['Lineaire algebra', 'Kansrekening en statistiek', 'Differentiaal- en integraalrekening']
+                },
+                {
+                    title: 'Programmeertalen',
+                    description: 'Leer een programmeertaal zoals Python (met bibliotheken zoals NumPy, Pandas en Scikit-learn) of R.',
+                    items: ['Python', 'R']
+                },
+            ]
+        };
+
+        roadmapSelect.addEventListener('change', (e) => {
+            const selectedRoadmap = e.target.value;
+            const roadmap = roadmaps[selectedRoadmap];
+            const html = roadmap.map((step, index) => {
+                return `
+                    <div class="step" data-index="${index}">
+                        <h2>${step.title}</h2>
+                        <p>${step.description}</p>
+                        <ul>
+                            ${step.items.map((item) => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }).join('');
+            roadmapContainer.innerHTML = html;
+
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((step) => {
+                step.addEventListener('click', () => {
+                    step.classList.toggle('active');
+                });
+            });
+        });
+
+        // Laad de eerste roadmap
+        roadmapSelect.value = 'backend';
+        const roadmap = roadmaps['backend'];
+        const html = roadmap.map((step, index) => {
+            return `
+                <div class="step" data-index="${index}">
+                    <h2>${step.title}</h2>
+                    <p>${step.description}</p>
+                    <ul>
+                        ${step.items.map((item) => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }).join('');
+        roadmapContainer.innerHTML = html;
+
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((step) => {
+            step.addEventListener('click', () => {
+                step.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
