@@ -15,6 +15,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Ondersteunen of vervangen - Stanford](https://paulomoekotte.github.io/mijnTiddlers/AutomationAndAugmentationPotential.html)
 
+[Ondersteunende technologie in de bouw](https://paulomoekotte.github.io/mijnTiddlers/OTindeBouw.html)
+
 [Future of work - MIT](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWork.html)
 
 [Future of work - MIT versie b](https://paulomoekotte.github.io/mijnTiddlers/FutureOfWorkb.html)
