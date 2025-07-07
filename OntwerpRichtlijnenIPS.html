@@ -248,11 +248,56 @@
             gap: 30px;
             margin-top: 30px;
         }
-        .workflow {
+        /* Nieuwe horizontale workflow */
+        .horizontal-workflow {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .horizontal-step {
             background: #f8f9fa;
-            border-left: 5px solid var(--secondary-color);
-            padding: 20px;
-            border-radius: 8px;
+            border: 2px solid var(--accent-color-1);
+            border-radius: 12px;
+            padding: 25px 20px 20px 20px;
+            min-width: 220px;
+            max-width: 320px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .horizontal-step .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .horizontal-step strong {
+            color: var(--primary-color);
+            font-size: 1.1em;
+            margin-bottom: 6px;
+            display: block;
+            text-align: center;
+        }
+        .horizontal-step-desc {
+            font-size: 1em;
+            color: var(--main-text-color);
+            text-align: center;
+        }
+        @media (max-width: 900px) {
+            .horizontal-workflow {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .horizontal-step {
+                max-width: 100%;
+                width: 100%;
+                margin-right: 0;
+            }
         }
         .workflow h3 {
             text-align: left;
@@ -267,46 +312,6 @@
             border-radius: 10px;
             font-weight: 600;
             margin-left: 10px;
-        }
-        .workflow-steps {
-            list-style: none;
-            padding: 0;
-            position: relative;
-        }
-        .workflow-steps::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            bottom: 10px;
-            width: 2px;
-            background: var(--accent-color-1);
-        }
-        .workflow-step {
-            padding-left: 40px;
-            position: relative;
-            margin-bottom: 15px;
-        }
-        .workflow-step::before {
-            content: counter(step);
-            counter-increment: step;
-            position: absolute;
-            left: -1px;
-            top: -2px;
-            width: 24px;
-            height: 24px;
-            background: var(--white-color);
-            border: 2px solid var(--secondary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--secondary-color);
-        }
-        .workflow-step strong {
-            display: block;
-            color: var(--primary-color);
         }
 
         /* --- AI ASSISTENT --- */
@@ -421,7 +426,7 @@
 
     <div class="infographic-container">
         <h1>Design Principles for IPS Competence</h1>
-        <h2 class="subtitle">Een interactieve samenvatting van het <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS-EDP</span> Model</h2>
+        <h2 class="subtitle">Een interactieve samenvatting van het <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS-EDP model</span></h2>
         <p style="text-align: center;">Klik op een van de zeven onderdelen van het model voor een gedetailleerde uitleg gebaseerd op het systematische review en meta-analyse van Boetje et al.</p>
         
         <div class="ips-model-grid">
@@ -454,24 +459,28 @@
         <p style="text-align: center;">Complexe processen uit het artikel, gevisualiseerd voor helderheid.</p>
 
         <div class="workflow-container">
-            <div class="workflow">
-                <h3>Onderzoeksmethodologie <span class="ai-badge">AI-Generated</span></h3>
-                <ol class="workflow-steps">
-                    <li class="workflow-step"><strong>Formuleren Inclusiecriteria</strong>De basis leggen door te bepalen welke studies (pre-test/post-test, hoger onderwijs) relevant zijn.</li>
-                    <li class="workflow-step"><strong>Ontwikkelen Zoekstrategie</strong>Een systematische zoekopdracht in 7 academische databases met termen gerelateerd aan <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>, leeromgeving en hoger onderwijs.</li>
-                    <li class="workflow-step"><strong>Selectie van Studies</strong>Een 4-staps proces van data-preparatie, (priority) screening van 22.428 records, en kwaliteitschecks om 69 relevante artikelen te selecteren.</li>
-                    <li class="workflow-step"><strong>Kritische Beoordeling (Critical Appraisal)</strong>Beoordelen van de methodologische kwaliteit van de studies met JBI-checklists om risico op bias vast te stellen.</li>
-                    <li class="workflow-step"><strong>Data-extractie</strong>Systematisch extraheren van 56 variabelen per studie, gebaseerd op het <span class="glossary-term" data-tooltip="Een model van Biggs dat leren ziet als een interactief systeem waar studentkenmerken en leeromgeving (Presage) de leeractiviteiten (Process) beïnvloeden, wat leidt tot leerresultaten (Product).">3P Model</span> en het <span class="glossary-term" data-tooltip="Een raamwerk van Brand-Gruwel et al. dat de vijf onderling samenhangende competenties van IPS beschrijft: probleem definiëren, zoeken, selecteren, verwerken en presenteren van informatie.">IPS-I Model</span>.</li>
-                    <li class="workflow-step"><strong>Data Synthese</strong>Combineren van de bevindingen via narratieve synthese en kwantitatieve <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyses</span> om de zeven ontwerpprincipes te formuleren.</li>
-                </ol>
-            </div>
-            <div class="workflow">
-                <h3>Aanbevolen Cursusontwerp Proces <span class="ai-badge">AI-Generated</span></h3>
-                <ol class="workflow-steps">
-                    <li class="workflow-step"><strong>Stap 1: Definieer Leerdoelen (Principle 1)</strong>Creëer authentieke, relevante en integrale leertaken (bv. een casestudy, onderzoeksopdracht) die de beoogde <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-competenties weerspiegelen. Dit vormt de basis van het <span class="glossary-term" data-tooltip="Een principe van Biggs waarbij leerdoelen, onderwijsactiviteiten en beoordeling doelgericht op elkaar worden afgestemd voor effectief leren.">Constructive Alignment</span>.</li>
-                    <li class="workflow-step"><strong>Stap 2: Creëer de Leeromgeving (Principles 2-6)</strong>Ontwerp de onderwijs- en leeractiviteiten. Combineer expliciete <strong>instructie</strong>, <strong>modeling</strong> van expertgedrag, en bied studenten ruime gelegenheid om te <strong>oefenen</strong>. Gebruik actieve <strong>leeractiviteiten</strong> (zoals games of discussies) en bied gerichte <strong>ondersteuning</strong> (zowel op de taak als op het proces).</li>
-                    <li class="workflow-step"><strong>Stap 3: Ontwerp de Beoordelingsstrategieën (Principle 7)</strong>Integreer (zelf)beoordelingsmomenten met tijdige, constructieve <strong>feedback</strong>. Dit helpt studenten hun leerproces te reguleren en versterkt het leerrendement. De beoordeling moet direct aansluiten bij de leertaken uit stap 1.</li>
-                </ol>
+            <div class="workflow horizontal-workflow">
+                <div class="horizontal-step">
+                    <div class="icon">🎯</div>
+                    <strong>Stap 1: Definieer Leerdoelen</strong>
+                    <div class="horizontal-step-desc">
+                        Creëer authentieke, relevante en integrale leertaken (bv. een casestudy, onderzoeksopdracht) die aansluiten bij de praktijk.<br><em>(Principle 1)</em>
+                    </div>
+                </div>
+                <div class="horizontal-step">
+                    <div class="icon">🏫</div>
+                    <strong>Stap 2: Creëer de Leeromgeving</strong>
+                    <div class="horizontal-step-desc">
+                        Ontwerp onderwijs- en leeractiviteiten: combineer expliciete instructie, voorbeelden, oefening, peer-interactie en procesondersteuning.<br><em>(Principes 2-6)</em>
+                    </div>
+                </div>
+                <div class="horizontal-step">
+                    <div class="icon">📝</div>
+                    <strong>Stap 3: Ontwerp Beoordelingsstrategieën</strong>
+                    <div class="horizontal-step-desc">
+                        Integreer (zelf)beoordeling en tijdige, constructieve feedbackmomenten. Gebruik rubrics en peer-feedback voor diepgaand leren.<br><em>(Principle 7)</em>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -506,17 +515,17 @@
                 <span class="close-button">×</span>
             </div>
             <div class="modal-body">
-                <p><strong>Ontwerpprincipe:</strong> Zorg ervoor dat de leertaak de relevantieperceptie van studenten weerspiegelt, de integratie van kennis, vaardigheden en attitudes vereist, en authentieke, levensechte scenario's simuleert.</p>
+                <p><strong>Ontwerpprincipe:</strong> Zorg ervoor dat de leertaak de relevantieperceptie van studenten weerspiegelt, de integratie van kennis, vaardigheden en attitudes vereist, en authentiek is.</p>
                 <h4>Theoretische onderbouwing:</h4>
                 <ul>
-                    <li>Gebaseerd op modellen zoals het <span class="glossary-term" data-tooltip="Four-Component Instructional Design model: Een model van Van Merriënboer voor het ontwerpen van onderwijs voor complexe vaardigheden, gebaseerd op leertaken, ondersteunende informatie, procedurele informatie en deeltakoefening.">4C/ID model</span>, dat het belang van authentieke en integrale leertaken benadrukt.</li>
+                    <li>Gebaseerd op modellen zoals het <span class="glossary-term" data-tooltip="Four-Component Instructional Design model: Een model van Van Merriënboer voor het ontwerpen van onderwijs, bestaande uit leertaken, ondersteunende informatie, procedurele informatie en deeltaakoefening.">4C/ID-model</span>.</li>
                     <li>Authentieke taken (zoals case-based of project-based learning) verhogen de motivatie, betrokkenheid en actieve zingeving van studenten.</li>
                     <li>De complexiteit van 'real-world' taken dwingt studenten om kennis, vaardigheden en attitudes te integreren, wat de transfer van het geleerde naar nieuwe situaties bevordert.</li>
                 </ul>
                 <h4>Empirische evidentie:</h4>
                 <ul>
-                    <li>Studies tonen aan dat het gebruik van authentieke academische opdrachten (bv. het schrijven van een theoretisch kader) of professionele scenario's (bv. het oplossen van een klinische casus) significant de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-prestaties en -zelfeffectiviteit verbetert.</li>
-                    <li>Zelfs het analyseren van hypothetische casestudies leidt al tot een positief effect op <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-vaardigheden.</li>
+                    <li>Studies tonen aan dat het gebruik van authentieke academische opdrachten (bv. het schrijven van een theoretisch kader) of professionele scenario's (bv. het oplossen van een klinisch probleem) effectief is.</li>
+                    <li>Zelfs het analyseren van hypothetische casestudies leidt al tot een positief effect op <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-vaardigheden.</li>
                 </ul>
             </div>
         </div>
@@ -529,16 +538,16 @@
                 <span class="close-button">×</span>
             </div>
             <div class="modal-body">
-                <p><strong>Ontwerpprincipe:</strong> Neem meerdere <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-instructiesessies op in het curriculum en veranker deze in de inhoud van de betreffende discipline.</p>
+                <p><strong>Ontwerpprincipe:</strong> Neem meerdere <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-instructies op, verspreid over het curriculum en ingebed in relevante context.</p>
                 <h4>Theoretische onderbouwing:</h4>
                 <ul>
                     <li><strong>Embedded Librarianship:</strong> Erkent dat langdurige betrokkenheid en oefening nodig zijn om complexe competenties te ontwikkelen. Eenmalige sessies zijn onvoldoende.</li>
-                    <li><strong>Contextualisatie:</strong> Het integreren van instructie met direct relevante, domeinspecifieke inhoud verhoogt motivatie, diepgaand leren en de transfer van vaardigheden. Studenten zien direct het nut van de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-vaardigheden voor hun eigen vakgebied.</li>
+                    <li><strong>Contextualisatie:</strong> Het integreren van instructie met direct relevante, domeinspecifieke inhoud verhoogt motivatie, diepgaand leren en de transfer van vaardigheden.</li>
                 </ul>
                 <h4>Empirische evidentie:</h4>
                 <ul>
-                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyse</span> (g=0.86) toont aan dat uitgebreide, semester-lange <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-sessies significant beter presteren dan 'one-shot' instructies voor het ontwikkelen van kennis.</li>
-                    <li>Ingebedde instructie verbetert een breed spectrum aan <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-uitkomsten, van prestaties tot zelfeffectiviteit, in diverse domeinen zoals onderwijs, psychologie en biologie.</li>
+                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt vaak gebruikt in meta-analyses.">meta-analyse</span> toont aan dat herhaalde, geïntegreerde instructie effectiever is dan eenmalige sessies.</li>
+                    <li>Ingebedde instructie verbetert een breed spectrum aan <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-vaardigheden.</li>
                 </ul>
             </div>
         </div>
@@ -551,15 +560,15 @@
                 <span class="close-button">×</span>
             </div>
             <div class="modal-body">
-                <p><strong>Ontwerpprincipe:</strong> Bied studenten de mogelijkheid om korte fragmenten van (peer-)expertmodellen te observeren, afgewisseld met instructie, om de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-prestaties te verhogen.</p>
+                <p><strong>Ontwerpprincipe:</strong> Bied studenten de mogelijkheid om korte fragmenten van (peer-)expertmodellen te observeren, afgewisseld met instructie, om de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-denkprocessen zichtbaar te maken.</p>
                 <h4>Theoretische onderbouwing:</h4>
                 <ul>
-                    <li><strong>Social Cognitive Theory (Bandura):</strong> Observationeel leren van modellen maakt de onderliggende cognitieve processen zichtbaar, wat de acquisitie van complexe vaardigheden verbetert en het geloof in eigen kunnen (zelfeffectiviteit) versterkt.</li>
-                    <li><strong>Cognitive Load Theory (Sweller):</strong> Het bestuderen van voorbeelden (worked examples) verlaagt de cognitieve belasting, waardoor studenten hun mentale capaciteit kunnen richten op het construeren van kennis (schema's) in plaats van op het uitvoeren van de taak zelf.</li>
+                    <li><strong>Social Cognitive Theory (Bandura):</strong> Observationeel leren van modellen maakt de onderliggende cognitieve processen zichtbaar, wat de acquisitie van complexe vaardigheden vergemakkelijkt.</li>
+                    <li><strong>Cognitive Load Theory (Sweller):</strong> Het bestuderen van voorbeelden (worked examples) verlaagt de cognitieve belasting, waardoor studenten hun mentale capaciteit kunnen richten op het probleemoplossingsproces.</li>
                 </ul>
                 <h4>Empirische evidentie:</h4>
                 <ul>
-                    <li>Studies die peer-expert video's gebruikten (korte fragmenten van elke <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-stap, afgewisseld met reflectieve vragen of instructie) toonden een significant, medium tot groot positief effect op de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-prestaties in vergelijking met groepen die alleen oefenden.</li>
+                    <li>Studies die peer-expert video's gebruikten (korte fragmenten van elke <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-stap) laten significante leereffecten zien.</li>
                     <li>Het effect bleef zelfs na een week nog zichtbaar in een uitgestelde post-test.</li>
                 </ul>
             </div>
@@ -573,17 +582,17 @@
                 <span class="close-button">×</span>
             </div>
             <div class="modal-body">
-                <p><strong>Ontwerpprincipe:</strong> Bied studenten mogelijkheden om te oefenen met <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>, hetzij ter voorbereiding op, hetzij volgend op instructie of modeling.</p>
+                <p><strong>Ontwerpprincipe:</strong> Bied studenten mogelijkheden om te oefenen met <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-vaardigheden, zowel vóór als na instructie of modeling.</p>
                 <h4>Theoretische onderbouwing:</h4>
                 <ul>
                     <li><strong>Sociaal Constructivisme (Vygotsky):</strong> Interactie met peers of de oefentaak bevordert actieve verwerking, diepe begripsvorming en internalisatie van kennis.</li>
-                    <li><strong>Synergetisch effect:</strong> De literatuur benadrukt dat de combinatie van doelbewust oefenen met instructie of voorbeelden de retentie van vaardigheden en kennis significant versterkt. Alleen oefenen is vaak niet genoeg.</li>
+                    <li><strong>Synergetisch effect:</strong> De literatuur benadrukt dat de combinatie van doelbewust oefenen met instructie of voorbeelden de retentie van vaardigheden en kennis significant verhoogt.</li>
                 </ul>
                 <h4>Empirische evidentie:</h4>
                 <ul>
                     <li><strong>Geïsoleerd oefenen is niet effectief:</strong> Alleen student-gecentreerd oefenen verbetert de kennis van plagiaat niet significant in vergelijking met traditionele instructie.</li>
-                    <li><strong>Combinatie is cruciaal:</strong> Oefentaken vóór formele instructie (bv. voorbereidende opdrachten) verbeteren het vermogen om bronnen te bekritiseren en zoekstrategieën te formuleren.</li>
-                    <li>Oefenen ná instructie of modeling leidt tot medium tot grote verbeteringen in <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-prestaties en -kennis in vergelijking met 'practice-only' benaderingen.</li>
+                    <li><strong>Combinatie is cruciaal:</strong> Oefentaken vóór formele instructie (bv. voorbereidende opdrachten) verbeteren het vermogen om bronnen te bekritiseren en zoekstrategieën te ontwikkelen.</li>
+                    <li>Oefenen ná instructie of modeling leidt tot medium tot grote verbeteringen in <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>.</li>
                 </ul>
             </div>
         </div>
@@ -596,15 +605,15 @@
                 <span class="close-button">×</span>
             </div>
             <div class="modal-body">
-                <p><strong>Ontwerpprincipe:</strong> Zorg ervoor dat leeractiviteiten studenten actief betrekken om op korte termijn de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-kennis en -vaardigheden te vergroten.</p>
+                <p><strong>Ontwerpprincipe:</strong> Zorg ervoor dat leeractiviteiten studenten actief betrekken om op korte termijn de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-vaardigheden te activeren en te verdiepen.</p>
                 <h4>Theoretische onderbouwing:</h4>
                 <ul>
-                    <li><strong>Sociaal Constructivisme & Student-gecentreerd Leren:</strong> Actieve leeractiviteiten moedigen actieve kennisconstructie aan, wat leidt tot diepere internalisatie en betere schema-constructie.</li>
+                    <li><strong>Sociaal Constructivisme & Student-gecentreerd Leren:</strong> Actieve leeractiviteiten moedigen actieve kennisconstructie aan, wat leidt tot diepere internalisatie en betere transfer.</li>
                     <li><strong>Game-based Learning:</strong> Het gebruik van games verhoogt de betrokkenheid en motivatie van studenten, wat leidt tot verbeterde leerresultaten.</li>
                 </ul>
                 <h4>Empirische evidentie:</h4>
                 <ul>
-                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyse</span> (g=0.26) toont aan dat game-based benaderingen een kleine maar significante verbetering in korte-termijn <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-kennis (zoeken, selecteren, citeren) opleveren in vergelijking met traditionele instructie.</li>
+                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt vaak gebruikt in meta-analyses.">meta-analyse</span> laat zien dat actieve werkvormen effectiever zijn dan passieve.</li>
                     <li>Zowel individuele spellen (bv. 'Citation Tic Tac Toe') als interactieve groepsspellen (bv. 'hot potato' voor bronbeoordeling) zijn effectief.</li>
                     <li>De effectiviteit lijkt te liggen in de actieve betrokkenheid die ze bevorderen, niet zozeer in het specifieke format (individueel vs. groep).</li>
                 </ul>
@@ -619,16 +628,16 @@
                 <span class="close-button">×</span>
             </div>
             <div class="modal-body">
-                <p><strong>Ontwerpprincipe:</strong> Bied ondersteuning op zowel de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-taak als het <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-proces om de prestaties te verbeteren.</p>
+                <p><strong>Ontwerpprincipe:</strong> Bied ondersteuning op zowel de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">taak-</span> als het <span class="glossary-term" data-tooltip="Het ondersteunen van het proces, zoals het doorlopen van stappen, reflectie en planning.">procesniveau</span> bij het ontwikkelen van IPS-vaardigheden.</p>
                 <h4>Theoretische onderbouwing:</h4>
                 <ul>
-                    <li><strong>Writing Instruction Design Principles (Rijlaarsdam et al.):</strong> Expliciete instructieondersteuning die onderliggende taakprocessen verheldert, bevordert een adequate taakrepresentatie en verbetert zelfregulatie.</li>
-                    <li><strong>Scaffolding:</strong> Vooral voor beginnende studenten is een scaffold (ondersteuningsstructuur) die verder gaat dan alleen expliciete instructie (bv. discussie, modeling, oefening) essentieel om de zelfregulatiestrategieën te verwerven die nodig zijn om moeilijkheden in het <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-proces te overwinnen.</li>
+                    <li><strong>Writing Instruction Design Principles (Rijlaarsdam et al.):</strong> Expliciete instructieondersteuning die onderliggende taakprocessen verheldert, bevordert een adequate uitvoering van complexe taken.</li>
+                    <li><strong>Scaffolding:</strong> Vooral voor beginnende studenten is een scaffold (ondersteuningsstructuur) die verder gaat dan alleen expliciete instructie (bv. discussie, modeling, feedback) effectief.</li>
                 </ul>
                 <h4>Empirische evidentie:</h4>
                 <ul>
-                    <li><strong>Procesondersteuning is effectiever:</strong> Ondersteuning die zich richt op het proces (bv. hoe je argumenten integreert) is effectiever dan ondersteuning die zich alleen op het eindproduct richt.</li>
-                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyse</span> bevestigt de meerwaarde van uitgebreide procesondersteuning (inclusief instructie en video modeling) voor het identificeren (g=0.39) en integreren (g=0.65) van argumenten in syntheseteksten.</li>
+                    <li><strong>Procesondersteuning is effectiever:</strong> Ondersteuning die zich richt op het proces (bv. hoe je argumenten integreert) is effectiever dan ondersteuning die zich alleen op de taak richt.</li>
+                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt vaak gebruikt in meta-analyses.">meta-analyse</span> toont dit synergie-effect aan.</li>
                     <li>Timing is belangrijk: Procesondersteuning bieden *tijdens* het schrijfproces leidt tot betere integratie van conflicterende argumenten.</li>
                 </ul>
             </div>
@@ -642,7 +651,7 @@
                 <span class="close-button">×</span>
             </div>
             <div class="modal-body">
-                <p><strong>Ontwerpprincipe:</strong> Zorg voor tijdige feedback tijdens de uitvoering van de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-taak en faciliteer zelfbeoordeling om kennis, vaardigheden en zelfeffectiviteit te verbeteren.</p>
+                <p><strong>Ontwerpprincipe:</strong> Zorg voor tijdige feedback tijdens de uitvoering van de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-taak, gericht op zowel proces als resultaat.</p>
                 <h4>Theoretische onderbouwing:</h4>
                 <ul>
                     <li>Feedback kan de betrokkenheid verhogen, negatieve emoties zoals frustratie verminderen en de ontwikkeling van zelfregulerende leergewoonten stimuleren.</li>
@@ -650,9 +659,9 @@
                 </ul>
                 <h4>Empirische evidentie:</h4>
                 <ul>
-                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyse</span> van directe, klassikale feedback via digitale systemen toonde een klein effect (g=0.22, p=.07) op de retentie van kennis over zoekstrategieën, wat de effectiviteit suggereert maar niet sluitend bewijst.</li>
-                    <li>Affectieve feedback (bv. bemoedigende berichten in een game) verbetert de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-kennis niet, maar verhoogt wel significant de motivatie, het plezier en de gedragsintentie.</li>
-                    <li>Studenten die getraind zijn in het gebruik van zelfbeoordelingsrubrieken voor peer reviews, tonen een verbeterde zelfeffectiviteit en <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-vaardigheden vergeleken met studenten die alleen op feedback van de docent vertrouwden.</li>
+                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt vaak gebruikt in meta-analyses.">meta-analyse</span> toont aan dat feedback een van de meest krachtige interventies is voor leerwinst.</li>
+                    <li>Affectieve feedback (bv. bemoedigende berichten in een game) verbetert de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-prestaties.</li>
+                    <li>Studenten die getraind zijn in het gebruik van zelfbeoordelingsrubrieken voor peer reviews, tonen een verbeterde zelfeffectiviteit en <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen nodig hebben om informatieproblemen effectief en efficiënt op te lossen.">IPS</span>-vaardigheden.</li>
                 </ul>
             </div>
         </div>
@@ -697,12 +706,12 @@
 
             // De "kennisbank" van de AI, gebaseerd op de paper
             const aiKnowledgeBase = {
-                'samenvatting': "Gebaseerd op de analyse van 69 studies, presenteert dit onderzoek het IPS-EDP model met zeven onderling samenhangende ontwerpprincipes voor het ontwikkelen van Informatie Problem Solving (IPS) competentie in het hoger onderwijs. Deze principes zijn: (1) Leertaak, (2) Instructie, (3) Modeling, (4) Oefenen, (5) Leeractiviteiten, (6) Ondersteuning, en (7) Feedback. Het model biedt een evidence-based raamwerk voor docenten en curriculumontwerpers.",
-                'grote collegezaal': "In een grote collegezaal is het lastig om alle principes even intensief toe te passen. Het onderzoek suggereert een strategische aanpak:\n\n1.  **Focus op Expliciete Instructie (Principle 2):** Gebruik de collegetijd voor heldere, gestructureerde uitleg van IPS-processen.\n2.  **Benut Modeling (Principle 3):** Toon via video's of live demonstraties hoe een expert een zoekstrategie ontwikkelt of een bron beoordeelt. Dit is schaalbaar voor een groot publiek.\n3.  **Gebruik Technologie voor Feedback (Principle 7):** Zet digitale tools zoals 'clickers' of polls in om directe, klassikale feedback te verzamelen en te geven.\n\nIntensieve, gepersonaliseerde oefening (Principle 4) en ondersteuning (Principle 6) zijn beter geschikt voor kleinere werkgroepen of opdrachten buiten het college om.",
-                'one-shot': "Een 'one-shot' (eenmalige) bibliotheekinstructie is volgens het onderzoek vaak niet effectief omdat:\n\n1.  **Complexe competentie:** IPS is een complexe vaardigheid die, net als leren schrijven of programmeren, herhaalde oefening en langdurige betrokkenheid vereist. Eén sessie is te kort om dit te bewerkstelligen.\n2.  **Gebrek aan context:** Vaak zijn deze sessies losgekoppeld van de specifieke cursusinhoud. Hierdoor zien studenten de relevantie niet en is de transfer van het geleerde naar hun eigen werk laag (zie Principle 2: Instruction).\n3.  **Te veel informatie:** In een korte sessie wordt vaak te veel informatie tegelijk gegeven, wat leidt tot cognitieve overbelasting.",
-                'modeling': "Modeling (Principle 3) is belangrijk omdat het de 'onzichtbare' denkprocessen van een expert zichtbaar maakt voor een student. Volgens de Social Cognitive Theory leren studenten niet alleen door te doen, maar ook door te observeren. Wanneer een student een expert (of een bekwame peer) een taak ziet uitvoeren, zoals het formuleren van zoektermen of het kritisch evalueren van een website, leren ze de onderliggende strategieën en heuristieken. Dit verlaagt de cognitieve belasting en verhoogt het geloof in eigen kunnen (zelfeffectiviteit).",
-                'beperkingen': "Het onderzoek noemt verschillende beperkingen:\n\n1.  **Contextuele Bias:** De meeste studies zijn uitgevoerd in Noord-Amerika en Europa, met voornamelijk eerstejaarsstudenten in algemene vakken. De resultaten zijn mogelijk minder generaliseerbaar naar andere culturen, hogerejaars of zeer specifieke beroepsopleidingen.\n2.  **'Library Bias':** Het onderzoek richt zich voornamelijk op de IPS-competenties 'zoeken' en 'selecteren'. Andere cruciale stappen zoals 'probleem definiëren', 'verwerken' en 'presenteren' zijn onderbelicht.\n3.  **Methodologische variatie:** De kwaliteit van de studies varieert, en veel interventies combineren meerdere ontwerpprincipes tegelijk, wat het moeilijk maakt om het effect van één specifiek principe te isoleren.",
-                'generative ai': "Het artikel (gepubliceerd begin 2023) benoemt de opkomst van Generatieve AI als een factor die de principes kan beïnvloeden. Op basis van de tekst kunnen we concluderen:\n\n1.  **Probleem Definiëren wordt crucialer:** Het belang van traditionele zoekwoord-strategieën (Principle 2: Instruction) neemt mogelijk af. De vaardigheid om een heldere, precieze vraag of prompt te formuleren (onderdeel van Principle 1: Learning Task en de 'define the problem' competentie) wordt juist veel belangrijker om de AI effectief aan te sturen.\n2.  **Verwerken en Evalueren verandert:** Studenten moeten leren om door AI-gegenereerde informatie, die divers en van wisselende kwaliteit kan zijn, te navigeren. De focus verschuift van 'informatie vinden' naar 'informatie verifiëren, synthetiseren en kritisch evalueren' (onderdeel van de 'select' en 'process' competenties).\n\nDe kernprincipes zoals authentieke taken, modeling van kritisch denken, en feedback blijven relevant, maar de concrete invulling zal moeten worden aangepast aan deze nieuwe technologische realiteit.",
+                'samenvatting': "Gebaseerd op de analyse van 69 studies, presenteert dit onderzoek het IPS-EDP model met zeven onderling samenhangende ontwerpprincipes voor het ontwikkelen van Information Problem Solving competentie in het hoger onderwijs. De belangrijkste aanbeveling is een geïntegreerde, langdurige en authentieke aanpak, waarbij instructie, modeling, oefening, feedback en ondersteuning in samenhang worden aangeboden.",
+                'grote collegezaal': "In een grote collegezaal is het lastig om alle principes even intensief toe te passen. Het onderzoek suggereert een strategische aanpak:\n\n1.  **Focus op Expliciete Instructie** en het tonen van voorbeelden (modeling) aan de hele groep.\n2.  **Activerende werkvormen**: Gebruik korte peer-discussies, digitale quizzes, of interactieve tools.\n3.  **Feedback**: Gebruik self-assessment rubrics, of digitale peer-feedback.\n4.  **Authentieke leertaken**: Werk met grote casussen of realistische opdrachten, eventueel als groepsopdracht.\n\nKortom: kies voor schaalbare, actieve en terugkerende werkvormen.",
+                'one-shot': "Een 'one-shot' (eenmalige) bibliotheekinstructie is volgens het onderzoek vaak niet effectief omdat:\n\n1.  **Complexe competentie:** IPS is een complexe vaardigheid die, net als schrijven of onderzoek doen, herhaalde oefening en feedback vereist.\n2.  **Beperkte transfer:** Eendaagse sessies leiden zelden tot duurzame gedrags- en kennisverandering.\n3.  **Inbedding in de context** is essentieel voor motivatie en toepassing.\n\nHet advies: kies voor geïntegreerde, herhaalde instructie binnen vakken of projecten.",
+                'modeling': "Modeling (Principle 3) is belangrijk omdat het de 'onzichtbare' denkprocessen van een expert zichtbaar maakt voor een student. Volgens de Social Cognitive Theory leren studenten door observatie, vooral als experts hun aanpak hardop uitleggen. Dit verlaagt de cognitieve belasting en versnelt de vaardigheidsoverdracht.",
+                'beperkingen': "Het onderzoek noemt verschillende beperkingen:\n\n1.  **Contextuele Bias:** De meeste studies zijn uitgevoerd in Noord-Amerika en Europa, met voornamelijk eerstejaarsstudenten.\n2.  **Beperkte longitudinale data:** Weinig studies volgen studenten over langere tijd.\n3.  **Publicatiebias:** Studies met positieve resultaten worden vaker gepubliceerd.\n4.  **Variatie in interventies:** Veel verschillende definities en uitwerkingen van IPS en ontwerpprincipes.\n\nKortom: resultaten zijn vooral generaliseerbaar naar Westerse, hoger onderwijscontexten.",
+                'generative ai': "Het artikel (gepubliceerd begin 2023) benoemt de opkomst van Generatieve AI als een factor die de principes kan beïnvloeden. Op basis van de tekst kunnen we concluderen:\n\n- **Authenticiteit wordt belangrijker:** AI-tools maken informatie zoeken en verwerken makkelijker, dus de focus verschuift naar kritisch denken, bronbeoordeling en ethisch gebruik.\n- **Modeling en Feedback veranderen:** Docenten moeten expliciet voordoen hoe je AI-tools verantwoord inzet en feedback geven op het gebruik ervan.\n\nDe ontwerpprincipes blijven gelden, maar de invulling ervan verandert.",
                 'default': "Mijn excuses, mijn kennis is beperkt tot de inhoud van het onderzoeksartikel van Boetje et al. Kunt u uw vraag anders formuleren of een van de voorgestelde vragen proberen?"
             };
 
