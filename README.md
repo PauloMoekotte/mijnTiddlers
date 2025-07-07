@@ -39,6 +39,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Rapport ICT-krapte -SEO](https://paulomoekotte.github.io/mijnTiddlers/test6.html)
 
+[Ontwerprichtlijnen IPS](https://paulomoekotte.github.io/mijnTiddlers/OntwerpRichtlijnenIPS.html)
+
 # Streamlit apps
 
 [AI & Data Science e-Cursus volgens de Roadmap](https://ecursus-datascience.streamlit.app/)
