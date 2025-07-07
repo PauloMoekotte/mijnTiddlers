@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactieve Infographic: Design Principles for IPS Competence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- ALGEMENE STIJLEN --- */
+        :root {
+            --bg-color: #f0f4f8;
+            --main-text-color: #333;
+            --primary-color: #005f73;
+            --secondary-color: #0a9396;
+            --accent-color-1: #94d2bd;
+            --accent-color-2: #e9d8a6;
+            --accent-color-3: #ee9b00;
+            --accent-color-4: #ca6702;
+            --accent-color-5: #bb3e03;
+            --white-color: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --header-font: 'Poppins', sans-serif;
+            --body-font: 'Poppins', sans-serif;
+        }
+
+        body {
+            font-family: var(--body-font);
+            background-color: var(--bg-color);
+            color: var(--main-text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .infographic-container {
+            max-width: 1200px;
+            margin: auto;
+            background: var(--white-color);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+        }
+
+        h1, h2, h3 {
+            font-family: var(--header-font);
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        h2.subtitle {
+            font-size: 1.2em;
+            font-weight: 400;
+            color: var(--secondary-color);
+            margin-top: 0;
+            margin-bottom: 40px;
+        }
+        
+        h2.section-title {
+            font-size: 2em;
+            margin-top: 60px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent-color-1);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .center-wrapper {
+            text-align: center;
+        }
+
+        /* --- IPS-EDP MODEL (HEXAGON GRID) --- */
+        .ips-model-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 900px;
+            margin: 50px auto;
+            justify-items: center;
+            align-items: center;
+        }
+
+        .hexagon {
+            position: relative;
+            width: 180px;
+            height: 208px; /* width * 1.1547 */
+            background-color: var(--secondary-color);
+            margin: 2px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .hexagon:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+        
+        .hexagon-content {
+            color: var(--white-color);
+            font-weight: 600;
+            font-size: 1.1em;
+            padding: 10px;
+            z-index: 2;
+        }
+        
+        .hexagon-content .sub-points {
+            font-size: 0.7em;
+            font-weight: 400;
+            margin-top: 8px;
+            display: block;
+            opacity: 0.9;
+        }
+
+        /* Specifieke posities en kleuren */
+        #h-instruction { grid-column: 2; grid-row: 1; background-color: var(--secondary-color); }
+        #h-modeling { grid-column: 3; grid-row: 1; background-color: var(--secondary-color); }
+        #h-feedback { grid-column: 1; grid-row: 2; background-color: var(--accent-color-4); }
+        #h-learning-task { grid-column: 2 / span 2; grid-row: 2; background-color: var(--primary-color); transform: scale(1.2); }
+        #h-practice { grid-column: 4; grid-row: 2; background-color: var(--accent-color-4); }
+        #h-support { grid-column: 2; grid-row: 3; background-color: var(--accent-color-3); }
+        #h-learning-activities { grid-column: 3; grid-row: 3; background-color: var(--accent-color-3); }
+
+        /* --- MODAL (POP-UP) STIJLEN --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--white-color);
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: fadeIn 0.5s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.8em;
+            text-align: left;
+        }
+        
+        .close-button {
+            color: #aaa;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-button:hover, .close-button:focus {
+            color: var(--main-text-color);
+        }
+        
+        .modal-body h4 {
+            color: var(--secondary-color);
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        
+        .modal-body ul {
+            list-style-type: '✓ ';
+            padding-left: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: scale(0.9);}
+            to {opacity: 1; transform: scale(1);}
+        }
+
+        /* --- GLOSSARY & TOOLTIPS --- */
+        .glossary-term {
+            color: var(--secondary-color);
+            font-weight: 600;
+            text-decoration: underline dotted;
+            text-decoration-thickness: 2px;
+            cursor: help;
+            position: relative;
+        }
+        
+        [data-tooltip] {
+            position: relative;
+        }
+        
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary-color);
+            color: var(--white-color);
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: 400;
+            line-height: 1.4;
+            white-space: normal; /* Zorgt voor tekst-wrapping */
+            width: 300px; /* Vaste breedte voor tooltip */
+            text-align: left;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 100;
+        }
+
+        [data-tooltip]:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* --- AI-GEGENEREERDE WORKFLOWS --- */
+        .workflow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .workflow {
+            background: #f8f9fa;
+            border-left: 5px solid var(--secondary-color);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .workflow h3 {
+            text-align: left;
+            margin-top: 0;
+            color: var(--secondary-color);
+        }
+        .ai-badge {
+            font-size: 0.8em;
+            background: var(--accent-color-1);
+            color: var(--primary-color);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .workflow-steps {
+            list-style: none;
+            padding: 0;
+            position: relative;
+        }
+        .workflow-steps::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: var(--accent-color-1);
+        }
+        .workflow-step {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .workflow-step::before {
+            content: counter(step);
+            counter-increment: step;
+            position: absolute;
+            left: -1px;
+            top: -2px;
+            width: 24px;
+            height: 24px;
+            background: var(--white-color);
+            border: 2px solid var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        .workflow-step strong {
+            display: block;
+            color: var(--primary-color);
+        }
+
+        /* --- AI ASSISTENT --- */
+        .ai-assistant-container {
+            margin-top: 40px;
+            padding: 30px;
+            background: #eaf4f4;
+            border-radius: 15px;
+            border-top: 5px solid var(--accent-color-3);
+        }
+        .ai-assistant-container h2 {
+            color: var(--accent-color-4);
+        }
+        .ai-assistant-container p {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+        }
+        .chat-interface {
+            max-width: 800px;
+            margin: auto;
+        }
+        #ai-response {
+            background: var(--white-color);
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 100px;
+            margin-bottom: 20px;
+            white-space: pre-wrap; /* Behoudt opmaak zoals nieuwe regels */
+            transition: all 0.3s;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        #user-prompt {
+            flex-grow: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+        #ask-ai-button {
+            padding: 12px 25px;
+            border: none;
+            background-color: var(--accent-color-3);
+            color: var(--primary-color);
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #ask-ai-button:hover {
+            background-color: var(--accent-color-4);
+            color: var(--white-color);
+        }
+        .prompt-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .prompt-suggestion-button {
+            background: none;
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+        .prompt-suggestion-button:hover {
+            background-color: var(--secondary-color);
+            color: var(--white-color);
+        }
+        
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 920px) {
+            .ips-model-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            #h-instruction { grid-column: 1; grid-row: 1; }
+            #h-modeling { grid-column: 2; grid-row: 1; }
+            #h-feedback { grid-column: 1; grid-row: 3; }
+            #h-learning-task { grid-column: 1 / span 2; grid-row: 2; transform: scale(1.1); }
+            #h-practice { grid-column: 2; grid-row: 3; }
+            #h-support { grid-column: 1; grid-row: 4; }
+            #h-learning-activities { grid-column: 2; grid-row: 4; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 2em; }
+            .ips-model-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .hexagon { width: 220px; height: 254px; }
+            /* Reset grid positions for single column */
+            #h-instruction, #h-modeling, #h-feedback, #h-learning-task, #h-practice, #h-support, #h-learning-activities {
+                grid-column: 1;
+                grid-row: auto;
+                transform: scale(1);
+            }
+            .input-area { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="infographic-container">
+        <h1>Design Principles for IPS Competence</h1>
+        <h2 class="subtitle">Een interactieve samenvatting van het <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS-EDP</span> Model</h2>
+        <p style="text-align: center;">Klik op een van de zeven onderdelen van het model voor een gedetailleerde uitleg gebaseerd op het systematische review en meta-analyse van Boetje et al.</p>
+        
+        <div class="ips-model-grid">
+            <div class="hexagon" id="h-instruction" onclick="openModal('modal-instruction')">
+                <div class="hexagon-content">2. INSTRUCTION<span class="sub-points">Frequent<br>Embedded in Domain</span></div>
+            </div>
+            <div class="hexagon" id="h-modeling" onclick="openModal('modal-modeling')">
+                <div class="hexagon-content">3. MODELING<span class="sub-points">Peer Experts<br>Reflective Prompts</span></div>
+            </div>
+            <div class="hexagon" id="h-feedback" onclick="openModal('modal-feedback')">
+                <div class="hexagon-content">7. FEEDBACK<span class="sub-points">Just-in-Time<br>Self-Assessment</span></div>
+            </div>
+            <div class="hexagon" id="h-learning-task" onclick="openModal('modal-learning-task')">
+                <div class="hexagon-content">1. LEARNING TASK<span class="sub-points">Relevant<br>Authentic<br>Whole Task</span></div>
+            </div>
+            <div class="hexagon" id="h-practice" onclick="openModal('modal-practice')">
+                <div class="hexagon-content">4. PRACTICE<span class="sub-points">Before / After<br>Timing</span></div>
+            </div>
+            <div class="hexagon" id="h-support" onclick="openModal('modal-support')">
+                <div class="hexagon-content">6. SUPPORT<span class="sub-points">Task Support<br>Process Support</span></div>
+            </div>
+            <div class="hexagon" id="h-learning-activities" onclick="openModal('modal-learning-activities')">
+                <div class="hexagon-content">5. LEARNING ACTIVITIES<span class="sub-points">Activate<br>Engage</span></div>
+            </div>
+        </div>
+        
+        <div class="center-wrapper">
+             <h2 class="section-title">AI-Gegenereerde Workflows</h2>
+        </div>
+        <p style="text-align: center;">Complexe processen uit het artikel, gevisualiseerd voor helderheid.</p>
+
+        <div class="workflow-container">
+            <div class="workflow">
+                <h3>Onderzoeksmethodologie <span class="ai-badge">AI-Generated</span></h3>
+                <ol class="workflow-steps">
+                    <li class="workflow-step"><strong>Formuleren Inclusiecriteria</strong>De basis leggen door te bepalen welke studies (pre-test/post-test, hoger onderwijs) relevant zijn.</li>
+                    <li class="workflow-step"><strong>Ontwikkelen Zoekstrategie</strong>Een systematische zoekopdracht in 7 academische databases met termen gerelateerd aan <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>, leeromgeving en hoger onderwijs.</li>
+                    <li class="workflow-step"><strong>Selectie van Studies</strong>Een 4-staps proces van data-preparatie, (priority) screening van 22.428 records, en kwaliteitschecks om 69 relevante artikelen te selecteren.</li>
+                    <li class="workflow-step"><strong>Kritische Beoordeling (Critical Appraisal)</strong>Beoordelen van de methodologische kwaliteit van de studies met JBI-checklists om risico op bias vast te stellen.</li>
+                    <li class="workflow-step"><strong>Data-extractie</strong>Systematisch extraheren van 56 variabelen per studie, gebaseerd op het <span class="glossary-term" data-tooltip="Een model van Biggs dat leren ziet als een interactief systeem waar studentkenmerken en leeromgeving (Presage) de leeractiviteiten (Process) beïnvloeden, wat leidt tot leerresultaten (Product).">3P Model</span> en het <span class="glossary-term" data-tooltip="Een raamwerk van Brand-Gruwel et al. dat de vijf onderling samenhangende competenties van IPS beschrijft: probleem definiëren, zoeken, selecteren, verwerken en presenteren van informatie.">IPS-I Model</span>.</li>
+                    <li class="workflow-step"><strong>Data Synthese</strong>Combineren van de bevindingen via narratieve synthese en kwantitatieve <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyses</span> om de zeven ontwerpprincipes te formuleren.</li>
+                </ol>
+            </div>
+            <div class="workflow">
+                <h3>Aanbevolen Cursusontwerp Proces <span class="ai-badge">AI-Generated</span></h3>
+                <ol class="workflow-steps">
+                    <li class="workflow-step"><strong>Stap 1: Definieer Leerdoelen (Principle 1)</strong>Creëer authentieke, relevante en integrale leertaken (bv. een casestudy, onderzoeksopdracht) die de beoogde <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-competenties weerspiegelen. Dit vormt de basis van het <span class="glossary-term" data-tooltip="Een principe van Biggs waarbij leerdoelen, onderwijsactiviteiten en beoordeling doelgericht op elkaar worden afgestemd voor effectief leren.">Constructive Alignment</span>.</li>
+                    <li class="workflow-step"><strong>Stap 2: Creëer de Leeromgeving (Principles 2-6)</strong>Ontwerp de onderwijs- en leeractiviteiten. Combineer expliciete <strong>instructie</strong>, <strong>modeling</strong> van expertgedrag, en bied studenten ruime gelegenheid om te <strong>oefenen</strong>. Gebruik actieve <strong>leeractiviteiten</strong> (zoals games of discussies) en bied gerichte <strong>ondersteuning</strong> (zowel op de taak als op het proces).</li>
+                    <li class="workflow-step"><strong>Stap 3: Ontwerp de Beoordelingsstrategieën (Principle 7)</strong>Integreer (zelf)beoordelingsmomenten met tijdige, constructieve <strong>feedback</strong>. Dit helpt studenten hun leerproces te reguleren en versterkt het leerrendement. De beoordeling moet direct aansluiten bij de leertaken uit stap 1.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="ai-assistant-container">
+            <div class="center-wrapper">
+                <h2 class="section-title">AI Assistent</h2>
+            </div>
+            <p>Stel een vraag over het artikel. Deze assistent is "getraind" op de inhoud van de 43-pagina's tellende publicatie en geeft antwoorden op basis van de onderzoeksbevindingen.</p>
+            <div class="chat-interface">
+                <div id="ai-response">Hallo! Ik ben uw AI-assistent voor dit onderzoek. Stel een vraag hieronder of kies een van de suggesties.</div>
+                <div class="input-area">
+                    <input type="text" id="user-prompt" placeholder="Stel uw vraag hier...">
+                    <button id="ask-ai-button">Vraag</button>
+                </div>
+                <div class="prompt-suggestions">
+                    <button class="prompt-suggestion-button">Geef een korte samenvatting van het onderzoek.</button>
+                    <button class="prompt-suggestion-button">Hoe pas ik deze principes toe in een grote collegezaal?</button>
+                    <button class="prompt-suggestion-button">Waarom is een 'one-shot' bibliotheekinstructie niet effectief?</button>
+                    <button class="prompt-suggestion-button">Wat is het belang van 'Modeling'?</button>
+                    <button class="prompt-suggestion-button">Wat zijn de belangrijkste beperkingen van dit onderzoek?</button>
+                    <button class="prompt-suggestion-button">Hoe beïnvloedt Generatieve AI (zoals ChatGPT) deze principes?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals voor elk principe -->
+    <div id="modal-learning-task" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>1. Learning Task (De Leertaak)</h3>
+                <span class="close-button">×</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ontwerpprincipe:</strong> Zorg ervoor dat de leertaak de relevantieperceptie van studenten weerspiegelt, de integratie van kennis, vaardigheden en attitudes vereist, en authentieke, levensechte scenario's simuleert.</p>
+                <h4>Theoretische onderbouwing:</h4>
+                <ul>
+                    <li>Gebaseerd op modellen zoals het <span class="glossary-term" data-tooltip="Four-Component Instructional Design model: Een model van Van Merriënboer voor het ontwerpen van onderwijs voor complexe vaardigheden, gebaseerd op leertaken, ondersteunende informatie, procedurele informatie en deeltakoefening.">4C/ID model</span>, dat het belang van authentieke en integrale leertaken benadrukt.</li>
+                    <li>Authentieke taken (zoals case-based of project-based learning) verhogen de motivatie, betrokkenheid en actieve zingeving van studenten.</li>
+                    <li>De complexiteit van 'real-world' taken dwingt studenten om kennis, vaardigheden en attitudes te integreren, wat de transfer van het geleerde naar nieuwe situaties bevordert.</li>
+                </ul>
+                <h4>Empirische evidentie:</h4>
+                <ul>
+                    <li>Studies tonen aan dat het gebruik van authentieke academische opdrachten (bv. het schrijven van een theoretisch kader) of professionele scenario's (bv. het oplossen van een klinische casus) significant de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-prestaties en -zelfeffectiviteit verbetert.</li>
+                    <li>Zelfs het analyseren van hypothetische casestudies leidt al tot een positief effect op <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-vaardigheden.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-instruction" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>2. Instruction (Instructie)</h3>
+                <span class="close-button">×</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ontwerpprincipe:</strong> Neem meerdere <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-instructiesessies op in het curriculum en veranker deze in de inhoud van de betreffende discipline.</p>
+                <h4>Theoretische onderbouwing:</h4>
+                <ul>
+                    <li><strong>Embedded Librarianship:</strong> Erkent dat langdurige betrokkenheid en oefening nodig zijn om complexe competenties te ontwikkelen. Eenmalige sessies zijn onvoldoende.</li>
+                    <li><strong>Contextualisatie:</strong> Het integreren van instructie met direct relevante, domeinspecifieke inhoud verhoogt motivatie, diepgaand leren en de transfer van vaardigheden. Studenten zien direct het nut van de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-vaardigheden voor hun eigen vakgebied.</li>
+                </ul>
+                <h4>Empirische evidentie:</h4>
+                <ul>
+                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyse</span> (g=0.86) toont aan dat uitgebreide, semester-lange <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-sessies significant beter presteren dan 'one-shot' instructies voor het ontwikkelen van kennis.</li>
+                    <li>Ingebedde instructie verbetert een breed spectrum aan <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-uitkomsten, van prestaties tot zelfeffectiviteit, in diverse domeinen zoals onderwijs, psychologie en biologie.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal-modeling" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>3. Modeling (Voordoen)</h3>
+                <span class="close-button">×</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ontwerpprincipe:</strong> Bied studenten de mogelijkheid om korte fragmenten van (peer-)expertmodellen te observeren, afgewisseld met instructie, om de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-prestaties te verhogen.</p>
+                <h4>Theoretische onderbouwing:</h4>
+                <ul>
+                    <li><strong>Social Cognitive Theory (Bandura):</strong> Observationeel leren van modellen maakt de onderliggende cognitieve processen zichtbaar, wat de acquisitie van complexe vaardigheden verbetert en het geloof in eigen kunnen (zelfeffectiviteit) versterkt.</li>
+                    <li><strong>Cognitive Load Theory (Sweller):</strong> Het bestuderen van voorbeelden (worked examples) verlaagt de cognitieve belasting, waardoor studenten hun mentale capaciteit kunnen richten op het construeren van kennis (schema's) in plaats van op het uitvoeren van de taak zelf.</li>
+                </ul>
+                <h4>Empirische evidentie:</h4>
+                <ul>
+                    <li>Studies die peer-expert video's gebruikten (korte fragmenten van elke <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-stap, afgewisseld met reflectieve vragen of instructie) toonden een significant, medium tot groot positief effect op de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-prestaties in vergelijking met groepen die alleen oefenden.</li>
+                    <li>Het effect bleef zelfs na een week nog zichtbaar in een uitgestelde post-test.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal-practice" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>4. Practice (Oefenen)</h3>
+                <span class="close-button">×</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ontwerpprincipe:</strong> Bied studenten mogelijkheden om te oefenen met <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>, hetzij ter voorbereiding op, hetzij volgend op instructie of modeling.</p>
+                <h4>Theoretische onderbouwing:</h4>
+                <ul>
+                    <li><strong>Sociaal Constructivisme (Vygotsky):</strong> Interactie met peers of de oefentaak bevordert actieve verwerking, diepe begripsvorming en internalisatie van kennis.</li>
+                    <li><strong>Synergetisch effect:</strong> De literatuur benadrukt dat de combinatie van doelbewust oefenen met instructie of voorbeelden de retentie van vaardigheden en kennis significant versterkt. Alleen oefenen is vaak niet genoeg.</li>
+                </ul>
+                <h4>Empirische evidentie:</h4>
+                <ul>
+                    <li><strong>Geïsoleerd oefenen is niet effectief:</strong> Alleen student-gecentreerd oefenen verbetert de kennis van plagiaat niet significant in vergelijking met traditionele instructie.</li>
+                    <li><strong>Combinatie is cruciaal:</strong> Oefentaken vóór formele instructie (bv. voorbereidende opdrachten) verbeteren het vermogen om bronnen te bekritiseren en zoekstrategieën te formuleren.</li>
+                    <li>Oefenen ná instructie of modeling leidt tot medium tot grote verbeteringen in <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-prestaties en -kennis in vergelijking met 'practice-only' benaderingen.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal-learning-activities" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>5. Learning Activities (Leeractiviteiten)</h3>
+                <span class="close-button">×</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ontwerpprincipe:</strong> Zorg ervoor dat leeractiviteiten studenten actief betrekken om op korte termijn de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-kennis en -vaardigheden te vergroten.</p>
+                <h4>Theoretische onderbouwing:</h4>
+                <ul>
+                    <li><strong>Sociaal Constructivisme & Student-gecentreerd Leren:</strong> Actieve leeractiviteiten moedigen actieve kennisconstructie aan, wat leidt tot diepere internalisatie en betere schema-constructie.</li>
+                    <li><strong>Game-based Learning:</strong> Het gebruik van games verhoogt de betrokkenheid en motivatie van studenten, wat leidt tot verbeterde leerresultaten.</li>
+                </ul>
+                <h4>Empirische evidentie:</h4>
+                <ul>
+                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyse</span> (g=0.26) toont aan dat game-based benaderingen een kleine maar significante verbetering in korte-termijn <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-kennis (zoeken, selecteren, citeren) opleveren in vergelijking met traditionele instructie.</li>
+                    <li>Zowel individuele spellen (bv. 'Citation Tic Tac Toe') als interactieve groepsspellen (bv. 'hot potato' voor bronbeoordeling) zijn effectief.</li>
+                    <li>De effectiviteit lijkt te liggen in de actieve betrokkenheid die ze bevorderen, niet zozeer in het specifieke format (individueel vs. groep).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal-support" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>6. Support (Ondersteuning)</h3>
+                <span class="close-button">×</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ontwerpprincipe:</strong> Bied ondersteuning op zowel de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-taak als het <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-proces om de prestaties te verbeteren.</p>
+                <h4>Theoretische onderbouwing:</h4>
+                <ul>
+                    <li><strong>Writing Instruction Design Principles (Rijlaarsdam et al.):</strong> Expliciete instructieondersteuning die onderliggende taakprocessen verheldert, bevordert een adequate taakrepresentatie en verbetert zelfregulatie.</li>
+                    <li><strong>Scaffolding:</strong> Vooral voor beginnende studenten is een scaffold (ondersteuningsstructuur) die verder gaat dan alleen expliciete instructie (bv. discussie, modeling, oefening) essentieel om de zelfregulatiestrategieën te verwerven die nodig zijn om moeilijkheden in het <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-proces te overwinnen.</li>
+                </ul>
+                <h4>Empirische evidentie:</h4>
+                <ul>
+                    <li><strong>Procesondersteuning is effectiever:</strong> Ondersteuning die zich richt op het proces (bv. hoe je argumenten integreert) is effectiever dan ondersteuning die zich alleen op het eindproduct richt.</li>
+                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyse</span> bevestigt de meerwaarde van uitgebreide procesondersteuning (inclusief instructie en video modeling) voor het identificeren (g=0.39) en integreren (g=0.65) van argumenten in syntheseteksten.</li>
+                    <li>Timing is belangrijk: Procesondersteuning bieden *tijdens* het schrijfproces leidt tot betere integratie van conflicterende argumenten.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div id="modal-feedback" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>7. Feedback</h3>
+                <span class="close-button">×</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ontwerpprincipe:</strong> Zorg voor tijdige feedback tijdens de uitvoering van de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-taak en faciliteer zelfbeoordeling om kennis, vaardigheden en zelfeffectiviteit te verbeteren.</p>
+                <h4>Theoretische onderbouwing:</h4>
+                <ul>
+                    <li>Feedback kan de betrokkenheid verhogen, negatieve emoties zoals frustratie verminderen en de ontwikkeling van zelfregulerende leergewoonten stimuleren.</li>
+                    <li>Directe feedback via digitale tools (zoals clickers of LMS-functies) stelt docenten in staat hun pedagogische strategieën real-time aan te passen, wat de effectiviteit van de instructie verhoogt.</li>
+                </ul>
+                <h4>Empirische evidentie:</h4>
+                <ul>
+                    <li>Een <span class="glossary-term" data-tooltip="Een statistische techniek die resultaten van meerdere onafhankelijke studies combineert om een algemeen effect te schatten. Wordt gebruikt om de validiteit van de ontwerpprincipes te versterken.">meta-analyse</span> van directe, klassikale feedback via digitale systemen toonde een klein effect (g=0.22, p=.07) op de retentie van kennis over zoekstrategieën, wat de effectiviteit suggereert maar niet sluitend bewijst.</li>
+                    <li>Affectieve feedback (bv. bemoedigende berichten in een game) verbetert de <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-kennis niet, maar verhoogt wel significant de motivatie, het plezier en de gedragsintentie.</li>
+                    <li>Studenten die getraind zijn in het gebruik van zelfbeoordelingsrubrieken voor peer reviews, tonen een verbeterde zelfeffectiviteit en <span class="glossary-term" data-tooltip="Information Problem Solving: De geïntegreerde kennis, vaardigheden en attitudes die individuen in staat stellen online informatie te zoeken, beoordelen en gebruiken om problemen op te lossen en kennis op te bouwen.">IPS</span>-vaardigheden vergeleken met studenten die alleen op feedback van de docent vertrouwden.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- MODAL LOGICA ---
+            const modals = document.querySelectorAll('.modal');
+            const closeButtons = document.querySelectorAll('.close-button');
+
+            window.openModal = function(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'flex';
+                }
+            }
+
+            function closeModal() {
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', closeModal);
+            });
+
+            window.addEventListener('click', function(event) {
+                modals.forEach(modal => {
+                    if (event.target == modal) {
+                        closeModal();
+                    }
+                });
+            });
+            
+            // --- AI ASSISTENT LOGICA ---
+            const askButton = document.getElementById('ask-ai-button');
+            const userInput = document.getElementById('user-prompt');
+            const aiResponseDiv = document.getElementById('ai-response');
+            const suggestionButtons = document.querySelectorAll('.prompt-suggestion-button');
+
+            // De "kennisbank" van de AI, gebaseerd op de paper
+            const aiKnowledgeBase = {
+                'samenvatting': "Gebaseerd op de analyse van 69 studies, presenteert dit onderzoek het IPS-EDP model met zeven onderling samenhangende ontwerpprincipes voor het ontwikkelen van Informatie Problem Solving (IPS) competentie in het hoger onderwijs. Deze principes zijn: (1) Leertaak, (2) Instructie, (3) Modeling, (4) Oefenen, (5) Leeractiviteiten, (6) Ondersteuning, en (7) Feedback. Het model biedt een evidence-based raamwerk voor docenten en curriculumontwerpers.",
+                'grote collegezaal': "In een grote collegezaal is het lastig om alle principes even intensief toe te passen. Het onderzoek suggereert een strategische aanpak:\n\n1.  **Focus op Expliciete Instructie (Principle 2):** Gebruik de collegetijd voor heldere, gestructureerde uitleg van IPS-processen.\n2.  **Benut Modeling (Principle 3):** Toon via video's of live demonstraties hoe een expert een zoekstrategie ontwikkelt of een bron beoordeelt. Dit is schaalbaar voor een groot publiek.\n3.  **Gebruik Technologie voor Feedback (Principle 7):** Zet digitale tools zoals 'clickers' of polls in om directe, klassikale feedback te verzamelen en te geven.\n\nIntensieve, gepersonaliseerde oefening (Principle 4) en ondersteuning (Principle 6) zijn beter geschikt voor kleinere werkgroepen of opdrachten buiten het college om.",
+                'one-shot': "Een 'one-shot' (eenmalige) bibliotheekinstructie is volgens het onderzoek vaak niet effectief omdat:\n\n1.  **Complexe competentie:** IPS is een complexe vaardigheid die, net als leren schrijven of programmeren, herhaalde oefening en langdurige betrokkenheid vereist. Eén sessie is te kort om dit te bewerkstelligen.\n2.  **Gebrek aan context:** Vaak zijn deze sessies losgekoppeld van de specifieke cursusinhoud. Hierdoor zien studenten de relevantie niet en is de transfer van het geleerde naar hun eigen werk laag (zie Principle 2: Instruction).\n3.  **Te veel informatie:** In een korte sessie wordt vaak te veel informatie tegelijk gegeven, wat leidt tot cognitieve overbelasting.",
+                'modeling': "Modeling (Principle 3) is belangrijk omdat het de 'onzichtbare' denkprocessen van een expert zichtbaar maakt voor een student. Volgens de Social Cognitive Theory leren studenten niet alleen door te doen, maar ook door te observeren. Wanneer een student een expert (of een bekwame peer) een taak ziet uitvoeren, zoals het formuleren van zoektermen of het kritisch evalueren van een website, leren ze de onderliggende strategieën en heuristieken. Dit verlaagt de cognitieve belasting en verhoogt het geloof in eigen kunnen (zelfeffectiviteit).",
+                'beperkingen': "Het onderzoek noemt verschillende beperkingen:\n\n1.  **Contextuele Bias:** De meeste studies zijn uitgevoerd in Noord-Amerika en Europa, met voornamelijk eerstejaarsstudenten in algemene vakken. De resultaten zijn mogelijk minder generaliseerbaar naar andere culturen, hogerejaars of zeer specifieke beroepsopleidingen.\n2.  **'Library Bias':** Het onderzoek richt zich voornamelijk op de IPS-competenties 'zoeken' en 'selecteren'. Andere cruciale stappen zoals 'probleem definiëren', 'verwerken' en 'presenteren' zijn onderbelicht.\n3.  **Methodologische variatie:** De kwaliteit van de studies varieert, en veel interventies combineren meerdere ontwerpprincipes tegelijk, wat het moeilijk maakt om het effect van één specifiek principe te isoleren.",
+                'generative ai': "Het artikel (gepubliceerd begin 2023) benoemt de opkomst van Generatieve AI als een factor die de principes kan beïnvloeden. Op basis van de tekst kunnen we concluderen:\n\n1.  **Probleem Definiëren wordt crucialer:** Het belang van traditionele zoekwoord-strategieën (Principle 2: Instruction) neemt mogelijk af. De vaardigheid om een heldere, precieze vraag of prompt te formuleren (onderdeel van Principle 1: Learning Task en de 'define the problem' competentie) wordt juist veel belangrijker om de AI effectief aan te sturen.\n2.  **Verwerken en Evalueren verandert:** Studenten moeten leren om door AI-gegenereerde informatie, die divers en van wisselende kwaliteit kan zijn, te navigeren. De focus verschuift van 'informatie vinden' naar 'informatie verifiëren, synthetiseren en kritisch evalueren' (onderdeel van de 'select' en 'process' competenties).\n\nDe kernprincipes zoals authentieke taken, modeling van kritisch denken, en feedback blijven relevant, maar de concrete invulling zal moeten worden aangepast aan deze nieuwe technologische realiteit.",
+                'default': "Mijn excuses, mijn kennis is beperkt tot de inhoud van het onderzoeksartikel van Boetje et al. Kunt u uw vraag anders formuleren of een van de voorgestelde vragen proberen?"
+            };
+
+            function getAIResponse(prompt) {
+                const lowerCasePrompt = prompt.toLowerCase();
+                aiResponseDiv.style.opacity = 0.5;
+                aiResponseDiv.textContent = "Aan het denken...";
+                
+                setTimeout(() => {
+                    let response = aiKnowledgeBase.default;
+                    for (const key in aiKnowledgeBase) {
+                        if (lowerCasePrompt.includes(key)) {
+                            response = aiKnowledgeBase[key];
+                            break;
+                        }
+                    }
+                    aiResponseDiv.textContent = response;
+                    aiResponseDiv.style.opacity = 1;
+                }, 700); // Simuleert een 'denk'pauze
+            }
+
+            askButton.addEventListener('click', () => {
+                const prompt = userInput.value;
+                if (prompt.trim() !== '') {
+                    getAIResponse(prompt);
+                }
+            });
+            
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    askButton.click();
+                }
+            });
+
+            suggestionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const prompt = button.textContent;
+                    userInput.value = prompt;
+                    getAIResponse(prompt);
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
