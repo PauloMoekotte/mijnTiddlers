@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- ALGEMENE STIJLEN --- */
         :root {
             --bg-color: #f0f4f8;
             --main-text-color: #333;
@@ -89,7 +88,7 @@
         .hexagon {
             position: relative;
             width: 180px;
-            height: 208px; /* width * 1.1547 */
+            height: 208px;
             background-color: var(--secondary-color);
             margin: 2px;
             cursor: pointer;
@@ -100,12 +99,10 @@
             justify-content: center;
             text-align: center;
         }
-        
         .hexagon:hover {
             transform: scale(1.1);
             z-index: 10;
         }
-        
         .hexagon-content {
             color: var(--white-color);
             font-weight: 600;
@@ -113,7 +110,6 @@
             padding: 10px;
             z-index: 2;
         }
-        
         .hexagon-content .sub-points {
             font-size: 0.7em;
             font-weight: 400;
@@ -121,8 +117,6 @@
             display: block;
             opacity: 0.9;
         }
-
-        /* Specifieke posities en kleuren */
         #h-instruction { grid-column: 2; grid-row: 1; background-color: var(--secondary-color); }
         #h-modeling { grid-column: 3; grid-row: 1; background-color: var(--secondary-color); }
         #h-feedback { grid-column: 1; grid-row: 2; background-color: var(--accent-color-4); }
@@ -130,7 +124,6 @@
         #h-practice { grid-column: 4; grid-row: 2; background-color: var(--accent-color-4); }
         #h-support { grid-column: 2; grid-row: 3; background-color: var(--accent-color-3); }
         #h-learning-activities { grid-column: 3; grid-row: 3; background-color: var(--accent-color-3); }
-
         /* --- MODAL (POP-UP) STIJLEN --- */
         .modal {
             display: none;
@@ -145,7 +138,6 @@
             align-items: center;
             justify-content: center;
         }
-
         .modal-content {
             background-color: var(--white-color);
             margin: auto;
@@ -156,7 +148,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             animation: fadeIn 0.5s;
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -165,13 +156,11 @@
             padding-bottom: 15px;
             margin-bottom: 20px;
         }
-        
         .modal-header h3 {
             margin: 0;
             font-size: 1.8em;
             text-align: left;
         }
-        
         .close-button {
             color: #aaa;
             font-size: 32px;
@@ -179,27 +168,22 @@
             cursor: pointer;
             transition: color 0.3s;
         }
-
         .close-button:hover, .close-button:focus {
             color: var(--main-text-color);
         }
-        
         .modal-body h4 {
             color: var(--secondary-color);
             font-size: 1.2em;
             margin-top: 20px;
         }
-        
         .modal-body ul {
             list-style-type: '✓ ';
             padding-left: 20px;
         }
-
         @keyframes fadeIn {
             from {opacity: 0; transform: scale(0.9);}
             to {opacity: 1; transform: scale(1);}
         }
-
         /* --- GLOSSARY & TOOLTIPS --- */
         .glossary-term {
             color: var(--secondary-color);
@@ -209,11 +193,7 @@
             cursor: help;
             position: relative;
         }
-        
-        [data-tooltip] {
-            position: relative;
-        }
-        
+        [data-tooltip] { position: relative; }
         [data-tooltip]::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -227,20 +207,18 @@
             font-size: 0.9em;
             font-weight: 400;
             line-height: 1.4;
-            white-space: normal; /* Zorgt voor tekst-wrapping */
-            width: 300px; /* Vaste breedte voor tooltip */
+            white-space: normal;
+            width: 300px;
             text-align: left;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
             z-index: 100;
         }
-
         [data-tooltip]:hover::after {
             opacity: 1;
             visibility: visible;
         }
-        
         /* --- AI-GEGENEREERDE WORKFLOWS --- */
         .workflow-container {
             display: flex;
@@ -248,13 +226,13 @@
             gap: 30px;
             margin-top: 30px;
         }
-        /* Nieuwe horizontale workflow */
+        /* Horizontale workflow met losse stappen */
         .horizontal-workflow {
             display: flex;
             flex-direction: row;
             gap: 30px;
             justify-content: center;
-            align-items: flex-start;
+            align-items: stretch;
             margin-top: 40px;
             flex-wrap: wrap;
         }
@@ -262,7 +240,7 @@
             background: #f8f9fa;
             border: 2px solid var(--accent-color-1);
             border-radius: 12px;
-            padding: 25px 20px 20px 20px;
+            padding: 20px 18px 20px 18px;
             min-width: 220px;
             max-width: 320px;
             box-shadow: 0 4px 12px var(--shadow-color);
@@ -273,20 +251,37 @@
             margin-bottom: 20px;
         }
         .horizontal-step .icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 2.4em;
+            margin-bottom: 8px;
         }
         .horizontal-step strong {
             color: var(--primary-color);
-            font-size: 1.1em;
-            margin-bottom: 6px;
+            font-size: 1em;
+            margin-bottom: 4px;
             display: block;
             text-align: center;
         }
         .horizontal-step-desc {
-            font-size: 1em;
+            font-size: 0.98em;
             color: var(--main-text-color);
             text-align: center;
+        }
+        .horizontal-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: var(--accent-color-2);
+            margin: 0 0px;
+        }
+        @media (max-width: 1100px) {
+            .horizontal-workflow {
+                gap:18px;
+            }
+            .horizontal-step {
+                min-width:180px;
+                max-width:100%;
+            }
         }
         @media (max-width: 900px) {
             .horizontal-workflow {
@@ -297,6 +292,9 @@
                 max-width: 100%;
                 width: 100%;
                 margin-right: 0;
+            }
+            .horizontal-arrow {
+                display: none;
             }
         }
         .workflow h3 {
@@ -341,7 +339,7 @@
             padding: 20px;
             min-height: 100px;
             margin-bottom: 20px;
-            white-space: pre-wrap; /* Behoudt opmaak zoals nieuwe regels */
+            white-space: pre-wrap;
             transition: all 0.3s;
         }
         .input-area {
@@ -390,7 +388,6 @@
             background-color: var(--secondary-color);
             color: var(--white-color);
         }
-        
         /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 920px) {
             .ips-model-grid {
@@ -459,26 +456,76 @@
         <p style="text-align: center;">Complexe processen uit het artikel, gevisualiseerd voor helderheid.</p>
 
         <div class="workflow-container">
-            <div class="workflow horizontal-workflow">
+            <div class="workflow horizontal-workflow" style="overflow-x:auto;">
                 <div class="horizontal-step">
                     <div class="icon">🎯</div>
-                    <strong>Stap 1: Definieer Leerdoelen</strong>
+                    <strong>Stap 1: Definieer Leerdoelen (Principe 1)</strong>
                     <div class="horizontal-step-desc">
-                        Creëer authentieke, relevante en integrale leertaken (bv. een casestudy, onderzoeksopdracht) die aansluiten bij de praktijk.<br><em>(Principle 1)</em>
+                        Creëer authentieke, relevante en integrale leertaken (bijv. casestudy, onderzoeksopdracht) die passen bij de praktijk.
                     </div>
                 </div>
+                <div class="horizontal-arrow">➡️</div>
+                <div class="horizontal-step">
+                    <div class="icon">🗂️</div>
+                    <strong>Stap 2: Ontwikkel Relevante Opdrachten</strong>
+                    <div class="horizontal-step-desc">
+                        Ontwerp taken die studenten uitdagen in het zoeken, selecteren, verwerken en presenteren van informatie.
+                    </div>
+                </div>
+                <div class="horizontal-arrow">➡️</div>
                 <div class="horizontal-step">
                     <div class="icon">🏫</div>
-                    <strong>Stap 2: Creëer de Leeromgeving</strong>
+                    <strong>Stap 3: Ontwerp de Leeromgeving (Principes 2-6)</strong>
                     <div class="horizontal-step-desc">
-                        Ontwerp onderwijs- en leeractiviteiten: combineer expliciete instructie, voorbeelden, oefening, peer-interactie en procesondersteuning.<br><em>(Principes 2-6)</em>
+                        Combineer expliciete instructie, voorbeelden (modeling), oefening, peer-interactie en procesondersteuning.
                     </div>
                 </div>
+                <div class="horizontal-arrow">➡️</div>
+                <div class="horizontal-step">
+                    <div class="icon">🧑‍🏫</div>
+                    <strong>Stap 4: Bied Expliciete Instructie</strong>
+                    <div class="horizontal-step-desc">
+                        Geef herhaalde, geïntegreerde instructie over deelvaardigheden, afgestemd op de inhoud.
+                    </div>
+                </div>
+                <div class="horizontal-arrow">➡️</div>
+                <div class="horizontal-step">
+                    <div class="icon">👥</div>
+                    <strong>Stap 5: Laat (Peer-)Experts Voordoen</strong>
+                    <div class="horizontal-step-desc">
+                        Gebruik korte fragmenten van experts of peers die hun denkproces zichtbaar maken (modeling).
+                    </div>
+                </div>
+                <div class="horizontal-arrow">➡️</div>
                 <div class="horizontal-step">
                     <div class="icon">📝</div>
-                    <strong>Stap 3: Ontwerp Beoordelingsstrategieën</strong>
+                    <strong>Stap 6: Oefenen (Practice)</strong>
                     <div class="horizontal-step-desc">
-                        Integreer (zelf)beoordeling en tijdige, constructieve feedbackmomenten. Gebruik rubrics en peer-feedback voor diepgaand leren.<br><em>(Principle 7)</em>
+                        Laat studenten gericht oefenen, zowel vóór als na instructie of modeling, individueel en in groepen.
+                    </div>
+                </div>
+                <div class="horizontal-arrow">➡️</div>
+                <div class="horizontal-step">
+                    <div class="icon">🎲</div>
+                    <strong>Stap 7: Activerende Leeractiviteiten</strong>
+                    <div class="horizontal-step-desc">
+                        Gebruik actieve en speelse (game-based) werkvormen om betrokkenheid te verhogen.
+                    </div>
+                </div>
+                <div class="horizontal-arrow">➡️</div>
+                <div class="horizontal-step">
+                    <div class="icon">🛠️</div>
+                    <strong>Stap 8: Bieden van Ondersteuning</strong>
+                    <div class="horizontal-step-desc">
+                        Bied taak- en procesondersteuning (scaffolding), vooral voor beginnende studenten.
+                    </div>
+                </div>
+                <div class="horizontal-arrow">➡️</div>
+                <div class="horizontal-step">
+                    <div class="icon">💬</div>
+                    <strong>Stap 9: Integreer Feedback en Beoordeling (Principe 7)</strong>
+                    <div class="horizontal-step-desc">
+                        Plan tijdige, constructieve feedbackmomenten (ook zelf- en peer-feedback) met duidelijke beoordelingscriteria.
                     </div>
                 </div>
             </div>
@@ -530,7 +577,6 @@
             </div>
         </div>
     </div>
-
     <div id="modal-instruction" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -552,7 +598,6 @@
             </div>
         </div>
     </div>
-    
     <div id="modal-modeling" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -574,7 +619,6 @@
             </div>
         </div>
     </div>
-    
     <div id="modal-practice" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -597,7 +641,6 @@
             </div>
         </div>
     </div>
-    
     <div id="modal-learning-activities" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -620,7 +663,6 @@
             </div>
         </div>
     </div>
-    
     <div id="modal-support" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -643,7 +685,6 @@
             </div>
         </div>
     </div>
-    
     <div id="modal-feedback" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -704,7 +745,6 @@
             const aiResponseDiv = document.getElementById('ai-response');
             const suggestionButtons = document.querySelectorAll('.prompt-suggestion-button');
 
-            // De "kennisbank" van de AI, gebaseerd op de paper
             const aiKnowledgeBase = {
                 'samenvatting': "Gebaseerd op de analyse van 69 studies, presenteert dit onderzoek het IPS-EDP model met zeven onderling samenhangende ontwerpprincipes voor het ontwikkelen van Information Problem Solving competentie in het hoger onderwijs. De belangrijkste aanbeveling is een geïntegreerde, langdurige en authentieke aanpak, waarbij instructie, modeling, oefening, feedback en ondersteuning in samenhang worden aangeboden.",
                 'grote collegezaal': "In een grote collegezaal is het lastig om alle principes even intensief toe te passen. Het onderzoek suggereert een strategische aanpak:\n\n1.  **Focus op Expliciete Instructie** en het tonen van voorbeelden (modeling) aan de hele groep.\n2.  **Activerende werkvormen**: Gebruik korte peer-discussies, digitale quizzes, of interactieve tools.\n3.  **Feedback**: Gebruik self-assessment rubrics, of digitale peer-feedback.\n4.  **Authentieke leertaken**: Werk met grote casussen of realistische opdrachten, eventueel als groepsopdracht.\n\nKortom: kies voor schaalbare, actieve en terugkerende werkvormen.",
@@ -730,7 +770,7 @@
                     }
                     aiResponseDiv.textContent = response;
                     aiResponseDiv.style.opacity = 1;
-                }, 700); // Simuleert een 'denk'pauze
+                }, 700);
             }
 
             askButton.addEventListener('click', () => {
@@ -755,6 +795,5 @@
             });
         });
     </script>
-
 </body>
 </html>
