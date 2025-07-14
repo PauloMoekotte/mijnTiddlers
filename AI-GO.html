@@ -126,6 +126,14 @@
         .framework-card.vaardigheden { border-color: #e74c3c; }
         .framework-card.attituden { border-color: #f1c40f; }
         .framework-card.ethiek { border-color: #2ecc71; }
+
+        /* Factoren kaarten */
+        .framework-card.factor { border-top: 8px solid; }
+        .factor-individu { border-color: #9b59b6; }
+        .factor-team { border-color: #2980b9; }
+        .factor-organisatie { border-color: #e67e22; }
+        .factor-beleid { border-color: #16a085; }
+
         .card-header {
             display: flex;
             align-items: center;
@@ -330,11 +338,6 @@
             margin-top: 20px;
             font-style: italic;
         }
-        /* Factoren kaarten */
-        .framework-card.factor { border-top: 8px solid; }
-        .factor-individu { border-color: #9b59b6; }
-        .factor-organisatie { border-color: #e67e22; }
-        .factor-beleid { border-color: #16a085; }
         .factor-content {
             display: none;
             margin-top: 20px;
@@ -504,10 +507,13 @@
         </section>
         <section class="section">
             <h2>Beïnvloedende Factoren</h2>
-            <p>AI-geletterdheid ontwikkelt zich niet vanzelf. De ontwikkeling wordt beïnvloed door factoren op drie niveaus:</p>
+            <p>AI-geletterdheid ontwikkelt zich niet vanzelf. De ontwikkeling wordt beïnvloed door factoren op vier niveaus:</p>
             <div class="framework-container">
                 <div class="framework-card factor factor-individu" data-factor="factor-individu-content">
                     <h3>👤 Individu</h3>
+                </div>
+                <div class="framework-card factor factor-team" data-factor="factor-team-content">
+                    <h3>👥 Team</h3>
                 </div>
                 <div class="framework-card factor factor-organisatie" data-factor="factor-organisatie-content">
                     <h3>🏢 Organisatie</h3>
@@ -521,6 +527,14 @@
                     <li>Scholing en training</li>
                     <li>Eerdere ervaring met AI</li>
                     <li>Professionele rol en context</li>
+                </ul>
+            </div>
+            <div id="factor-team-content" class="factor-content">
+                <ul>
+                    <li>Samenwerking binnen het team</li>
+                    <li>Kennisdeling en peer learning</li>
+                    <li>Teamcultuur rondom innovatie en AI</li>
+                    <li>Gezamenlijke reflectie op AI-gebruik</li>
                 </ul>
             </div>
             <div id="factor-organisatie-content" class="factor-content">
@@ -652,7 +666,7 @@
                 } else if (question.includes('ethiek') || question.includes('waarom is ethiek')) {
                     return "Ethiek is de fundamentele basis van het hele raamwerk, niet zomaar een los onderdeel. Het vormt de leidraad voor hoe de andere componenten (kennis, vaardigheden, attituden) worden ingezet en toegepast in de praktijk.";
                 } else if (question.includes('factoren') || question.includes('beïnvloeden')) {
-                    return "AI-geletterdheid wordt beïnvloed door factoren op drie niveaus:\n- Individu: Scholing, ervaring en professionele rol.\n- Organisatie: Leermiddelen, strategie, samenwerking en infrastructuur.\n- Beleid: Investeringen en regelgeving zoals de EU AI Act.";
+                    return "AI-geletterdheid wordt beïnvloed door factoren op vier niveaus:\n- Individu: Scholing, ervaring en professionele rol.\n- Team: Samenwerking, kennisdeling en teamcultuur.\n- Organisatie: Leermiddelen, strategie, samenwerking en infrastructuur.\n- Beleid: Investeringen en regelgeving zoals de EU AI Act.";
                 } else if (question.includes('hallo') || question.includes('hoi')) {
                     return "Hallo! Stel gerust je vraag over het AI-GO raamwerk.";
                 } else if (question.includes('dank')) {
