@@ -1,0 +1,110 @@
+[
+  {
+    "title": "Introductie tot AI in Beroepsonderwijs",
+    "subtitle": "Basisbegrippen en Relevantie voor Onderwijs",
+    "content": [
+      "Wat is AI: Uitleg van kunstmatige intelligentie en haar kernprincipes binnen het onderwijs.",
+      "Historische ontwikkeling: Evolutie van AI en haar integratie in onderwijs sinds de beginjaren.",
+      "Waarom belangrijk: De rol van AI in het verbeteren van vaardigheden, efficiëntie en personalisatie in beroepsonderwijs."
+    ]
+  },
+  {
+    "title": "AI-technologieën in het Onderwijs",
+    "subtitle": "Belangrijkste Tools en Toepassingen",
+    "content": [
+      "Machine learning: Hoe algoritmes voorspellingen en adaptief leren mogelijk maken.",
+      "Natuurlijke taalverwerking: Verbetering van communicatie en automatische feedback.",
+      "Computer vision: Gebruik bij praktische vaardigheden en simulaties."
+    ]
+  },
+  {
+    "title": "Personalised Learning en AI",
+    "subtitle": "Aanpassen aan Individuele Leerbehoeften",
+    "content": [
+      "Aanbevelingssystemen: AI die leerpaden personaliseert op basis van prestaties.",
+      "Adaptieve leeromgevingen: Dynamisch aanpassen van inhoud en moeilijkheidsgraad.",
+      "Voordelen: Betere betrokkenheid, motivatie en leerresultaten voor studenten."
+    ]
+  },
+  {
+    "title": "AI voor Docentondersteuning",
+    "subtitle": "Verbeteren van Lesmethoden en Begeleiding",
+    "content": [
+      "Automatische beoordeling: AI ondersteunt bij het nakijken van opdrachten en examens.",
+      "Data-analyse: Inzichten verkrijgen in studentprestaties en leerpatronen.",
+      "Virtuele assistenten: 24/7 ondersteuning voor docenten en studenten."
+    ]
+  },
+  {
+    "title": "Praktijkgerichte AI-toepassingen",
+    "subtitle": "Simulaties en Virtuele Omgevingen",
+    "content": [
+      "Virtuele realiteit: Realistische simulaties voor praktische vaardigheden.",
+      "Augmented reality: Overlay van informatie tijdens hands-on training.",
+      "Voordelen: Veilig leren, kostenbesparing en betere voorbereiding op de arbeidsmarkt."
+    ]
+  },
+  {
+    "title": "Ethische en Privacy Overwegingen",
+    "subtitle": "Verantwoord Gebruik van AI in Onderwijs",
+    "content": [
+      "Privacy: Bescherming van studentgegevens en gegevensbeheer.",
+      "Bias en eerlijkheid: Voorkomen van discriminatie en vooringenomenheid in AI-systemen.",
+      "Verantwoordelijkheid: Transparantie en toezicht op AI-toepassingen."
+    ]
+  },
+  {
+    "title": "Implementatie en Integratie",
+    "subtitle": "Praktische Stappen voor Onderwijsinstellingen",
+    "content": [
+      "Technologische eisen: Infrastructuur en software voor AI-integratie.",
+      "Training en ondersteuning: Opleiden van docenten en personeel.",
+      "Samenwerking: Betrekken van stakeholders voor succesvolle adoptie."
+    ]
+  },
+  {
+    "title": "Succesverhalen en Best Practices",
+    "subtitle": "Voorbeelden uit de Praktijk",
+    "content": [
+      "Voorbeeld 1: AI-gestuurde leerplatformen in technische opleidingen.",
+      "Voorbeeld 2: Virtuele simulaties voor medische trainingen.",
+      "Lessen: Wat werkt goed en wat kan beter bij implementatie."
+    ]
+  },
+  {
+    "title": "Uitdagingen en Beperkingen",
+    "subtitle": "Overwinnen van Obstakels in AI-toepassing",
+    "content": [
+      "Technische uitdagingen: Integratie, schaalbaarheid en betrouwbaarheid.",
+      "Kosten: Investeringen in technologie en opleiding.",
+      "Acceptatie: Overbruggen van weerstand bij docenten en studenten."
+    ]
+  },
+  {
+    "title": "Toekomstige Trends in AI en Beroepsonderwijs",
+    "subtitle": "Innovaties en Nieuwe Mogelijkheden",
+    "content": [
+      "Automatisering: Verdergaande robotisering en AI-gestuurde workflows.",
+      "Lifelong learning: Continu leren ondersteund door AI systemen.",
+      "Samenwerking met industrie: AI-gestuurde stage- en leerprogramma's."
+    ]
+  },
+  {
+    "title": "Samenvatting en Belangrijkste Inzichten",
+    "subtitle": "Kernpunten uit het Onderzoek",
+    "content": [
+      "Overzicht: Belang van AI voor personalisatie en efficiëntie in beroepsonderwijs.",
+      "Innovaties: Nieuwe technologieën en hun impact op leren en werken.",
+      "Uitdagingen: Ethische, praktische en technische aspecten om te overwegen."
+    ]
+  },
+  {
+    "title": "Toekomstvisie en Conclusie",
+    "subtitle": "Ontwikkelingen en Aanbevelingen",
+    "content": [
+      "Samenvatting: Belangrijke lessen en trends voor de komende jaren.",
+      "Vooruitblik: Kansen en uitdagingen voor AI in het beroepsonderwijs.",
+      "Aanbevelingen: Strategieën voor succesvolle adoptie en verantwoord gebruik."
+    ]
+  }
+]
