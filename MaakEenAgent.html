@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infographic: Hoe bouw je een AI Agent?</title>
     <style>
-        /* --- Algemene Styling & Kleurinstelling --- */
         :root {
             --primary-bg: #111827;
             --secondary-bg: #1F2937;
@@ -14,7 +13,6 @@
             --border-color: #374151;
             --placeholder-text: #9CA3AF;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--primary-bg);
@@ -23,7 +21,6 @@
             padding: 2rem;
             line-height: 1.6;
         }
-
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -32,31 +29,21 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
-
         h1, h2, h3 {
             color: var(--accent-color);
             border-bottom: 2px solid var(--accent-color);
             padding-bottom: 10px;
         }
-
         h1 {
             text-align: center;
             font-size: 2.5rem;
         }
-
-        p {
-            margin-bottom: 1rem;
-        }
-
-        /* --- Glossary & Tooltip Styling --- */
         .glossary-term {
             color: var(--accent-color);
-            text-decoration: underline;
-            text-decoration-style: dotted;
+            text-decoration: underline dotted;
             cursor: help;
             position: relative;
         }
-
         .glossary-term .tooltip-text {
             visibility: hidden;
             width: 300px;
@@ -76,19 +63,15 @@
             font-size: 0.9rem;
             line-height: 1.4;
         }
-
         .glossary-term:hover .tooltip-text {
             visibility: visible;
             opacity: 1;
         }
-
-        /* --- Workflow Visualisatie --- */
         .workflow-container {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-
         .workflow-step {
             background-color: var(--primary-bg);
             border: 1px solid var(--border-color);
@@ -97,20 +80,19 @@
             border-radius: 8px;
             position: relative;
             transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 18px;
         }
-
         .workflow-step:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-
-        .workflow-step h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.2rem;
-            color: var(--text-color);
-            border: none;
+        .step-icon {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
         }
-        
         .step-number {
             position: absolute;
             top: -15px;
@@ -127,21 +109,17 @@
             font-size: 1.2rem;
             border: 2px solid var(--secondary-bg);
         }
-        
         .arrow {
             text-align: center;
             font-size: 2rem;
             color: var(--accent-color);
             margin: -10px 0;
         }
-
-        /* --- AI Assistent Styling --- */
         #ai-assistant {
             margin-top: 3rem;
             padding-top: 1.5rem;
             border-top: 2px solid var(--border-color);
         }
-
         .chat-container {
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -150,14 +128,12 @@
             flex-direction: column;
             height: 500px;
         }
-
         .chat-history {
             flex-grow: 1;
             padding: 20px;
             overflow-y: auto;
             background-color: var(--primary-bg);
         }
-        
         .message {
             margin-bottom: 15px;
             max-width: 80%;
@@ -165,7 +141,6 @@
             border-radius: 18px;
             line-height: 1.4;
         }
-        
         .user-message {
             background-color: var(--accent-color);
             color: var(--primary-bg);
@@ -173,7 +148,6 @@
             margin-left: auto;
             border-bottom-right-radius: 4px;
         }
-        
         .assistant-message {
             background-color: #374151;
             color: var(--text-color);
@@ -181,12 +155,10 @@
             margin-right: auto;
             border-bottom-left-radius: 4px;
         }
-
         .chat-input-area {
             display: flex;
             border-top: 1px solid var(--border-color);
         }
-
         #userInput {
             flex-grow: 1;
             border: none;
@@ -198,7 +170,6 @@
         #userInput:focus {
             outline: none;
         }
-        
         #sendButton {
             background-color: var(--accent-color);
             border: none;
@@ -211,7 +182,6 @@
         #sendButton:hover {
             background-color: #059669;
         }
-        
         .predefined-questions {
             padding: 20px;
             border-top: 1px solid var(--border-color);
@@ -219,7 +189,6 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        
         .predefined-questions button {
             background-color: transparent;
             border: 1px solid var(--accent-color);
@@ -230,91 +199,118 @@
             transition: background-color 0.2s, color 0.2s;
             font-size: 0.9rem;
         }
-        
         .predefined-questions button:hover {
             background-color: var(--accent-color);
             color: var(--primary-bg);
         }
-
     </style>
 </head>
 <body>
-
     <div class="container">
         <header>
             <h1>Hoe bouw je een AI Agent?</h1>
-            <p style="text-align: center;">Een interactieve infographic gebaseerd op de best practices van LangChain. [1]</p>
+            <p style="text-align: center;">Een interactieve infographic gebaseerd op de best practices van LangChain.</p>
         </header>
-
         <main>
             <section id="intro">
                 <h2>Wat is een Agent?</h2>
                 <p>
-                    Een <span class="glossary-term">Agent<span class="tooltip-text">Een AI-systeem dat redeneert en tools gebruikt om complexe, meerstaps taken uit te voeren.</span></span> is een systeem ontworpen om taken uit te voeren die je normaal aan een "slimme stagiair" zou geven. Het gaat verder dan traditionele software door gebruik te maken van de redeneercapaciteiten van een Large Language Model (LLM) om beslissingen te nemen. [1]
+                    Een <span class="glossary-term">Agent<span class="tooltip-text">Een AI-systeem dat redeneert en tools gebruikt om complexe, meerstaps taken uit te voeren.</span></span> is een AI die autonoom werkt en zelfstandig taken uitvoert door informatie op te halen en te verwerken.
                 </p>
                 <p>
-                    Het is cruciaal om een realistische taak te kiezen. Als de logica simpel en vaststaand is, is traditionele software vaak sneller en goedkoper. Een agent is de juiste keuze voor taken die flexibiliteit en contextueel begrip vereisen. [1]
+                    Het is cruciaal om een realistische taak te kiezen. Als de logica simpel en vaststaand is, is traditionele software vaak sneller en goedkoper. Een agent is de juiste keuze voor complexe, variabele taken.
                 </p>
             </section>
-
             <section id="workflow">
                 <h2>Visuele Workflow: De 6 Stappen naar een Functionele Agent</h2>
                 <div class="workflow-container">
-                    
                     <div class="workflow-step">
                         <div class="step-number">1</div>
-                        <h3>Definieer de taak met voorbeelden</h3>
-                        <p>Kies een realistische taak en bedenk 5-10 concrete voorbeelden. Dit valideert de scope en geeft je een benchmark om prestaties te meten. [1]</p>
+                        <span class="step-icon">
+                            <!-- Icon: Bulb (Idee) -->
+                            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="5" stroke="#10B981" stroke-width="2"/><rect x="9" y="16" width="6" height="5" rx="2" fill="#10B981"/><rect x="10.5" y="19" width="3" height="2" rx="1.5" fill="#374151"/></svg>
+                        </span>
+                        <div>
+                            <h3>Definieer de taak met voorbeelden</h3>
+                            <p>Kies een realistische taak en bedenk 5-10 concrete voorbeelden. Dit valideert de scope en geeft je een benchmark om prestaties te meten.</p>
+                        </div>
                     </div>
                     <div class="arrow">↓</div>
                     <div class="workflow-step">
                         <div class="step-number">2</div>
-                        <h3>Ontwerp de werkprocedure (SOP)</h3>
-                        <p>Schrijf een gedetailleerde <span class="glossary-term">SOP<span class="tooltip-text">Standard Operating Procedure: Een gedetailleerd stappenplan dat beschrijft hoe een mens de taak zou uitvoeren.</span></span>. Dit helpt bij het identificeren van de benodigde stappen, beslissingen en tools voor je agent. [1]</p>
+                        <span class="step-icon">
+                            <!-- Icon: Checklist -->
+                            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="3" stroke="#10B981" stroke-width="2"/><path d="M7 9l2 2 4-4" stroke="#10B981" stroke-width="2" fill="none"/></svg>
+                        </span>
+                        <div>
+                            <h3>Ontwerp de werkprocedure (SOP)</h3>
+                            <p>Schrijf een gedetailleerde <span class="glossary-term">SOP<span class="tooltip-text">Standard Operating Procedure: Een gedetailleerd stappenplan dat beschrijft hoe een taak uitgevoerd moet worden.</span></span> zodat je agent weet welke stappen gezet moeten worden.</p>
+                        </div>
                     </div>
                     <div class="arrow">↓</div>
                     <div class="workflow-step">
                         <div class="step-number">3</div>
-                        <h3>Bouw een MVP met een Prompt</h3>
-                        <p>Begin klein. Focus op de meest kritieke redeneertaak en bouw een effectieve <span class="glossary-term">Prompt<span class="tooltip-text">De instructie die je aan een LLM geeft om een specifieke output te genereren. Dit is de kern van de redenering.</span></span>. Test deze met handmatig ingevoerde data. [1]</p>
+                        <span class="step-icon">
+                            <!-- Icon: Prompt -->
+                            <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#10B981" stroke-width="2"/><text x="8" y="16" font-size="8" fill="#10B981">A→B</text></svg>
+                        </span>
+                        <div>
+                            <h3>Bouw een MVP met een Prompt</h3>
+                            <p>Begin klein. Focus op de meest kritieke redeneertaak en bouw een effectieve <span class="glossary-term">Prompt<span class="tooltip-text">De instructie die je aan een LLM geeft om een specifieke taak uit te voeren.</span></span>.</p>
+                        </div>
                     </div>
                     <div class="arrow">↓</div>
                     <div class="workflow-step">
                         <div class="step-number">4</div>
-                        <h3>Verbind & Orchestreer</h3>
-                        <p>Koppel je prompt aan echte data via API's, databases of andere bronnen. Implementeer de <span class="glossary-term">Orchestration<span class="tooltip-text">De logica die bepaalt welke databronnen wanneer worden aangesproken en hoe de informatie door het systeem stroomt.</span></span>-logica die beslist welke data wanneer nodig is. [1] </p>
+                        <span class="step-icon">
+                            <!-- Icon: API -->
+                            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="8" width="18" height="8" rx="3" stroke="#10B981" stroke-width="2"/><circle cx="7" cy="12" r="2" stroke="#10B981" stroke-width="2"/><circle cx="17" cy="12" r="2" stroke="#10B981" stroke-width="2"/></svg>
+                        </span>
+                        <div>
+                            <h3>Verbind & Orchestreer</h3>
+                            <p>Koppel je prompt aan echte data via API's, databases of andere bronnen. Implementeer de <span class="glossary-term">Orchestration<span class="tooltip-text">De logica die bepaalt hoe en wanneer je agent verschillende tools en data gebruikt.</span></span>.</p>
+                        </div>
                     </div>
                     <div class="arrow">↓</div>
                     <div class="workflow-step">
                         <div class="step-number">5</div>
-                        <h3>Test & Itereer</h3>
-                        <p>Test je <span class="glossary-term">MVP<span class="tooltip-text">Minimum Viable Product: Een basisversie van je product die net genoeg functies heeft om bruikbaar te zijn voor de eerste gebruikers.</span></span> handmatig met je voorbeelden. Gebruik <span class="glossary-term">Tracing<span class="tooltip-text">Het visualiseren van de datastroom en beslissingen van een agent om te debuggen en prestaties te analyseren.</span></span> tools om de flow te visualiseren en schaal op naar geautomatiseerde tests. [1]</p>
+                        <span class="step-icon">
+                            <!-- Icon: Test -->
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 18L18 6M6 6l12 12" stroke="#10B981" stroke-width="2"/><circle cx="12" cy="12" r="9" stroke="#10B981" stroke-width="2"/></svg>
+                        </span>
+                        <div>
+                            <h3>Test & Itereer</h3>
+                            <p>Test je <span class="glossary-term">MVP<span class="tooltip-text">Minimum Viable Product: Een basisversie van je product die net genoeg functies heeft om bruikbaar te zijn.</span></span> en verbeter op basis van de resultaten.</p>
+                        </div>
                     </div>
                     <div class="arrow">↓</div>
                     <div class="workflow-step">
                         <div class="step-number">6</div>
-                        <h3>Implementeer, Schaal & Verfijn</h3>
-                        <p>Zet de agent in productie. Monitor het gebruik in de echte wereld om te zien hoe mensen ermee omgaan en gebruik die inzichten om de agent verder te verfijnen en uit te breiden. [1]</p>
+                        <span class="step-icon">
+                            <!-- Icon: Deploy/Scale -->
+                            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="17" width="20" height="5" rx="2.5" stroke="#10B981" stroke-width="2"/><rect x="7" y="2" width="10" height="15" rx="3" stroke="#10B981" stroke-width="2"/></svg>
+                        </span>
+                        <div>
+                            <h3>Implementeer, Schaal & Verfijn</h3>
+                            <p>Zet de agent in productie. Monitor het gebruik en verbeter waar nodig.</p>
+                        </div>
                     </div>
-
                 </div>
             </section>
-
             <section id="ai-assistant">
-                <h2>AI Assistent Examenreglement</h2>
-                <p>Stel hier je vragen over het examenreglement. <strong>Let op:</strong> Dit is een demo-assistent. De antwoorden zijn vooraf ingesteld en dienen als voorbeeld van hoe een echte AI-assistent zou kunnen werken.</p>
-                
+                <h2>AI Assistent</h2>
+                <p>Stel hier je vragen over het bouwen van AI agents. Dit is een demo-chat. Antwoorden zijn voorbeeldantwoorden.</p>
                 <div class="chat-container">
                     <div class="chat-history" id="chatHistory">
                         <div class="message assistant-message">
-                            Hallo! Ik ben je AI-assistent voor het examenreglement. Hoe kan ik je helpen?
+                            Hallo! Ik ben je AI-assistent over AI agents. Hoe kan ik je helpen?
                         </div>
                     </div>
                     <div class="predefined-questions" id="predefinedQuestions">
-                       <button>Wat is de herkansingsregeling?</button>
-                       <button>Hoe meld ik me aan voor een tentamen?</button>
-                       <button>Wat gebeurt er bij fraude?</button>
-                       <button>Waar kan ik mijn resultaten inzien?</button>
+                       <button>Wat is een agent?</button>
+                       <button>Hoe kies ik een taak voor een agent?</button>
+                       <button>Wat is een prompt?</button>
+                       <button>Hoe test ik mijn agent?</button>
                     </div>
                     <div class="chat-input-area">
                         <input type="text" id="userInput" placeholder="Typ je vraag hier...">
@@ -324,7 +320,6 @@
             </section>
         </main>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const userInput = document.getElementById('userInput');
@@ -332,7 +327,6 @@
             const chatHistory = document.getElementById('chatHistory');
             const predefinedQuestionsContainer = document.getElementById('predefinedQuestions');
 
-            // --- Event Listeners ---
             sendButton.addEventListener('click', sendMessage);
             userInput.addEventListener('keydown', function(event) {
                 if (event.key === 'Enter') {
@@ -347,15 +341,13 @@
                 }
             });
 
-            // --- Functies ---
             function sendMessage() {
                 const messageText = userInput.value.trim();
                 if (messageText === '') return;
 
                 appendMessage(messageText, 'user');
                 userInput.value = '';
-                
-                // Simuleer een kleine vertraging voor het antwoord
+
                 setTimeout(() => {
                     generateAssistantResponse(messageText);
                 }, 500);
@@ -366,35 +358,32 @@
                 messageDiv.classList.add('message', `${sender}-message`);
                 messageDiv.textContent = text;
                 chatHistory.appendChild(messageDiv);
-                // Scroll naar de laatste boodschap
                 chatHistory.scrollTop = chatHistory.scrollHeight;
             }
 
             function generateAssistantResponse(userText) {
                 let responseText = "";
-                // Gestandaardiseerde check, ongevoelig voor hoofdletters/leestekens
                 const lowerCaseText = userText.toLowerCase().replace(/[?.,!]/g, '');
 
                 switch (lowerCaseText) {
-                    case "wat is de herkansingsregeling":
-                        responseText = "DEMO ANTWOORD: Voor de meeste vakken heb je recht op één herkansing per collegejaar. Raadpleeg sectie 4.2 van het examenreglement voor de specifieke voorwaarden en uitzonderingen.";
+                    case "wat is een agent":
+                        responseText = "Een agent is een AI-systeem dat zelfstandig taken uitvoert en tools gebruikt om complexe problemen op te lossen.";
                         break;
-                    case "hoe meld ik me aan voor een tentamen":
-                        responseText = "DEMO ANTWOORD: Aanmelden voor tentamens gebeurt via het studentenportal. De aanmelddeadline is doorgaans 14 dagen voor de tentamendatum. Zie sectie 3.1 voor de volledige procedure.";
+                    case "hoe kies ik een taak voor een agent":
+                        responseText = "Kies een taak die complex en variabel is, waarbij menselijk redeneren en het combineren van informatie nodig is.";
                         break;
-                    case "wat gebeurt er bij fraude":
-                        responseText = "DEMO ANTWOORD: Fraude wordt zeer serieus genomen en kan leiden tot sancties, waaronder uitsluiting van tentamens of zelfs uitschrijving. De procedure bij een vermoeden van fraude staat beschreven in sectie 8 van het reglement.";
+                    case "wat is een prompt":
+                        responseText = "Een prompt is de instructie die je aan een AI-model geeft om een specifieke taak uit te voeren.";
                         break;
-                    case "waar kan ik mijn resultaten inzien":
-                        responseText = "DEMO ANTWOORD: Tentamenresultaten worden uiterlijk 15 werkdagen na de tentamendatum gepubliceerd in het studentenportal onder het kopje 'Resultaten'.";
+                    case "hoe test ik mijn agent":
+                        responseText = "Test je agent op concrete voorbeelden en kijk of de resultaten kloppen en bruikbaar zijn. Itereer waar nodig.";
                         break;
                     default:
-                        responseText = "Ik ben een demo-assistent en kan alleen de vooraf ingestelde vragen beantwoorden. Voor een volledig functionele assistent moet ik worden gekoppeld aan de database met het volledige examenreglement.";
+                        responseText = "Ik ben een demo-assistent en kan alleen de vooraf ingestelde vragen beantwoorden. Voor een echte assistent moet ik gekoppeld worden aan een AI-model en data.";
                 }
-                
                 appendMessage(responseText, 'assistant');
             }
         });
     </script>
 </body>
-</html>```
+</html>
