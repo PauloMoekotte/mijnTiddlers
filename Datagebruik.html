@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Efficiënt Datagebruik - Interactieve Handreiking</title>
+  <style>
+    body { font-family: Arial; margin: 0; padding: 0; background: #f4f6f9; }
+    header { background: #005baa; color: white; padding: 20px; text-align: center; }
+    .container { padding: 20px; max-width: 1200px; margin: auto; }
+    .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    h2 { color: #005baa; }
+    button.toggle { background: #0075c9; color: white; border: none; padding: 8px 16px; cursor: pointer; margin-top: 10px; }
+    .content { display: none; padding-top: 10px; }
+    .chat-container { border-top: 2px solid #ccc; padding-top: 20px; }
+    #chat { border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: auto; background: #fff; margin-bottom: 10px; }
+    #userInput { width: 80%; padding: 10px; }
+    #sendBtn { padding: 10px; background: #28a745; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Efficiënt Datagebruik in Zorg en Ondersteuning</h1>
+    <p>Interactieve handreiking met AI-hulp (door LMarena</p>
+  </header>
+
+  <div class="container">
+
+    <!-- Thema 1 -->
+    <div class="section">
+      <h2>Waarom Efficiënt Datagebruik?</h2>
+      <button class="toggle">Lees meer</button>
+      <div class="content">
+        <p>Efficiënt datagebruik leidt tot minder administratieve lasten, betere ondersteuning van professionals en meer grip op kwaliteit en verantwoording.</p>
+      </div>
+    </div>
+
+    <!-- Thema 2 -->
+    <div class="section">
+      <h2>Zes Bouwstenen voor Informatieverziening</h2>
+      <button class="toggle">Toon bouwstenen</button>
+      <div class="content">
+        <ol>
+          <li><strong>Principes:</strong> Afspraak over doelen en uitgangspunten.</li>
+          <li><strong>Werkprocessen:</strong> Documenteer werkwijze en rollen.</li>
+          <li><strong>Gestandaardiseerde taal:</strong> Gebruik eenduidige definities.</li>
+          <li><strong>ICT:</strong> Maak systemen interoperabel en gebruiksvriendelijk.</li>
+          <li><strong>Governance:</strong> Maak afspraken over besluitvorming en eigenaarschap.</li>
+          <li><strong>Sturen op vertrouwen:</strong> Verminder verantwoordingsdruk door slimme registratie.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Thema 3 -->
+    <div class="section">
+      <h2>Perspectieven</h2>
+      <button class="toggle">Toon perspectieven</button>
+      <div class="content">
+        <ul>
+          <li><strong>Cliënt:</strong> Begrijpelijke en transparante data.</li>
+          <li><strong>Professional:</strong> Minder registratielast, meer betekenisvolle gegevens.</li>
+          <li><strong>Organisatie:</strong> Inzicht in kwaliteit en processen.</li>
+          <li><strong>Toezichthouder:</strong> Vertrouwen op basis van inzicht i.p.v. controle.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AI Assistent -->
+    <div class="section chat-container">
+      <h2>Stel een vraag over de handreiking</h2>
+      <div id="chat"></div>
+      <input type="text" id="userInput" placeholder="Typ je vraag hier...">
+      <button id="sendBtn">Verstuur</button>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Toggle panels
+    document.querySelectorAll(".toggle").forEach(btn => {
+      btn.addEventListener("click", () => {
+          const content = btn.nextElementSibling;
+          content.style.display = content.style.display === "block" ? "none" : "block";
+      });
+    });
+
+    // Simpel AI gedrag (mock)
+    const antwoorden = {
+      "wat zijn de bouwstenen": "De handreiking benoemt 6 bouwstenen: principes, werkprocessen, gestandaardiseerde taal, ICT, governance en sturen op vertrouwen.",
+      "wat is het doel": "Het doel is efficiënter datagebruik zodat professionals minder tijd aan administratie besteden en meer tijd aan zorg en ondersteuning.",
+      "wie zijn betrokken": "Cliënten, professionals, zorgorganisaties en toezichthouders worden allemaal meegenomen in de handreiking.",
+    };
+
+    const chat = document.getElementById("chat");
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    sendBtn.addEventListener("click", () => {
+      const vraag = userInput.value.trim().toLowerCase();
+      if (!vraag) return;
+      const userMessage = `<div><strong>Jij:</strong> ${vraag}</div>`;
+      let antwoord = "Sorry, ik weet het antwoord daarop niet direct. Probeer een andere vraag.";
+      for (let key in antwoorden) {
+        if (vraag.includes(key)) {
+          antwoord = antwoorden[key];
+          break;
+        }
+      }
+      const botMessage = `<div><strong>Assistent:</strong> ${antwoord}</div>`;
+      chat.innerHTML += userMessage + botMessage;
+      chat.scrollTop = chat.scrollHeight;
+      userInput.value = '';
+    });
+  </script>
+</body>
+</html>
