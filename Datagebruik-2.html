@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efficiënt Datagebruik in het Onderwijs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #0078d7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e7e7e7;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .step:hover {
+            background-color: #d1d1d1;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+        }
+        .chatbox {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-input {
+            width: calc(100% - 80px);
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .chat-button {
+            width: 70px;
+            padding: 10px;
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .chat-response {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e7e7e7;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Efficiënt Datagebruik in het Onderwijs</h1>
+    </header>
+    <section>
+        <h2>Stappenplan Datagebruik</h2>
+        <img src="https://via.placeholder.com/600x200" alt="Stappenplan afbeelding" style="width:100%">
+        <div class="step" onclick="openModal('Bepaal de aanleiding', 'Dit is de eerste stap waarbij je de aanleiding bepaalt om data te gaan gebruiken. Dit kan vanuit operationeel oogpunt, om te verantwoorden of om te verbeteren.')">Bepaal de aanleiding</div>
+        <div class="step" onclick="openModal('Organiseer een teamgesprek', 'Organiseer een teamgesprek om na te gaan welke beïnvloedbare factoren er zijn en welke factoren je wel of niet kunt beïnvloeden.')">Organiseer een teamgesprek</div>
+        <div class="step" onclick="openModal('Verzamel relevante gegevens', 'Verzamel relevante en betrouwbare gegevens om na te gaan of deze factoren inderdaad invloed uitoefenen.')">Verzamel relevante gegevens</div>
+        <div class="dropdown">
+            <div class="step">Meer stappen</div>
+            <div class="dropdown-content">
+                <div onclick="openModal('Genereer interpretaties', 'Genereer aannemelijke en geloofwaardige interpretaties van de gegevens.')">Genereer interpretaties</div>
+                <div onclick="openModal('Beslis welke oorzaak relevant is', 'Beslis welke oorzaak relevant en urgent is.')">Beslis oorzaak</div>
+                <div onclick="openModal('Implementeer de interventies', 'Implementeer de interventies in het onderwijs.')">Implementeer interventies</div>
+                <div onclick="openModal('Evalueer de interventies', 'Evalueer de interventies samen met de stakeholders.')">Evalueer interventies</div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>Ontwerpcriteria</h2>
+        <img src="https://via.placeholder.com/600x200" alt="Ontwerpcriteria afbeelding" style="width:100%">
+        <p>Houd rekening met de complexe realiteit waarin het onderwijsteam werkt, zowel ten aanzien van de vraagstelling als ten aanzien van het selecteren van de interventie.</p>
+        <p>Zorg voor voldoende expertise; schakel eventueel ondersteunende stafdiensten in.</p>
+        <p>Streef naar een volledig beeld of integraal perspectief op het 'probleem'; gebruik daarom zoveel mogelijk verschillende databronnen en onderzoeksperspectieven.</p>
+    </section>
+    <section>
+        <h2>Randvoorwaarden</h2>
+        <img src="https://via.placeholder.com/600x200" alt="Randvoorwaarden afbeelding" style="width:100%">
+        <p>Data moeten inhoudelijk correct, consistent en volledig zijn.</p>
+        <p>Het moet duidelijk zijn welke databron gebruikt is.</p>
+        <p>Data moeten tijdig aanwezig en eenvoudig toegankelijk zijn.</p>
+    </section>
+    <section>
+        <h2>Casuïstiek</h2>
+        <img src="https://via.placeholder.com/600x200" alt="Casuïstiek afbeelding" style="width:100%">
+        <div class="step" onclick="openModal('Casus 1: Startersresultaat', 'Het Startersresultaat is het aandeel van de nieuwe instromers in de instelling op niveau 2 of hoger dat een jaar later nog studeert bij de eigen instelling of is uitgestroomd met een diploma behaald in het eerste jaar op de instelling.')">Casus 1: Startersresultaat</div>
+        <div class="step" onclick="openModal('Casus 2: Jaarresultaat', 'Het Jaarresultaat drukt het percentage gediplomeerde studenten uit van een cursusjaar ten opzichte van alle instellingsverlaters en gediplomeerde doorstromers.')">Casus 2: Jaarresultaat</div>
+    </section>
+    <section class="chart-container">
+        <h2>Voorbeeld Grafiek</h2>
+        <canvas id="exampleChart"></canvas>
+    </section>
+    <div class="chatbox">
+        <h2>AI-Assistent</h2>
+        <p>Stel hier je vragen over het boek:</p>
+        <input type="text" id="userInput" class="chat-input" placeholder="Typ hier je vraag...">
+        <button class="chat-button" onclick="askQuestion()">Vraag stellen</button>
+        <div id="chatResponse" class="chat-response"></div>
+    </div>
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modalContent"></p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function openModal(title, content) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalContent').innerText = content;
+            document.getElementById('detailModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        function askQuestion() {
+            const userInput = document.getElementById('userInput').value;
+            let response = "Ik begrijp je vraag niet. Probeer het opnieuw.";
+            if (userInput.toLowerCase().includes("datagebruik")) {
+                response = "Datagebruik in het onderwijs helpt bij het verbeteren van onderwijsprocessen en het nemen van beslissingen op basis van data.";
+            } else if (userInput.toLowerCase().includes("stappenplan")) {
+                response = "Het stappenplan voor datagebruik omvat zeven stappen, waaronder het bepalen van de aanleiding, het organiseren van een teamgesprek, en het evalueren van interventies.";
+            } else if (userInput.toLowerCase().includes("casus")) {
+                response = "Een casus is een praktijkvoorbeeld dat laat zien hoe data kan worden gebruikt om onderwijs te verbeteren. Bijvoorbeeld het Startersresultaat of Jaarresultaat.";
+            }
+            document.getElementById('chatResponse').innerText = response;
+        }
+
+        // Voorbeeld grafiek met Chart.js
+        const ctx = document.getElementById('exampleChart').getContext('2d');
+        const exampleChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Startersresultaat', 'Jaarresultaat', 'Diplomaresultaat'],
+                datasets: [{
+                    label: 'Resultaten',
+                    data: [75, 82, 88],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
