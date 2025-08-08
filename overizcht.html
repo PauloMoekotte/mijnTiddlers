@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Overzichtspagina</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+        }
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            width: 270px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.12s;
+        }
+        .card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+        }
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        .card-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #0070f3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .card-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Overzicht van Pagina's</h1>
+    <div class="card-container">
+        <div class="card">
+            <div class="card-title">Home</div>
+            <a class="card-link" href="home.html">Bekijk deze pagina</a>
+        </div>
+        <div class="card">
+            <div class="card-title">Contact</div>
+            <a class="card-link" href="contact.html">Bekijk deze pagina</a>
+        </div>
+        <div class="card">
+            <div class="card-title">Over Ons</div>
+            <a class="card-link" href="overons.html">Bekijk deze pagina</a>
+        </div>
+        <div class="card">
+            <div class="card-title">Diensten</div>
+            <a class="card-link" href="diensten.html">Bekijk deze pagina</a>
+        </div>
+        <!-- Voeg hier meer cards toe naar wens -->
+    </div>
+</body>
+</html>
