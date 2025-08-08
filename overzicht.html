@@ -18,17 +18,18 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 32px;
-      max-width: 1100px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 28px;
+      max-width: 1200px;
       margin: 0 auto;
     }
     .flip-card {
       background-color: transparent;
       width: 100%;
-      height: 250px;
+      height: 220px;
       perspective: 1000px;
       cursor: pointer;
+      outline: none;
     }
     .flip-card-inner {
       position: relative;
@@ -51,31 +52,34 @@
       align-items: center;
       justify-content: center;
       backface-visibility: hidden;
-      font-size: 1.2em;
-      padding: 28px;
+      font-size: 1.1em;
+      padding: 20px;
       box-sizing: border-box;
       background: #fff;
+      text-align: center;
     }
     .flip-card-front {
       color: #3b5a9d;
       font-weight: 700;
       letter-spacing: 0.8px;
-      text-align: center;
       background: linear-gradient(135deg, #e3eaf3 60%, #f9e498 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .flip-card-back {
       transform: rotateY(180deg);
       color: #212121;
       background: linear-gradient(135deg, #f8e3e3 60%, #e3eaf3 100%);
       font-size: 1em;
-      text-align: center;
       font-weight: 400;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
     }
     .flip-card-back a {
-      margin-top: 20px;
+      margin-top: 16px;
       display: inline-block;
       background: #3b5a9d;
       color: #fff;
@@ -83,6 +87,7 @@
       border-radius: 8px;
       text-decoration: none;
       transition: background 0.22s;
+      font-size: 1em;
     }
     .flip-card-back a:hover {
       background: #1f3360;
@@ -92,134 +97,148 @@
 <body>
   <h1>Overzicht HTML Pagina's</h1>
   <div class="grid">
-    <!-- Card 1 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          AI-GO.html
-        </div>
-        <div class="flip-card-back">
-          <div>Interactieve infographic over het AI-GO raamwerk.</div>
-          <a href="AI-GO.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 2 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          roadmap.html
-        </div>
-        <div class="flip-card-back">
-          <div>Overzicht van roadmaps voor Backend Ontwikkelaar en Data Science.</div>
-          <a href="roadmap.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 3 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          FutureOfWork.html
-        </div>
-        <div class="flip-card-back">
-          <div>Infographic over de toekomst van werk en de rol van technologie.</div>
-          <a href="FutureOfWork.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 4 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          VideoLearn.html
-        </div>
-        <div class="flip-card-back">
-          <div>Interactieve tool voor sociologische verkenning met video en inputvelden.</div>
-          <a href="VideoLearn.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 5 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          AI en werk.html
-        </div>
-        <div class="flip-card-back">
-          <div>Infographic over AI en werk, met Gemini integratie.</div>
-          <a href="AI en werk.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 6 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          MBOVerkenner.html
-        </div>
-        <div class="flip-card-back">
-          <div>Interactieve verkenner voor MBO opleidingen en sectoren.</div>
-          <a href="MBOVerkenner.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 7 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          Testen.html
-        </div>
-        <div class="flip-card-back">
-          <div>Infographic over digitale modellen voor de gezondheidszorg.</div>
-          <a href="Testen.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 8 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          TaakAnalyse.html
-        </div>
-        <div class="flip-card-back">
-          <div>Infographic over AI's rol in de toekomst van werk, met grafieken.</div>
-          <a href="TaakAnalyse.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 9 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          OTindeBouw.html
-        </div>
-        <div class="flip-card-back">
-          <div>Infographic over technologie in de bouwsector (TNO).</div>
-          <a href="OTindeBouw.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
-    <!-- Card 10 -->
-    <div class="flip-card" tabindex="0">
-      <div class="flip-card-inner">
-        <div class="flip-card-front">
-          VanKraptenaarKans-2.html
-        </div>
-        <div class="flip-card-back">
-          <div>Infographic over technologische oplossingen van krapte naar kansen.</div>
-          <a href="VanKraptenaarKans-2.html" target="_blank">Open pagina</a>
-        </div>
-      </div>
-    </div>
+    <!-- BEGIN CARDS -->
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">AI en werk.html</div>
+      <div class="flip-card-back">Infographic over AI en werk.<a href="AI en werk.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">AI-GO.html</div>
+      <div class="flip-card-back">Interactieve infographic AI-GO raamwerk.<a href="AI-GO.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">AIGeletterdheidRaamwerk.html</div>
+      <div class="flip-card-back">AI-geletterdheid raamwerk overzicht.<a href="AIGeletterdheidRaamwerk.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">AI_CapabilityIndicators.html</div>
+      <div class="flip-card-back">Indicators voor AI-capabilities.<a href="AI_CapabilityIndicators.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">ArbeidsondersteunendeTechnologie.html</div>
+      <div class="flip-card-back">Arbeidsondersteunende technologieën.<a href="ArbeidsondersteunendeTechnologie.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">AuditingFramework.html</div>
+      <div class="flip-card-back">Auditing framework voor AI.<a href="AuditingFramework.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">AutomationAndAugmentationPotential.html</div>
+      <div class="flip-card-back">Automatiserings- en augmentatiepotentieel.<a href="AutomationAndAugmentationPotential.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">Datagebruik-2.html</div>
+      <div class="flip-card-back">Datagebruik in AI - versie 2.<a href="Datagebruik-2.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">Datagebruik.html</div>
+      <div class="flip-card-back">Datagebruik in AI.<a href="Datagebruik.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">FutureOfWork.html</div>
+      <div class="flip-card-back">Infographic over de toekomst van werk.<a href="FutureOfWork.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">FutureOfWorkb.html</div>
+      <div class="flip-card-back">Alternatieve versie toekomst van werk.<a href="FutureOfWorkb.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">Interactief_technologienetwerk.html</div>
+      <div class="flip-card-back">Interactief technologienetwerk.<a href="Interactief_technologienetwerk.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">KwaliteitsAgenda.html</div>
+      <div class="flip-card-back">Kwaliteitsagenda voor AI.<a href="KwaliteitsAgenda.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">MBOVerkenner.html</div>
+      <div class="flip-card-back">Interactieve verkenner MBO opleidingen.<a href="MBOVerkenner.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">MBOverkenner.html</div>
+      <div class="flip-card-back">Alternatieve verkenner MBO opleidingen.<a href="MBOverkenner.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">MaakEenAgent.html</div>
+      <div class="flip-card-back">Maak je eigen agent.<a href="MaakEenAgent.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">OTindeBouw.html</div>
+      <div class="flip-card-back">Technologie in de bouwsector (TNO).<a href="OTindeBouw.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">OntwerpRichtlijnenIPS.html</div>
+      <div class="flip-card-back">Ontwerprichtlijnen IPS.<a href="OntwerpRichtlijnenIPS.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">TaakAnalyse.html</div>
+      <div class="flip-card-back">AI's rol in de toekomst van werk.<a href="TaakAnalyse.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">Testen.html</div>
+      <div class="flip-card-back">Infographic digitale modellen zorg.<a href="Testen.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">Toptips voor AI en Beoordeling.html</div>
+      <div class="flip-card-back">Toptips voor AI & beoordeling.<a href="Toptips voor AI en Beoordeling.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">VanKraptenaarKans-2.html</div>
+      <div class="flip-card-back">Krapte naar kansen - versie 2.<a href="VanKraptenaarKans-2.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">VanKraptenaarKans.html</div>
+      <div class="flip-card-back">Krapte naar kansen.<a href="VanKraptenaarKans.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">VanKraptenaarKans3.html</div>
+      <div class="flip-card-back">Krapte naar kansen - versie 3.<a href="VanKraptenaarKans3.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">Vergelijkende_Scatterplot.html</div>
+      <div class="flip-card-back">Vergelijkende scatterplot.<a href="Vergelijkende_Scatterplot.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">VideoLearn.html</div>
+      <div class="flip-card-back">Sociological Imagination Explorer.<a href="VideoLearn.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">examenreglement_2025-2026.html</div>
+      <div class="flip-card-back">Examenreglement 2025-2026.<a href="examenreglement_2025-2026.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">examenreglement_2025-2026b.html</div>
+      <div class="flip-card-back">Examenreglement 2025-2026 b.<a href="examenreglement_2025-2026b.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">examenreglement_2025-2026c.html</div>
+      <div class="flip-card-back">Examenreglement 2025-2026 c.<a href="examenreglement_2025-2026c.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">examenreglement_2025-2026d.html</div>
+      <div class="flip-card-back">Examenreglement 2025-2026 d.<a href="examenreglement_2025-2026d.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">netwerktechnologie_NB.html</div>
+      <div class="flip-card-back">Netwerktechnologie Noord-Brabant.<a href="netwerktechnologie_NB.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">netwerktechnologie_OV.html</div>
+      <div class="flip-card-back">Netwerktechnologie Overijssel.<a href="netwerktechnologie_OV.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">overzicht.html</div>
+      <div class="flip-card-back">Deze overzichtspagina.<a href="overzicht.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">roadmap.html</div>
+      <div class="flip-card-back">Roadmaps Backend & Data Science.<a href="roadmap.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <div class="flip-card" tabindex="0"><div class="flip-card-inner">
+      <div class="flip-card-front">test6.html</div>
+      <div class="flip-card-back">Testpagina 6.<a href="test6.html" target="_blank">Open pagina</a></div>
+    </div></div>
+    <!-- EINDE CARDS -->
   </div>
 </body>
 </html>
-```
-
-- De cards draaien om bij hover (ook op touch/tab via tabindex).
-- Elke achterkant bevat een korte beschrijving en een link naar de HTML-pagina.
-- Je kunt de kleurstelling aanpassen in de CSS.
-- Voeg gerust cards toe als er meer pagina’s zijn.
-
-Wil je deze code direct toegevoegd in jouw repo als overizcht.html?
