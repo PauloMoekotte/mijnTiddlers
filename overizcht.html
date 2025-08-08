@@ -1,77 +1,228 @@
+Hier is een voorbeeld van een overzichtspagina (overizcht.html) met cards voor alle gevonden HTML-bestanden in jouw repo. Elke card draait om bij hover en toont een korte beschrijving van de pagina. Je kunt de beschrijvingen aanpassen naar wens. Plak deze code in jouw overzichtspagina.
+
+```html
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <title>Overzichtspagina</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f6f8fa;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            text-align: center;
-            margin-top: 2rem;
-        }
-        .card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 2rem;
-            padding: 2rem;
-        }
-        .card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            width: 270px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: transform 0.12s;
-        }
-        .card:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.10);
-        }
-        .card-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: #2c3e50;
-        }
-        .card-link {
-            display: inline-block;
-            margin-top: 1rem;
-            color: #0070f3;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .card-link:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Overzicht HTML Pagina's</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Lato', sans-serif;
+      background-color: #f5f6fa;
+      margin: 0;
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #3b5a9d;
+      margin-bottom: 40px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 250px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(.4,2,.6,1);
+      transform-style: preserve-3d;
+    }
+    .flip-card:hover .flip-card-inner,
+    .flip-card:focus .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      box-shadow: 0 6px 24px rgba(59,90,157,0.10), 0 1.5px 5px rgba(60,60,60,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+      font-size: 1.2em;
+      padding: 28px;
+      box-sizing: border-box;
+      background: #fff;
+    }
+    .flip-card-front {
+      color: #3b5a9d;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-align: center;
+      background: linear-gradient(135deg, #e3eaf3 60%, #f9e498 100%);
+    }
+    .flip-card-back {
+      transform: rotateY(180deg);
+      color: #212121;
+      background: linear-gradient(135deg, #f8e3e3 60%, #e3eaf3 100%);
+      font-size: 1em;
+      text-align: center;
+      font-weight: 400;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .flip-card-back a {
+      margin-top: 20px;
+      display: inline-block;
+      background: #3b5a9d;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.22s;
+    }
+    .flip-card-back a:hover {
+      background: #1f3360;
+    }
+  </style>
 </head>
 <body>
-    <h1>Overzicht van Pagina's</h1>
-    <div class="card-container">
-        <div class="card">
-            <div class="card-title">Home</div>
-            <a class="card-link" href="home.html">Bekijk deze pagina</a>
+  <h1>Overzicht HTML Pagina's</h1>
+  <div class="grid">
+    <!-- Card 1 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          AI-GO.html
         </div>
-        <div class="card">
-            <div class="card-title">Contact</div>
-            <a class="card-link" href="contact.html">Bekijk deze pagina</a>
+        <div class="flip-card-back">
+          <div>Interactieve infographic over het AI-GO raamwerk.</div>
+          <a href="AI-GO.html" target="_blank">Open pagina</a>
         </div>
-        <div class="card">
-            <div class="card-title">Over Ons</div>
-            <a class="card-link" href="overons.html">Bekijk deze pagina</a>
-        </div>
-        <div class="card">
-            <div class="card-title">Diensten</div>
-            <a class="card-link" href="diensten.html">Bekijk deze pagina</a>
-        </div>
-        <!-- Voeg hier meer cards toe naar wens -->
+      </div>
     </div>
+    <!-- Card 2 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          roadmap.html
+        </div>
+        <div class="flip-card-back">
+          <div>Overzicht van roadmaps voor Backend Ontwikkelaar en Data Science.</div>
+          <a href="roadmap.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          FutureOfWork.html
+        </div>
+        <div class="flip-card-back">
+          <div>Infographic over de toekomst van werk en de rol van technologie.</div>
+          <a href="FutureOfWork.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card 4 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          VideoLearn.html
+        </div>
+        <div class="flip-card-back">
+          <div>Interactieve tool voor sociologische verkenning met video en inputvelden.</div>
+          <a href="VideoLearn.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card 5 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          AI en werk.html
+        </div>
+        <div class="flip-card-back">
+          <div>Infographic over AI en werk, met Gemini integratie.</div>
+          <a href="AI en werk.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card 6 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          MBOVerkenner.html
+        </div>
+        <div class="flip-card-back">
+          <div>Interactieve verkenner voor MBO opleidingen en sectoren.</div>
+          <a href="MBOVerkenner.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card 7 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          Testen.html
+        </div>
+        <div class="flip-card-back">
+          <div>Infographic over digitale modellen voor de gezondheidszorg.</div>
+          <a href="Testen.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card 8 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          TaakAnalyse.html
+        </div>
+        <div class="flip-card-back">
+          <div>Infographic over AI's rol in de toekomst van werk, met grafieken.</div>
+          <a href="TaakAnalyse.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card 9 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          OTindeBouw.html
+        </div>
+        <div class="flip-card-back">
+          <div>Infographic over technologie in de bouwsector (TNO).</div>
+          <a href="OTindeBouw.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+    <!-- Card 10 -->
+    <div class="flip-card" tabindex="0">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          VanKraptenaarKans-2.html
+        </div>
+        <div class="flip-card-back">
+          <div>Infographic over technologische oplossingen van krapte naar kansen.</div>
+          <a href="VanKraptenaarKans-2.html" target="_blank">Open pagina</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
+```
+
+- De cards draaien om bij hover (ook op touch/tab via tabindex).
+- Elke achterkant bevat een korte beschrijving en een link naar de HTML-pagina.
+- Je kunt de kleurstelling aanpassen in de CSS.
+- Voeg gerust cards toe als er meer pagina’s zijn.
+
+Wil je deze code direct toegevoegd in jouw repo als overizcht.html?
