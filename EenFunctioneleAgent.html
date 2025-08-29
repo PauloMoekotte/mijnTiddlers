@@ -1,239 +1,291 @@
-<!DOCTYPE html>
+Hier is een interactieve, HTML-gebaseerde infographic op basis van de door u verstrekte webpagina. Alle interactieve elementen, inclusief de AI-assistent, zijn volledig functioneel in de onderstaande code. code Htmldownloadcontent_copyexpand_less    <!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infographic: Hoe bouw je een AI Agent?</title>
+    <title>Infographic: Hoe bouw je een Agent</title>
     <style>
-        /* --- Algemene Styling & Kleurinstelling --- */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
         :root {
-            --primary-bg: #111827;
-            --secondary-bg: #1F2937;
-            --text-color: #F3F4F6;
-            --accent-color: #10B981;
-            --border-color: #374151;
-            --placeholder-text: #9CA3AF;
+            --primary-color: #0d1a2e;
+            --secondary-color: #f0f4f8;
+            --accent-color: #4a90e2;
+            --text-color: #333;
+            --light-text-color: #f8f9fa;
+            --border-color: #d1d9e0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-color);
-            margin: 0;
-            padding: 2rem;
+            font-family: 'Roboto', sans-serif;
             line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
         }
 
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-            background-color: var(--secondary-bg);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        h1, h2, h3 {
-            color: var(--accent-color);
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 2.8em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline {
+            position: relative;
+            margin-top: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--accent-color);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            padding: 20px 40px;
+            position: relative;
+            width: 50%;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 60px;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 60px;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 4px solid var(--accent-color);
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -12px;
+        }
+
+        .timeline-item:nth-child(even)::after {
+            left: -12px;
+        }
+
+        .timeline-content {
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .timeline-content h2 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-top: 0;
             border-bottom: 2px solid var(--accent-color);
             padding-bottom: 10px;
+            display: inline-block;
         }
-
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-        }
-
-        p {
-            margin-bottom: 1rem;
-        }
-
-        /* --- Glossary & Tooltip Styling --- */
-        .glossary-term {
+        
+        .timeline-content h3 {
             color: var(--accent-color);
-            text-decoration: underline;
-            text-decoration-style: dotted;
-            cursor: help;
-            position: relative;
+            font-size: 1.1em;
+            margin-top: 15px;
         }
 
-        .glossary-term .tooltip-text {
+        /* Glossary Tooltip */
+        .tooltip {
+            position: relative;
+            cursor: help;
+            font-weight: 700;
+            color: var(--accent-color);
+            text-decoration: underline dotted;
+        }
+
+        .tooltip .tooltiptext {
             visibility: hidden;
             width: 300px;
-            background-color: #000;
-            color: #fff;
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
             text-align: left;
-            border: 1px solid var(--accent-color);
+            font-weight: 400;
             border-radius: 6px;
             padding: 10px;
             position: absolute;
-            z-index: 1;
+            z-index: 10;
             bottom: 125%;
             left: 50%;
             margin-left: -150px;
             opacity: 0;
             transition: opacity 0.3s;
-            font-size: 0.9rem;
-            line-height: 1.4;
         }
 
-        .glossary-term:hover .tooltip-text {
+        .tooltip:hover .tooltiptext {
             visibility: visible;
             opacity: 1;
         }
 
-        /* --- Workflow Visualisatie --- */
+        /* Workflow visualization */
         .workflow-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            margin-top: 15px;
         }
-
         .workflow-step {
-            background-color: var(--primary-bg);
-            border: 1px solid var(--border-color);
-            border-left: 5px solid var(--accent-color);
-            padding: 20px;
-            border-radius: 8px;
+            background-color: #e3effc;
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
             position: relative;
-            transition: transform 0.2s, box-shadow 0.2s;
+            padding-left: 25px;
         }
-
-        .workflow-step:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .workflow-step h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.2rem;
-            color: var(--text-color);
-            border: none;
-        }
-        
-        .step-number {
+        .workflow-step:before {
+            content: '➔';
             position: absolute;
-            top: -15px;
-            left: -25px;
-            background-color: var(--accent-color);
-            color: var(--primary-bg);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            border: 2px solid var(--secondary-bg);
-        }
-        
-        .arrow {
-            text-align: center;
-            font-size: 2rem;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
             color: var(--accent-color);
-            margin: -10px 0;
         }
 
-        /* --- AI Assistent Styling --- */
-        #ai-assistant {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid var(--border-color);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        .chat-container {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 500px;
+        .workflow-step:nth-child(1) { animation-delay: 0.2s; }
+        .workflow-step:nth-child(2) { animation-delay: 0.4s; }
+        .workflow-step:nth-child(3) { animation-delay: 0.6s; }
+        .workflow-step:nth-child(4) { animation-delay: 0.8s; }
+
+        /* AI Assistant */
+        .ai-assistant {
+            margin-top: 50px;
+            padding: 30px;
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            border-radius: 10px;
+            text-align: center;
         }
 
-        .chat-history {
-            flex-grow: 1;
-            padding: 20px;
+        .ai-assistant h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #chat-window {
+            height: 200px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 15px;
             overflow-y: auto;
-            background-color: var(--primary-bg);
+            text-align: left;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
         }
         
         .message {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
             max-width: 80%;
-            padding: 10px 15px;
-            border-radius: 18px;
             line-height: 1.4;
         }
-        
+
         .user-message {
             background-color: var(--accent-color);
-            color: var(--primary-bg);
-            align-self: flex-end;
+            color: white;
             margin-left: auto;
-            border-bottom-right-radius: 4px;
+            border-bottom-right-radius: 3px;
         }
         
         .assistant-message {
-            background-color: #374151;
+            background-color: var(--secondary-color);
             color: var(--text-color);
-            align-self: flex-start;
             margin-right: auto;
-            border-bottom-left-radius: 4px;
+            border-bottom-left-radius: 3px;
         }
 
-        .chat-input-area {
-            display: flex;
-            border-top: 1px solid var(--border-color);
+        #chat-input {
+            width: calc(100% - 100px);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            font-size: 1em;
         }
 
-        #userInput {
-            flex-grow: 1;
+        #send-btn {
+            width: 90px;
+            padding: 10px;
             border: none;
-            background-color: var(--secondary-bg);
-            padding: 15px;
-            color: var(--text-color);
-            font-size: 1rem;
-        }
-        #userInput:focus {
-            outline: none;
-        }
-        
-        #sendButton {
             background-color: var(--accent-color);
-            border: none;
             color: white;
-            padding: 0 25px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.2s;
+            font-size: 1em;
         }
-        #sendButton:hover {
-            background-color: #059669;
+
+        #suggested-questions {
+            margin-top: 15px;
         }
-        
-        .predefined-questions {
-            padding: 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .predefined-questions button {
-            background-color: transparent;
+
+        .suggestion-btn {
+            background: none;
             border: 1px solid var(--accent-color);
-            color: var(--accent-color);
+            color: var(--light-text-color);
             padding: 8px 12px;
+            margin: 5px;
             border-radius: 20px;
             cursor: pointer;
-            transition: background-color 0.2s, color 0.2s;
-            font-size: 0.9rem;
+            transition: background-color 0.3s, color 0.3s;
         }
-        
-        .predefined-questions button:hover {
+        .suggestion-btn:hover {
             background-color: var(--accent-color);
-            color: var(--primary-bg);
+            color: white;
         }
 
     </style>
@@ -242,159 +294,202 @@
 
     <div class="container">
         <header>
-            <h1>Hoe bouw je een AI Agent?</h1>
-            <p style="text-align: center;">Een interactieve infographic gebaseerd op de best practices van LangChain. [1]</p>
+            <h1>Hoe bouw je een Agent?</h1>
+            <p>Een stapsgewijs framework om van een idee naar een impactvolle <span class="tooltip">AI Agent<span class="tooltiptext">Een AI Agent is een autonoom systeem dat zijn omgeving waarneemt, beslissingen neemt en acties onderneemt om specifieke doelen te bereiken. Het kan tools gebruiken en redeneren om complexe taken uit te voeren.</span></span> te komen, geïllustreerd met een praktijkvoorbeeld. Gebaseerd op de inzichten van LangChain. [1]</p>
         </header>
 
-        <main>
-            <section id="intro">
-                <h2>Wat is een Agent?</h2>
-                <p>
-                    Een <span class="glossary-term">Agent<span class="tooltip-text">Een AI-systeem dat redeneert en tools gebruikt om complexe, meerstaps taken uit te voeren.</span></span> is een systeem ontworpen om taken uit te voeren die je normaal aan een "slimme stagiair" zou geven. Het gaat verder dan traditionele software door gebruik te maken van de redeneercapaciteiten van een Large Language Model (LLM) om beslissingen te nemen. [1]
-                </p>
-                <p>
-                    Het is cruciaal om een realistische taak te kiezen. Als de logica simpel en vaststaand is, is traditionele software vaak sneller en goedkoper. Een agent is de juiste keuze voor taken die flexibiliteit en contextueel begrip vereisen. [1]
-                </p>
-            </section>
+        <main class="timeline">
 
-            <section id="workflow">
-                <h2>Visuele Workflow: De 6 Stappen naar een Functionele Agent</h2>
-                <div class="workflow-container">
-                    
-                    <div class="workflow-step">
-                        <div class="step-number">1</div>
-                        <h3>Definieer de taak met voorbeelden</h3>
-                        <p>Kies een realistische taak en bedenk 5-10 concrete voorbeelden. Dit valideert de scope en geeft je een benchmark om prestaties te meten. [1]</p>
-                    </div>
-                    <div class="arrow">↓</div>
-                    <div class="workflow-step">
-                        <div class="step-number">2</div>
-                        <h3>Ontwerp de werkprocedure (SOP)</h3>
-                        <p>Schrijf een gedetailleerde <span class="glossary-term">SOP<span class="tooltip-text">Standard Operating Procedure: Een gedetailleerd stappenplan dat beschrijft hoe een mens de taak zou uitvoeren.</span></span>. Dit helpt bij het identificeren van de benodigde stappen, beslissingen en tools voor je agent. [1]</p>
-                    </div>
-                    <div class="arrow">↓</div>
-                    <div class="workflow-step">
-                        <div class="step-number">3</div>
-                        <h3>Bouw een MVP met een Prompt</h3>
-                        <p>Begin klein. Focus op de meest kritieke redeneertaak en bouw een effectieve <span class="glossary-term">Prompt<span class="tooltip-text">De instructie die je aan een LLM geeft om een specifieke output te genereren. Dit is de kern van de redenering.</span></span>. Test deze met handmatig ingevoerde data. [1]</p>
-                    </div>
-                    <div class="arrow">↓</div>
-                    <div class="workflow-step">
-                        <div class="step-number">4</div>
-                        <h3>Verbind & Orchestreer</h3>
-                        <p>Koppel je prompt aan echte data via API's, databases of andere bronnen. Implementeer de <span class="glossary-term">Orchestration<span class="tooltip-text">De logica die bepaalt welke databronnen wanneer worden aangesproken en hoe de informatie door het systeem stroomt.</span></span>-logica die beslist welke data wanneer nodig is. [1] </p>
-                    </div>
-                    <div class="arrow">↓</div>
-                    <div class="workflow-step">
-                        <div class="step-number">5</div>
-                        <h3>Test & Itereer</h3>
-                        <p>Test je <span class="glossary-term">MVP<span class="tooltip-text">Minimum Viable Product: Een basisversie van je product die net genoeg functies heeft om bruikbaar te zijn voor de eerste gebruikers.</span></span> handmatig met je voorbeelden. Gebruik <span class="glossary-term">Tracing<span class="tooltip-text">Het visualiseren van de datastroom en beslissingen van een agent om te debuggen en prestaties te analyseren.</span></span> tools om de flow te visualiseren en schaal op naar geautomatiseerde tests. [1]</p>
-                    </div>
-                    <div class="arrow">↓</div>
-                    <div class="workflow-step">
-                        <div class="step-number">6</div>
-                        <h3>Implementeer, Schaal & Verfijn</h3>
-                        <p>Zet de agent in productie. Monitor het gebruik in de echte wereld om te zien hoe mensen ermee omgaan en gebruik die inzichten om de agent verder te verfijnen en uit te breiden. [1]</p>
-                    </div>
-
+            <!-- Stap 1 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h2>Stap 1: Definieer de taak met voorbeelden</h2>
+                    <p>Kies een realistische taak die je aan een slimme stagiair zou kunnen uitleggen. Formuleer 5-10 concrete voorbeelden van de taak. Dit helpt de scope te valideren en creëert een benchmark voor het meten van prestaties. [1]</p>
+                    <h3>Voorbeeld: E-mail Agent</h3>
+                    <ul>
+                        <li>Prioriteren van urgente e-mails.</li>
+                        <li>Inplannen van vergaderingen.</li>
+                        <li>Negeren van spam.</li>
+                        <li>Beantwoorden van productvragen.</li>
+                    </ul>
                 </div>
-            </section>
+            </div>
 
-            <section id="ai-assistant">
-                <h2>AI Assistent Examenreglement</h2>
-                <p>Stel hier je vragen over het examenreglement. <strong>Let op:</strong> Dit is een demo-assistent. De antwoorden zijn vooraf ingesteld en dienen als voorbeeld van hoe een echte AI-assistent zou kunnen werken.</p>
-                
-                <div class="chat-container">
-                    <div class="chat-history" id="chatHistory">
-                        <div class="message assistant-message">
-                            Hallo! Ik ben je AI-assistent voor het examenreglement. Hoe kan ik je helpen?
-                        </div>
-                    </div>
-                    <div class="predefined-questions" id="predefinedQuestions">
-                       <button>Wat is de herkansingsregeling?</button>
-                       <button>Hoe meld ik me aan voor een tentamen?</button>
-                       <button>Wat gebeurt er bij fraude?</button>
-                       <button>Waar kan ik mijn resultaten inzien?</button>
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="userInput" placeholder="Typ je vraag hier...">
-                        <button id="sendButton">Verstuur</button>
+            <!-- Stap 2 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h2>Stap 2: Ontwerp de werkprocedure (SOP)</h2>
+                    <p>Schrijf een gedetailleerde Standard Operating Procedure (<span class="tooltip">SOP<span class="tooltiptext">Standard Operating Procedure: een set stapsgewijze instructies om routinematige operaties uit te voeren. Het helpt bij het bereiken van efficiëntie, kwaliteitsoutput en uniformiteit van prestaties.</span></span>) die beschrijft hoe een mens de taak zou uitvoeren. Dit brengt de belangrijkste stappen, beslissingen en benodigde tools in kaart. [1]</p>
+                    <h3>AI-gegenereerde workflow: E-mail Agent</h3>
+                    <div class="workflow-container">
+                        <div class="workflow-step">Analyseer e-mail inhoud & afzender</div>
+                        <div class="workflow-step">Controleer kalender & plan vergadering</div>
+                        <div class="workflow-step">Stel een antwoord op</div>
+                        <div class="workflow-step">Verstuur e-mail na menselijke goedkeuring</div>
                     </div>
                 </div>
-            </section>
+            </div>
+
+            <!-- Stap 3 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h2>Stap 3: Bouw een MVP met een prompt</h2>
+                    <p>Begin klein. Focus op de meest kritieke redeneertaak van het <span class="tooltip">LLM<span class="tooltiptext">Large Language Model: Een groot taalmodel dat is getraind op enorme hoeveelheden tekstdata om menselijke taal te begrijpen en te genereren.</span></span> en bouw een <span class="tooltip">MVP<span class="tooltiptext">Minimum Viable Product: Een versie van een product met net genoeg functies om aantrekkelijk te zijn voor de eerste klanten en om feedback te verzamelen voor toekomstige productontwikkeling.</span></span>. De meeste agents falen omdat het redeneren van het LLM niet goed genoeg is. Valideer de kernlogica met handmatig ingevoerde data voordat je de volledige agent bouwt. [1]</p>
+                    <h3>Voorbeeld: E-mail classificatie</h3>
+                    <p>Focus eerst enkel op het correct classificeren van e-mails op basis van urgentie en intentie (bv. vergaderverzoek, supportvraag). [1]</p>
+                </div>
+            </div>
+            
+            <!-- Stap 4 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h2>Stap 4: Verbinden & Orkestreren</h2>
+                    <p>Verbind je werkende prompt met echte data en gebruikersinvoer. Identificeer welke context nodig is (e-mails, kalender, documentatie) en hoe je hier programmatisch toegang toe krijgt via <span class="tooltip">API's<span class="tooltiptext">Application Programming Interface: Een set definities en protocollen voor het bouwen en integreren van applicatiesoftware. Het stelt verschillende systemen in staat om met elkaar te communiceren.</span></span> of databases. [1]</p>
+                    <h3>Voorbeeld: E-mail Agent Integraties</h3>
+                    <ul>
+                        <li>Gmail API om e-mails te lezen.</li>
+                        <li>Google Calendar API om beschikbaarheid te checken.</li>
+                        <li>CRM of contactdatabase voor context over de afzender.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Stap 5 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h2>Stap 5: Testen & Itereren</h2>
+                    <p>Test je MVP handmatig met de voorbeelden uit stap 1. Gebruik tools zoals <span class="tooltip">LangSmith<span class="tooltiptext">LangSmith is een platform van LangChain om LLM-applicaties te debuggen, testen, evalueren en monitoren.</span></span> om de flow te visualiseren. Schaal vervolgens op naar geautomatiseerde tests om consistentie te garanderen en randgevallen te ontdekken. [1]</p>
+                     <h3>Belangrijke testgebieden:</h3>
+                    <ul>
+                        <li>Toon en veiligheid: professionele en respectvolle antwoorden.</li>
+                        <li>Intentie & Prioriteitsdetectie: correcte categorisatie.</li>
+                        <li>Efficiëntie toolgebruik: alleen noodzakelijke tools activeren.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Stap 6 -->
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h2>Stap 6: Implementeren, Schalen & Verfijnen</h2>
+                    <p>Breid de scope van je MVP geleidelijk uit. Implementeer de agent in productie en monitor het daadwerkelijke gebruik. Echte gebruikersdata onthullen vaak onverwachte behoeften en gaten in de functionaliteit. Behandel de lancering als het begin van iteratie, niet als het einde. [1]</p>
+                </div>
+            </div>
+
         </main>
+
+        <footer class="ai-assistant">
+            <h2>AI Assistent</h2>
+            <p>Stel een vraag over het bouwen van een agent.</p>
+            <div id="chat-window">
+                <div class="message assistant-message">Hallo! Hoe kan ik je helpen de stappen voor het bouwen van een agent beter te begrijpen?</div>
+            </div>
+            <input type="text" id="chat-input" placeholder="Typ je vraag hier...">
+            <button id="send-btn">Verstuur</button>
+            <div id="suggested-questions">
+                <button class="suggestion-btn" onclick="askQuestion('Wat is de eerste stap om een agent te bouwen?')">Wat is de eerste stap?</button>
+                <button class="suggestion-btn" onclick="askQuestion('Waarom is een SOP belangrijk?')">Waarom is een SOP belangrijk?</button>
+                <button class="suggestion-btn" onclick="askQuestion('Hoe moet ik mijn agent testen?')">Hoe test ik mijn agent?</button>
+                <button class="suggestion-btn" onclick="askQuestion('Wat is een MVP?')">Wat is een MVP?</button>
+            </div>
+        </footer>
+
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const userInput = document.getElementById('userInput');
-            const sendButton = document.getElementById('sendButton');
-            const chatHistory = document.getElementById('chatHistory');
-            const predefinedQuestionsContainer = document.getElementById('predefinedQuestions');
-
-            // --- Event Listeners ---
-            sendButton.addEventListener('click', sendMessage);
-            userInput.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-            predefinedQuestionsContainer.addEventListener('click', function(event) {
-                if (event.target.tagName === 'BUTTON') {
-                    const question = event.target.textContent;
-                    userInput.value = question;
-                    sendMessage();
-                }
-            });
-
-            // --- Functies ---
-            function sendMessage() {
-                const messageText = userInput.value.trim();
-                if (messageText === '') return;
-
-                appendMessage(messageText, 'user');
-                userInput.value = '';
-                
-                // Simuleer een kleine vertraging voor het antwoord
-                setTimeout(() => {
-                    generateAssistantResponse(messageText);
-                }, 500);
+        const knowledgeBase = [
+            {
+                keywords: ["stap 1", "eerste stap", "beginnen", "definieer", "voorbeelden"],
+                answer: "Stap 1 is het definiëren van de taak van je agent met concrete voorbeelden. Kies een realistische taak die je aan een slimme stagiair zou kunnen uitleggen en formuleer 5-10 specifieke voorbeelden. Dit helpt om de scope te bepalen en geeft je een benchmark om later de prestaties te meten. [1]"
+            },
+            {
+                keywords: ["stap 2", "sop", "procedure", "werkprocedure", "ontwerp"],
+                answer: "Stap 2 is het ontwerpen van een Standard Operating Procedure (SOP). Dit is een gedetailleerde, stapsgewijze instructie over hoe een mens de taak zou uitvoeren. Het helpt te bevestigen dat de scope van het probleem duidelijk is en brengt de benodigde stappen, beslissingen en tools voor je agent in kaart. [1]"
+            },
+                {
+                keywords: ["stap 3", "mvp", "prompt", "bouwen"],
+                answer: "Stap 3 is het bouwen van een Minimum Viable Product (MVP) met een prompt. Focus op de meest kritieke redeneertaak van het LLM. De meeste agents falen omdat het redeneren niet goed genoeg is. Door eerst een enkele prompt te perfectioneren met handmatige data, bouw je vertrouwen op in de kernlogica. [1]"
+            },
+            {
+                keywords: ["stap 4", "verbinden", "orkestreren", "data", "api"],
+                answer: "Stap 4 is het verbinden en orkestreren van de agent. Hier koppel je de werkende prompt aan echte databronnen zoals API's en databases. Je schrijft de logica die de juiste data op het juiste moment in je prompt invoegt. [1]"
+            },
+            {
+                keywords: ["stap 5", "test", "itereren", "langsmith"],
+                answer: "Stap 5 is testen en itereren. Begin met het handmatig testen van je MVP aan de hand van de voorbeelden uit stap 1. Gebruik tools zoals LangSmith om de flow te visualiseren. Schaal daarna op naar geautomatiseerde tests om consistentie te garanderen en randgevallen op te sporen. Belangrijke testgebieden zijn toon, veiligheid, en efficiëntie. [1]"
+            },
+            {
+                keywords: ["stap 6", "implementeren", "schalen", "verfijnen", "productie"],
+                answer: "Stap 6 is de implementatie, het schalen en verfijnen. Breid de scope van je MVP geleidelijk uit en breng de agent naar productie. Monitor het daadwerkelijke gebruik, want dit levert cruciale inzichten op voor verdere iteraties en verbeteringen. De lancering is het begin van de iteratie, niet het einde. [1]"
+            },
+            {
+                keywords: ["waarom voorbeelden", "belangrijk", "concrete voorbeelden"],
+                answer: "Concrete voorbeelden zijn cruciaal om twee redenen: ten eerste valideren ze dat je idee goed afgebakend is (niet te triviaal of te vaag), en ten tweede geven ze je een benchmark om de prestaties van de agent objectief te meten tijdens de testfase. [1]"
+            },
+            {
+                keywords: ["mvp", "minimum viable product"],
+                answer: "Een MVP (Minimum Viable Product) is een versie van je agent met net genoeg functionaliteit om de kernredenering te valideren. In de context van het bouwen van een agent, focus je op de meest kritieke LLM-taak en laat je complexe integraties en automatisering nog even achterwege. [1]"
             }
+        ];
 
-            function appendMessage(text, sender) {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message', `${sender}-message`);
-                messageDiv.textContent = text;
-                chatHistory.appendChild(messageDiv);
-                // Scroll naar de laatste boodschap
-                chatHistory.scrollTop = chatHistory.scrollHeight;
-            }
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const chatWindow = document.getElementById('chat-window');
 
-            function generateAssistantResponse(userText) {
-                let responseText = "";
-                // Gestandaardiseerde check, ongevoelig voor hoofdletters/leestekens
-                const lowerCaseText = userText.toLowerCase().replace(/[?.,!]/g, '');
-
-                switch (lowerCaseText) {
-                    case "wat is de herkansingsregeling":
-                        responseText = "DEMO ANTWOORD: Voor de meeste vakken heb je recht op één herkansing per collegejaar. Raadpleeg sectie 4.2 van het examenreglement voor de specifieke voorwaarden en uitzonderingen.";
-                        break;
-                    case "hoe meld ik me aan voor een tentamen":
-                        responseText = "DEMO ANTWOORD: Aanmelden voor tentamens gebeurt via het studentenportal. De aanmelddeadline is doorgaans 14 dagen voor de tentamendatum. Zie sectie 3.1 voor de volledige procedure.";
-                        break;
-                    case "wat gebeurt er bij fraude":
-                        responseText = "DEMO ANTWOORD: Fraude wordt zeer serieus genomen en kan leiden tot sancties, waaronder uitsluiting van tentamens of zelfs uitschrijving. De procedure bij een vermoeden van fraude staat beschreven in sectie 8 van het reglement.";
-                        break;
-                    case "waar kan ik mijn resultaten inzien":
-                        responseText = "DEMO ANTWOORD: Tentamenresultaten worden uiterlijk 15 werkdagen na de tentamendatum gepubliceerd in het studentenportal onder het kopje 'Resultaten'.";
-                        break;
-                    default:
-                        responseText = "Ik ben een demo-assistent en kan alleen de vooraf ingestelde vragen beantwoorden. Voor een volledig functionele assistent moet ik worden gekoppeld aan de database met het volledige examenreglement.";
-                }
-                
-                appendMessage(responseText, 'assistant');
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
         });
+
+        function askQuestion(question) {
+            chatInput.value = question;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const userQuery = chatInput.value.trim().toLowerCase();
+            if (userQuery === "") return;
+
+            appendMessage(userQuery, 'user');
+            chatInput.value = "";
+
+            setTimeout(() => {
+                const response = getResponse(userQuery);
+                appendMessage(response, 'assistant');
+            }, 500);
+        }
+
+        function appendMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', `${sender}-message`);
+            messageDiv.textContent = text;
+            chatWindow.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function getResponse(query) {
+            let bestMatch = { score: 0, answer: "Sorry, ik kon geen direct antwoord vinden op je vraag. Probeer het anders te formuleren. De tekst gaat voornamelijk over de 6 stappen om een AI-agent te bouwen. [1]" };
+            const queryWords = query.split(/\s+/);
+
+            knowledgeBase.forEach(entry => {
+                let currentScore = 0;
+                entry.keywords.forEach(keyword => {
+                    if (query.includes(keyword)) {
+                        currentScore++;
+                    }
+                });
+                if (currentScore > bestMatch.score) {
+                    bestMatch = { score: currentScore, answer: entry.answer };
+                }
+            });
+
+            return bestMatch.answer;
+        }
+
     </script>
+
 </body>
-</html>```
+</html>
+  
