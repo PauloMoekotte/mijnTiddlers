@@ -372,7 +372,7 @@
         }
         .tooltip-text {
             visibility: hidden;
-            width: 300px;
+            width: 300px; /* Make sure tooltips are wide enough */
             background-color: #555;
             color: #fff;
             text-align: center;
@@ -382,10 +382,11 @@
             z-index: 10;
             bottom: 125%; /* Position above the text */
             left: 50%;
-            margin-left: -150px;
+            margin-left: -150px; /* Center the tooltip */
             opacity: 0;
             transition: opacity 0.3s;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            white-space: normal; /* Allow text to wrap */
         }
         .tooltip-text::after {
             content: "";
@@ -459,7 +460,7 @@
         .flashcard-image {
             display: block;
             margin: 20px auto;
-            max-width: 100%;
+            max-width: 100px; /* Reduced max-width for images */
             height: auto;
         }
 
@@ -494,6 +495,9 @@
             .tooltip-text {
                 width: 200px;
                 margin-left: -100px;
+            }
+            .flashcard-image {
+                max-width: 80px;
             }
         }
     </style>
@@ -530,11 +534,11 @@
                     <li>Let op de onderstaande iconen in de rechterbovenhoek van elke kaart:
                         <div style="display: flex; gap: 20px; margin-top: 15px; justify-content: center;">
                             <div style="text-align: center;">
-                                <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/document-icon.png" alt="Teacher Info Icon" width="40">
+                                <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/document-icon.png" alt="Docent Info Icon" width="40">
                                 <p style="font-size: 0.9em; margin-top: 5px;">Docenteninformatie</p>
                             </div>
                             <div style="text-align: center;">
-                                <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/eye-icon.png" alt="Student Material Icon" width="40">
+                                <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/eye-icon.png" alt="Student Materiaal Icon" width="40">
                                 <p style="font-size: 0.9em; margin-top: 5px;">Studentenmateriaal</p>
                             </div>
                         </div>
@@ -716,7 +720,7 @@
                 <div class="guiding-questions">
                     <h4>Geval: Théâtre D'opéra Spatial wint wedstrijd</h4>
                     <p>In 2022 won Théâtre D'opéra Spatial, een AI-gegenereerd kunstwerk, de eerste prijs in de digitale kunstwedstrijd van de Colorado State Fair, vóór een menselijke kunstenaar. De overwinning ontketende een debat over wat als "echte kunst" telt. [20]</p>
-                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/ai-art-icon.png" alt="AI Art" class="flashcard-image" style="max-width: 150px;">
+                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/person-laptop-icon.png" alt="AI Kunstenaar" class="flashcard-image">
                     <p class="big-question">Moet AI-gegenereerde kunst als "echte kunst" worden beschouwd?</p>
                     <div class="decision-slider" data-flashcard-type="real-notreal">
                         <span class="label left">Echt</span>
@@ -753,11 +757,11 @@
             <!-- Flashcard 2: Accuracy of AI Outputs -->
             <div class="flashcard-item" data-flashcard-id="2">
                 <h3>Engage.2: Nauwkeurigheid van AI-outputs</h3>
-                <p class="context">Het doel van deze discussie is om studenten te helpen begrijpen dat AI-gegenereerde outputs fouten kunnen bevatten en dat het gebruik ervan zonder kritische evaluatie kan leiden tot schadelijke gevolgen. Hoewel AI studenten kan ondersteunen bij het efficiënter en zinvoller uitvoeren van taken, is het essentieel dat ze leren om AI-outputs te bevragen. Door dit proces kunnen studenten beginnen na te denken over de kinds van taken die AI goed uitvoert en waar het tekortschiet. [22]</p>
+                <p class="context">Het doel van deze discussie is om studenten te helpen begrijpen dat AI-gegenereerde outputs fouten kunnen bevatten en dat het gebruik ervan zonder kritische evaluatie kan leiden tot schadelijke gevolgen. Hoewel AI studenten kan ondersteunen bij het efficiënter en zinvoller uitvoeren van taken, is het essentieel dat ze leren om AI-outputs te bevragen. Door dit proces kunnen studenten beginnen na te denken over de soorten taken die AI goed uitvoert en waar het tekortschiet. [22]</p>
                 <div class="guiding-questions">
                     <h4>Geval: Advocaten beboet voor het citeren van nepzaken</h4>
                     <p>In februari 2025 werden drie advocaten beboet met $5.000 door een federale rechter voor het citeren van nepzaken gegenereerd door AI. Een advocaat gaf toe een AI-programma te hebben gebruikt dat de zaken verzon en verontschuldigde zich voor de fout. [23]</p>
-                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/lawyer-ai-icon.png" alt="Lawyer AI" class="flashcard-image" style="max-width: 150px;">
+                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/lawyer-ai-icon.png" alt="Advocaat AI" class="flashcard-image">
                     <p class="big-question">Wie moet verantwoordelijk worden gehouden?</p>
                     <div class="decision-slider-options">
                         <button class="select-option" data-value="the-ai">De AI</button>
@@ -787,7 +791,7 @@
                 <div class="guiding-questions">
                     <h4>Geval: AI-boeken op Amazon</h4>
                     <p>In 2023 verschenen door AI gemaakte boeken te koop op Amazon onder valse auteursnamen. Sommige mensen vreesden dat de AI ideeën van echte auteurs zonder toestemming had gekopieerd. Anderen zeiden dat bedrijven niet precies hoeven te delen waarop de AI is getraind. [26]</p>
-                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/ai-books-icon.png" alt="AI Books" class="flashcard-image" style="max-width: 150px;">
+                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/ai-books-icon.png" alt="AI Boeken" class="flashcard-image">
                     <p class="big-question">Denkt u dat het eerlijk is dat AI boeken creëert met ideeën van echte auteurs?</p>
                     <div class="decision-slider" data-flashcard-type="unfair-fair">
                         <span class="label left">Oneerlijk</span>
@@ -823,7 +827,7 @@
                 <div class="guiding-questions">
                     <h4>Geval 1: Gezichtsherkenningssystemen</h4>
                     <p>Joy Buolamwini, een wetenschapper, testte drie gezichtsherkenningssystemen, gemaakt door drie verschillende bedrijven, met behulp van 1270 foto's om te zien hoe goed ze konden vertellen of iemand een man of een vrouw was. De resultaten toonden aan dat de systemen meer fouten maakten voor mensen met een donkere huid. [31]</p>
-                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/face-rec-icon.png" alt="Face Recognition" class="flashcard-image" style="max-width: 150px;">
+                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/face-rec-icon.png" alt="Gezichtsherkenning" class="flashcard-image">
                     <p class="big-question">Kunnen we AI-systemen vertrouwen om accurate medische diagnoses te stellen?</p>
                     <div class="decision-slider" data-flashcard-type="yes-no">
                         <span class="label left">Ja</span>
@@ -852,7 +856,7 @@
                         </div>
 
                         <h4>Geval 2: Vul de lege plekken in over discriminatie door AI-systemen</h4>
-                        <p style="font-size: 1.1em; margin-top: 20px;">Het is niet oké als AI-systemen mensen verschillend behandelen op basis van <span class="fill-in-the-blank tooltip-container" data-correct-answer="ras, geslacht, leeftijd, etniciteit" data-prompt-id="blank1">_______<span class="tooltip-text">Vul hier in: ras, geslacht, leeftijd, etniciteit (voorbeelden)</span></span>. Daarom moeten bedrijven <span class="fill-in-the-blank tooltip-container" data-correct-answer="hun data controleren, transparanter zijn, eerlijke algoritmes ontwerpen" data-prompt-id="blank2">_______<span class="tooltip-text">Vul hier in: hun data controleren, transparanter zijn, eerlijke algoritmes ontwerpen (voorbeelden)</span></span>. [31]</p>
+                        <p style="font-size: 1.1em; margin-top: 20px;">Het is niet oké als AI-systemen mensen verschillend behandelen op basis van <span class="fill-in-the-blank tooltip-container" data-correct-answer="ras, geslacht, leeftijd, etniciteit" data-prompt-id="blank1">_______<span class="tooltip-text">Mogelijke antwoorden: ras, geslacht, leeftijd, etniciteit</span></span>. Daarom moeten bedrijven <span class="fill-in-the-blank tooltip-container" data-correct-answer="hun data controleren, transparanter zijn, eerlijke algoritmes ontwerpen" data-prompt-id="blank2">_______<span class="tooltip-text">Mogelijke antwoorden: hun data controleren, transparanter zijn, eerlijke algoritmes ontwerpen</span></span>. [31]</p>
                         <button onclick="checkBlanks()" style="background-color: #28B463; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Controleer antwoorden</button>
                         <div id="blank-feedback" style="margin-top: 10px; font-weight: bold;"></div>
 
@@ -898,6 +902,8 @@
 
     <script>
         // Full text content for AI Assistant context
+        // This large string contains all the textual information from the PDF,
+        // which the AI assistant uses to formulate its responses.
         const fullTextContext = `
             Voor Grades 9-12. Bijgewerkt op 1 september 2025.
             AILit Framework: Ethiek van AI Discussie Flashcards voor in de Klas.
@@ -1063,6 +1069,12 @@
                         guidingQuestionsDetail.style.display = 'none';
                     }
                     card.querySelectorAll('.decision-slider-options .select-option').forEach(btn => btn.classList.remove('selected'));
+                    
+                    // Reset blank feedback for Flashcard 4, Geval 2 if it exists
+                    const blankFeedback = card.querySelector('#blank-feedback');
+                    if (blankFeedback) {
+                        blankFeedback.innerHTML = '';
+                    }
                 }
             });
             flashcardCounter.textContent = `${index + 1} / ${flashcards.length}`;
@@ -1105,7 +1117,6 @@
                     guidingQuestionsDetail.style.display = 'block';
                 }
 
-
                 // Hide all question lists and show the relevant one
                 parentCard.querySelectorAll('.guiding-questions-detail ul').forEach(ul => ul.style.display = 'none');
                 if (type === 'real-notreal') {
@@ -1140,8 +1151,8 @@
             const blank2Element = document.querySelector('.fill-in-the-blank[data-prompt-id="blank2"]');
 
             // Correct answers are stored in data-correct-answer attribute
-            const correct1Options = blank1Element.dataset.correctAnswer.split(',').map(s => s.trim().toLowerCase());
-            const correct2Options = blank2Element.dataset.correctAnswer.split(',').map(s => s.trim().toLowerCase());
+            const correct1Options = blank1Element.dataset.correctAnswer.split(',').map(s => s.trim());
+            const correct2Options = blank2Element.dataset.correctAnswer.split(',').map(s => s.trim());
 
             feedbackDiv.innerHTML = `
                 <p><strong>Mogelijke antwoorden voor de eerste lege plek:</strong> ${correct1Options.join(', ')}</p>
@@ -1180,8 +1191,9 @@
 
         async function getAiResponse(query) {
             query = query.toLowerCase();
-            let response = "Excuses, ik heb geen antwoord op die specifieke vraag in de verstrekte documenten. Kunt u een andere vraag stellen?";
+            let response = "Excuses, ik heb geen antwoord op die specifieke vraag in de verstrekte documenten. Kunt u een van de voorgedefinieerde vragen hieronder selecteren of uw vraag anders formuleren?";
 
+            // Simple keyword matching for AI responses based on fullTextContext
             if (query.includes("hallo") || query.includes("hoi") || query.includes("goedendag")) {
                 response = "Hallo! Ik ben uw AI Assistent. Ik kan vragen beantwoorden over de Ethiek van AI Flashcards. Stel gerust uw vraag!";
             } else if (query.includes("ethiek in ai") || query.includes("wat is ethiek")) {
@@ -1190,7 +1202,7 @@
                 response = "Intellectueel Eigendom is een breed juridisch concept dat uitvindingen, geschriften, muziek, kunst en symbolen beschermt, door de maker het exclusieve recht te geven om hun werk te gebruiken, te delen of te verkopen. Auteursrecht is een specifiek wettelijk recht dat aan de maker van een origineel werk wordt verleend om het te gebruiken, te verspreiden en te wijzigen. Kortom, auteursrecht is een vorm van intellectueel eigendom.";
             } else if (query.includes("auteursrecht") && query.includes("attributie")) {
                 response = "Auteursrecht is het wettelijke recht om te bepalen hoe een origineel werk wordt gebruikt, gedeeld of gewijzigd. Attributie verwijst naar het geven van credits aan de oorspronkelijke maker van een werk wanneer u het gebruikt of ernaar verwijst. Attributie geeft de maker geen controle, maar erkent hun bijdrage, vaak als een vorm van respect. [10, 12]";
-            } else if (query.includes("ai-gegenereerde kunst") && (query.includes("ethische vragen") || query.includes("oproepen"))) {
+            } else if (query.includes("ai-gegenereerde kunst") && (query.includes("ethische vragen") || query.includes("oproepen") || query.includes("uitdagingen"))) {
                 response = "AI-gegenereerde kunst roept ethische vragen op over auteurschap en creativiteit. Het debat draait om wie als de 'schepper' moet worden gezien (de AI, de programmeur of de gebruiker) en hoe attributie en eigendom moeten worden vastgesteld, vooral wanneer de AI kunst produceert op basis van bestaande werken. Ook is de vraag of AI-kunst in wedstrijden op dezelfde manier moet worden beoordeeld als menselijke kunst. [17, 20]";
             } else if (query.includes("transparantie") && query.includes("trainingsdata") && query.includes("belangrijk")) {
                 response = "Transparantie in trainingsdata is cruciaal omdat het studenten helpt de bronnen van informatie te begrijpen waarop AI-modellen zijn getraind. Zonder transparantie is het moeilijk te weten of werk van makers zonder toestemming of de juiste attributie is gebruikt, wat tot zorgen over eerlijkheid en ethiek kan leiden, zoals gezien in het geval van AI-gegenereerde boeken op Amazon. [25, 26]";
@@ -1199,11 +1211,18 @@
             } else if (query.includes("wie verantwoordelijk") && (query.includes("advocaten") || query.includes("nepzaken"))) {
                  response = "In het geval van de advocaten die nepzaken citeerden, ligt de verantwoordelijkheid in de discussie tussen de AI zelf, de advocaat die het programma gebruikte, of beide. De flashcard moedigt aan om na te denken over 'verantwoord gebruik van AI versus het plaatsen van schuld'. De advocaat gaf toe de fout gemaakt te hebben, maar de vraag blijft of een AI als 'verantwoordelijk' kan worden beschouwd. [23, 24]";
             } else if (query.includes("kernbegrippen") || query.includes("belangrijke termen")) {
-                response = "De kernbegrippen die in dit framework worden behandeld zijn: Ethiek, Intellectueel Eigendom, Auteursrecht, Attributie en Transparantie.";
-            } else if (fullTextContext.toLowerCase().includes(query)) {
-                // Generic response if query is found somewhere in the text but not in specific conditions
-                response = "Ik heb informatie gevonden die gerelateerd is aan uw vraag in de flashcards. Specifieke details zijn te vinden onder de betreffende sleutelbegrippen of discussieflashcards.";
+                response = "De kernbegrippen die in dit framework worden behandeld zijn: Ethiek, Intellectueel Eigendom, Auteursrecht, Attributie en Transparantie. U kunt meer lezen over elk begrip door op de betreffende knop bovenaan de pagina te klikken.";
+            } else if (query.includes("milieukosten") || query.includes("ai en milieu")) {
+                response = "Het AILit Framework belicht ook de milieukosten van AI, wat aanleiding geeft tot een bredere examinatie van de relatie van AI met de fysieke wereld. Het moedigt een dieper begrip van de impact van AI aan dan alleen de directe toepassing ervan.";
+            } else if (query.includes("competenties") || query.includes("actie")) {
+                response = "De flashcards richten zich op vier competenties: Create.4 (authenticitiet en intellectueel eigendom), Engage.2 (evaluatie van AI-outputs), Manage.5 (richtlijnen voor AI-systemen), en Design.3 (dataverzameling en curatie voor training).";
             }
+            // Fallback for more general queries that might be present in the text
+            else if (fullTextContext.toLowerCase().includes(query)) {
+                // If a general keyword is found but not a specific answer, provide a hint
+                response = "Ik heb informatie gevonden die gerelateerd is aan uw vraag in de flashcards. Specifieke details zijn te vinden onder de relevante sleutelbegrippen of discussieflashcards. Probeer een van de voorgedefinieerde vragen!";
+            }
+
 
             return new Promise(resolve => setTimeout(() => resolve(response), 1000)); // Simulate AI processing time
         }
