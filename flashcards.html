@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AILit Framework: Ethiek van AI Flashcards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light gray background */
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            color: #D35400; /* Orange-red */
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1.1em;
+            color: #555;
+        }
+        .section-title {
+            color: #34495E; /* Dark blue-gray */
+            font-size: 1.8em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #D35400;
+            padding-bottom: 5px;
+        }
+        .intro-box {
+            background-color: #f7f9fb;
+            border-left: 5px solid #D35400;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .intro-box p {
+            margin: 0;
+            color: #444;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+
+        /* Key Terms Styling */
+        .key-terms-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .key-term-button {
+            background-color: #D35400;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .key-term-button.active, .key-term-button:hover {
+            background-color: #E67E22;
+        }
+        .key-term-card {
+            background-color: #fdfdfd;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: none; /* Hidden by default */
+            position: relative;
+        }
+        .key-term-card.active {
+            display: block;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .card-header h3 {
+            color: #D35400;
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .toggle-view-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .toggle-view-buttons button {
+            background-color: #3498DB; /* Blue */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .toggle-view-buttons button.active, .toggle-view-buttons button:hover {
+            background-color: #2980B9;
+        }
+        .definition {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .teacher-tip {
+            background-color: #E8F8F5; /* Light green-blue */
+            border-left: 4px solid #1ABC9C; /* Green */
+            padding: 10px 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+
+        /* Discussion Flashcards Styling */
+        .discussion-flashcards {
+            margin-top: 40px;
+        }
+        .flashcard-nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .flashcard-nav button {
+            background-color: #1ABC9C; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 0 10px;
+            transition: background-color 0.3s ease;
+        }
+        .flashcard-nav button:disabled {
+            background-color: #BDC3C7; /* Light gray */
+            cursor: not-allowed;
+        }
+        .flashcard-nav button:hover:not(:disabled) {
+            background-color: #16A085;
+        }
+        .flashcard-item {
+            background-color: #ECF0F1; /* Light blue-gray */
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none; /* Hidden by default */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            position: relative;
+        }
+        .flashcard-item.active {
+            display: block;
+        }
+        .flashcard-item h3 {
+            color: #2C3E50; /* Darker blue-gray */
+            margin-top: 0;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+        }
+        .flashcard-item .context {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        .flashcard-item .big-question {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #D35400;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .guiding-questions {
+            background-color: #F8F9F9;
+            border-left: 4px solid #3498DB;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        .guiding-questions h4 {
+            color: #3498DB;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .guiding-questions ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .guiding-questions ul li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .guiding-questions ul li::before {
+            content: '•';
+            color: #3498DB;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            font-size: 1.2em;
+            top: -2px;
+        }
+        .teacher-tip-flashcard {
+            background-color: #E8F8F5; /* Light green-blue */
+            border-left: 4px solid #1ABC9C; /* Green */
+            padding: 10px 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-style: italic;
+            font-size: 0.9em;
+        }
+        .decision-slider {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+            height: 50px;
+            font-size: 1.1em;
+        }
+        .decision-slider .label {
+            position: absolute;
+            font-weight: bold;
+            color: #555;
+        }
+        .decision-slider .label.left { left: 0; transform: translateX(-50%); }
+        .decision-slider .label.right { right: 0; transform: translateX(50%); }
+        .decision-slider .line {
+            width: 80%;
+            height: 8px;
+            background-color: #D35400;
+            border-radius: 4px;
+        }
+        .decision-slider-options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .decision-slider-options button {
+            background-color: #D35400;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .decision-slider-options button:hover {
+            background-color: #E67E22;
+        }
+        .decision-slider-options button.selected {
+            background-color: #1ABC9C;
+        }
+
+        /* AI Assistant Styling */
+        .ai-assistant {
+            background-color: #ECF0F1;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .ai-assistant h2 {
+            color: #34495E;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .chat-window {
+            height: 250px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+        .chat-message.user {
+            background-color: #DCF8C6; /* Light green */
+            margin-left: auto;
+            text-align: right;
+        }
+        .chat-message.ai {
+            background-color: #E0E0E0; /* Light gray */
+            margin-right: auto;
+            text-align: left;
+        }
+        .ai-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .ai-input-area input[type="text"] {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .ai-input-area button {
+            background-color: #28B463; /* Darker green */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .ai-input-area button:hover {
+            background-color: #239B56;
+        }
+        .predefined-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .predefined-questions button {
+            background-color: #AAB7B8; /* Muted gray */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        .predefined-questions button:hover {
+            background-color: #8C999B;
+        }
+
+        /* Tooltip Styling */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            width: 300px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%; /* Position above the text */
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .full-width-section {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            padding: 40px 0; /* Add vertical padding */
+            text-align: center;
+        }
+        .ethics-framework {
+            background-color: #fce4ec; /* Light pink from page 3 */
+            color: #4A148C;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: left;
+        }
+        .competences-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+        .competence-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            background-color: #f7fcfb;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            width: 100%;
+        }
+        .competence-item .icon {
+            font-size: 2em;
+            color: #1ABC9C;
+            background-color: #d6f5ee;
+            padding: 10px;
+            border-radius: 50%;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .competence-item .text h4 {
+            margin: 0 0 5px 0;
+            color: #34495E;
+            font-size: 1.2em;
+        }
+        .competence-item .text p {
+            margin: 0;
+            color: #555;
+        }
+        /* Images in flashcards */
+        .flashcard-image {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 1.8em;
+            }
+            .section-title {
+                font-size: 1.5em;
+            }
+            .key-term-button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+            .key-term-card {
+                padding: 15px;
+            }
+            .flashcard-nav button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+            .ai-input-area {
+                flex-direction: column;
+            }
+            .ai-input-area input, .ai-input-area button {
+                width: 100%;
+            }
+            .tooltip-text {
+                width: 200px;
+                margin-left: -100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <p style="text-align: right; font-size: 0.9em; color: #777;">Bijgewerkt op 1 september 2025</p>
+            <h1 style="color: #4A148C;">AILit Framework</h1>
+            <h1 style="color: #D35400;">Ethiek van AI Discussie Flashcards voor in de Klas</h1>
+            <p>De Ethiek van AI Discussie Flashcards maken gebruik van praktijkgerichte situaties om studenten aan te moedigen na te denken over en hun standpunten te bespreken over het verantwoord gebruik van AI.</p>
+            <div class="intro-box">
+                <p><strong>Elke flashcard is opgebouwd uit:</strong></p>
+                <ul>
+                    <li>Een inleidende vraag en/of een praktijkgerichte situatie.</li>
+                    <li>Een grote vraag om diverse ideeën en discussie te genereren.</li>
+                </ul>
+                <p><strong>Begeleidende vragen zijn opgenomen op een extra flashcard om:</strong></p>
+                <ul>
+                    <li>Studenten te helpen reflecteren en hun gedachten te verbinden.</li>
+                    <li>Studenten aan te moedigen de diverse kanten van elke situatie te begrijpen.</li>
+                </ul>
+            </div>
+            <p style="font-size: 0.8em; color: #777;">Referentie: OECD (2025). Empowering learners for the age of AI: An AI literacy framework for primary and secondary education (Review draft). OECD. Paris. https://ailiteracyframework.org</p>
+        </header>
+
+        <section class="directions-for-use">
+            <h2 class="section-title">Gebruiksaanwijzing</h2>
+            <div class="intro-box" style="border-left-color: #3498DB;">
+                <ul>
+                    <li>Introduceer de sleutelbegrippen van de slides 5-15 voordat u discussies met studenten start. Elk sleutelbegrip heeft een versie voor 'Docenteninformatie' en 'Studentenmateriaal'.</li>
+                    <li>De discussieflashcards beginnen op slide 17.</li>
+                    <li>De flashcards zijn <span style="font-weight: bold; color: #D35400;">aanpasbaar en afdrukbaar</span>. Maak gerust een kopie en pas deze aan uw context aan.</li>
+                    <li>Let op de onderstaande iconen in de rechterbovenhoek van elke kaart:
+                        <div style="display: flex; gap: 20px; margin-top: 15px; justify-content: center;">
+                            <div style="text-align: center;">
+                                <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/document-icon.png" alt="Teacher Info Icon" width="40">
+                                <p style="font-size: 0.9em; margin-top: 5px;">Docenteninformatie</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/eye-icon.png" alt="Student Material Icon" width="40">
+                                <p style="font-size: 0.9em; margin-top: 5px;">Studentenmateriaal</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <p style="font-style: italic; font-size: 0.9em; color: #D35400; text-align: center; margin-top: 20px;">Of u deze flashcards nu gebruikt zoals ze zijn of aanpast, citeer alstublieft ons werk! We zouden graag foto's of video's ervan in actie zien – deel ze gerust via anchal.sayal@code.org</p>
+            </div>
+        </section>
+
+        <section class="full-width-section" style="background-color: #e0f2f7;">
+            <h2 class="section-title">Ethiek in het AILit Framework</h2>
+            <div class="ethics-framework">
+                <p>Het AILit Framework moedigt leerlingen aan om kritisch te onderzoeken hoe AI hun leven en toekomst beïnvloedt, waarbij de nadruk ligt op ethische overwegingen zoals <span style="font-weight: bold;">waarden, context en verantwoordelijkheid</span> die centraal staan in het begrijpen en gebruiken van AI. Het framework begeleidt studenten om na te denken over wie profiteert of schade ondervindt van AI, wiens perspectieven zijn opgenomen of uitgesloten, en hoe AI autonomie en toegang tot informatie beïnvloedt.</p>
+                <p><span style="font-weight: bold;">Ethische reflectie</span> is een kerncompetentie in het framework, waardoor leerlingen kunnen vragen wat AI niet alleen kan doen, maar ook wat het zou moeten doen en wie het dient. Het framework belicht ook de milieukosten van AI, wat aanleiding geeft tot een bredere examinatie van de relatie met de fysieke wereld.</p>
+                <p style="font-style: italic; font-size: 0.9em; color: #D35400; margin-top: 20px;">Raadpleeg Pagina 12 van het AILit Framework om te lezen over hoe het thema "AI's effecten op individuen, de samenleving en het milieu" onze benadering van ethiek informeert.</p>
+            </div>
+        </section>
+
+        <section class="competences">
+            <h2 class="section-title">Competenties in Actie</h2>
+            <p>De flashcards richten zich op vier van de competenties uit het framework:</p>
+            <div class="competences-section">
+                <div class="competence-item">
+                    <div class="icon">💻</div>
+                    <div class="text">
+                        <h4>Create.4</h4>
+                        <p>Analyseer hoe AI de authenticiteit van inhoud en intellectueel eigendom kan waarborgen of schenden.</p>
+                    </div>
+                </div>
+                <div class="competence-item">
+                    <div class="icon">💡</div>
+                    <div class="text">
+                        <h4>Engage.2</h4>
+                        <p>Evalueer of AI-outputs moeten worden geaccepteerd, herzien of afgewezen.</p>
+                    </div>
+                </div>
+                <div class="competence-item">
+                    <div class="icon">📊</div>
+                    <div class="text">
+                        <h4>Manage.5</h4>
+                        <p>Ontwikkel en communiceer richtlijnen voor het gebruik van AI-systemen die aansluiten bij menselijke waarden, eerlijkheid bevorderen en transparantie prioriteren.</p>
+                    </div>
+                </div>
+                <div class="competence-item">
+                    <div class="icon">⚙️</div>
+                    <div class="text">
+                        <h4>Design.3</h4>
+                        <p>Verzamel en beheer gegevens die kunnen worden gebruikt om een AI-model te trainen, rekening houdend met relevantie, representatie en potentiële impact.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="key-terms">
+            <h2 class="section-title">Sleutelbegrippen</h2>
+            <div class="key-terms-container">
+                <button class="key-term-button" data-term="ethics">Ethiek</button>
+                <button class="key-term-button" data-term="intellectual-property">Intellectueel Eigendom</button>
+                <button class="key-term-button" data-term="copyright">Auteursrecht</button>
+                <button class="key-term-button" data-term="attribution">Attributie</button>
+                <button class="key-term-button" data-term="transparency">Transparantie</button>
+            </div>
+
+            <div id="ethics-card" class="key-term-card">
+                <div class="card-header">
+                    <h3>Ethiek</h3>
+                    <div class="toggle-view-buttons">
+                        <button data-view="teacher" class="active">Docent</button>
+                        <button data-view="student">Student</button>
+                    </div>
+                </div>
+                <div class="definition teacher-view active">
+                    <p>Ethiek is de tak van de filosofie die zich bezighoudt met wat moreel juist en verkeerd is, en hoe beslissingen mensen en de samenleving beïnvloeden.</p>
+                    <div class="teacher-tip">
+                        <strong>Docententip!</strong>
+                        <p>Vraag na het definiëren van ethiek aan studenten na te denken over hoe het gebruiken van het werk van iemand anders zonder toestemming als een ethisch probleem kan worden beschouwd, zelfs als het niet illegaal is. Ga nog niet in op voorbeelden; merk op dat ethiek vaak gaat over hoe mensen worden behandeld, niet alleen over welke regels er bestaan. [6]</p>
+                    </div>
+                </div>
+                <div class="definition student-view">
+                    <p>Ethiek gaat over uitzoeken wat goed en fout is, en hoe onze keuzes andere mensen en de wereld om ons heen beïnvloeden.</p>
+                </div>
+            </div>
+
+            <div id="intellectual-property-card" class="key-term-card">
+                <div class="card-header">
+                    <h3>Intellectueel Eigendom</h3>
+                    <div class="toggle-view-buttons">
+                        <button data-view="teacher" class="active">Docent</button>
+                        <button data-view="student">Student</button>
+                    </div>
+                </div>
+                <div class="definition teacher-view active">
+                    <p>Intellectueel Eigendom is het juridische concept dat uitvindingen, geschriften, muziek, kunst en symbolen beschermt, door de maker het exclusieve recht te geven om hun werk te gebruiken, te delen of te verkopen.</p>
+                    <div class="teacher-tip">
+                        <strong>Docententip!</strong>
+                        <p>Nodig studenten uit om voorbeelden uit hun eigen leven te bedenken, zoals een lied dat ze schreven, een video die ze maakten of een ontwerp dat ze voor een project creëerden. Leid vervolgens een korte discussie over waarom het belangrijk kan zijn om die creaties te beschermen, en wat er zou kunnen gebeuren als iemand anders hun werk zonder toestemming zou gebruiken. U kunt de discussie overslaan als er niet genoeg tijd is! [8]</p>
+                    </div>
+                </div>
+                <div class="definition student-view">
+                    <p>Intellectueel Eigendom betekent regels die dingen die mensen creëren – zoals uitvindingen, verhalen, muziek, kunst of logo's – beschermen. Deze regels geven de maker het speciale recht om te beslissen hoe hun werk wordt gebruikt, gedeeld of verkocht.</p>
+                </div>
+            </div>
+
+            <div id="copyright-card" class="key-term-card">
+                <div class="card-header">
+                    <h3>Auteursrecht</h3>
+                    <div class="toggle-view-buttons">
+                        <button data-view="teacher" class="active">Docent</button>
+                        <button data-view="student">Student</button>
+                    </div>
+                </div>
+                <div class="definition teacher-view active">
+                    <p>Auteursrecht is het wettelijke recht dat aan de maker van een origineel werk wordt verleend om het te gebruiken, te verspreiden en te wijzigen.</p>
+                    <div class="teacher-tip">
+                        <strong>Docententip!</strong>
+                        <p>Laat studenten weten dat dit een juridisch concept is, niet alleen over het geven van credits – het gaat over wie het recht heeft om te beslissen hoe een werk wordt gebruikt. U vindt het misschien nuttig om studenten te vertellen dat als zij iets creëren, zij beslissen of anderen het mogen kopiëren of er winst uit mogen halen. [10]</p>
+                    </div>
+                </div>
+                <div class="definition student-view">
+                    <p>Auteursrecht is een wet die de persoon die iets heeft gemaakt, zoals een lied, verhaal of video, het recht geeft om te bepalen hoe het wordt gebruikt, gedeeld of veranderd.</p>
+                </div>
+            </div>
+
+            <div id="attribution-card" class="key-term-card">
+                <div class="card-header">
+                    <h3>Attributie</h3>
+                    <div class="toggle-view-buttons">
+                        <button data-view="teacher" class="active">Docent</button>
+                        <button data-view="student">Student</button>
+                    </div>
+                </div>
+                <div class="definition teacher-view active">
+                    <p>Attributie verwijst naar de handeling van het geven van credits aan de oorspronkelijke maker van een werk, vooral in de context van het gebruiken of refereren aan hun materiaal.</p>
+                    <div class="teacher-tip">
+                        <strong>Docententip!</strong>
+                        <p>Definieer attributie en benadruk dat het de maker geen controle geeft, maar eerder hun bijdrage erkent. Het wordt vaak gezien als een basisvorm van respect in creatief werk. [12]</p>
+                    </div>
+                </div>
+                <div class="definition student-view">
+                    <p>Attributie betekent het geven van credits aan de persoon die iets oorspronkelijk heeft gemaakt, zoals een afbeelding, video of idee, wanneer je hun werk gebruikt of bespreekt.</p>
+                </div>
+            </div>
+
+            <div id="transparency-card" class="key-term-card">
+                <div class="card-header">
+                    <h3>Transparantie</h3>
+                    <div class="toggle-view-buttons">
+                        <button data-view="teacher" class="active">Docent</button>
+                        <button data-view="student">Student</button>
+                    </div>
+                </div>
+                <div class="definition teacher-view active">
+                    <p>Transparantie is de praktijk van het openlijk openbaar maken hoe iets werkt, vooral met betrekking tot besluitvorming, gegevensgebruik of AI-processen.</p>
+                    <div class="teacher-tip">
+                        <strong>Docententip!</strong>
+                        <p>U kunt studenten vertellen dat transparantie belangrijk is wanneer mensen niet weten of hun werk wordt gebruikt, of hoe AI-systemen beslissingen nemen. Dit helpt studenten te begrijpen waarom een gebrek aan transparantie kan leiden tot ethische problemen. [14]</p>
+                    </div>
+                </div>
+                <div class="definition student-view">
+                    <p>Transparantie betekent open en eerlijk zijn over hoe iets werkt, zoals hoe beslissingen worden genomen of hoe gegevens en AI worden gebruikt.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="discussion-flashcards">
+            <h2 class="section-title">Discussie Flashcards</h2>
+            <p style="text-align: center; font-style: italic; margin-bottom: 20px;">De discussieflashcards beginnen hier!</p>
+
+            <div class="flashcard-nav">
+                <button id="prev-flashcard">Vorige</button>
+                <span id="flashcard-counter">1 / 4</span>
+                <button id="next-flashcard">Volgende</button>
+            </div>
+
+            <!-- Flashcard 1: AI Generated Art -->
+            <div class="flashcard-item active" data-flashcard-id="1">
+                <h3>Create.4: AI-gegenereerde Kunst</h3>
+                <p class="context">Het doel van deze discussie is dat studenten reflecteren op hoe AI-gegenereerde kunst definities van <span class="tooltip-container">auteurschap<span class="tooltip-text">Auteurschap verwijst naar de status van het zijn van de maker van een origineel werk.</span></span> en <span class="tooltip-container">creativiteit<span class="tooltip-text">Creativiteit is het gebruik van verbeelding of originele ideeën om iets te creëren.</span></span> uitdaagt. Ze moeten nadenken over attributie en eigendom wanneer een machine een output genereert op basis van reeds bestaande artistieke werken van mensen, andere AI-systemen of een gebruikersprompt. Ze kunnen dit verbinden met de vraag of de AI zelf, de programmeur of de gebruiker moet worden gezien als de "schepper", en of wedstrijden openbaarmaking of afzonderlijk AI-ondersteund werk van menselijk werk moeten vereisen. [17]</p>
+                <div class="guiding-questions">
+                    <h4>Geval: Théâtre D'opéra Spatial wint wedstrijd</h4>
+                    <p>In 2022 won Théâtre D'opéra Spatial, een AI-gegenereerd kunstwerk, de eerste prijs in de digitale kunstwedstrijd van de Colorado State Fair, vóór een menselijke kunstenaar. De overwinning ontketende een debat over wat als "echte kunst" telt. [20]</p>
+                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/ai-art-icon.png" alt="AI Art" class="flashcard-image" style="max-width: 150px;">
+                    <p class="big-question">Moet AI-gegenereerde kunst als "echte kunst" worden beschouwd?</p>
+                    <div class="decision-slider" data-flashcard-type="real-notreal">
+                        <span class="label left">Echt</span>
+                        <div class="line"></div>
+                        <span class="label right">Niet Echt</span>
+                    </div>
+                    <div class="decision-slider-options">
+                        <button class="select-option" data-value="real">Echt</button>
+                        <button class="select-option" data-value="not-real">Niet Echt</button>
+                    </div>
+                    <div class="guiding-questions-detail" style="display: none; margin-top: 20px;">
+                        <h4>Begeleidende Vragen:</h4>
+                        <ul class="real-questions">
+                            <li>Is het eerlijk om AI-gegenereerde kunst te vergelijken met door mensen gemaakte werken in wedstrijden? Moeten ze volgens dezelfde criteria worden beoordeeld? [19]</li>
+                            <li>Als een AI een afbeelding creëert die u emotioneel raakt, betekent dat dan dat het als "echte" kunst moet tellen, ook al heeft een mens het niet met de hand gemaakt? [19]</li>
+                            <li>Wie moet de credits krijgen voor AI-gegenereerde kunst? De AI, de AI-programmeur, of de persoon die de prompt geeft? [20]</li>
+                            <li>Als iemand een schilderij op canvas maakt, moet diegene dan alle credits krijgen, of moet de persoon die de verf en het canvas heeft gemaakt ook worden gecrediteerd? [21]</li>
+                            <li>Wat betekent het om iets te "creëren" wanneer AI betrokken is? Is het typen van een prompt om de kunst te maken voldoende om een kunstenaar te worden genoemd? [21]</li>
+                        </ul>
+                        <ul class="not-real-questions" style="display: none;">
+                            <li>Kan een kunstenaar nog steeds creatief zijn als hij een AI-tool gebruikt, net zoals hij een penseel of Photoshop zou gebruiken? [19]</li>
+                            <li>Hoe kunnen AI-tools mensen helpen creatief te zijn of nieuwe ideeën te uiten, vooral als ze niet de kans hebben gehad om kunstlessen te volgen? [19]</li>
+                            <li>Is het mogelijk voor alle drie (de AI, de AI-programmeur en de persoon die de prompt geeft) om de credits te delen? Hoe zou een eerlijk systeem daarvoor eruit zien? [21]</li>
+                            <li>Als de AI het kunstwerk genereert, maar de persoon beslist wat er gevraagd moet worden, wie doet dan het meeste creatieve denkwerk? [21]</li>
+                        </ul>
+                        <div class="teacher-tip-flashcard">
+                            <strong>Docententip!</strong>
+                            <p>Dit is een goede gelegenheid om het belang van <span class="tooltip-container">Intellectueel Eigendom<span class="tooltip-text">Intellectueel Eigendom is het juridische concept dat uitvindingen, geschriften, muziek, kunst en symbolen beschermt, door de maker het exclusieve recht te geven om hun werk te gebruiken, te delen of te verkopen.</span></span> en <span class="tooltip-container">Auteursrecht<span class="tooltip-text">Auteursrecht is het wettelijke recht dat aan de maker van een origineel werk wordt verleend om het te gebruiken, te verspreiden en te wijzigen.</span></span> te benadrukken. U kunt studenten vragen zich een lijn voor te stellen die de reeks meningen vertegenwoordigt en erlangs te gaan staan op basis van hun positie in het debat. Moedig studenten aan om de reden achter hun standpunt te uiten! [19]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard 2: Accuracy of AI Outputs -->
+            <div class="flashcard-item" data-flashcard-id="2">
+                <h3>Engage.2: Nauwkeurigheid van AI-outputs</h3>
+                <p class="context">Het doel van deze discussie is om studenten te helpen begrijpen dat AI-gegenereerde outputs fouten kunnen bevatten en dat het gebruik ervan zonder kritische evaluatie kan leiden tot schadelijke gevolgen. Hoewel AI studenten kan ondersteunen bij het efficiënter en zinvoller uitvoeren van taken, is het essentieel dat ze leren om AI-outputs te bevragen. Door dit proces kunnen studenten beginnen na te denken over de kinds van taken die AI goed uitvoert en waar het tekortschiet. [22]</p>
+                <div class="guiding-questions">
+                    <h4>Geval: Advocaten beboet voor het citeren van nepzaken</h4>
+                    <p>In februari 2025 werden drie advocaten beboet met $5.000 door een federale rechter voor het citeren van nepzaken gegenereerd door AI. Een advocaat gaf toe een AI-programma te hebben gebruikt dat de zaken verzon en verontschuldigde zich voor de fout. [23]</p>
+                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/lawyer-ai-icon.png" alt="Lawyer AI" class="flashcard-image" style="max-width: 150px;">
+                    <p class="big-question">Wie moet verantwoordelijk worden gehouden?</p>
+                    <div class="decision-slider-options">
+                        <button class="select-option" data-value="the-ai">De AI</button>
+                        <button class="select-option" data-value="lawyer">De Advocaat</button>
+                        <button class="select-option" data-value="both">Beide</button>
+                    </div>
+                    <div class="guiding-questions-detail" style="display: none; margin-top: 20px;">
+                        <h4>Begeleidende Vragen:</h4>
+                        <ul class="decision-specific-questions">
+                            <li>Denkt u dat AI "verantwoordelijk" kan zijn als het niet denkt of keuzes maakt zoals een persoon? Waarom wel of waarom niet? [24]</li>
+                            <li>Als u AI gebruikt voor iets belangrijks, zoals een schoolproject of een beslissing in het echte leven, hoeveel moet u dan dubbel controleren wat het zegt? [24]</li>
+                            <li>Wat zou er mis kunnen gaan als mensen te veel vertrouwen op AI in serieuze banen zoals recht, geneeskunde of onderwijs? [24]</li>
+                            <li>Wat zou er gedaan kunnen worden om te voorkomen dat dit soort dingen opnieuw gebeuren? Welke regels of verbeteringen in AI-tools zou u suggereren? [24]</li>
+                        </ul>
+                        <div class="teacher-tip-flashcard">
+                            <strong>Docententip!</strong>
+                            <p>Moedig studenten aan om na te denken over het verantwoord gebruik van AI versus het plaatsen van schuld. [24]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard 3: Transparency in Training Data -->
+            <div class="flashcard-item" data-flashcard-id="3">
+                <h3>Manage.5: Transparantie in trainingsdata</h3>
+                <p class="context">Het doel van deze discussie is het introduceren van het concept van <span class="tooltip-container">transparantie<span class="tooltip-text">Transparantie is de praktijk van het openlijk openbaar maken hoe iets werkt, vooral met betrekking tot besluitvorming, gegevensgebruik of AI-processen.</span></span> door studenten te helpen de bronnen van informatie te begrijpen waarop AI-modellen worden getraind, de stappen die bedrijven al dan niet nemen om transparant te zijn over deze bronnen, en hoe dit makers beïnvloedt. Door dit onderwerp te verkennen, worden studenten aangemoedigd om na te denken waarom sommige makers zich zorgen zouden maken over een gebrek aan transparantie, vooral wanneer het onmogelijk wordt om te weten of hun werk zonder toestemming of de juiste <span class="tooltip-container">attributie<span class="tooltip-text">Attributie verwijst naar de handeling van het geven van credits aan de oorspronkelijke maker van een werk, vooral in de context van het gebruiken of refereren aan hun materiaal.</span></span> is gebruikt. [25]</p>
+                <div class="guiding-questions">
+                    <h4>Geval: AI-boeken op Amazon</h4>
+                    <p>In 2023 verschenen door AI gemaakte boeken te koop op Amazon onder valse auteursnamen. Sommige mensen vreesden dat de AI ideeën van echte auteurs zonder toestemming had gekopieerd. Anderen zeiden dat bedrijven niet precies hoeven te delen waarop de AI is getraind. [26]</p>
+                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/ai-books-icon.png" alt="AI Books" class="flashcard-image" style="max-width: 150px;">
+                    <p class="big-question">Denkt u dat het eerlijk is dat AI boeken creëert met ideeën van echte auteurs?</p>
+                    <div class="decision-slider" data-flashcard-type="unfair-fair">
+                        <span class="label left">Oneerlijk</span>
+                        <div class="line"></div>
+                        <span class="label right">Eerlijk</span>
+                    </div>
+                    <div class="decision-slider-options">
+                        <button class="select-option" data-value="unfair">Oneerlijk</button>
+                        <button class="select-option" data-value="fair">Eerlijk</button>
+                    </div>
+                    <div class="guiding-questions-detail" style="display: none; margin-top: 20px;">
+                        <h4>Begeleidende Vragen:</h4>
+                        <ul class="unfair-questions">
+                            <li>Hoe zou u zich voelen als AI uw werk zonder uw medeweten zou gebruiken? [27]</li>
+                            <li>Als AI boeken schrijft met iemands ideeën, hoe moet die persoon dan credits krijgen? [27]</li>
+                        </ul>
+                        <ul class="fair-questions" style="display: none;">
+                            <li>Kan AI geïnspireerd worden door het werk van andere mensen, vergelijkbaar met mensen? [27]</li>
+                            <li>Als AI iets nieuws en anders creëert, is het dan echt het werk van de auteur kopiëren? [27]</li>
+                        </ul>
+                        <div class="teacher-tip-flashcard">
+                            <strong>Docententip!</strong>
+                            <p>Dit is een goede gelegenheid om de woorden "transparantie" en "attributie" te versterken. [27]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flashcard 4: Bias in Training Data -->
+            <div class="flashcard-item" data-flashcard-id="4">
+                <h3>Design.3: Vooroordeel in trainingsdata</h3>
+                <p class="context">Het doel van deze discussie is om studenten te helpen begrijpen dat AI-systemen meer fouten kunnen maken voor bepaalde groepen mensen als de trainingsdata niet voldoende variatie bevatten, zoals verschillende huidtinten of lichtomstandigheden. In dit geval maakten de gezichtsherkenningssystemen meer fouten voor mensen met een donkere huid, omdat ze waarschijnlijk getraind waren op meer afbeeldingen van mensen met een lichtere huid. Dit is een voorbeeld van <span class="tooltip-container">vooroordeel<span class="tooltip-text">Vooroordeel in AI verwijst naar systematische en herhaalbare fouten in een computersysteem die onbillijke resultaten produceren, zoals het discrimineren van bepaalde groepen.</span></span> in de trainingsdata, waarbij de AI leert van een onevenwichtige of onvolledige reeks voorbeelden. [28]</p>
+                <div class="guiding-questions">
+                    <h4>Geval 1: Gezichtsherkenningssystemen</h4>
+                    <p>Joy Buolamwini, een wetenschapper, testte drie gezichtsherkenningssystemen, gemaakt door drie verschillende bedrijven, met behulp van 1270 foto's om te zien hoe goed ze konden vertellen of iemand een man of een vrouw was. De resultaten toonden aan dat de systemen meer fouten maakten voor mensen met een donkere huid. [31]</p>
+                    <img src="https://raw.githubusercontent.com/google/gemini-pro/main/img/face-rec-icon.png" alt="Face Recognition" class="flashcard-image" style="max-width: 150px;">
+                    <p class="big-question">Kunnen we AI-systemen vertrouwen om accurate medische diagnoses te stellen?</p>
+                    <div class="decision-slider" data-flashcard-type="yes-no">
+                        <span class="label left">Ja</span>
+                        <div class="line"></div>
+                        <span class="label right">Nee</span>
+                    </div>
+                    <div class="decision-slider-options">
+                        <button class="select-option" data-value="yes">Ja</button>
+                        <button class="select-option" data-value="no">Nee</button>
+                    </div>
+
+                    <div class="guiding-questions-detail" style="display: none; margin-top: 20px;">
+                        <h4>Begeleidende Vragen:</h4>
+                        <ul class="yes-questions">
+                            <li>Wat zou er gebeuren als mensen afhankelijk zouden zijn van AI voor hun eigen medische diagnose? [30]</li>
+                            <li>Wat zou er gebeuren als de situatie van een patiënt anders is dan de voorbeelden waarvan de AI heeft geleerd? [30]</li>
+                            <li>Waarom zou een AI-systeem betere diagnoses maken voor sommige medische problemen dan voor andere? [30]</li>
+                        </ul>
+                        <ul class="no-questions" style="display: none;">
+                            <li>Wie moet verantwoordelijk zijn als een AI een verkeerde medische diagnose geeft: de dokter, het AI-bedrijf, of beide? [30]</li>
+                            <li>Wat zou er kunnen gebeuren als een AI-systeem wordt getraind op medische afbeeldingen of gegevens die geen brede verscheidenheid aan patiënten laten zien? [30]</li>
+                        </ul>
+                        <div class="teacher-tip-flashcard">
+                            <strong>Docententip!</strong>
+                            <p>Gebruik de eerste prompt om het concept van <span class="tooltip-container">vooroordeel in trainingsdata<span class="tooltip-text">Vooroordeel in trainingsdata ontstaat wanneer de data die gebruikt worden om een AI-model te trainen, bepaalde groepen of kenmerken oververtegenwoordigen of ondervertegenwoordigen, wat leidt tot bevooroordeelde resultaten.</span></span> te introduceren bij uw studenten en stimuleer een rijke discussie met de praktijkgerichte situatie. [30]</p>
+                        </div>
+
+                        <h4>Geval 2: Vul de lege plekken in over discriminatie door AI-systemen</h4>
+                        <p style="font-size: 1.1em; margin-top: 20px;">Het is niet oké als AI-systemen mensen verschillend behandelen op basis van <span class="fill-in-the-blank tooltip-container" data-correct-answer="ras, geslacht, leeftijd, etniciteit" data-prompt-id="blank1">_______<span class="tooltip-text">Vul hier in: ras, geslacht, leeftijd, etniciteit (voorbeelden)</span></span>. Daarom moeten bedrijven <span class="fill-in-the-blank tooltip-container" data-correct-answer="hun data controleren, transparanter zijn, eerlijke algoritmes ontwerpen" data-prompt-id="blank2">_______<span class="tooltip-text">Vul hier in: hun data controleren, transparanter zijn, eerlijke algoritmes ontwerpen (voorbeelden)</span></span>. [31]</p>
+                        <button onclick="checkBlanks()" style="background-color: #28B463; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;">Controleer antwoorden</button>
+                        <div id="blank-feedback" style="margin-top: 10px; font-weight: bold;"></div>
+
+                        <h4>Aanvullende begeleidende vragen voor Geval 2:</h4>
+                        <ul>
+                            <li>Hoe zou u zich voelen als AI uw gezicht verkeerd herkende? [32]</li>
+                            <li>Moeten we van AI verwachten dat het "nooit" fouten maakt, of moeten we ons richten op wie het meest wordt getroffen wanneer het dat wel doet? [32]</li>
+                            <li>Zijn sommige fouten ernstiger dan andere? Waarom zou een verkeerde identificatie meer van belang zijn in sommige omgevingen (bijv. politie, werving)? [32]</li>
+                            <li>Hoe kunnen we bedrijven verantwoordelijk houden wanneer hun AI-systemen schade veroorzaken, zelfs onbedoeld? [32]</li>
+                            <li>Welke soorten schade zijn wij het meest verantwoordelijk voor het voorkomen bij het ontwerpen van AI? [32]</li>
+                        </ul>
+                        <div class="teacher-tip-flashcard">
+                            <strong>Docententip!</strong>
+                            <p>U kunt meerdere kopieën van de verklaring maken en elke student zijn individuele reactie laten opschrijven, waardoor een klaslokaalhoek ontstaat. [32]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ai-assistant">
+            <h2>AI Assistent</h2>
+            <div class="chat-window" id="chat-window">
+                <div class="chat-message ai">Hallo! Ik ben uw AI Assistent. Ik kan vragen beantwoorden over de Ethiek van AI Flashcards. Stel gerust uw vraag!</div>
+            </div>
+            <div class="ai-input-area">
+                <input type="text" id="user-input" placeholder="Stel hier uw vraag..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">Verstuur</button>
+            </div>
+            <div class="predefined-questions">
+                <button onclick="selectPredefinedQuestion('Wat zijn de kernbegrippen van ethiek in AI?')">Wat zijn de kernbegrippen van ethiek in AI?</button>
+                <button onclick="selectPredefinedQuestion('Wat is het verschil tussen auteursrecht en attributie?')">Wat is het verschil tussen auteursrecht en attributie?</button>
+                <button onclick="selectPredefinedQuestion('Hoe kan AI-gegenereerde kunst ethische vragen oproepen?')">Hoe kan AI-gegenereerde kunst ethische vragen oproepen?</button>
+                <button onclick="selectPredefinedQuestion('Waarom is transparantie in trainingsdata belangrijk?')">Waarom is transparantie in trainingsdata belangrijk?</button>
+                <button onclick="selectPredefinedQuestion('Geef een voorbeeld van vooroordeel in AI-systemen.')">Geef een voorbeeld van vooroordeel in AI-systemen.</button>
+            </div>
+        </section>
+
+        <footer style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #777; font-size: 0.9em;">
+            <p>Referentie: OECD (2025). Empowering learners for the age of AI: An AI literacy framework for primary and secondary education (Review draft). OECD. Paris. https://ailiteracyframework.org</p>
+        </footer>
+    </div>
+
+    <script>
+        // Full text content for AI Assistant context
+        const fullTextContext = `
+            Voor Grades 9-12. Bijgewerkt op 1 september 2025.
+            AILit Framework: Ethiek van AI Discussie Flashcards voor in de Klas.
+            De Ethiek van AI Discussie Flashcards maken gebruik van praktijkgerichte situaties om studenten aan te moedigen na te denken over en hun standpunten te bespreken over het verantwoord gebruik van AI.
+            Elke flashcard is opgebouwd uit:
+            • Een inleidende vraag en/of een praktijkgerichte situatie.
+            • Een grote vraag om diverse ideeën en discussie te genereren.
+            Begeleidende vragen zijn opgenomen op een extra flashcard om:
+            • Studenten te helpen reflecteren en hun gedachten te verbinden.
+            • Studenten aan te moedigen de diverse kanten van elke situatie te begrijpen.
+            Referentie: OECD (2025). Empowering learners for the age of AI: An AI literacy framework for primary and secondary education (Review draft). OECD. Paris. https://ailiteracyframework.org
+
+            Gebruiksaanwijzing:
+            • Introduceer de sleutelbegrippen van de slides 5-15 voordat u discussies met studenten start. Elk sleutelbegrip heeft een versie voor 'Docenteninformatie' en 'Studentenmateriaal'.
+            • De discussieflashcards beginnen op slide 17.
+            • De flashcards zijn aanpasbaar en afdrukbaar. Maak gerust een kopie en pas deze aan uw context aan.
+            • Let op de iconen in de rechterbovenhoek van elke kaart: (Docenteninformatie icoon) Docenteninformatie, (Studentenmateriaal icoon) Studentenmateriaal.
+            Of u deze flashcards nu gebruikt zoals ze zijn of aanpast, citeer alstublieft ons werk! We zouden graag foto's of video's ervan in actie zien – deel ze gerust via anchal.sayal@code.org.
+
+            Ethiek in het AILit Framework:
+            Het AILit Framework moedigt leerlingen aan om kritisch te onderzoeken hoe AI hun leven en toekomst beïnvloedt, waarbij de nadruk ligt op ethische overwegingen zoals waarden, context en verantwoordelijkheid die centraal staan in het begrijpen en gebruiken van AI. Het framework begeleidt studenten om na te denken over wie profiteert of schade ondervindt van AI, wiens perspectieven zijn opgenomen of uitgesloten, en hoe AI autonomie en toegang tot informatie beïnvloedt. Ethische reflectie is een kerncompetentie in het framework, waardoor leerlingen kunnen vragen wat AI niet alleen kan doen, maar ook wat het zou moeten doen en wie het dient. Het framework belicht ook de milieukosten van AI, wat aanleiding geeft tot een bredere examinatie van de relatie met de fysieke wereld. Refer naar Pagina 12 van het AILit Framework om te lezen over hoe het thema “AI's effecten op individuen, de samenleving en het milieu” onze benadering van ethiek informeert.
+
+            Competenties in Actie:
+            De flashcards richten zich op vier van de competenties uit het framework:
+            Create.4: Analyseer hoe AI de authenticiteit van inhoud en intellectueel eigendom kan waarborgen of schenden.
+            Engage.2: Evalueer of AI-outputs moeten worden geaccepteerd, herzien of afgewezen.
+            Manage.5: Ontwikkel en communiceer richtlijnen voor het gebruik van AI-systemen die aansluiten bij menselijke waarden, eerlijkheid bevorderen en transparantie prioriteren.
+            Design.3: Verzamel en beheer gegevens die kunnen worden gebruikt om een AI-model te trainen, rekening houdend met relevantie, representatie en potentiële impact.
+
+            Sleutelbegrippen:
+
+            Ethiek:
+            Docentenversie: Ethiek is de tak van de filosofie die zich bezighoudt met wat moreel juist en verkeerd is, en hoe beslissingen mensen en de samenleving beïnvloeden. Docententip: Vraag na het definiëren van ethiek aan studenten na te denken over hoe het gebruiken van het werk van iemand anders zonder toestemming als een ethisch probleem kan worden beschouwd, zelfs als het niet illegaal is. Ga nog niet in op voorbeelden; merk op dat ethiek vaak gaat over hoe mensen worden behandeld, niet alleen over welke regels er bestaan.
+            Studentenversie: Ethiek gaat over uitzoeken wat goed en fout is, en hoe onze keuzes andere mensen en de wereld om ons heen beïnvloeden.
+
+            Intellectueel Eigendom:
+            Docentenversie: Intellectueel Eigendom is het juridische concept dat uitvindingen, geschriften, muziek, kunst en symbolen beschermt, door de maker het exclusieve recht te geven om hun werk te gebruiken, te delen of te verkopen. Docententip: Nodig studenten uit om voorbeelden uit hun eigen leven te bedenken, zoals een lied dat ze schreven, een video die ze maakten of een ontwerp dat ze voor een project creëerden. Leid vervolgens een korte discussie over waarom het belangrijk kan zijn om die creaties te beschermen, en wat er zou kunnen gebeuren als iemand anders hun werk zonder toestemming zou gebruiken. U kunt de discussie overslaan als er niet genoeg tijd is!
+            Studentenversie: Intellectueel Eigendom betekent regels die dingen die mensen creëren – zoals uitvindingen, verhalen, muziek, kunst of logo's – beschermen. Deze regels geven de maker het speciale recht om te beslissen hoe hun werk wordt gebruikt, gedeeld of verkocht.
+
+            Auteursrecht:
+            Docentenversie: Auteursrecht is het wettelijke recht dat aan de maker van een origineel werk wordt verleend om het te gebruiken, te verspreiden en te wijzigen. Docententip: Laat studenten weten dat dit een juridisch concept is, niet alleen over het geven van credits – het gaat over wie het recht heeft om te beslissen hoe een werk wordt gebruikt. U vindt het misschien nuttig om studenten te vertellen dat als zij iets creëren, zij beslissen of anderen het mogen kopiëren of er winst uit mogen halen.
+            Studentenversie: Auteursrecht is een wet die de persoon die iets heeft gemaakt, zoals een lied, verhaal of video, het recht geeft om te bepalen hoe het wordt gebruikt, gedeeld of veranderd.
+
+            Attributie:
+            Docentenversie: Attributie verwijst naar de handeling van het geven van credits aan de oorspronkelijke maker van een werk, vooral in de context van het gebruiken of refereren aan hun materiaal. Docententip: Definieer attributie en benadruk dat het de maker geen controle geeft, maar eerder hun bijdrage erkent. Het wordt vaak gezien als een basisvorm van respect in creatief werk.
+            Studentenversie: Attributie betekent het geven van credits aan de persoon die iets oorspronkelijk heeft gemaakt, zoals een afbeelding, video of idee, wanneer je hun werk gebruikt of bespreekt.
+
+            Transparantie:
+            Docentenversie: Transparantie is de praktijk van het openlijk openbaar maken hoe iets werkt, vooral met betrekking tot besluitvorming, gegevensgebruik of AI-processen. Docententip: U kunt studenten vertellen dat transparantie belangrijk is wanneer mensen niet weten of hun werk wordt gebruikt, of hoe AI-systemen beslissingen nemen. Dit helpt studenten te begrijpen waarom een gebrek aan transparantie kan leiden tot ethische problemen.
+            Studentenversie: Transparantie betekent open en eerlijk zijn over hoe iets werkt, zoals hoe beslissingen worden genomen of hoe gegevens en AI worden gebruikt.
+
+            Discussie Flashcards:
+
+            Flashcard 1: Create.4: AI-gegenereerde Kunst
+            Doel: Reflecteren op hoe AI-gegenereerde kunst definities van auteurschap en creativiteit uitdaagt. Overweeg attributie en eigendom wanneer een machine een output genereert op basis van reeds bestaande artistieke werken van mensen, andere AI-systemen of een gebruikersprompt. Verbind dit met de vraag of de AI zelf, de programmeur of de gebruiker moet worden gezien als de "schepper", en of wedstrijden openbaarmaking of afzonderlijk AI-ondersteund werk van menselijk werk moeten vereisen.
+            Geval: In 2022 won Théâtre D'opéra Spatial, een AI-gegenereerd kunstwerk, de eerste prijs in de digitale kunstwedstrijd van de Colorado State Fair, vóór een menselijke kunstenaar. De overwinning ontketende een debat over wat als "echte kunst" telt.
+            Grote vraag: Moet AI-gegenereerde kunst als "echte kunst" worden beschouwd?
+            Begeleidende Vragen ("Echt"):
+            - Is het eerlijk om AI-gegenereerde kunst te vergelijken met door mensen gemaakte werken in wedstrijden? Moeten ze volgens dezelfde criteria worden beoordeeld?
+            - Als een AI een afbeelding creëert die u emotioneel raakt, betekent dat dan dat het als "echte" kunst moet tellen, ook al heeft een mens het niet met de hand gemaakt?
+            - Wie moet de credits krijgen voor AI-gegenereerde kunst? De AI, de AI-programmeur, of de persoon die de prompt geeft?
+            - Als iemand een schilderij op canvas maakt, moet diegene dan alle credits krijgen, of moet de persoon die de verf en het canvas heeft gemaakt ook worden gecrediteerd?
+            - Wat betekent het om iets te "creëren" wanneer AI betrokken is? Is het typen van een prompt om de kunst te maken voldoende om een kunstenaar te worden genoemd?
+            Begeleidende Vragen ("Niet Echt"):
+            - Kan een kunstenaar nog steeds creatief zijn als hij een AI-tool gebruikt, net zoals hij een penseel of Photoshop zou gebruiken?
+            - Hoe kunnen AI-tools mensen helpen creatief te zijn of nieuwe ideeën te uiten, vooral als ze niet de kans hebben gehad om kunstlessen te volgen?
+            - Is het mogelijk voor alle drie (de AI, de AI-programmeur en de persoon die de prompt geeft) om de credits te delen? Hoe zou een eerlijk systeem daarvoor eruit zien?
+            - Als de AI het kunstwerk genereert, maar de persoon beslist wat er gevraagd moet worden, wie doet dan het meeste creatieve denkwerk?
+            Docententip: Dit is een goede gelegenheid om het belang van Intellectueel Eigendom en Auteursrecht te benadrukken. U kunt studenten vragen zich een lijn voor te stellen die de reeks meningen vertegenwoordigt en erlangs te gaan staan op basis van hun positie in het debat. Moedig studenten aan om de reden achter hun standpunt te uiten!
+
+            Flashcard 2: Engage.2: Nauwkeurigheid van AI-outputs
+            Doel: Helpen studenten begrijpen dat AI-gegenereerde outputs fouten kunnen bevatten en dat het gebruik ervan zonder kritische evaluatie kan leiden tot schadelijke gevolgen. Studenten leren AI-outputs te bevragen. Reflecteren op de soorten taken die AI goed uitvoert en waar het tekortschiet.
+            Geval: In februari 2025 werden drie advocaten beboet met $5.000 door een federale rechter voor het citeren van nepzaken gegenereerd door AI. Een advocaat gaf toe een AI-programma te hebben gebruikt dat de zaken verzon en verontschuldigde zich voor de fout.
+            Grote vraag: Wie moet verantwoordelijk worden gehouden?
+            Begeleidende Vragen:
+            - Denkt u dat AI "verantwoordelijk" kan zijn als het niet denkt of keuzes maakt zoals een persoon? Waarom wel of waarom niet?
+            - Als u AI gebruikt voor iets belangrijks, zoals een schoolproject of een beslissing in het echte leven, hoeveel moet u dan dubbel controleren wat het zegt?
+            - Wat zou er mis kunnen gaan als mensen te veel vertrouwen op AI in serieuze banen zoals recht, geneeskunde of onderwijs?
+            - Wat zou er gedaan kunnen worden om te voorkomen dat dit soort dingen opnieuw gebeuren? Welke regels of verbeteringen in AI-tools zou u suggereren?
+            Docententip: Moedig studenten aan om na te denken over het verantwoord gebruik van AI versus het plaatsen van schuld.
+
+            Flashcard 3: Manage.5: Transparantie in trainingsdata
+            Doel: Het introduceren van het concept van transparantie door studenten te helpen de bronnen van informatie te begrijpen waarop AI-modellen worden getraind, de stappen die bedrijven al dan niet nemen om transparant te zijn over deze bronnen, en hoe dit makers beïnvloedt. Verkennen waarom makers zich zorgen zouden maken over een gebrek aan transparantie, vooral wanneer het onmogelijk wordt om te weten of hun werk zonder toestemming of de juiste attributie is gebruikt.
+            Geval: In 2023 verschenen door AI gemaakte boeken te koop op Amazon onder valse auteursnamen. Sommige mensen vreesden dat de AI ideeën van echte auteurs zonder toestemming had gekopieerd. Anderen zeiden dat bedrijven niet precies hoeven te delen waarop de AI is getraind.
+            Grote vraag: Denkt u dat het eerlijk is dat AI boeken creëert met ideeën van echte auteurs?
+            Begeleidende Vragen ("Oneerlijk"):
+            - Hoe zou u zich voelen als AI uw werk zonder uw medeweten zou gebruiken?
+            - Als AI boeken schrijft met iemands ideeën, hoe moet die persoon dan credits krijgen?
+            Begeleidende Vragen ("Eerlijk"):
+            - Kan AI geïnspireerd worden door het werk van andere mensen, vergelijkbaar met mensen?
+            - Als AI iets nieuws en anders creëert, is het dan echt het werk van de auteur kopiëren?
+            Docententip: Dit is een goede gelegenheid om de woorden "transparantie" en "attributie" te versterken.
+
+            Flashcard 4: Design.3: Vooroordeel in trainingsdata
+            Doel: Helpen studenten begrijpen dat AI-systemen meer fouten kunnen maken voor bepaalde groepen mensen als de trainingsdata niet voldoende variatie bevatten (bias). Uitleg dat dit een voorbeeld is van bias in trainingsdata.
+            Geval 1: Joy Buolamwini, een wetenschapper, testte drie gezichtsherkenningssystemen, gemaakt door drie verschillende bedrijven, met behulp van 1270 foto's om te zien hoe goed ze konden vertellen of iemand een man of een vrouw was. De resultaten toonden aan dat de systemen meer fouten maakten voor mensen met een donkere huid.
+            Grote vraag: Kunnen we AI-systemen vertrouwen om accurate medische diagnoses te stellen?
+            Begeleidende Vragen ("Ja"):
+            - Wat zou er gebeuren als mensen afhankelijk zouden zijn van AI voor hun eigen medische diagnose?
+            - Wat zou er gebeuren als de situatie van een patiënt anders is dan de voorbeelden waarvan de AI heeft geleerd?
+            - Waarom zou een AI-systeem betere diagnoses maken voor sommige medische problemen dan voor andere?
+            Begeleidende Vragen ("Nee"):
+            - Wie moet verantwoordelijk zijn als een AI een verkeerde medische diagnose geeft: de dokter, het AI-bedrijf, of beide?
+            - Wat zou er kunnen gebeuren als een AI-systeem wordt getraind op medische afbeeldingen of gegevens die geen brede verscheidenheid aan patiënten laten zien?
+            Docententip: Gebruik de eerste prompt om het concept van vooroordeel in trainingsdata te introduceren bij uw studenten en stimuleer een rijke discussie met de praktijkgerichte situatie.
+            Geval 2 (Invullen): Het is niet oké als AI-systemen mensen verschillend behandelen op basis van _______. Daarom moeten bedrijven _______.
+            Correcte antwoorden voor invulvragen: ras, geslacht, leeftijd, etniciteit (voor de eerste); hun data controleren, transparanter zijn, eerlijke algoritmes ontwerpen (voor de tweede).
+            Aanvullende begeleidende vragen voor Geval 2:
+            - Hoe zou u zich voelen als AI uw gezicht verkeerd herkende?
+            - Moeten we van AI verwachten dat het "nooit" fouten maakt, of moeten we ons richten op wie het meest wordt getroffen wanneer het dat wel doet?
+            - Zijn sommige fouten ernstiger dan andere? Waarom zou een verkeerde identificatie meer van belang zijn in sommige omgevingen (bijv. politie, werving)?
+            - Hoe kunnen we bedrijven verantwoordelijk houden wanneer hun AI-systemen schade veroorzaken, zelfs onbedoeld?
+            - Welke soorten schade zijn wij het meest verantwoordelijk voor het voorkomen bij het ontwerpen van AI?
+            Docententip: U kunt meerdere kopieën van de verklaring maken en elke student zijn individuele reactie laten opschrijven, waardoor een klaslokaalhoek ontstaat.
+        `;
+
+        // Key Terms functionality
+        document.querySelectorAll('.key-term-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Deactivate all buttons and hide all cards
+                document.querySelectorAll('.key-term-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.key-term-card').forEach(card => card.classList.remove('active'));
+
+                // Activate clicked button
+                this.classList.add('active');
+
+                // Show corresponding card
+                const term = this.dataset.term;
+                document.getElementById(`${term}-card`).classList.add('active');
+            });
+        });
+
+        document.querySelectorAll('.key-term-card .toggle-view-buttons button').forEach(button => {
+            button.addEventListener('click', function() {
+                const parentCard = this.closest('.key-term-card');
+                const view = this.dataset.view;
+
+                // Deactivate all view buttons in this card
+                parentCard.querySelectorAll('.toggle-view-buttons button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                // Hide all definitions and show the selected one
+                parentCard.querySelectorAll('.definition').forEach(def => def.classList.remove('active'));
+                parentCard.querySelector(`.definition.${view}-view`).classList.add('active');
+            });
+        });
+
+        // Flashcards Navigation functionality
+        let currentFlashcardIndex = 0;
+        const flashcards = document.querySelectorAll('.flashcard-item');
+        const prevButton = document.getElementById('prev-flashcard');
+        const nextButton = document.getElementById('next-flashcard');
+        const flashcardCounter = document.getElementById('flashcard-counter');
+
+        function showFlashcard(index) {
+            flashcards.forEach((card, i) => {
+                card.classList.remove('active');
+                if (i === index) {
+                    card.classList.add('active');
+                    // Reset decision slider and guiding questions when a new flashcard is shown
+                    const guidingQuestionsDetail = card.querySelector('.guiding-questions-detail');
+                    if (guidingQuestionsDetail) {
+                        guidingQuestionsDetail.style.display = 'none';
+                    }
+                    card.querySelectorAll('.decision-slider-options .select-option').forEach(btn => btn.classList.remove('selected'));
+                }
+            });
+            flashcardCounter.textContent = `${index + 1} / ${flashcards.length}`;
+            prevButton.disabled = index === 0;
+            nextButton.disabled = index === flashcards.length - 1;
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                showFlashcard(currentFlashcardIndex);
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentFlashcardIndex < flashcards.length - 1) {
+                currentFlashcardIndex++;
+                showFlashcard(currentFlashcardIndex);
+            }
+        });
+
+        // Initialize first flashcard
+        showFlashcard(currentFlashcardIndex);
+
+        // Flashcard specific interactions (decision sliders)
+        document.querySelectorAll('.flashcard-item .decision-slider-options .select-option').forEach(button => {
+            button.addEventListener('click', function() {
+                const parentCard = this.closest('.flashcard-item');
+                const type = parentCard.querySelector('.decision-slider')?.dataset.flashcardType; // Check if .decision-slider exists
+                const selectedValue = this.dataset.value;
+
+                // Remove 'selected' class from all options in this card
+                parentCard.querySelectorAll('.decision-slider-options .select-option').forEach(btn => btn.classList.remove('selected'));
+                // Add 'selected' class to the clicked option
+                this.classList.add('selected');
+
+                // Show guiding questions detail section
+                const guidingQuestionsDetail = parentCard.querySelector('.guiding-questions-detail');
+                if (guidingQuestionsDetail) {
+                    guidingQuestionsDetail.style.display = 'block';
+                }
+
+
+                // Hide all question lists and show the relevant one
+                parentCard.querySelectorAll('.guiding-questions-detail ul').forEach(ul => ul.style.display = 'none');
+                if (type === 'real-notreal') {
+                    if (selectedValue === 'real') {
+                        parentCard.querySelector('.real-questions').style.display = 'block';
+                    } else if (selectedValue === 'not-real') {
+                        parentCard.querySelector('.not-real-questions').style.display = 'block';
+                    }
+                } else if (type === 'unfair-fair') {
+                    if (selectedValue === 'unfair') {
+                        parentCard.querySelector('.unfair-questions').style.display = 'block';
+                    } else if (selectedValue === 'fair') {
+                        parentCard.querySelector('.fair-questions').style.display = 'block';
+                    }
+                } else if (type === 'yes-no') {
+                    if (selectedValue === 'yes') {
+                        parentCard.querySelector('.yes-questions').style.display = 'block';
+                    } else if (selectedValue === 'no') {
+                        parentCard.querySelector('.no-questions').style.display = 'block';
+                    }
+                } else { // For the "Who should be held accountable" card (Engage.2)
+                    // This card has only one list of guiding questions regardless of the choice.
+                    parentCard.querySelector('.decision-specific-questions').style.display = 'block';
+                }
+            });
+        });
+
+        // Functionality for fill-in-the-blanks (Flashcard 4, Geval 2)
+        function checkBlanks() {
+            const feedbackDiv = document.getElementById('blank-feedback');
+            const blank1Element = document.querySelector('.fill-in-the-blank[data-prompt-id="blank1"]');
+            const blank2Element = document.querySelector('.fill-in-the-blank[data-prompt-id="blank2"]');
+
+            // Correct answers are stored in data-correct-answer attribute
+            const correct1Options = blank1Element.dataset.correctAnswer.split(',').map(s => s.trim().toLowerCase());
+            const correct2Options = blank2Element.dataset.correctAnswer.split(',').map(s => s.trim().toLowerCase());
+
+            feedbackDiv.innerHTML = `
+                <p><strong>Mogelijke antwoorden voor de eerste lege plek:</strong> ${correct1Options.join(', ')}</p>
+                <p><strong>Mogelijke antwoorden voor de tweede lege plek:</strong> ${correct2Options.join(', ')}</p>
+                <p style="color: green;">Dit zijn voorbeelden van hoe je de invulvragen zou kunnen benaderen. De juiste antwoorden kunnen variëren, maar richten zich op het vermijden van discriminatie en de verantwoordelijkheid van bedrijven voor eerlijke AI.</p>
+            `;
+        }
+
+        // AI Assistant functionality
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (message === '') return;
+
+            // Display user message
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('chat-message', 'user');
+            userMessageDiv.textContent = message;
+            chatWindow.appendChild(userMessageDiv);
+            userInput.value = '';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            // Simulate AI response
+            const aiResponseDiv = document.createElement('div');
+            aiResponseDiv.classList.add('chat-message', 'ai');
+            aiResponseDiv.textContent = 'De AI Assistent denkt na...';
+            chatWindow.appendChild(aiResponseDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            const aiResponse = await getAiResponse(message);
+            aiResponseDiv.textContent = aiResponse;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function getAiResponse(query) {
+            query = query.toLowerCase();
+            let response = "Excuses, ik heb geen antwoord op die specifieke vraag in de verstrekte documenten. Kunt u een andere vraag stellen?";
+
+            if (query.includes("hallo") || query.includes("hoi") || query.includes("goedendag")) {
+                response = "Hallo! Ik ben uw AI Assistent. Ik kan vragen beantwoorden over de Ethiek van AI Flashcards. Stel gerust uw vraag!";
+            } else if (query.includes("ethiek in ai") || query.includes("wat is ethiek")) {
+                response = "Volgens het AILit Framework is ethiek de tak van de filosofie die zich bezighoudt met wat moreel juist en verkeerd is, en hoe beslissingen mensen en de samenleving beïnvloeden. In AI ligt de nadruk op ethische overwegingen zoals waarden, context en verantwoordelijkheid bij het begrijpen en gebruiken van AI. Het gaat over nadenken over wie profiteert of schade ondervindt van AI, wiens perspectieven zijn opgenomen of uitgesloten, en hoe AI autonomie en toegang tot informatie beïnvloedt.";
+            } else if (query.includes("intellectueel eigendom") && query.includes("auteursrecht")) {
+                response = "Intellectueel Eigendom is een breed juridisch concept dat uitvindingen, geschriften, muziek, kunst en symbolen beschermt, door de maker het exclusieve recht te geven om hun werk te gebruiken, te delen of te verkopen. Auteursrecht is een specifiek wettelijk recht dat aan de maker van een origineel werk wordt verleend om het te gebruiken, te verspreiden en te wijzigen. Kortom, auteursrecht is een vorm van intellectueel eigendom.";
+            } else if (query.includes("auteursrecht") && query.includes("attributie")) {
+                response = "Auteursrecht is het wettelijke recht om te bepalen hoe een origineel werk wordt gebruikt, gedeeld of gewijzigd. Attributie verwijst naar het geven van credits aan de oorspronkelijke maker van een werk wanneer u het gebruikt of ernaar verwijst. Attributie geeft de maker geen controle, maar erkent hun bijdrage, vaak als een vorm van respect. [10, 12]";
+            } else if (query.includes("ai-gegenereerde kunst") && (query.includes("ethische vragen") || query.includes("oproepen"))) {
+                response = "AI-gegenereerde kunst roept ethische vragen op over auteurschap en creativiteit. Het debat draait om wie als de 'schepper' moet worden gezien (de AI, de programmeur of de gebruiker) en hoe attributie en eigendom moeten worden vastgesteld, vooral wanneer de AI kunst produceert op basis van bestaande werken. Ook is de vraag of AI-kunst in wedstrijden op dezelfde manier moet worden beoordeeld als menselijke kunst. [17, 20]";
+            } else if (query.includes("transparantie") && query.includes("trainingsdata") && query.includes("belangrijk")) {
+                response = "Transparantie in trainingsdata is cruciaal omdat het studenten helpt de bronnen van informatie te begrijpen waarop AI-modellen zijn getraind. Zonder transparantie is het moeilijk te weten of werk van makers zonder toestemming of de juiste attributie is gebruikt, wat tot zorgen over eerlijkheid en ethiek kan leiden, zoals gezien in het geval van AI-gegenereerde boeken op Amazon. [25, 26]";
+            } else if (query.includes("vooroordeel in ai-systemen") || query.includes("voorbeeld van vooroordeel")) {
+                response = "Een prominent voorbeeld van vooroordeel in AI-systemen betreft gezichtsherkenningssystemen. Wetenschapper Joy Buolamwini testte drie systemen die meer fouten maakten bij mensen met een donkere huid dan bij mensen met een lichtere huid. Dit komt waarschijnlijk doordat de AI getraind was op een onevenwichtige of onvolledige set afbeeldingen, wat resulteert in 'bias in de trainingsdata'. [28, 31]";
+            } else if (query.includes("wie verantwoordelijk") && (query.includes("advocaten") || query.includes("nepzaken"))) {
+                 response = "In het geval van de advocaten die nepzaken citeerden, ligt de verantwoordelijkheid in de discussie tussen de AI zelf, de advocaat die het programma gebruikte, of beide. De flashcard moedigt aan om na te denken over 'verantwoord gebruik van AI versus het plaatsen van schuld'. De advocaat gaf toe de fout gemaakt te hebben, maar de vraag blijft of een AI als 'verantwoordelijk' kan worden beschouwd. [23, 24]";
+            } else if (query.includes("kernbegrippen") || query.includes("belangrijke termen")) {
+                response = "De kernbegrippen die in dit framework worden behandeld zijn: Ethiek, Intellectueel Eigendom, Auteursrecht, Attributie en Transparantie.";
+            } else if (fullTextContext.toLowerCase().includes(query)) {
+                // Generic response if query is found somewhere in the text but not in specific conditions
+                response = "Ik heb informatie gevonden die gerelateerd is aan uw vraag in de flashcards. Specifieke details zijn te vinden onder de betreffende sleutelbegrippen of discussieflashcards.";
+            }
+
+            return new Promise(resolve => setTimeout(() => resolve(response), 1000)); // Simulate AI processing time
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function selectPredefinedQuestion(question) {
+            userInput.value = question;
+            sendMessage();
+        }
+    </script>
+</body>
+</html>
