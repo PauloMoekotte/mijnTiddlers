@@ -82,63 +82,50 @@
             cursor: pointer;
             font-size: 1em;
             transition: background-color 0.3s ease;
+            position: relative; /* Needed for tooltip positioning */
+            white-space: nowrap; /* Prevent button text from wrapping */
         }
-        .key-term-button.active, .key-term-button:hover {
+        .key-term-button:hover {
             background-color: #E67E22;
         }
-        .key-term-card {
-            background-color: #fdfdfd;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            display: none; /* Hidden by default */
-            position: relative;
+        /* Tooltip specific to key term buttons */
+        .key-term-button .tooltip-text {
+            visibility: hidden;
+            width: 350px; /* Wider tooltip for detailed content */
+            background-color: #555;
+            color: #fff;
+            text-align: left; /* Align text left for better readability */
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%; /* Position above the button */
+            left: 50%;
+            margin-left: -175px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            white-space: normal; /* Allow text to wrap */
+            line-height: 1.4;
         }
-        .key-term-card.active {
-            display: block;
+        .key-term-button .tooltip-text strong {
+            color: #FFD700; /* Gold for emphasis in tooltip */
         }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+        .key-term-button .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
         }
-        .card-header h3 {
-            color: #D35400;
-            margin: 0;
-            font-size: 1.5em;
+        .key-term-button:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
-        .toggle-view-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        .toggle-view-buttons button {
-            background-color: #3498DB; /* Blue */
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .toggle-view-buttons button.active, .toggle-view-buttons button:hover {
-            background-color: #2980B9;
-        }
-        .definition {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
-        .teacher-tip {
-            background-color: #E8F8F5; /* Light green-blue */
-            border-left: 4px solid #1ABC9C; /* Green */
-            padding: 10px 15px;
-            margin-top: 15px;
-            border-radius: 4px;
-            font-style: italic;
-            font-size: 0.9em;
-        }
+
 
         /* Discussion Flashcards Styling */
         .discussion-flashcards {
@@ -364,15 +351,16 @@
             background-color: #8C999B;
         }
 
-        /* Tooltip Styling */
+        /* Tooltip Styling for generic inline tooltips */
         .tooltip-container {
             position: relative;
             display: inline-block;
             cursor: help;
+            border-bottom: 1px dotted #888; /* Visual cue for tooltip */
         }
-        .tooltip-text {
+        .tooltip-container .tooltip-text {
             visibility: hidden;
-            width: 300px; /* Make sure tooltips are wide enough */
+            width: 300px;
             background-color: #555;
             color: #fff;
             text-align: center;
@@ -382,13 +370,13 @@
             z-index: 10;
             bottom: 125%; /* Position above the text */
             left: 50%;
-            margin-left: -150px; /* Center the tooltip */
+            margin-left: -150px;
             opacity: 0;
             transition: opacity 0.3s;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             white-space: normal; /* Allow text to wrap */
         }
-        .tooltip-text::after {
+        .tooltip-container .tooltip-text::after {
             content: "";
             position: absolute;
             top: 100%;
@@ -479,8 +467,10 @@
                 padding: 8px 15px;
                 font-size: 0.9em;
             }
-            .key-term-card {
-                padding: 15px;
+            /* Adjust tooltip width for smaller screens */
+            .key-term-button .tooltip-text {
+                width: 250px;
+                margin-left: -125px;
             }
             .flashcard-nav button {
                 padding: 8px 15px;
@@ -492,7 +482,7 @@
             .ai-input-area input, .ai-input-area button {
                 width: 100%;
             }
-            .tooltip-text {
+            .tooltip-container .tooltip-text {
                 width: 200px;
                 margin-left: -100px;
             }
@@ -595,111 +585,46 @@
         <section class="key-terms">
             <h2 class="section-title">Sleutelbegrippen</h2>
             <div class="key-terms-container">
-                <button class="key-term-button" data-term="ethics">Ethiek</button>
-                <button class="key-term-button" data-term="intellectual-property">Intellectueel Eigendom</button>
-                <button class="key-term-button" data-term="copyright">Auteursrecht</button>
-                <button class="key-term-button" data-term="attribution">Attributie</button>
-                <button class="key-term-button" data-term="transparency">Transparantie</button>
-            </div>
-
-            <div id="ethics-card" class="key-term-card">
-                <div class="card-header">
-                    <h3>Ethiek</h3>
-                    <div class="toggle-view-buttons">
-                        <button data-view="teacher" class="active">Docent</button>
-                        <button data-view="student">Student</button>
-                    </div>
-                </div>
-                <div class="definition teacher-view active">
-                    <p>Ethiek is de tak van de filosofie die zich bezighoudt met wat moreel juist en verkeerd is, en hoe beslissingen mensen en de samenleving beïnvloeden.</p>
-                    <div class="teacher-tip">
-                        <strong>Docententip!</strong>
-                        <p>Vraag na het definiëren van ethiek aan studenten na te denken over hoe het gebruiken van het werk van iemand anders zonder toestemming als een ethisch probleem kan worden beschouwd, zelfs als het niet illegaal is. Ga nog niet in op voorbeelden; merk op dat ethiek vaak gaat over hoe mensen worden behandeld, niet alleen over welke regels er bestaan. [6]</p>
-                    </div>
-                </div>
-                <div class="definition student-view">
-                    <p>Ethiek gaat over uitzoeken wat goed en fout is, en hoe onze keuzes andere mensen en de wereld om ons heen beïnvloeden.</p>
-                </div>
-            </div>
-
-            <div id="intellectual-property-card" class="key-term-card">
-                <div class="card-header">
-                    <h3>Intellectueel Eigendom</h3>
-                    <div class="toggle-view-buttons">
-                        <button data-view="teacher" class="active">Docent</button>
-                        <button data-view="student">Student</button>
-                    </div>
-                </div>
-                <div class="definition teacher-view active">
-                    <p>Intellectueel Eigendom is het juridische concept dat uitvindingen, geschriften, muziek, kunst en symbolen beschermt, door de maker het exclusieve recht te geven om hun werk te gebruiken, te delen of te verkopen.</p>
-                    <div class="teacher-tip">
-                        <strong>Docententip!</strong>
-                        <p>Nodig studenten uit om voorbeelden uit hun eigen leven te bedenken, zoals een lied dat ze schreven, een video die ze maakten of een ontwerp dat ze voor een project creëerden. Leid vervolgens een korte discussie over waarom het belangrijk kan zijn om die creaties te beschermen, en wat er zou kunnen gebeuren als iemand anders hun werk zonder toestemming zou gebruiken. U kunt de discussie overslaan als er niet genoeg tijd is! [8]</p>
-                    </div>
-                </div>
-                <div class="definition student-view">
-                    <p>Intellectueel Eigendom betekent regels die dingen die mensen creëren – zoals uitvindingen, verhalen, muziek, kunst of logo's – beschermen. Deze regels geven de maker het speciale recht om te beslissen hoe hun werk wordt gebruikt, gedeeld of verkocht.</p>
-                </div>
-            </div>
-
-            <div id="copyright-card" class="key-term-card">
-                <div class="card-header">
-                    <h3>Auteursrecht</h3>
-                    <div class="toggle-view-buttons">
-                        <button data-view="teacher" class="active">Docent</button>
-                        <button data-view="student">Student</button>
-                    </div>
-                </div>
-                <div class="definition teacher-view active">
-                    <p>Auteursrecht is het wettelijke recht dat aan de maker van een origineel werk wordt verleend om het te gebruiken, te verspreiden en te wijzigen.</p>
-                    <div class="teacher-tip">
-                        <strong>Docententip!</strong>
-                        <p>Laat studenten weten dat dit een juridisch concept is, niet alleen over het geven van credits – het gaat over wie het recht heeft om te beslissen hoe een werk wordt gebruikt. U vindt het misschien nuttig om studenten te vertellen dat als zij iets creëren, zij beslissen of anderen het mogen kopiëren of er winst uit mogen halen. [10]</p>
-                    </div>
-                </div>
-                <div class="definition student-view">
-                    <p>Auteursrecht is een wet die de persoon die iets heeft gemaakt, zoals een lied, verhaal of video, het recht geeft om te bepalen hoe het wordt gebruikt, gedeeld of veranderd.</p>
-                </div>
-            </div>
-
-            <div id="attribution-card" class="key-term-card">
-                <div class="card-header">
-                    <h3>Attributie</h3>
-                    <div class="toggle-view-buttons">
-                        <button data-view="teacher" class="active">Docent</button>
-                        <button data-view="student">Student</button>
-                    </div>
-                </div>
-                <div class="definition teacher-view active">
-                    <p>Attributie verwijst naar de handeling van het geven van credits aan de oorspronkelijke maker van een werk, vooral in de context van het gebruiken of refereren aan hun materiaal.</p>
-                    <div class="teacher-tip">
-                        <strong>Docententip!</strong>
-                        <p>Definieer attributie en benadruk dat het de maker geen controle geeft, maar eerder hun bijdrage erkent. Het wordt vaak gezien als een basisvorm van respect in creatief werk. [12]</p>
-                    </div>
-                </div>
-                <div class="definition student-view">
-                    <p>Attributie betekent het geven van credits aan de persoon die iets oorspronkelijk heeft gemaakt, zoals een afbeelding, video of idee, wanneer je hun werk gebruikt of bespreekt.</p>
-                </div>
-            </div>
-
-            <div id="transparency-card" class="key-term-card">
-                <div class="card-header">
-                    <h3>Transparantie</h3>
-                    <div class="toggle-view-buttons">
-                        <button data-view="teacher" class="active">Docent</button>
-                        <button data-view="student">Student</button>
-                    </div>
-                </div>
-                <div class="definition teacher-view active">
-                    <p>Transparantie is de praktijk van het openlijk openbaar maken hoe iets werkt, vooral met betrekking tot besluitvorming, gegevensgebruik of AI-processen.</p>
-                    <div class="teacher-tip">
-                        <strong>Docententip!</strong>
-                        <p>U kunt studenten vertellen dat transparantie belangrijk is wanneer mensen niet weten of hun werk wordt gebruikt, of hoe AI-systemen beslissingen nemen. Dit helpt studenten te begrijpen waarom een gebrek aan transparantie kan leiden tot ethische problemen. [14]</p>
-                    </div>
-                </div>
-                <div class="definition student-view">
-                    <p>Transparantie betekent open en eerlijk zijn over hoe iets werkt, zoals hoe beslissingen worden genomen of hoe gegevens en AI worden gebruikt.</p>
-                </div>
+                <button class="key-term-button" data-term="ethics">
+                    Ethiek
+                    <span class="tooltip-text">
+                        <strong>Docenten:</strong> Ethiek is de tak van de filosofie die zich bezighoudt met wat moreel juist en verkeerd is, en hoe beslissingen mensen en de samenleving beïnvloeden.<br><br>
+                        <strong>Docententip:</strong> Vraag na het definiëren van ethiek aan studenten na te denken over hoe het gebruiken van het werk van iemand anders zonder toestemming als een ethisch probleem kan worden beschouwd, zelfs als het niet illegaal is. Ga nog niet in op voorbeelden; merk op dat ethiek vaak gaat over hoe mensen worden behandeld, niet alleen over welke regels er bestaan. [6]<br><br>
+                        <strong>Studenten:</strong> Ethiek gaat over uitzoeken wat goed en fout is, en hoe onze keuzes andere mensen en de wereld om ons heen beïnvloeden.
+                    </span>
+                </button>
+                <button class="key-term-button" data-term="intellectual-property">
+                    Intellectueel Eigendom
+                    <span class="tooltip-text">
+                        <strong>Docenten:</strong> Intellectueel Eigendom is het juridische concept dat uitvindingen, geschriften, muziek, kunst en symbolen beschermt, door de maker het exclusieve recht te geven om hun werk te gebruiken, te delen of te verkopen.<br><br>
+                        <strong>Docententip:</strong> Nodig studenten uit om voorbeelden uit hun eigen leven te bedenken, zoals een lied dat ze schreven, een video die ze maakten of een ontwerp dat ze voor een project creëerden. Leid vervolgens een korte discussie over waarom het belangrijk kan zijn om die creaties te beschermen, en wat er zou kunnen gebeuren als iemand anders hun werk zonder toestemming zou gebruiken. U kunt de discussie overslaan als er niet genoeg tijd is! [8]<br><br>
+                        <strong>Studenten:</strong> Intellectueel Eigendom betekent regels die dingen die mensen creëren – zoals uitvindingen, verhalen, muziek, kunst of logo's – beschermen. Deze regels geven de maker het speciale recht om te beslissen hoe hun werk wordt gebruikt, gedeeld of verkocht.
+                    </span>
+                </button>
+                <button class="key-term-button" data-term="copyright">
+                    Auteursrecht
+                    <span class="tooltip-text">
+                        <strong>Docenten:</strong> Auteursrecht is het wettelijke recht dat aan de maker van een origineel werk wordt verleend om het te gebruiken, te verspreiden en te wijzigen.<br><br>
+                        <strong>Docententip:</strong> Laat studenten weten dat dit een juridisch concept is, niet alleen over het geven van credits – het gaat over wie het recht heeft om te beslissen hoe een werk wordt gebruikt. U vindt het misschien nuttig om studenten te vertellen dat als zij iets creëren, zij beslissen of anderen het mogen kopiëren of er winst uit mogen halen. [10]<br><br>
+                        <strong>Studenten:</strong> Auteursrecht is een wet die de persoon die iets heeft gemaakt, zoals een lied, verhaal of video, het recht geeft om te bepalen hoe het wordt gebruikt, gedeeld of veranderd.
+                    </span>
+                </button>
+                <button class="key-term-button" data-term="attribution">
+                    Attributie
+                    <span class="tooltip-text">
+                        <strong>Docenten:</strong> Attributie verwijst naar de handeling van het geven van credits aan de oorspronkelijke maker van een werk, vooral in de context van het gebruiken of refereren aan hun materiaal.<br><br>
+                        <strong>Docententip:</strong> Definieer attributie en benadruk dat het de maker geen controle geeft, maar eerder hun bijdrage erkent. Het wordt vaak gezien als een basisvorm van respect in creatief werk. [12]<br><br>
+                        <strong>Studenten:</strong> Attributie betekent het geven van credits aan de persoon die iets oorspronkelijk heeft gemaakt, zoals een afbeelding, video of idee, wanneer je hun werk gebruikt of bespreekt.
+                    </span>
+                </button>
+                <button class="key-term-button" data-term="transparency">
+                    Transparantie
+                    <span class="tooltip-text">
+                        <strong>Docenten:</strong> Transparantie is de praktijk van het openlijk openbaar maken hoe iets werkt, vooral met betrekking tot besluitvorming, gegevensgebruik of AI-processen.<br><br>
+                        <strong>Docententip:</strong> U kunt studenten vertellen dat transparantie belangrijk is wanneer mensen niet weten of hun werk wordt gebruikt, of hoe AI-systemen beslissingen nemen. Dit helpt studenten te begrijpen waarom een gebrek aan transparantie kan leiden tot ethische problemen. [14]<br><br>
+                        <strong>Studenten:</strong> Transparantie betekent open en eerlijk zijn over hoe iets werkt, zoals hoe beslissingen worden genomen of hoe gegevens en AI worden gebruikt.
+                    </span>
+                </button>
             </div>
         </section>
 
@@ -1020,36 +945,8 @@
             Docententip: U kunt meerdere kopieën van de verklaring maken en elke student zijn individuele reactie laten opschrijven, waardoor een klaslokaalhoek ontstaat.
         `;
 
-        // Key Terms functionality
-        document.querySelectorAll('.key-term-button').forEach(button => {
-            button.addEventListener('click', function() {
-                // Deactivate all buttons and hide all cards
-                document.querySelectorAll('.key-term-button').forEach(btn => btn.classList.remove('active'));
-                document.querySelectorAll('.key-term-card').forEach(card => card.classList.remove('active'));
-
-                // Activate clicked button
-                this.classList.add('active');
-
-                // Show corresponding card
-                const term = this.dataset.term;
-                document.getElementById(`${term}-card`).classList.add('active');
-            });
-        });
-
-        document.querySelectorAll('.key-term-card .toggle-view-buttons button').forEach(button => {
-            button.addEventListener('click', function() {
-                const parentCard = this.closest('.key-term-card');
-                const view = this.dataset.view;
-
-                // Deactivate all view buttons in this card
-                parentCard.querySelectorAll('.toggle-view-buttons button').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-
-                // Hide all definitions and show the selected one
-                parentCard.querySelectorAll('.definition').forEach(def => def.classList.remove('active'));
-                parentCard.querySelector(`.definition.${view}-view`).classList.add('active');
-            });
-        });
+        // Key Terms functionality (now handled by CSS tooltips, no JS needed for active state)
+        // No JS for key-term buttons anymore, as the tooltips are purely CSS-driven.
 
         // Flashcards Navigation functionality
         let currentFlashcardIndex = 0;
@@ -1211,7 +1108,7 @@
             } else if (query.includes("wie verantwoordelijk") && (query.includes("advocaten") || query.includes("nepzaken"))) {
                  response = "In het geval van de advocaten die nepzaken citeerden, ligt de verantwoordelijkheid in de discussie tussen de AI zelf, de advocaat die het programma gebruikte, of beide. De flashcard moedigt aan om na te denken over 'verantwoord gebruik van AI versus het plaatsen van schuld'. De advocaat gaf toe de fout gemaakt te hebben, maar de vraag blijft of een AI als 'verantwoordelijk' kan worden beschouwd. [23, 24]";
             } else if (query.includes("kernbegrippen") || query.includes("belangrijke termen")) {
-                response = "De kernbegrippen die in dit framework worden behandeld zijn: Ethiek, Intellectueel Eigendom, Auteursrecht, Attributie en Transparantie. U kunt meer lezen over elk begrip door op de betreffende knop bovenaan de pagina te klikken.";
+                response = "De kernbegrippen die in dit framework worden behandeld zijn: Ethiek, Intellectueel Eigendom, Auteursrecht, Attributie en Transparantie. U kunt meer lezen over elk begrip door met uw muis over de betreffende knop bovenaan de pagina te zweven.";
             } else if (query.includes("milieukosten") || query.includes("ai en milieu")) {
                 response = "Het AILit Framework belicht ook de milieukosten van AI, wat aanleiding geeft tot een bredere examinatie van de relatie van AI met de fysieke wereld. Het moedigt een dieper begrip van de impact van AI aan dan alleen de directe toepassing ervan.";
             } else if (query.includes("competenties") || query.includes("actie")) {
@@ -1220,7 +1117,7 @@
             // Fallback for more general queries that might be present in the text
             else if (fullTextContext.toLowerCase().includes(query)) {
                 // If a general keyword is found but not a specific answer, provide a hint
-                response = "Ik heb informatie gevonden die gerelateerd is aan uw vraag in de flashcards. Specifieke details zijn te vinden onder de relevante sleutelbegrippen of discussieflashcards. Probeer een van de voorgedefinieerde vragen!";
+                response = "Ik heb informatie gevonden die gerelateerd is aan uw vraag in de flashcards. Specifieke details zijn te vinden onder de relevante sleutelbegrippen (hover met uw muis over de knoppen) of discussieflashcards. Probeer een van de voorgedefinieerde vragen!";
             }
 
 
