@@ -41,6 +41,7 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Ontwerprichtlijnen IPS](https://paulomoekotte.github.io/mijnTiddlers/OntwerpRichtlijnenIPS.html)
 
+[Op weg naar AI die werkt voor iedereen](https://paulomoekotte.github.io/mijnTiddlers/Op weg naar AI die werkt voor iedereen.html)
 # Streamlit apps
 
 [AI & Data Science e-Cursus volgens de Roadmap](https://ecursus-datascience.streamlit.app/)
