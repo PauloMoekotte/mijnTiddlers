@@ -41,7 +41,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Ontwerprichtlijnen IPS](https://paulomoekotte.github.io/mijnTiddlers/OntwerpRichtlijnenIPS.html)
 
-[Op weg naar AI die werkt voor iedereen](https://paulomoekotte.github.io/mijnTiddlers/Op%20%weg%20%naar%20%AI%20%die%20%werkt%20%voor%20%iedereen.html)
+[Op weg naar AI die werkt voor iedereen](https://paulomoekotte.github.io/mijnTiddlers/OpWegNaarAIDieWerktVoorIedereen.html.html)
+
 
 # Streamlit apps
 
