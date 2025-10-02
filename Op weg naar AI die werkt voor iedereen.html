@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UWV Infographic: Op weg naar AI die werkt voor iedereen</title>
+    <style>
+        :root {
+            --uwv-blue: #0073B4;
+            --uwv-dark-blue: #005A8E;
+            --uwv-light-blue: #E6F1F7;
+            --uwv-yellow: #FFB81C;
+            --uwv-text: #333;
+            --uwv-bg: #f9f9f9;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--uwv-bg);
+            color: var(--uwv-text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--uwv-blue);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--uwv-yellow);
+        }
+        
+        header .logo {
+            max-width: 100px;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        .section {
+            background-color: white;
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        h2 {
+            color: var(--uwv-dark-blue);
+            border-bottom: 2px solid var(--uwv-yellow);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 2rem;
+        }
+        
+        h3 {
+            color: var(--uwv-blue);
+            font-size: 1.5rem;
+        }
+
+        /* Interactive Tabs */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--uwv-blue);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-button.active, .tab-button:hover {
+            color: var(--uwv-dark-blue);
+            border-bottom-color: var(--uwv-yellow);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Key Takeaways Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background-color: var(--uwv-light-blue);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--uwv-blue);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .card h4 {
+            margin-top: 0;
+            color: var(--uwv-dark-blue);
+        }
+
+        /* Bar Chart Styling */
+        .chart-container {
+            width: 100%;
+            margin: 20px 0;
+        }
+        .chart-title {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--uwv-dark-blue);
+        }
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .bar-entry {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .bar-label {
+            width: 30%;
+            text-align: right;
+            font-size: 0.9em;
+            flex-shrink: 0;
+        }
+        .bar-wrapper {
+            width: 70%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+        }
+        .bar {
+            height: 25px;
+            background-color: var(--uwv-blue);
+            border-radius: 5px;
+            text-align: right;
+            padding-right: 8px;
+            color: white;
+            font-weight: 700;
+            line-height: 25px;
+            transition: width 1.5s ease-out;
+            white-space: nowrap;
+        }
+        .bar:hover {
+            background-color: var(--uwv-dark-blue);
+        }
+
+        /* 2x2 Risk Matrix */
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .risk-cell {
+            padding: 20px;
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .risk-cell h4 { margin-top: 0; }
+        .risk-high { background-color: #ffebee; color: #c62828; border: 2px solid #c62828; }
+        .risk-medium { background-color: #fff3e0; color: #f57c00; border: 2px solid #f57c00; }
+        .risk-low { background-color: #e8f5e9; color: #2e7d32; border: 2px solid #2e7d32; }
+
+        /* Glossary Tooltips */
+        .glossary {
+            color: var(--uwv-blue);
+            font-weight: 700;
+            border-bottom: 1px dotted var(--uwv-blue);
+            cursor: help;
+            position: relative;
+        }
+        .glossary .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--uwv-dark-blue);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .glossary .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--uwv-dark-blue) transparent transparent transparent;
+        }
+        .glossary:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* AI Features Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--uwv-yellow);
+            color: var(--uwv-dark-blue);
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .fab:hover {
+            transform: scale(1.1);
+        }
+        .fab-options {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 999;
+        }
+        .fab-options.active {
+            display: flex;
+        }
+        .fab-option {
+            background-color: var(--uwv-blue);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            transition: background-color 0.3s;
+        }
+        .fab-option:hover {
+            background-color: var(--uwv-dark-blue);
+        }
+
+        /* Modal for Summary */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: var(--border-radius);
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover {
+            color: black;
+        }
+
+        /* Chatbot styling */
+        .chatbot-container {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            max-height: 500px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1001;
+        }
+        .chatbot-header {
+            background-color: var(--uwv-blue);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chatbot-header h4 { margin: 0; }
+        #close-chat { font-size: 20px; cursor: pointer; }
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message {
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: var(--uwv-light-blue);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+        .bot-message {
+            background-color: #f1f1f1;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+        .chatbot-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+        }
+        #chat-input {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 10px 15px;
+            font-size: 1rem;
+        }
+        #send-chat {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--uwv-blue);
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* Workflow Visualizer */
+        .workflow-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .workflow-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 15px;
+            background: var(--uwv-light-blue);
+            border-radius: var(--border-radius);
+            border: 2px solid var(--uwv-blue);
+            position: relative;
+        }
+        .workflow-step h5 { margin: 0 0 5px 0; color: var(--uwv-dark-blue); }
+        .workflow-arrow {
+            font-size: 2.5rem;
+            color: var(--uwv-yellow);
+            align-self: center;
+            flex-grow: 0;
+            padding: 0 10px;
+        }
+        #generate-workflow-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 25px;
+            background-color: var(--uwv-yellow);
+            color: var(--uwv-dark-blue);
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        #generate-workflow-btn:hover {
+            transform: scale(1.05);
+        }
+
+        blockquote {
+            border-left: 5px solid var(--uwv-yellow);
+            padding-left: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #555;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            background-color: var(--uwv-dark-blue);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            .tabs { justify-content: center; }
+            .bar-label { width: 40%; font-size: 0.8em; }
+            .bar-wrapper { width: 60%; }
+            .workflow-container { flex-direction: column; align-items: stretch; }
+            .workflow-arrow { transform: rotate(90deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="https://www.uwv.nl/uwv-main-theme/images/logo-uwv.svg" alt="UWV Logo" class="logo">
+        <h1>Op weg naar AI die werkt voor iedereen</h1>
+        <p>Hoe de opkomst van AI doorwerkt in beroepen, sectoren en skills</p>
+    </header>
+
+    <div class="container">
+        <!-- Section 1: Samenvatting en Kernpunten -->
+        <section class="section">
+            <h2>Kernpunten uit het onderzoek</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h4>Algemene Effecten</h4>
+                    <p>AI, met name <span class="glossary">generatieve AI<span class="tooltiptext">Een vorm van AI waarbij complexe algoritmes content genereren zoals tekst, afbeeldingen of code.</span></span>, fungeert als digitale assistent, wat leidt tot hogere productiviteit. Massawerkloosheid wordt niet verwacht, maar de aard van werk en skills veranderen sterk.</p>
+                </div>
+                <div class="card">
+                    <h4>Impact op Taken & Skills</h4>
+                    <p>Creatieve, taalkundige en data-analysetaken worden overgenomen. Digitale, kritische en ethische vaardigheden worden belangrijker. Soft skills onderscheiden de mens van de machine.</p>
+                </div>
+                <div class="card">
+                    <h4>Beroepen & Sectoren</h4>
+                    <p>Beroepen met routinematige taal- en datataken lopen het meeste risico. Vooral kennisintensieve sectoren zoals zakelijke dienstverlening, ICT en de financiële sector merken de gevolgen.</p>
+                </div>
+                <div class="card">
+                    <h4>Scholing is Cruciaal</h4>
+                    <p>De behoefte aan om- en bijscholing neemt toe. Digitale geletterdheid wordt essentieel. Een leven lang ontwikkelen is cruciaal om iedereen mee te laten komen in de transitie.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Algemene Effecten & Verwachtingen Werkgevers -->
+        <section class="section">
+            <h2>Algemene effecten op werk en werkgelegenheid</h2>
+            <p>De komende jaren zal generatieve AI de grootste impact hebben. Het fungeert vaak als een digitale assistent die werk ondersteunt. Hoewel grootschalig baanverlies niet wordt verwacht, zal de aard van het werk sterk veranderen. Dit kan krapte deels verlichten, maar ook leiden tot nieuwe knelpunten en een grotere mismatch tussen vraag en aanbod.</p>
+            
+            <blockquote>"We hebben als mensheid al heel veel technologische revoluties 'overwonnen'. Telkens bleek er nog werk voor de meeste mensen." – Daniël Bischoff, Human Capital Agenda ICT</blockquote>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">Verwachtingen impact AI door werkgevers (komende 5 jaar)</h3>
+                <div class="bar-chart" id="employer-expectations-chart">
+                    <!-- Bars will be inserted by JS -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Impact op Taken, Skills, Beroepen en Sectoren -->
+        <section class="section">
+            <h2>De impact in detail</h2>
+            <div class="tabs">
+                <button class="tab-button active" onclick="openTab(event, 'tasks')">Taken & Skills</button>
+                <button class="tab-button" onclick="openTab(event, 'professions')">Beroepen & Sectoren</button>
+                <button class="tab-button" onclick="openTab(event, 'employees')">Werknemers & Werkgevers</button>
+            </div>
+
+            <div id="tasks" class="tab-content active">
+                <h3>Welke taken kan AI overnemen?</h3>
+                <p>AI kan een breed scala aan taken gedeeltelijk of geheel overnemen. Dit raakt vooral routinematige en data-/taalgedreven taken.</p>
+                <div class="card-grid">
+                    <div class="card"><h4>✍️ Creatief & Taalkundig</h4><p>Creëren van tekst, beeld, video. Samenvatten, corrigeren en vertalen.</p></div>
+                    <div class="card"><h4>📋 Assisteren & Administreren</h4><p>Notuleren, plannen, organiseren en doorgronden van complexe documenten.</p></div>
+                    <div class="card"><h4>📊 Dataverzameling & Analyse</h4><p>Patronen herkennen, trends voorspellen en coderen/programmeren.</p></div>
+                    <div class="card"><h4>👁️ Visuele Analyse</h4><p>Automatisch beoordelen van medische scans, inspecties en surveillance.</p></div>
+                </div>
+
+                <h3 style="margin-top: 30px;">Welke skills worden belangrijker?</h3>
+                <p>Terwijl AI 'harde' skills overneemt, worden menselijke vaardigheden crucialer.</p>
+                 <div class="card-grid">
+                    <div class="card"><h4>💡 Kritisch & Ethisch Denken</h4><p>De output van AI interpreteren, controleren ('factchecking') en de ethische implicaties overwegen.</p></div>
+                    <div class="card"><h4>💻 Digitale Geletterdheid</h4><p>Begrijpen hoe AI werkt en hoe je effectief instructies geeft, zoals via een <span class="glossary">prompt<span class="tooltiptext">Een instructie, vraag of opdracht die aan een AI-model wordt gegeven om een specifiek resultaat te genereren.</span></span>.</p></div>
+                    <div class="card"><h4>🤝 Soft Skills</h4><p>Creativiteit, samenwerking, communicatie en aanpassingsvermogen. Dit onderscheidt de mens van de machine.</p></div>
+                </div>
+            </div>
+
+            <div id="professions" class="tab-content">
+                <h3>Risicomatrix voor beroepen</h3>
+                <p>Beroepen met veel taal/data-taken en routinematig werk lopen het hoogste risico.</p>
+                <div class="risk-matrix">
+                    <div class="risk-cell risk-high"><h4>Hoog risico</h4><p>Veel taal/data<br>+<br>Veel routine</p></div>
+                    <div class="risk-cell risk-medium"><h4>Gemiddeld risico</h4><p>Weinig taal/data<br>+<br>Veel routine</p></div>
+                    <div class="risk-cell risk-medium"><h4>Gemiddeld risico</h4><p>Veel taal/data<br>+<br>Weinig routine</p></div>
+                    <div class="risk-cell risk-low"><h4>Laag risico</h4><p>Weinig taal/data<br>+<br>Weinig routine</p></div>
+                </div>
+                <p style="margin-top:20px;"><b>Voorbeelden van kwetsbare beroepen:</b> Administratief medewerkers, (junior) software developers, tekstschrijvers, vertalers, klantenservicemedewerkers, consultants, boekhouders, en dataverwerkers. <br><b>Beroepen buiten schot (voorlopig):</b> Fijn handwerk (kappers, bakkers) en beroepen met cruciale menselijke interactie (zorgmedewerkers, horecapersoneel).</p>
+                
+                <div class="chart-container">
+                    <h3 class="chart-title">Mate van AI-gebruik per sector</h3>
+                    <div class="bar-chart" id="sector-usage-chart">
+                        <!-- Bars will be inserted by JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <div id="employees" class="tab-content">
+                <h3>Gevolgen voor werknemers en werkgevers</h3>
+                <p>De dynamiek op de werkvloer verandert. Werknemers experimenteren vaak al volop, terwijl werkgevers soms nog terughoudend zijn vanwege o.a. privacywetgeving en risico's.</p>
+                <blockquote>"Werknemers lopen voor op werkgevers en wachten op actie." – Anna Salomons, Tilburg University & Universiteit Utrecht</blockquote>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Kansen</h4>
+                        <p>Productiviteitswinst voor werknemers, interessanter werk (minder routine), en het toegankelijker maken van werk voor mensen met een afstand tot de arbeidsmarkt.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Risico's</h4>
+                        <p>Verlies van autonomie, 'ontmenselijking' van werk, en een groeiende kloof voor mensen die minder digivaardig zijn. Bestaande werknemersrechten kunnen onder druk komen te staan.</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Gebruik van AI naar bedrijfsgrootte</h3>
+                    <div class="bar-chart" id="size-usage-chart">
+                        <!-- Bars will be inserted by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Scholingsbehoefte en de Rol van de Overheid -->
+        <section class="section">
+            <h2>Scholing: De sleutel tot een succesvolle transitie</h2>
+            <p>De opkomst van AI vergroot de noodzaak tot om- en bijscholing. Digitale geletterdheid wordt een cruciaal onderdeel van elk curriculum. Een Leven Lang Ontwikkelen is geen luxe meer, maar een noodzaak.</p>
+             <blockquote>"Het onderwijs zou moeten stoppen om kinderen de hele dag dingen te leren die alleen van nut zijn als de stroom uitvalt." – Mathijs Bouman, econoom en journalist</blockquote>
+            
+            <h3>AI Workflow: Hoe passen we ons aan?</h3>
+            <p>Het proces om als organisatie of individu succesvol mee te gaan in de AI-transitie kent meerdere stappen. Klik op de knop om een visuele weergave van dit protocol te genereren.</p>
+            <button id="generate-workflow-btn" onclick="generateWorkflow()">Genereer AI-Adaptatie Workflow</button>
+            <div id="workflow-output"></div>
+        </section>
+
+        <!-- Section 5: Kansen en Bedreigingen -->
+        <section class="section">
+            <h2>Conclusie: Twee kanten van dezelfde medaille</h2>
+            <p>De inzet van AI op de werkvloer brengt zowel grote kansen als serieuze bedreigingen met zich mee. Wendbaarheid en leervermogen zijn cruciaal. Het maken van de juiste keuzes bepaalt of we een situatie van winnaars of verliezers creëren.</p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <h3>🟢 Kansen</h3>
+                    <ul style="list-style-type: '✔️ ';">
+                        <li><b>Hogere arbeidsproductiviteit:</b> Meer doen met dezelfde mensen.</li>
+                        <li><b>Minder krapte:</b> AI kan taken overnemen in sectoren met personeelstekorten.</li>
+                        <li><b>Inclusievere arbeidsmarkt:</b> Toetredingsdrempels voor werk worden verlaagd.</li>
+                        <li><b>Hogere kwaliteit van werk:</b> Automatisering van saaie, repetitieve taken.</li>
+                    </ul>
+                </div>
+                <div style="flex: 1; min-width: 300px;">
+                    <h3>🔴 Bedreigingen</h3>
+                    <ul style="list-style-type: '⚠️ ';">
+                        <li><b>Baanverlies:</b> In specifieke (routinematige) beroepen.</li>
+                        <li><b>Meer mismatch:</b> Een groeiende kloof tussen gevraagde en aanwezige skills.</li>
+                        <li><b>Groepen in de knel:</b> Minder digivaardige mensen kunnen achterblijven.</li>
+                        <li><b>Lagere kwaliteit van werk:</b> Uitholling van taken en verlies van autonomie.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- AI Tools: FAB and Modals -->
+    <div class="fab" id="fab-main" title="AI Tools">
+        <span>🤖</span>
+    </div>
+    <div class="fab-options" id="fab-options">
+        <div class="fab-option" id="summary-btn">Genereer Samenvatting</div>
+        <div class="fab-option" id="chat-btn">Start AI Assistent</div>
+    </div>
+    
+    <!-- Summary Modal -->
+    <div id="summary-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal">&times;</span>
+            <h2>AI-Gegenereerde Samenvatting</h2>
+            <p>De opkomst van AI heeft een aanzienlijke impact op de Nederlandse arbeidsmarkt. Generatieve AI, zoals ChatGPT, leidt tot hogere productiviteit door werk te ondersteunen of deels over te nemen, zonder directe massawerkloosheid te veroorzaken. De aard van het werk en de benodigde vaardigheden veranderen echter sterk.</p>
+            <p>Taken die AI beïnvloedt zijn creatief, taalkundig, administratief en data-gerelateerd, wat leidt tot een toenemende vraag naar digitale, kritische en ethische vaardigheden. Soft skills worden belangrijker om de mens van de machine te onderscheiden.</p>
+            <p>Beroepen met routinetaken en een sterke taal- of datacomponent lopen het meeste risico, vooral in kennisintensieve sectoren. Hoewel werkgevers vaak terughoudend zijn, biedt AI kansen voor productiviteitswinst en toegankelijker werk. Risico's zoals verlies van autonomie en ontmenselijking zijn aanwezig.</p>
+            <p>De behoefte aan om- en bijscholing zal toenemen. Digitale geletterdheid wordt cruciaal en samenwerking tussen onderwijs, overheid en bedrijfsleven is essentieel om de transitie soepel te laten verlopen en te zorgen dat iedereen kan meekomen.</p>
+        </div>
+    </div>
+    
+    <!-- Chatbot Container -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header">
+            <h4>UWV AI Assistent</h4>
+            <span id="close-chat">&times;</span>
+        </div>
+        <div class="chatbot-messages" id="chat-messages">
+             <div class="bot-message">Hallo! Ik ben de AI Assistent. Stel een vraag over het rapport. Probeer bijvoorbeeld: "Welke beroepen lopen risico?"</div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chat-input" placeholder="Stel een vraag...">
+            <button id="send-chat">➤</button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2024 UWV | Deze infographic is gebaseerd op het rapport 'Op weg naar AI die werkt voor iedereen'.</p>
+    </footer>
+
+<script>
+    // --- Tabs ---
+    function openTab(evt, tabName) {
+        let i, tabcontent, tablinks;
+        const parent = evt.target.closest('.section');
+        tabcontent = parent.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = parent.getElementsByClassName("tab-button");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        parent.querySelector('#' + tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    // --- Charts ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Observer for animating charts on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const chartId = entry.target.id;
+                    if (chartId === 'employer-expectations-chart' && !entry.target.dataset.animated) {
+                        createBarChart('employer-expectations-chart', employerData);
+                        entry.target.dataset.animated = true;
+                    } else if (chartId === 'sector-usage-chart' && !entry.target.dataset.animated) {
+                        createBarChart('sector-usage-chart', sectorData);
+                         entry.target.dataset.animated = true;
+                    } else if (chartId === 'size-usage-chart' && !entry.target.dataset.animated) {
+                        createBarChart('size-usage-chart', sizeData, true);
+                        entry.target.dataset.animated = true;
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        observer.observe(document.getElementById('employer-expectations-chart'));
+        observer.observe(document.getElementById('sector-usage-chart'));
+        observer.observe(document.getElementById('size-usage-chart'));
+    });
+
+    const employerData = [
+        { label: "Scholingsbehoeftes veranderen", value: 51 },
+        { label: "Andere vaardigheden nodig", value: 42 },
+        { label: "Functies sterk veranderen", value: 23 },
+        { label: "Nieuwe banen bijkomen", value: 14 },
+        { label: "Personeelstekort minder", value: 11 },
+        { label: "Banen verdwijnen", value: 6 },
+    ];
+
+    const sectorData = [
+        { label: "Informatie en communicatie", value: 20+29 },
+        { label: "Onderwijs", value: 8+27 },
+        { label: "Openbaar bestuur", value: 2+33 },
+        { label: "Financiële instellingen", value: 4+25 },
+        { label: "Specialistische zakelijke diensten", value: 1+24 },
+        { label: "Vervoer en opslag", value: 6+19 },
+    ];
+    
+    const sizeData = [
+        { label: "Totaal", values: [3, 13] },
+        { label: "2-19 werknemers", values: [3, 12] },
+        { label: "20-99 werknemers", values: [4, 19] },
+        { label: "100+ werknemers", values: [6, 31] },
+    ];
+
+
+    function createBarChart(containerId, data, isStacked = false) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = ''; // Clear previous content
+
+        if (isStacked) {
+            data.forEach(item => {
+                const entry = document.createElement('div');
+                entry.className = 'bar-entry';
+                
+                const label = document.createElement('div');
+                label.className = 'bar-label';
+                label.textContent = item.label;
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'bar-wrapper';
+                
+                const totalValue = item.values.reduce((a, b) => a + b, 0);
+
+                const bar1 = document.createElement('div');
+                bar1.className = 'bar';
+                bar1.style.backgroundColor = 'var(--uwv-dark-blue)';
+                bar1.textContent = `${item.values[0]}%`;
+                
+                const bar2 = document.createElement('div');
+                bar2.className = 'bar';
+                bar2.textContent = `${item.values[1]}%`;
+                
+                const barContainer = document.createElement('div');
+                barContainer.style.display = 'flex';
+                barContainer.style.width = '0%';
+                barContainer.style.transition = 'width 1.5s ease-out';
+                
+                barContainer.appendChild(bar1);
+                barContainer.appendChild(bar2);
+                wrapper.appendChild(barContainer);
+                entry.appendChild(label);
+                entry.appendChild(wrapper);
+                container.appendChild(entry);
+                
+                setTimeout(() => {
+                    barContainer.style.width = `${totalValue}%`;
+                    bar1.style.width = `${(item.values[0] / totalValue) * 100}%`;
+                    bar2.style.width = `${(item.values[1] / totalValue) * 100}%`;
+                }, 100);
+            });
+            // Add legend
+            const legend = document.createElement('div');
+            legend.style.cssText = 'display: flex; justify-content: center; gap: 20px; margin-top: 15px;';
+            legend.innerHTML = `
+                <div><span style="display: inline-block; width: 15px; height: 15px; background-color: var(--uwv-dark-blue); margin-right: 5px; vertical-align: middle;"></span> (Zeer) Hoge mate</div>
+                <div><span style="display: inline-block; width: 15px; height: 15px; background-color: var(--uwv-blue); margin-right: 5px; vertical-align: middle;"></span> Redelijke mate</div>
+            `;
+            container.appendChild(legend);
+
+        } else {
+             data.forEach(item => {
+                const entry = document.createElement('div');
+                entry.className = 'bar-entry';
+                
+                const label = document.createElement('div');
+                label.className = 'bar-label';
+                label.textContent = item.label;
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'bar-wrapper';
+
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.textContent = `${item.value}%`;
+                bar.style.width = '0%';
+                
+                wrapper.appendChild(bar);
+                entry.appendChild(label);
+                entry.appendChild(wrapper);
+                container.appendChild(entry);
+                
+                setTimeout(() => {
+                    bar.style.width = `${item.value}%`;
+                }, 100);
+            });
+        }
+    }
+
+
+    // --- Workflow Generator ---
+    function generateWorkflow() {
+        const workflowData = [
+            { title: "Stap 1: Bewustwording & Analyse", description: "Identificeer welke taken en processen door AI beïnvloed worden." },
+            { title: "Stap 2: Strategie & Keuzes", description: "Bepaal waar en hoe AI wordt ingezet om doelen te bereiken." },
+            { title: "Stap 3: Skills Ontwikkelen", description: "Investeer in om- en bijscholing in digitale, kritische en soft skills." },
+            { title: "Stap 4: Implementatie & Experiment", description: "Start met de implementatie en moedig experimenten op de werkvloer aan." },
+            { title: "Stap 5: Evaluatie & Bijsturing", description: "Meet de impact, verzamel feedback en pas de strategie continu aan." },
+        ];
+        
+        const output = document.getElementById('workflow-output');
+        output.innerHTML = '';
+        const container = document.createElement('div');
+        container.className = 'workflow-container';
+
+        workflowData.forEach((step, index) => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'workflow-step';
+            stepDiv.innerHTML = `<h5>${step.title}</h5><p>${step.description}</p>`;
+            container.appendChild(stepDiv);
+
+            if (index < workflowData.length - 1) {
+                const arrow = document.createElement('div');
+                arrow.className = 'workflow-arrow';
+                arrow.innerHTML = '➔';
+                container.appendChild(arrow);
+            }
+        });
+        
+        output.appendChild(container);
+        document.getElementById('generate-workflow-btn').style.display = 'none';
+    }
+
+
+    // --- AI Features Logic ---
+    const fab = document.getElementById('fab-main');
+    const fabOptions = document.getElementById('fab-options');
+    const summaryBtn = document.getElementById('summary-btn');
+    const chatBtn = document.getElementById('chat-btn');
+    const summaryModal = document.getElementById('summary-modal');
+    const closeModal = document.getElementById('close-modal');
+    const chatbot = document.getElementById('chatbot');
+    const closeChat = document.getElementById('close-chat');
+
+    fab.addEventListener('click', () => {
+        fabOptions.classList.toggle('active');
+    });
+
+    // Summary logic
+    summaryBtn.addEventListener('click', () => {
+        summaryModal.style.display = 'block';
+        fabOptions.classList.remove('active');
+    });
+    closeModal.addEventListener('click', () => {
+        summaryModal.style.display = 'none';
+    });
+    window.addEventListener('click', (event) => {
+        if (event.target == summaryModal) {
+            summaryModal.style.display = 'none';
+        }
+    });
+
+    // Chatbot logic
+    chatBtn.addEventListener('click', () => {
+        chatbot.style.display = 'flex';
+        fabOptions.classList.remove('active');
+    });
+    closeChat.addEventListener('click', () => {
+        chatbot.style.display = 'none';
+    });
+    
+    // Chatbot functionality
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const sendChatBtn = document.getElementById('send-chat');
+
+    const knowledgeBase = {
+        'risico': "Beroepen met veel routinematige taal- en datataken lopen het meeste risico. Denk aan administratief medewerkers, tekstschrijvers, en klantenservicemedewerkers.",
+        'beroepen': "Beroepen met veel routinematige taal- en datataken lopen het meeste risico. Denk aan administratief medewerkers, tekstschrijvers, en klantenservicemedewerkers.",
+        'skills': "Digitale geletterdheid, kritisch en ethisch denken, creativiteit, en soft skills zoals samenwerken en communicatie worden steeds belangrijker.",
+        'vaardigheden': "Digitale geletterdheid, kritisch en ethisch denken, creativiteit, en soft skills zoals samenwerken en communicatie worden steeds belangrijker.",
+        'kansen': "De belangrijkste kansen zijn een hogere arbeidsproductiviteit, het verminderen van personeelskrapte, en het creëren van interessanter en toegankelijker werk.",
+        'scholing': "Scholing is cruciaal. De behoefte aan om- en bijscholing zal sterk toenemen. Een leven lang ontwikkelen wordt de norm om relevant te blijven op de arbeidsmarkt.",
+        'werkgever': "Werkgevers zijn vaak nog terughoudend, maar het is cruciaal dat ze investeren in scholing en het gesprek aangaan met werknemers over de inzet van AI.",
+        'hallo': "Hallo! Hoe kan ik u helpen met informatie uit het rapport?",
+        'bedankt': "Graag gedaan! Heeft u nog andere vragen?"
+    };
+
+    function handleChat() {
+        const userInput = chatInput.value.trim().toLowerCase();
+        if (userInput === '') return;
+
+        appendMessage(userInput, 'user');
+        chatInput.value = '';
+
+        setTimeout(() => {
+            let botResponse = "Sorry, dat begrijp ik niet. Kunt u de vraag anders formuleren? Probeer sleutelwoorden zoals 'risico', 'skills' of 'kansen'.";
+            for (const key in knowledgeBase) {
+                if (userInput.includes(key)) {
+                    botResponse = knowledgeBase[key];
+                    break;
+                }
+            }
+            appendMessage(botResponse, 'bot');
+        }, 500);
+    }
+    
+    sendChatBtn.addEventListener('click', handleChat);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleChat();
+        }
+    });
+
+    function appendMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        messageDiv.textContent = text;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+</script>
+</body>
+</html>
