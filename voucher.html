@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voucher - Richard Claus 65 jaar!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 2cm;
+            box-sizing: border-box;
+            background-color: #f8f8f8;
+            color: #333;
+            line-height: 1.6;
+            -webkit-print-color-adjust: exact; /* For printing background colors */
+        }
+        .a4-container {
+            width: 21cm;
+            min-height: 29.7cm;
+            margin: 0 auto;
+            background: linear-gradient(to bottom right, #fdfcfb, #e0e6e3); /* Subtle gradient for depth */
+            border: 1px solid #ddd;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            padding: 2cm;
+            box-sizing: border-box;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Hulsbeek_Recreatiegebied.jpg/1200px-Hulsbeek_Recreatiegebied.jpg'); /* Hulsbeek landscape */
+            background-size: cover;
+            background-position: center;
+            color: #222; /* Darker text for contrast on background */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white overlay for readability */
+            padding: 2cm;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 1.5cm;
+            padding-bottom: 0.5cm;
+            border-bottom: 2px solid #a8c4b1;
+        }
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2em;
+            color: #3b5f4a; /* Deep forest green */
+            margin-bottom: 0.1em;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
+        }
+        header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em;
+            color: #d4a75e; /* Goldenrod */
+            margin-top: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .intro {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 1.5cm;
+            color: #555;
+        }
+        .programma {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5cm;
+            margin-bottom: 2cm;
+            justify-content: center;
+        }
+        .programma-onderdeel {
+            background-color: #fcfcfc;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.2em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            width: calc(50% - 0.75cm); /* Two columns */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .programma-onderdeel:nth-child(odd) {
+            margin-right: 0.75cm;
+        }
+        .programma-onderdeel:nth-child(even) {
+            margin-left: 0.75cm;
+        }
+        .programma-onderdeel h3 {
+            font-family: 'Playfair Display', serif;
+            color: #6a8c7b; /* Muted green */
+            margin-top: 0;
+            margin-bottom: 0.5em;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        .programma-onderdeel p {
+            margin: 0.3em 0;
+            color: #444;
+            font-size: 0.95em;
+        }
+        .programma-onderdeel img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+        }
+        .cta {
+            background-color: #d4a75e; /* Goldenrod */
+            color: white;
+            padding: 1.2em;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 1.5cm;
+            font-size: 1.2em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .details {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 1cm;
+            text-align: center;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2cm;
+            padding-top: 1cm;
+            border-top: 1px dashed #a8c4b1;
+            font-size: 0.9em;
+            color: #777;
+        }
+        .practical-tips {
+            background-color: #f0f5f3;
+            padding: 1em;
+            border-left: 5px solid #a8c4b1;
+            margin-top: 1.5cm;
+            border-radius: 0 8px 8px 0;
+        }
+        .practical-tips h3 {
+            color: #3b5f4a;
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        .practical-tips ul {
+            list-style: disc;
+            margin-left: 1.5em;
+            padding-left: 0;
+            color: #555;
+        }
+
+        /* Specific styles for printing */
+        @media print {
+            body {
+                padding: 0;
+                margin: 0;
+                background-color: #fff;
+            }
+            .a4-container {
+                width: 21cm;
+                height: 29.7cm;
+                padding: 2cm;
+                border: none;
+                box-shadow: none;
+                background-image: none; /* Remove background image for cleaner print */
+                background: #fff;
+            }
+            .overlay {
+                background-color: transparent; /* Make overlay transparent for print */
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="a4-container">
+        <div class="overlay">
+            <header>
+                <h2>Voucher voor een onvergetelijke dag!</h2>
+                <h1>Richard Claus 65 jaar!</h1>
+            </header>
+
+            <div class="intro">
+                Lieve Richard,<br>
+                Ter ere van jouw 65ste verjaardag verrassen we je graag met een dag vol natuur, actie en gezelligheid,
+                volledig verzorgd op en rondom het prachtige Hulsbeek! Bereid je voor op een dag die je niet snel zult vergeten.
+                <br>
+                Hartelijke groeten,<br>
+                Jouw vriendengroep
+            </div>
+
+            <div class="programma">
+                <div class="programma-onderdeel">
+                    <h3>Ochtend: Natuur in de hoofdrol</h3>
+                    <img src="https://www.ivn.nl/sites/default/files/styles/afbeelding_332_x_249/public/2021-09/Paddenstoelenwandeling.jpg?itok=xM9s4oT7" alt="Paddenstoelenwandeling Hulsbeek">
+                    <p><strong>10:00 – 12:30 uur: Paddenstoelenwandeling met natuurgids</strong></p>
+                    <p>Start bij Ingang Het Buitenhuys (P6, Bornsedijk 100, Oldenzaal). Geniet van een ontspannende wandeling met een IVN-gids die je alles vertelt over de paddenstoelen in het Hulsbeekgebied.</p>
+                </div>
+                <div class="programma-onderdeel">
+                    <h3>Koffiepauze met uitzicht</h3>
+                    <img src="https://carteblanche99.com/wp-content/uploads/2023/12/banner-home.jpg" alt="Terras Carte Blanche 99 aan het water">
+                    <p><strong>Rond 12:30 – 13:30 uur: Koffie & gebak bij Carte Blanche 99</strong></p>
+                    <p>Direct aan het water gelegen, met een prachtig terras en een mooi uitzicht. De ideale plek om even bij te komen en te genieten.</p>
+                </div>
+                <div class="programma-onderdeel">
+                    <h3>Middag: Actie naar keuze</h3>
+                    <img src="https://outdoorchallengepark.nl/wp-content/uploads/2019/09/outdoor-challenge-park-08-e1569420063715.jpg" alt="High rope parcours Outdoor Challenge Park">
+                    <p><strong>14:00 – 16:30 uur: Actieve groepsactiviteit</strong></p>
+                    <p>De keuze is aan jou! Ga voor een GPS-tocht, klootschieten, een high rope parcours, abseilen, tokkelen óf een E-chopper toertocht door Twente!</p>
+                </div>
+                <div class="programma-onderdeel">
+                    <h3>Afsluiting: Proost!</h3>
+                    <img src="https://www.othmar.eu/content/themes/othmar/images/photos/proeflokaal/slide-proeflokaal-7.jpg" alt="Bierproeverij Brouwerij Othmar">
+                    <p><strong>17:00 – 18:30 uur: Bierproeverij bij Brouwerij Othmar (Ootmarsum)</strong></p>
+                    <p>Sluit de actieve middag af met een (speciaal)bierproeverij, eventueel gecombineerd met een rondleiding en heerlijke borrelhapjes.</p>
+                </div>
+                <div class="programma-onderdeel" style="width: 100%; margin-left: 0; margin-right: 0;">
+                    <h3>Diner: Culinaire afsluiting</h3>
+                    <img src="https://ervehulsbeek.nl/wp-content/uploads/2023/07/diner-erve-hulsbeek-1.jpg" alt="Diner bij Erve Hulsbeek">
+                    <p><strong>19:00 uur: Driegangendiner, BBQ of buffet</strong></p>
+                    <p>Geniet van een feestelijk diner bij Erve Hulsbeek of Carte Blanche 99, beide prachtig gelegen aan Het Hulsbeek. Lokale cateraars zorgen voor een heerlijke maaltijd, afgestemd op jullie wensen.</p>
+                </div>
+            </div>
+
+            <div class="cta">
+                Deze gehele dag wordt georganiseerd en volledig ontzorgd door Hulsbeek Events!
+            </div>
+
+            <div class="practical-tips">
+                <h3>Praktische tips:</h3>
+                <ul>
+                    <li><strong>Vervoer:</strong> De meeste locaties zijn op loopafstand in het Hulsbeek-gebied. Parkeren is eenvoudig.</li>
+                    <li><strong>Aanmelding:</strong> Voor de paddenstoelenwandeling en proeverijen is tijdig aanmelden vereist.</li>
+                    <li><strong>Flexibiliteit:</strong> Het programma kan in overleg verder worden afgestemd op specifieke wensen!</li>
+                </ul>
+            </div>
+
+            <footer>
+                Een dag vol plezier, ontspanning en onvergetelijke momenten in het prachtige Twentse landschap.
+                <br>
+                Aangeboden door jouw vriendengroep!
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
