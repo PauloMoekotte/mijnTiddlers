@@ -10,14 +10,18 @@
             size: A4;
             margin: 0;
         }
+        html, body {
+            height: 100%;
+        }
         body {
             font-family: 'Open Sans', sans-serif;
             margin: 0;
-            padding: 2cm;
+            padding: 0;
             box-sizing: border-box;
             background-color: #f8f8f8;
             color: #333;
             line-height: 1.6;
+            min-height: 100vh;
             -webkit-print-color-adjust: exact; /* For printing background colors */
         }
         .a4-container {
@@ -42,6 +46,7 @@
             top: 0;
             left: 0;
             width: 100%;
+            min-height: 100%;
             height: 100%;
             background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent white overlay for readability */
             padding: 2cm;
@@ -170,6 +175,9 @@
 
         /* Specific styles for printing */
         @media print {
+            html, body {
+                height: auto;
+            }
             body {
                 padding: 0;
                 margin: 0;
@@ -178,6 +186,7 @@
             .a4-container {
                 width: 21cm;
                 height: 29.7cm;
+                min-height: 29.7cm;
                 padding: 2cm;
                 border: none;
                 box-shadow: none;
@@ -213,7 +222,7 @@
                     <h3>Ochtend: Natuur in de hoofdrol</h3>
                     <img src="https://www.ivn.nl/sites/default/files/styles/afbeelding_332_x_249/public/2021-09/Paddenstoelenwandeling.jpg" alt="Paddenstoelenwandeling Hulsbeek">
                     <p><strong>10:00 – 12:30 uur: Paddenstoelenwandeling met natuurgids</strong></p>
-                    <p>Start bij Ingang Het Buitenhuys (P6, Bornsedijk 100, Oldenzaal). Geniet van een ontspannende wandeling met een IVN-gids die je alles vertelt over de paddenstoelen in het Hulsbeekgebied.</p>
+                    <p>Start bij Ingang Het Buitenhuys (P6, Bornsedijk 100, Oldenzaal). Geniet van een ontspannende wandeling met een IVN-gids die je alles vertelt over de paddenstoelen in het Hulsbeek.</p>
                 </div>
                 <div class="programma-onderdeel">
                     <h3>Koffiepauze met uitzicht</h3>
@@ -237,7 +246,7 @@
                     <h3>Diner: Culinaire afsluiting</h3>
                     <img src="https://ervehulsbeek.nl/wp-content/uploads/2023/07/diner-erve-hulsbeek-1.jpg" alt="Diner bij Erve Hulsbeek">
                     <p><strong>19:00 uur: Driegangendiner, BBQ of buffet</strong></p>
-                    <p>Geniet van een feestelijk diner bij Erve Hulsbeek of Carte Blanche 99, beide prachtig gelegen aan Het Hulsbeek. Lokale cateraars zorgen voor een heerlijke maaltijd, afgestemd op jullie wensen.</p>
+                    <p>Geniet van een feestelijk diner bij Erve Hulsbeek of Carte Blanche 99, beide prachtig gelegen aan Het Hulsbeek. Lokale cateraars zorgen voor een heerlijke maaltijd, afgestemd op jouw wensen.</p>
                 </div>
             </div>
 
