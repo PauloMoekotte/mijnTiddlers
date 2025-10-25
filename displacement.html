@@ -1,0 +1,671 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Task Displacement Visualization</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" 
+    rel="stylesheet" 
+  />
+  <style>
+    /* Reset and base */
+    html, body {
+      height: 100%;
+      margin: 0; padding: 8px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      background: #f2e6d9;
+      color: #4d3c27;
+      user-select: none;
+      display: flex; flex-direction: column;
+      min-height: 100vh;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      gap: 8px;
+    }
+    h1, h2 {
+      margin: 0 0 8px 0;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 18px;
+      letter-spacing: 0.03em;
+      color: #725b3a;
+    }
+    h2 {
+      font-size: 15px;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      color: #5a4630;
+    }
+    /* Layout */
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto;
+      gap: 12px;
+    }
+    section.control-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #c6bcae;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      font-weight: 600;
+      color: #5a4630;
+      cursor: pointer;
+      user-select: none;
+    }
+    label span.desc {
+      font-weight: 400;
+      margin-top: 4px;
+      font-size: 12px;
+      color: #7d6d52;
+    }
+    input[type="range"] {
+      margin-top: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 12px;
+      background: #d8cfa8;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    input[type="range"]:hover {
+      background: #bfb687;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #9a834c;
+      border: 1.5px solid #6a5530;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      margin-top: -5px;
+    }
+    input[type="range"]:hover::-webkit-slider-thumb {
+      background: #8a743d;
+      transform: scale(1.15);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #9a834c;
+      border: 1.5px solid #6a5530;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    input[type="range"]:hover::-moz-range-thumb {
+      background: #8a743d;
+      transform: scale(1.15);
+    }
+    /* Sliders numeric output */
+    output {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #5a4630;
+      font-weight: 600;
+      user-select: none;
+      min-width: 34px;
+      text-align: right;
+    }
+    /* Visualization container */
+    .visualization {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: visible;
+      min-height: 300px;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      font-family: 'Inter', monospace;
+      font-weight: 600;
+      color: #473a22;
+    }
+    /* Bars */
+    .bar-label {
+      font-weight: 600;
+      fill: #5a4630;
+      user-select: none;
+    }
+    .bar-val-text {
+      font-weight: 600;
+      fill: #4a3922;
+      user-select: none;
+    }
+    .bar-initial {
+      fill: #9c8866; /* warm brown */
+      transition: fill 0.3s;
+    }
+    .bar-post {
+      fill: #6d5a38;
+      transition: fill 0.3s;
+    }
+    .bar-displaced {
+      fill: #c9b998c7;
+      transition: fill 0.3s;
+    }
+    /* Wage bubbles */
+    .wage-group {
+      font-weight: 600;
+      fill: #3f2e10;
+    }
+    /* Flow arrows and labels */
+    .flow-arrow {
+      fill: #bfae7b;
+      stroke: #8b7d52;
+      stroke-width: 2;
+      cursor: default;
+      filter: drop-shadow(1px 1px 0 #d7b86f88);
+      transition: fill 0.3s;
+    }
+    .flow-label {
+      fill: #5a4630;
+      font-weight: 600;
+      pointer-events: none;
+      user-select: none;
+      text-shadow:
+        -1px -1px 0 #fff8d4,
+         1px -1px 0 #fff8d4,
+        -1px  1px 0 #fff8d4,
+         1px  1px 0 #fff8d4;
+    }
+    /* Tooltip style for bars on hover */
+    .tooltip {
+      position: absolute;
+      pointer-events: none;
+      background-color: #d7cfa3cc;
+      color: #4a3d1f;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 12px;
+      white-space: nowrap;
+      user-select: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      box-shadow: inset 1px 1px 3px #bdae61;
+      transform-origin: bottom left;
+      z-index: 10;
+    }
+    /* Responsive text size */
+    @media (max-width: 460px) {
+      body {
+        font-size: 13px;
+      }
+      h1 {
+        font-size: 16px;
+      }
+      h2 {
+        font-size: 14px;
+      }
+    }
+    /* Button styling for mobile slider step */
+    /* None needed - sliders sized & usable */
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Task Displacement by Automation</h1>
+    <section class="control-panel" aria-label="Sliders for displacement rates">
+      <label for="disp-1">
+        Group A Displacement %
+        <input type="range" id="disp-1" name="disp-1" min="0" max="100" step="1" value="30" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30" />
+        <output for="disp-1" id="out-1">30%</output>
+      </label>
+      <label for="disp-2">
+        Group B Displacement %
+        <input type="range" id="disp-2" name="disp-2" min="0" max="100" step="1" value="45" aria-valuemin="0" aria-valuemax="100" aria-valuenow="45" />
+        <output for="disp-2" id="out-2">45%</output>
+      </label>
+      <label for="disp-3">
+        Group C Displacement %
+        <input type="range" id="disp-3" name="disp-3" min="0" max="100" step="1" value="20" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20" />
+        <output for="disp-3" id="out-3">20%</output>
+      </label>
+      <label for="disp-4">
+        Group D Displacement %
+        <input type="range" id="disp-4" name="disp-4" min="0" max="100" step="1" value="55" aria-valuemin="0" aria-valuemax="100" aria-valuenow="55" />
+        <output for="disp-4" id="out-4">55%</output>
+      </label>
+    </section>
+
+    <section class="visualization" aria-label="Task displacement visualization">
+      <svg viewBox="0 0 520 350" role="img" aria-labelledby="visTitle visDesc" >
+        <title id="visTitle">Task Displacement Among Demographic Groups due to Automation</title>
+        <desc id="visDesc">Bar graphs of initial and post automation task shares by four demographic groups with wage impact bubbles and flow arrows showing task shifting from labor to capital</desc>
+
+        <!-- Labels on left -->
+        <text class="bar-label" x="10" y="40" dominant-baseline="middle">Group A</text>
+        <text class="bar-label" x="10" y="90" dominant-baseline="middle">Group B</text>
+        <text class="bar-label" x="10" y="140" dominant-baseline="middle">Group C</text>
+        <text class="bar-label" x="10" y="190" dominant-baseline="middle">Group D</text>
+
+        <!-- Bars background grid lines -->
+        <line x1="80" y1="25" x2="80" y2="215" stroke="#c6bcae" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="140" y1="25" x2="140" y2="215" stroke="#c6bcae" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="200" y1="25" x2="200" y2="215" stroke="#c6bcae" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="260" y1="25" x2="260" y2="215" stroke="#c6bcae" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="320" y1="25" x2="320" y2="215" stroke="#c6bcae" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="380" y1="25" x2="380" y2="215" stroke="#c6bcae" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="440" y1="25" x2="440" y2="215" stroke="#c6bcae" stroke-width="1" stroke-dasharray="3 3" />
+        <line x1="500" y1="25" x2="500" y2="215" stroke="#c6bcae" stroke-width="1" stroke-dasharray="3 3" />
+
+        <!-- X axis label -->
+        <text x="260" y="230" fill="#725b3a" font-weight="600" font-size="13" text-anchor="middle" user-select="none">
+          Task Share (%)
+        </text>
+
+        <!-- Initial Task share bars (solid) and Post-automation bars (darker) and Displaced (hatched) -->
+        <!-- Bars for groups drawn dynamically -->
+
+        <!-- Wage impact bubbles -->
+        <!-- Arrows -->
+        
+      </svg>
+    </section>
+  </main>
+
+  <div class="tooltip" role="tooltip" aria-hidden="true"></div>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const svg = document.querySelector("svg");
+    const tooltip = document.querySelector(".tooltip");
+
+    /* Data: demographic groups with initial task shares and base wages (arbitrary units) */
+    const groups = [
+      {id: "disp-1", name: "Group A", initialTaskShare: 28, baseWage: 22, colorBase:"#9c8866", colorPost:"#6d5a38"},
+      {id: "disp-2", name: "Group B", initialTaskShare: 36, baseWage: 18, colorBase:"#a4926b", colorPost:"#7b6543"},
+      {id: "disp-3", name: "Group C", initialTaskShare: 20, baseWage: 26, colorBase:"#b5a777", colorPost:"#8c7e50"},
+      {id: "disp-4", name: "Group D", initialTaskShare: 16, baseWage: 14, colorBase:"#c9bb85", colorPost:"#a29563"},
+    ];
+
+    // Settings
+    const maxBarWidth = 420; // max bar width in px for 100%
+    const barHeight = 18;
+    const barGap = 45;
+    const barLeftX = 85; // left start x-position of bars
+    const wageBubbleRadius = 12;
+    const wageRadiusScale = 2.1; // scale base wage to circle radius
+    const minWageRadius = 7;
+    const maxWageRadius = 18;
+
+    // Areas for bars:
+    // For each group y = 40, 90, 140, 190
+
+    // We will dynamically build bars and wage circles elements and update
+
+    // Pre-create bars and wage groups elements SVG:
+    const state = {}; // Store for refs to SVG elements & slider displacement values
+
+    // Create bars elements for each group
+    groups.forEach((g,i) => {
+      // Container group for each demographic line
+      let groupLine = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      groupLine.setAttribute("data-group", g.id);
+      groupLine.setAttribute("aria-label", `${g.name} task share bars`);
+
+      // Initial task share bar - base color
+      let barInitial = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      barInitial.setAttribute("class", "bar-initial");
+      barInitial.setAttribute("x", barLeftX);
+      barInitial.setAttribute("y", 40 + i*barGap - barHeight/2);
+      barInitial.setAttribute("height", barHeight);
+      barInitial.setAttribute("rx", 6);
+      barInitial.setAttribute("ry", 6);
+      barInitial.setAttribute("fill", g.colorBase);
+      barInitial.setAttribute("tabindex", "0");
+      barInitial.setAttribute("aria-describedby", `desc-initial-${i}`);
+
+      // Post automation bar (darker)
+      let barPost = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      barPost.setAttribute("class", "bar-post");
+      barPost.setAttribute("x", barLeftX);
+      barPost.setAttribute("y", 40 + i*barGap - barHeight/2);
+      barPost.setAttribute("height", barHeight);
+      barPost.setAttribute("rx", 6);
+      barPost.setAttribute("ry", 6);
+      barPost.setAttribute("fill", g.colorPost);
+      barPost.setAttribute("tabindex", "0");
+      barPost.setAttribute("aria-describedby", `desc-post-${i}`);
+
+      // Displaced bar portion (hatched) - invisible by default
+      let barDisplaced = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      barDisplaced.setAttribute("class", "bar-displaced");
+      barDisplaced.setAttribute("x", barLeftX);
+      barDisplaced.setAttribute("y", 40 + i*barGap - barHeight/2);
+      barDisplaced.setAttribute("height", barHeight);
+      barDisplaced.setAttribute("rx", 6);
+      barDisplaced.setAttribute("ry", 6);
+      barDisplaced.setAttribute("fill", "url(#hatchPattern)");
+      barDisplaced.setAttribute("opacity", 0.6);
+      barDisplaced.setAttribute("tabindex", "0");
+      barDisplaced.setAttribute("aria-describedby", `desc-disp-${i}`);
+
+      // Text values for initial and post (right end of the bars)
+      let textInitial = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textInitial.setAttribute("class", "bar-val-text");
+      textInitial.setAttribute("x", barLeftX);
+      textInitial.setAttribute("y", 40 + i*barGap - 6);
+      textInitial.setAttribute("font-size", "10");
+      textInitial.setAttribute("text-anchor", "end");
+      textInitial.setAttribute("aria-hidden", "true");
+      // will update text and x dynamically
+
+      let textPost = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      textPost.setAttribute("class", "bar-val-text");
+      textPost.setAttribute("x", barLeftX);
+      textPost.setAttribute("y", 40 + i*barGap + 10);
+      textPost.setAttribute("font-size", "10");
+      textPost.setAttribute("text-anchor", "end");
+      textPost.setAttribute("aria-hidden", "true");
+
+      // Wage impact bubble - radius scaled by relative wage (adjusted by displacement)
+      let wageBubble = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      wageBubble.setAttribute("class", "wage-group");
+      wageBubble.setAttribute("cy", 40 + i*barGap);
+      wageBubble.setAttribute("fill", g.colorPost);
+      wageBubble.setAttribute("stroke", "#4c3d1d");
+      wageBubble.setAttribute("stroke-width", 1.8);
+      wageBubble.setAttribute("tabindex", "0");
+      wageBubble.setAttribute("aria-describedby", `desc-wage-${i}`);
+
+      // Wage % text inside bubble
+      let wageText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      wageText.setAttribute("class", "wage-group");
+      wageText.setAttribute("text-anchor", "middle");
+      wageText.setAttribute("dominant-baseline", "middle");
+      wageText.setAttribute("font-size", "11");
+      wageText.setAttribute("fill", "#fffdf1");
+      wageText.style.userSelect = "none";
+
+      groupLine.appendChild(barInitial);
+      groupLine.appendChild(barPost);
+      groupLine.appendChild(barDisplaced);
+      groupLine.appendChild(textInitial);
+      groupLine.appendChild(textPost);
+      groupLine.appendChild(wageBubble);
+      groupLine.appendChild(wageText);
+
+      svg.appendChild(groupLine);
+
+      // Store references for updates
+      state[g.id] = {
+        slider: document.getElementById(g.id),
+        barInitial,
+        barPost,
+        barDisplaced,
+        textInitial,
+        textPost,
+        wageBubble,
+        wageText,
+        displacement: Number(document.getElementById(g.id).value) / 100,
+      };
+    });
+
+    // Define hatch pattern for displaced bars
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    defs.innerHTML = `
+      <pattern id="hatchPattern" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="#a3975c" stroke-width="1"/>
+      </pattern>
+    `;
+    svg.insertBefore(defs, svg.firstChild);
+
+    // Flow arrows: from labor bars right end to "Capital" box on right
+    // Positions:
+    // Labor box left edge: barLeftX - 30 (label area)
+    // Capital box on right side x ~ 490, y center ~ 130
+    // Arrows from displaced portion right end + offset
+
+    // Capital box and label
+    const capitalGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    capitalGroup.setAttribute("aria-label", "Capital");
+    capitalGroup.setAttribute("role", "img");
+
+    const capitalRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    capitalRect.setAttribute("x", 490);
+    capitalRect.setAttribute("y", 90);
+    capitalRect.setAttribute("width", 40);
+    capitalRect.setAttribute("height", 80);
+    capitalRect.setAttribute("rx", 10);
+    capitalRect.setAttribute("ry", 10);
+    capitalRect.setAttribute("fill", "#776237");
+    capitalRect.setAttribute("stroke", "#4b3b19");
+    capitalRect.setAttribute("stroke-width", 2);
+    capitalRect.setAttribute("filter", "drop-shadow(1px 1px 2px #8c7d4d77)");
+
+    const capitalLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    capitalLabel.setAttribute("x", 510);
+    capitalLabel.setAttribute("y", 135);
+    capitalLabel.setAttribute("fill", "#f1efd9");
+    capitalLabel.setAttribute("font-weight", "600");
+    capitalLabel.setAttribute("text-anchor", "middle");
+    capitalLabel.setAttribute("font-size", "13");
+    capitalLabel.textContent = "Capital";
+
+    capitalGroup.appendChild(capitalRect);
+    capitalGroup.appendChild(capitalLabel);
+    svg.appendChild(capitalGroup);
+
+    // Flow arrows container
+    const arrowsGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    svg.appendChild(arrowsGroup);
+
+    // Function to create arrow paths
+    function createArrowPath(x1,y1,x2,y2) {
+      // Draw a smooth curve arrow from (x1,y1) to (x2,y2)
+      // Curve control points to create a nice flow
+      const cp1x = x1 + 30;
+      const cp1y = y1;
+      const cp2x = x2 - 10;
+      const cp2y = y2;
+      // Arrowhead size
+      const headLen = 8;
+
+      // Calculate arrowhead points
+      // Direction vector
+      const angle = Math.atan2(y2 - cp2y, x2 - cp2x);
+      const arrowP1x = x2 - headLen * Math.cos(angle - Math.PI / 6);
+      const arrowP1y = y2 - headLen * Math.sin(angle - Math.PI / 6);
+      const arrowP2x = x2 - headLen * Math.cos(angle + Math.PI / 6);
+      const arrowP2y = y2 - headLen * Math.sin(angle + Math.PI / 6);
+
+      // Path string
+      const path = `
+        M${x1},${y1} 
+        C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2} 
+        L${arrowP1x},${arrowP1y} 
+        M${x2},${y2} 
+        L${arrowP2x},${arrowP2y}
+      `;
+
+      return path;
+    }
+
+    // Create arrow elements for each group, updated dynamically
+    groups.forEach((g,i) => {
+      let pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      pathEl.setAttribute("class", "flow-arrow");
+      pathEl.setAttribute("fill", "none");
+      pathEl.setAttribute("stroke", "#bfae7b");
+      pathEl.setAttribute("stroke-width", "2.4");
+      arrowsGroup.appendChild(pathEl);
+
+      // Arrow label near curve midpoint
+      let label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      label.setAttribute("class", "flow-label");
+      label.setAttribute("font-size", "10");
+      label.textContent = "Tasks Shifted";
+      arrowsGroup.appendChild(label);
+
+      state[g.id].arrowPath = pathEl;
+      state[g.id].arrowLabel = label;
+    });
+
+    // Update function
+    function update() {
+      groups.forEach((g,i) => {
+        let data = state[g.id];
+        let dispRate = Number(data.slider.value) / 100;
+        data.displacement = dispRate;
+        // Update output text with %
+        document.getElementById(`out-${i+1}`).textContent = `${data.slider.value}%`;
+        data.slider.setAttribute("aria-valuenow", data.slider.value);
+
+        // Initial bar width
+        let initialWidth = (g.initialTaskShare / 100) * maxBarWidth;
+        data.barInitial.setAttribute("width", initialWidth.toFixed(1));
+
+        // Displaced amount in % task share terms
+        let displacedShare = g.initialTaskShare * dispRate / 100 * 100; // g.initialTaskShare * dispRate
+        // Post automation share = initial - displaced task share
+        let postShare = g.initialTaskShare * (1 - dispRate);
+
+        // Post bar width
+        let postWidth = (postShare / 100) * maxBarWidth;
+        data.barPost.setAttribute("width", postWidth.toFixed(1));
+
+        // Displaced bar width and x start at end of post bar
+        let displacedWidth = initialWidth - postWidth;
+        data.barDisplaced.setAttribute("width", displacedWidth.toFixed(1));
+        data.barDisplaced.setAttribute("x", (barLeftX + postWidth).toFixed(1));
+
+        // Show displaced bar only if > 1 px width
+        data.barDisplaced.setAttribute("visibility", displacedWidth > 1 ? "visible" : "hidden");
+
+        // Update value texts (position right aligned to bar end, with 4px padding)
+        data.textInitial.textContent = `Initial: ${g.initialTaskShare.toFixed(1)}%`;
+        data.textPost.textContent = `Post-auto: ${postShare.toFixed(1)}%`;
+
+        data.textInitial.setAttribute("x", (barLeftX + initialWidth - 6).toFixed(1));
+        data.textPost.setAttribute("x", (barLeftX + postWidth - 6).toFixed(1));
+
+        // Wage impact calculation: negative correlation to displacement rate
+        // wageImpact = baseWage * (1 - dispRate * 0.7) scaled, clamp minimum 30% wage
+        let wageFactor = 1 - dispRate * 0.7;
+        if (wageFactor < 0.3) wageFactor = 0.3;
+        let adjustedWage = g.baseWage * wageFactor;
+
+        // Circle radius scaled by wage, clamp radius sizes
+        let radius = Math.min(Math.max(adjustedWage * wageRadiusScale, minWageRadius), maxWageRadius);
+        data.wageBubble.setAttribute("r", radius.toFixed(1));
+        data.wageBubble.setAttribute("cx", (barLeftX + maxBarWidth + 30).toFixed(1));
+
+        // Color intensity linked to wage (lighter if wage lower)
+        let shade = Math.round(120 + 40 * wageFactor);
+        let fillColor = `rgb(${shade - 40},${shade - 25},${shade - 80})`; // olive/dark goldish
+        data.wageBubble.setAttribute("fill", fillColor);
+        data.wageBubble.setAttribute("stroke", `rgb(${shade - 90},${shade - 90},${shade - 50})`);
+
+        data.wageText.textContent = `$${adjustedWage.toFixed(0)}`;
+        data.wageText.setAttribute("cx", (barLeftX + maxBarWidth + 30).toFixed(1));
+        data.wageText.setAttribute("cy", (40 + i*barGap).toFixed(1));
+
+        // Update arrow paths between displaced bar end and capital box
+        const y = 40 + i*barGap;
+        const xStart = barLeftX + postWidth + displacedWidth;
+        // Capital box center left edge at x=490 y=130 approximately
+        const capX = 490;
+        const capY = 130;
+
+        let arrowPath = createArrowPath(xStart, y, capX, capY);
+
+        data.arrowPath.setAttribute("d", arrowPath);
+        // Position label roughly mid-curve (about 60% along x-axis)
+        let labelX = xStart + (capX - xStart) * 0.65;
+        let labelY = y + (capY - y) * 0.65 - 8;
+        data.arrowLabel.setAttribute("x", labelX.toFixed(1));
+        data.arrowLabel.setAttribute("y", labelY.toFixed(1));
+      });
+    }
+
+    // Setup slider input event handlers
+    Object.values(state).forEach(({slider}) => {
+      slider.addEventListener("input", () => {
+        update();
+      });
+    });
+
+    // Initial update
+    update();
+
+    // Tooltip functionality for bars and wage bubbles
+    function attachTooltipToElement(el, textGetter) {
+      el.addEventListener("mouseenter", (e) => {
+        tooltip.textContent = textGetter();
+        tooltip.style.opacity = "1";
+        tooltip.style.pointerEvents = "auto";
+      });
+      el.addEventListener("mouseleave", (e) => {
+        tooltip.style.opacity = "0";
+        tooltip.style.pointerEvents = "none";
+      });
+      el.addEventListener("mousemove", (e) => {
+        const offset = 14;
+        const bw = window.innerWidth;
+        const bh = window.innerHeight;
+        let tx = e.clientX + offset;
+        let ty = e.clientY + offset;
+        if (tx + tooltip.offsetWidth > bw) {
+          tx = e.clientX - tooltip.offsetWidth - offset;
+        }
+        if (ty + tooltip.offsetHeight > bh) {
+          ty = e.clientY - tooltip.offsetHeight - offset;
+        }
+        tooltip.style.transform = `translate(${tx}px, ${ty}px)`;
+      });
+    }
+
+    groups.forEach((g,i) => {
+      let s = state[g.id];
+      attachTooltipToElement(s.barInitial, () =>
+        `${g.name}\nInitial Task Share:\n${g.initialTaskShare.toFixed(1)}%`
+      );
+      attachTooltipToElement(s.barPost, () =>
+        `${g.name}\nPost-automation Task Share:\n${(g.initialTaskShare * (1 - s.displacement)).toFixed(1)}%`
+      );
+      attachTooltipToElement(s.barDisplaced, () =>
+        `${g.name}\nDisplaced Tasks:\n${(g.initialTaskShare * s.displacement).toFixed(1)}%`
+      );
+      attachTooltipToElement(s.wageBubble, () => {
+        const wageFactor = 1 - s.displacement * 0.7 < 0.3 ? 0.3 : 1 - s.displacement * 0.7;
+        const wageAdjusted = g.baseWage * wageFactor;
+        return `${g.name}\nEstimated Wage Impact:\n$${wageAdjusted.toFixed(0)}`;
+      });
+    });
+
+  })();
+  </script>
+</body>
+</html>
