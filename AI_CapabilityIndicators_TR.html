@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OECD AI Capability Indicators - Interactief Rapport</title>
+    <style>
+        :root {
+            --oecd-green: #008747;
+            --oecd-dark: #333333;
+            --oecd-light-grey: #f4f4f4;
+            --oecd-blue: #0b5d9e; /* Secundaire kleur uit logo */
+            --text-color: #2c3e50;
+            --bg-color: #ffffff;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: white;
+            padding: 20px 40px;
+            border-bottom: 4px solid var(--oecd-green);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .oecd-tag {
+            background-color: var(--oecd-green);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        h1 {
+            color: var(--oecd-dark);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* --- Intro Section --- */
+        .intro-section {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 60px;
+            align-items: center;
+        }
+
+        .intro-text {
+            flex: 1;
+        }
+
+        .intro-text p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .intro-visual {
+            flex: 1;
+            background: var(--oecd-light-grey);
+            height: 300px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .robot-icon {
+            font-size: 8rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- Glossary Tooltip Styles --- */
+        .glossary-term {
+            color: var(--oecd-green);
+            font-weight: bold;
+            cursor: help;
+            border-bottom: 1px dotted var(--oecd-green);
+            position: relative;
+            display: inline-block;
+        }
+
+        .glossary-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--oecd-dark);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            width: 250px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+            pointer-events: none;
+        }
+
+        .glossary-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--oecd-dark) transparent transparent transparent;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* --- Indicators Grid --- */
+        .section-title {
+            border-left: 5px solid var(--oecd-green);
+            padding-left: 15px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            color: var(--oecd-dark);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 3px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            border-top: 3px solid var(--oecd-green);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--oecd-blue);
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .level-bar-container {
+            margin-top: 15px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            height: 10px;
+            width: 100%;
+            position: relative;
+        }
+
+        .level-bar-fill {
+            height: 100%;
+            background: var(--oecd-green);
+            border-radius: 5px;
+            width: 0%; /* Animated via JS */
+            transition: width 1.5s ease-out;
+        }
+
+        .level-text {
+            font-size: 0.8rem;
+            text-align: right;
+            margin-top: 5px;
+            font-weight: bold;
+            color: var(--oecd-green);
+        }
+
+        /* Special styling for Consciousness */
+        .card.beta {
+            border: 1px dashed #999;
+            background-color: #fafafa;
+        }
+        .card.beta .level-bar-fill {
+            background: #999;
+        }
+
+        /* --- AI Simulation Button --- */
+        .ai-analysis-btn {
+            background: linear-gradient(135deg, var(--oecd-green), #006e3a);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,135,71,0.3);
+        }
+
+        .ai-analysis-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .ai-output-box {
+            background: #f0fcf4;
+            border: 1px solid var(--oecd-green);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            display: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+        }
+
+        /* --- AI Assistant (Chatbot) --- */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            z-index: 2000;
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-header {
+            background: var(--oecd-blue);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .chatbot-minimized {
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .chat-window {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .bot-msg {
+            background: #e6f2ff;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .user-msg {
+            background: var(--oecd-green);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .input-area {
+            padding: 10px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .input-area button {
+            background: var(--oecd-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+        }
+
+        .quick-prompts {
+            padding: 10px;
+            background: #f0f0f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .prompt-chip {
+            background: white;
+            border: 1px solid var(--oecd-green);
+            color: var(--oecd-green);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .prompt-chip:hover {
+            background: var(--oecd-green);
+            color: white;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--oecd-dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .intro-section {
+                flex-direction: column;
+            }
+            .chatbot-container {
+                width: 90%;
+                right: 5%;
+                bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <span class="oecd-tag">Technical Report 2025</span>
+            <h1>OECD AI Capability Indicators</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- INTRO SECTION -->
+        <section class="intro-section">
+            <div class="intro-text">
+                <h2>Begrijpen wat AI echt kan</h2>
+                <p>
+                    In een landschap dat gedomineerd wordt door zowel hype als angst, biedt de OESO duidelijkheid. 
+                    Dit rapport introduceert de <strong>AI Capability Indicators</strong>: een raamwerk om de werkelijke 
+                    capaciteiten van <span class="glossary-term" data-tooltip="Systemen die taken uitvoeren die normaal menselijke intelligentie vereisen, zoals patroonherkenning en taalverwerking.">Artificiële Intelligentie (AI)</span> 
+                    te meten en te vergelijken met menselijke vaardigheden.
+                </p>
+                <p>
+                    Het doel is beleidsmakers te voorzien van data om de impact op onderwijs en de arbeidsmarkt te beoordelen. 
+                    Het rapport maakt gebruik van <span class="glossary-term" data-tooltip="Large Language Models: AI getraind op enorme hoeveelheden tekst om taal te genereren en begrijpen.">LLM's</span> en expert-reviews 
+                    om deze schalen te definiëren.
+                </p>
+                <button class="ai-analysis-btn" onclick="generateSummary()">
+                    <span>✨</span> Genereer AI Analyse van de Methodologie
+                </button>
+            </div>
+            <div class="intro-visual">
+                <div class="robot-icon">🤖</div>
+            </div>
+        </section>
+
+        <!-- AI OUTPUT SECTION (Hidden initially) -->
+        <div id="ai-output" class="ai-output-box"></div>
+
+        <!-- INDICATORS GRID -->
+        <h2 class="section-title">De 9 + 1 AI Indicatoren</h2>
+        <p style="margin-bottom: 20px;">De indicatoren zijn ontwikkeld als schalen van 5 niveaus, waarbij niveau 5 staat voor volledige menselijke equivalentie. Klik op een kaart voor details.</p>
+        
+        <div class="grid" id="indicators-grid">
+            <!-- Generated by JS -->
+        </div>
+
+        <!-- POLICY SECTION -->
+        <h2 class="section-title">Impact op Beleid en Werk</h2>
+        <div style="background: #f9f9f9; padding: 25px; border-radius: 8px; border-left: 5px solid var(--oecd-blue);">
+            <h3>De AI Catch-Up Index</h3>
+            <p>Hoofdstuk 13 introduceert de "Catch-Up Index". Dit meet de afstand tussen de huidige AI-capaciteiten en de vereisten voor specifieke beroepen.</p>
+            <ul>
+                <li><strong>Automatisering vs. Augmentatie:</strong> Als AI een taak sneller kan, betekent dit niet direct banenverlies, maar een verandering van de menselijke rol.</li>
+                <li><strong>Onderwijs:</strong> Vragen rijzen over welke vaardigheden studenten nog moeten leren als AI deze beter beheerst (bijv. coderen of vertalen).</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2025 OECD AI Capability Indicators Technical Report - Interactieve Infographic Versie.
+    </footer>
+
+    <!-- AI ASSISTANT CHATBOT -->
+    <div class="chatbot-container" id="chatbot">
+        <div class="chatbot-header" onclick="toggleChat()">
+            <span>OECD AI Assistent</span>
+            <span id="toggle-icon">−</span>
+        </div>
+        <div class="chat-window" id="chat-messages">
+            <div class="message bot-msg">
+                Hallo! Ik ben getraind op de inhoud van het OECD rapport. Stel me een vraag of kies een optie hieronder.
+            </div>
+        </div>
+        <div class="quick-prompts">
+            <div class="prompt-chip" onclick="sendPrompt('Wat zijn de 10 indicatoren?')">Wat zijn de indicatoren?</div>
+            <div class="prompt-chip" onclick="sendPrompt('Waarom is bewustzijn controversieel?')">Waarom is 'bewustzijn' controversieel?</div>
+            <div class="prompt-chip" onclick="sendPrompt('Wat is het doel van dit rapport?')">Wat is het doel?</div>
+            <div class="prompt-chip" onclick="sendPrompt('Hoe meet je AI in banen?')">Hoe meet je AI in banen?</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Typ uw vraag..." onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA: Indicators ---
+        const indicators = [
+            {
+                title: "Language",
+                desc: "Van simpele commando's tot nuance, humor en context. Huidige LLM's scoren hoog, maar missen soms diepgaand begrip.",
+                level: 4,
+                beta: false
+            },
+            {
+                title: "Social Interaction",
+                desc: "Emoties interpreteren en sociale normen begrijpen. Cruciaal voor zorgrobots en assistenten.",
+                level: 2,
+                beta: false
+            },
+            {
+                title: "Problem Solving",
+                desc: "Multi-step reasoning en planning. Van eenvoudige doolhoven tot complexe strategische beslissingen.",
+                level: 3,
+                beta: false
+            },
+            {
+                title: "Creativity",
+                desc: "Genereren van nieuwe, waardevolle output. AI is sterk in combineren, maar mist nog menselijke intentionaliteit.",
+                level: 3,
+                beta: false
+            },
+            {
+                title: "Knowledge & Memory",
+                desc: "Opslag, retrieval en het leren van nieuwe informatie. Verschil tussen statische training en 'lifelong learning'.",
+                level: 4,
+                beta: false
+            },
+            {
+                title: "Metacognition",
+                desc: "Thinking about thinking. Weten wat je niet weet. AI hallucineert nog vaak door gebrek hieraan.",
+                level: 2,
+                beta: false
+            },
+            {
+                title: "Vision",
+                desc: "Van objectherkenning tot volledig begrip van complexe scènes en video.",
+                level: 4,
+                beta: false
+            },
+            {
+                title: "Manipulation",
+                desc: "Fysieke interactie met objecten. Robots blijven achter op mensen qua behendigheid in ongestructureerde omgevingen.",
+                level: 2,
+                beta: false
+            },
+            {
+                title: "Robotic Intelligence",
+                desc: "Integratie van zintuigen, motoriek en planning in fysieke robots.",
+                level: 2,
+                beta: false
+            },
+            {
+                title: "Consciousness (Bewustzijn)",
+                desc: "BETA: Niet opgenomen in de officiële release vanwege ethische controverse en gebrek aan consensus.",
+                level: 1,
+                beta: true
+            }
+        ];
+
+        // --- RENDER: Indicators Grid ---
+        const grid = document.getElementById('indicators-grid');
+        
+        indicators.forEach(ind => {
+            const card = document.createElement('div');
+            card.className = ind.beta ? 'card beta' : 'card';
+            
+            const betaTag = ind.beta ? '<small style="color:red; font-weight:bold;">[BETA - Niet vrijgegeven]</small><br>' : '';
+            
+            card.innerHTML = `
+                <h3>${ind.title}</h3>
+                ${betaTag}
+                <p>${ind.desc}</p>
+                <div class="level-bar-container">
+                    <div class="level-bar-fill" style="width: 0%" data-width="${(ind.level / 5) * 100}%"></div>
+                </div>
+                <div class="level-text">Niveau: ${ind.level}/5</div>
+            `;
+            grid.appendChild(card);
+        });
+
+        // --- ANIMATION: Animate bars on load ---
+        setTimeout(() => {
+            document.querySelectorAll('.level-bar-fill').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-width');
+            });
+        }, 500);
+
+        // --- FUNCTION: AI Analysis Simulation ---
+        function generateSummary() {
+            const outputBox = document.getElementById('ai-output');
+            outputBox.style.display = 'block';
+            outputBox.innerHTML = "<strong>AI Analyseert methodologie...</strong><br>";
+            
+            const text = "De methodologie van dit rapport combineert twee bronnen: (1) Directe metingen van AI-prestaties via benchmarks (zoals examenscores) en (2) Expert-opinies verzameld via workshops. \n\nHet rapport benadrukt dat menselijke vaardigheden relatief stabiel zijn, terwijl AI snel evolueert. De indicators zijn ontworpen om: Begrijpelijk, Beleidsrelevant, Uitgebreid en Responsief te zijn. \n\nDe schalen gebruiken 5 niveaus, waarbij Niveau 5 staat voor volledige menselijke equivalentie in complexe, ongestructureerde omgevingen.";
+            
+            let i = 0;
+            const speed = 30;
+            
+            function typeWriter() {
+                if (i < text.length) {
+                    outputBox.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                }
+            }
+            
+            // Clear current and start typing
+            outputBox.innerHTML = "<span style='color:var(--oecd-green)'><strong>AI Samenvatting Methodologie:</strong></span><br><br>";
+            typeWriter();
+        }
+
+        // --- CHATBOT LOGIC ---
+        // A simplified knowledge base derived from the PDF content
+        const knowledgeBase = [
+            {
+                keywords: ["doel", "waarom", "introductie"],
+                answer: "Het doel van de OECD AI Capability Indicators is om beleidsmakers een betrouwbaar, genuanceerd beeld te geven van wat AI wel en niet kan. Dit helpt bij het vormen van beleid rond onderwijs, werkgelegenheid en veiligheid."
+            },
+            {
+                keywords: ["bewustzijn", "consciousness", "sentience", "gevoel"],
+                answer: "De indicator 'Consciousness' is ontwikkeld maar niet vrijgegeven in de beta-versie. Reden: Er is geen wetenschappelijke consensus over hoe bewustzijn in machines te meten, en het onderwerp is ethisch zeer controversieel en speculatief."
+            },
+            {
+                keywords: ["banen", "werk", "arbeid", "economie", "beroepen"],
+                answer: "Hoofdstuk 13 introduceert de 'Catch-Up Index'. Dit meet het gat tussen wat een baan vereist en wat AI kan. Taken met veel herhaling (niveau 1-2) zijn kwetsbaar, terwijl taken die complexe sociale interactie of fysieke behendigheid (niveau 4-5) vereisen, dat minder zijn."
+            },
+            {
+                keywords: ["indicatoren", "welke", "lijst", "categorieën"],
+                answer: "Er zijn 10 indicatoren ontwikkeld: Language, Social Interaction, Problem Solving, Creativity, Metacognition, Knowledge/Memory, Vision, Manipulation, Robotic Intelligence en (de voorlopig uitgesloten) Consciousness."
+            },
+            {
+                keywords: ["niveau", "schaal", "score"],
+                answer: "Elke indicator gebruikt een schaal van 1 tot 5. Niveau 1 is basis automatisering in gecontroleerde omgevingen. Niveau 5 is volledig menselijk niveau (of hoger) in ongestructureerde, complexe situaties."
+            },
+            {
+                keywords: ["visie", "kijken", "zien", "computer vision"],
+                answer: "Computer Vision (Hoofdstuk 10) is ver gevorderd in specifieke taken (zoals medische scans), maar mist nog de 'Human Sophistication' (Niveau 5) om algemene context te begrijpen in onvoorspelbare situaties."
+            }
+        ];
+
+        function toggleChat() {
+            const chat = document.getElementById('chatbot');
+            const icon = document.getElementById('toggle-icon');
+            if (chat.classList.contains('chatbot-minimized')) {
+                chat.classList.remove('chatbot-minimized');
+                icon.textContent = '−';
+            } else {
+                chat.classList.add('chatbot-minimized');
+                icon.textContent = '+';
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendPrompt(text) {
+            document.getElementById('user-input').value = text;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const text = inputField.value.trim();
+            if (!text) return;
+
+            // Add user message
+            addMessage(text, 'user-msg');
+            inputField.value = '';
+
+            // Simulate thinking time
+            setTimeout(() => {
+                const response = findAnswer(text);
+                addMessage(response, 'bot-msg');
+            }, 600);
+        }
+
+        function addMessage(text, className) {
+            const chatWindow = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${className}`;
+            msgDiv.textContent = text;
+            chatWindow.appendChild(msgDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function findAnswer(input) {
+            const lowerInput = input.toLowerCase();
+            
+            // Default fallback
+            let bestMatch = "Ik heb die specifieke informatie niet gevonden in dit technische rapport. Probeer te vragen naar de indicatoren, bewustzijn of de impact op banen.";
+
+            // Simple keyword matching
+            for (const item of knowledgeBase) {
+                for (const keyword of item.keywords) {
+                    if (lowerInput.includes(keyword)) {
+                        return item.answer;
+                    }
+                }
+            }
+            return bestMatch;
+        }
+    </script>
+</body>
+</html>
