@@ -10,8 +10,10 @@
             --primary: #2c3e50;
             --secondary: #34495e;
             --accent: #3498db;
-            --twente-color: #e74c3c;
+            --twente-color: #c0392b;
+            --twente-light: #e74c3c;
             --achterhoek-color: #27ae60;
+            --achterhoek-light: #2ecc71;
             --bg: #f4f7f6;
             --card-bg: #ffffff;
         }
@@ -60,6 +62,10 @@
             gap: 25px;
         }
 
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
         .chart-card {
             background: var(--card-bg);
             padding: 25px;
@@ -78,12 +84,43 @@
 
         .chart-container {
             position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        /* Specifieke styling voor de dubbele doughnut chart */
+        .dual-chart-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
             height: 300px;
             width: 100%;
+        }
+        
+        .chart-box {
+            width: 45%;
+            height: 100%;
+            position: relative;
+            text-align: center;
+        }
+        
+        .chart-box h3 {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
         }
 
         @media (max-width: 768px) {
             .charts-grid { grid-template-columns: 1fr; }
+            .dual-chart-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .chart-box {
+                width: 100%;
+                height: 250px;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
@@ -94,16 +131,18 @@
         <p>Inzichten voor regio's Twente & Achterhoek | Bron: AIS Arbeidsmarktinformatie</p>
     </div>
 
-    <!-- KPI Kaarten worden hier dynamisch ingeladen -->
-    <div class="kpi-grid" id="kpiContainer">
-        <!-- JS vult dit -->
-    </div>
+    <!-- KPI Kaarten -->
+    <div class="kpi-grid" id="kpiContainer"></div>
 
     <div class="charts-grid">
-        <!-- Grafiek 1: Instroom vs Vervanging -->
-        <div class="chart-card">
-            <h2>⚖️ Vraag vs. Aanbod (Vervanging vs. Instroom)</h2>
-            <p style="font-size: 0.9em; color: #666;">Vergelijking van de verwachte uitstroom (pensioen e.d.) tegenover nieuwe schoolverlaters (6-jaars totaal %).</p>
+        <!-- Grafiek 1: Instroom vs Vervanging (Full Width) -->
+        <div class="chart-card full-width">
+            <h2>⚖️ Vraag vs. Aanbod: Twente & Achterhoek</h2>
+            <p style="font-size: 0.9em; color: #666;">
+                Vergelijking per opleidingsniveau. <br>
+                <strong>Donkere balk</strong> = Vervangingsvraag (uitstroom). 
+                <strong>Lichte balk</strong> = Instroom (nieuwe schoolverlaters).
+            </p>
             <div class="chart-container">
                 <canvas id="gapChart"></canvas>
             </div>
@@ -111,8 +150,8 @@
 
         <!-- Grafiek 2: Sector Analyse -->
         <div class="chart-card">
-            <h2>📈 Groeiverwachting per Sector (Uitbreidingsvraag)</h2>
-            <p style="font-size: 0.9em; color: #666;">Welke sectoren verwachten groei in werkgelegenheid (Totaal 6 jr. %)?</p>
+            <h2>📈 Groeiverwachting per Sector</h2>
+            <p style="font-size: 0.9em; color: #666;">Verwachte uitbreidingsvraag (groei) totaal over 6 jaar.</p>
             <div class="chart-container">
                 <canvas id="sectorChart"></canvas>
             </div>
@@ -127,18 +166,26 @@
             </div>
         </div>
 
-        <!-- Grafiek 4: Opleidingsniveau Detail -->
-        <div class="chart-card">
-            <h2>🎓 Instroom Schoolverlaters per Niveau</h2>
-            <p style="font-size: 0.9em; color: #666;">Waar komen de meeste nieuwe arbeidskrachten vandaan?</p>
-            <div class="chart-container">
-                <canvas id="levelChart"></canvas>
+        <!-- Grafiek 4: Opleidingsniveau Detail (NU DUBBEL) -->
+        <div class="chart-card full-width">
+            <h2>🎓 Instroom Schoolverlaters (Verdeling)</h2>
+            <p style="font-size: 0.9em; color: #666;">Vergelijking van de instroom-mix per regio.</p>
+            
+            <div class="dual-chart-container">
+                <div class="chart-box">
+                    <h3>Twente</h3>
+                    <canvas id="levelChartTwente"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>Achterhoek</h3>
+                    <canvas id="levelChartAchterhoek"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
 <script>
-    // 1. DE RUWE DATA (Geplakt uit jouw bijlage)
+    // 1. DATA
     const csvData = `aggregatieniveau,detailniveau,thema,onderwerp,totaal 6 jr. %,gem. jaarlijks %,regionaam
 opleidingssector (ONR2019),Mbo2 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,2,"0,3",Twente
 opleidingssector (ONR2019),Mbo2 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,1",Achterhoek
@@ -245,23 +292,17 @@ opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot
         const lines = csv.trim().split('\n');
         const result = [];
         
-        // Skip header line 0
         for (let i = 1; i < lines.length; i++) {
-            // Regex om te splitten op komma's, maar niet binnen aanhalingstekens (voor "0,3")
             const matches = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
             if (!matches) continue;
-
-            // Schoon de matches op (quotes verwijderen)
             const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            
             if(row.length < 7) continue;
 
             const region = row[6].trim();
-            const rawValue = row[4]; // Totaal 6 jr %
+            const rawValue = row[4]; 
             let value = 0;
 
             if (rawValue) {
-                // Verwijder quotes en vervang komma door punt voor JS float conversie
                 let cleanVal = rawValue.replace(/"/g, '').replace(',', '.');
                 value = parseFloat(cleanVal);
                 if (isNaN(value)) value = 0;
@@ -280,23 +321,22 @@ opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot
 
     const data = parseCSV(csvData);
 
-    // 3. DATA VERWERKING VOOR GRAFIEKEN
-
-    // Helper: Filter data
-    const filterData = (subj, region) => data.filter(d => d.subject.includes(subj) && d.region === region && d.detail !== 'Totaal');
+    // Helpers
     const filterTotal = (subj, region) => data.find(d => d.subject.includes(subj) && d.region === region && d.detail === 'Totaal');
 
-    // Kleuren
-    const colorTwente = '#e74c3c';
-    const colorAchterhoek = '#27ae60';
+    // Kleuren definities
+    const colTwenteDark = '#c0392b';
+    const colTwenteLight = '#e74c3c';
+    const colAchterhoekDark = '#27ae60';
+    const colAchterhoekLight = '#2ecc71';
 
     // --- KPI KAARTEN ---
     const kpiContainer = document.getElementById('kpiContainer');
     const metrics = [
-        { title: 'Vervangingsvraag (Twente)', key: 'vervangingsvraag', region: 'Twente', color: colorTwente },
-        { title: 'Uitbreidingsvraag (Twente)', key: 'uitbreidingsvraag', region: 'Twente', color: colorTwente },
-        { title: 'Vervangingsvraag (Achterhoek)', key: 'vervangingsvraag', region: 'Achterhoek', color: colorAchterhoek },
-        { title: 'Uitbreidingsvraag (Achterhoek)', key: 'uitbreidingsvraag', region: 'Achterhoek', color: colorAchterhoek },
+        { title: 'Uitbreidingsvraag (Twente)', key: 'uitbreidingsvraag', region: 'Twente', color: colTwenteLight },
+        { title: 'Uitbreidingsvraag (Achterhoek)', key: 'uitbreidingsvraag', region: 'Achterhoek', color: colAchterhoekLight },
+        { title: 'Vervangingsvraag (Twente)', key: 'vervangingsvraag', region: 'Twente', color: colTwenteLight },
+        { title: 'Vervangingsvraag (Achterhoek)', key: 'vervangingsvraag', region: 'Achterhoek', color: colAchterhoekLight },
     ];
 
     metrics.forEach(m => {
@@ -310,20 +350,18 @@ opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot
         }
     });
 
-    // --- GRAFIEK 1: GAP ANALYSIS (Vervanging vs Instroom per Niveau - Twente Focus) ---
-    // We groeperen op opleidingsniveau (eerste woord van detail)
+    // --- ALGEMEEN DATA AGGREGATIE ---
     const levels = ['Mbo2', 'Mbo3', 'Mbo4', 'Bachelor', 'Master'];
     
-    // Aggregeren van data
     function getAggregatedData(region, subjectSnippet) {
         return levels.map(lvl => {
             const items = data.filter(d => d.region === region && d.subject.includes(subjectSnippet) && d.detail.startsWith(lvl));
-            // Gemiddelde nemen van de sectoren binnen dit niveau (simpele benadering voor visualisatie)
             const sum = items.reduce((a, b) => a + b.value, 0);
             return items.length ? (sum / items.length).toFixed(1) : 0;
         });
     }
 
+    // --- GRAFIEK 1: GAP ANALYSIS (Twente EN Achterhoek) ---
     const ctxGap = document.getElementById('gapChart').getContext('2d');
     new Chart(ctxGap, {
         type: 'bar',
@@ -331,39 +369,46 @@ opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot
             labels: levels,
             datasets: [
                 {
-                    label: 'Vervangingsvraag (Twente)',
+                    label: 'Vervanging (Twente)',
                     data: getAggregatedData('Twente', 'vervangingsvraag'),
-                    backgroundColor: 'rgba(231, 76, 60, 0.7)',
-                    borderColor: colorTwente,
-                    borderWidth: 1
+                    backgroundColor: '#a93226',
+                    borderWidth: 0
                 },
                 {
                     label: 'Instroom (Twente)',
                     data: getAggregatedData('Twente', 'instroom'),
-                    backgroundColor: 'rgba(52, 152, 219, 0.7)',
-                    borderColor: '#3498db',
-                    borderWidth: 1
+                    backgroundColor: '#e74c3c', 
+                    borderWidth: 0
+                },
+                {
+                    label: 'Vervanging (Achterhoek)',
+                    data: getAggregatedData('Achterhoek', 'vervangingsvraag'),
+                    backgroundColor: '#1e8449',
+                    borderWidth: 0
+                },
+                {
+                    label: 'Instroom (Achterhoek)',
+                    data: getAggregatedData('Achterhoek', 'instroom'),
+                    backgroundColor: '#2ecc71',
+                    borderWidth: 0
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { title: { display: true, text: 'Twente: Gemiddelde % per Opleidingsniveau' } }
+            interaction: { mode: 'index', intersect: false },
+            scales: { y: { beginAtZero: true } }
         }
     });
 
     // --- GRAFIEK 2: SECTOR UITBREIDINGSVRAAG ---
-    // Unieke sectoren extraheren (alles na de dash "-")
     const rawSectors = [...new Set(data.filter(d => d.detail !== 'Totaal').map(d => {
         const parts = d.detail.split(' - ');
         return parts.length > 1 ? parts[1] : parts[0];
     }))];
-    
-    // Alleen unieke en relevante sectoren overhouden
-    const sectors = [...new Set(rawSectors)].slice(0, 7); // Pak top 7 unieke namen voor overzichtelijkheid
+    const sectors = [...new Set(rawSectors)].slice(0, 7); 
 
-    // Data ophalen voor deze sectoren (gemiddelde over niveaus heen)
     function getSectorData(region) {
         return sectors.map(sec => {
             const items = data.filter(d => d.region === region && d.detail.includes(sec) && d.subject.includes('uitbreidingsvraag'));
@@ -375,20 +420,12 @@ opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot
     const ctxSector = document.getElementById('sectorChart').getContext('2d');
     new Chart(ctxSector, {
         type: 'bar',
-        indexAxis: 'y', // Horizontale bar
+        indexAxis: 'y', 
         data: {
             labels: sectors,
             datasets: [
-                {
-                    label: 'Twente',
-                    data: getSectorData('Twente'),
-                    backgroundColor: colorTwente
-                },
-                {
-                    label: 'Achterhoek',
-                    data: getSectorData('Achterhoek'),
-                    backgroundColor: colorAchterhoek
-                }
+                { label: 'Twente', data: getSectorData('Twente'), backgroundColor: colTwenteLight },
+                { label: 'Achterhoek', data: getSectorData('Achterhoek'), backgroundColor: colAchterhoekLight }
             ]
         },
         options: {
@@ -398,7 +435,7 @@ opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot
         }
     });
 
-    // --- GRAFIEK 3: RADAR CHART (Regio Vergelijking Totaal) ---
+    // --- GRAFIEK 3: RADAR CHART ---
     const radarLabels = ['Uitbreidingsvraag', 'Vervangingsvraag', 'Instroom Schoolverlaters'];
     const radarDataTwente = [
         filterTotal('uitbreidingsvraag', 'Twente')?.value || 0,
@@ -422,57 +459,70 @@ opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot
                     data: radarDataTwente,
                     fill: true,
                     backgroundColor: 'rgba(231, 76, 60, 0.2)',
-                    borderColor: colorTwente,
-                    pointBackgroundColor: colorTwente
+                    borderColor: colTwenteLight,
+                    pointBackgroundColor: colTwenteLight
                 },
                 {
                     label: 'Achterhoek',
                     data: radarDataAchterhoek,
                     fill: true,
                     backgroundColor: 'rgba(39, 174, 96, 0.2)',
-                    borderColor: colorAchterhoek,
-                    pointBackgroundColor: colorAchterhoek
+                    borderColor: colAchterhoekLight,
+                    pointBackgroundColor: colAchterhoekLight
                 }
             ]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                r: {
-                    angleLines: { color: '#eee' },
-                    grid: { color: '#eee' },
-                    suggestedMin: 0
-                }
-            }
-        }
+        options: { responsive: true, maintainAspectRatio: false }
     });
 
-    // --- GRAFIEK 4: DOUGHNUT (Instroom Verdeling) ---
-    // Totale instroom percentage optellen per niveau (indicatief)
-    const inflowData = levels.map(lvl => {
+    // --- GRAFIEK 4: DUBBELE DOUGHNUT ---
+    const bgColors = ['#f1c40f', '#e67e22', '#e74c3c', '#9b59b6', '#34495e'];
+    
+    // Data Twente
+    const inflowDataTwente = levels.map(lvl => {
         const val = getAggregatedData('Twente', 'instroom')[levels.indexOf(lvl)];
         return parseFloat(val);
     });
 
-    const ctxLevel = document.getElementById('levelChart').getContext('2d');
-    new Chart(ctxLevel, {
+    // Data Achterhoek
+    const inflowDataAchterhoek = levels.map(lvl => {
+        const val = getAggregatedData('Achterhoek', 'instroom')[levels.indexOf(lvl)];
+        return parseFloat(val);
+    });
+
+    // Chart Twente
+    new Chart(document.getElementById('levelChartTwente').getContext('2d'), {
         type: 'doughnut',
         data: {
             labels: levels,
             datasets: [{
-                data: inflowData,
-                backgroundColor: ['#f1c40f', '#e67e22', '#e74c3c', '#9b59b6', '#34495e'],
+                data: inflowDataTwente,
+                backgroundColor: bgColors,
                 hoverOffset: 4
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'right' },
-                title: { display: true, text: 'Instroom mix in Twente' }
-            }
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    // Chart Achterhoek
+    new Chart(document.getElementById('levelChartAchterhoek').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: levels,
+            datasets: [{
+                data: inflowDataAchterhoek,
+                backgroundColor: bgColors,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
         }
     });
 
