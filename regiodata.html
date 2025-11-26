@@ -1,0 +1,510 @@
+Dit is een gaaf project. De data die je hebt aangeleverd bevat waardevolle voorspellingen over de arbeidsmarkt in Twente en de Achterhoek (Instroom vs. Vraag).
+
+Ik heb een volledig werkend HTML-dashboard voor je gebouwd. Omdat de data complex is (CSV formaat met specifieke notaties zoals "0,3"), heb ik een speciaal script in de HTML geschreven dat jouw data automatisch inleest, opschoont en visualiseert.
+
+Wat zie je in dit dashboard?
+
+KPI Kaarten: Een samenvatting van de totale percentages voor beide regio's.
+
+Kloof Analyse (Instroom vs. Vervanging): Een grafiek die laat zien of er genoeg schoolverlaters zijn om de mensen die met pensioen gaan (vervangingsvraag) op te vangen per opleidingsniveau.
+
+Sector Groei (Uitbreidingsvraag): Welke sectoren groeien en welke krimpen?
+
+Regio Vergelijking: Een 'Radar' grafiek die Twente en de Achterhoek vergelijkt op de hoofdthema's.
+
+Instructies
+
+Kopieer onderstaande code.
+
+Sla het op als een .html bestand (bijv. arbeidsmarkt_dashboard.html).
+
+Open het in je browser.
+
+code
+Html
+play_circle
+download
+content_copy
+expand_less
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbeidsmarkt Dashboard 2024-2028</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --twente-color: #e74c3c;
+            --achterhoek-color: #27ae60;
+            --bg: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        h1 { margin: 0; color: var(--primary); }
+        p { color: #666; margin-top: 5px; }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+        }
+
+        .kpi-card h3 { margin: 0 0 10px 0; font-size: 14px; color: #7f8c8d; text-transform: uppercase; }
+        .kpi-card .value { font-size: 28px; font-weight: bold; color: var(--primary); }
+        .kpi-card .sub { font-size: 13px; color: #95a5a6; }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-card h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>📊 Arbeidsmarktprognose 2024-2028</h1>
+        <p>Inzichten voor regio's Twente & Achterhoek | Bron: AIS Arbeidsmarktinformatie</p>
+    </div>
+
+    <!-- KPI Kaarten worden hier dynamisch ingeladen -->
+    <div class="kpi-grid" id="kpiContainer">
+        <!-- JS vult dit -->
+    </div>
+
+    <div class="charts-grid">
+        <!-- Grafiek 1: Instroom vs Vervanging -->
+        <div class="chart-card">
+            <h2>⚖️ Vraag vs. Aanbod (Vervanging vs. Instroom)</h2>
+            <p style="font-size: 0.9em; color: #666;">Vergelijking van de verwachte uitstroom (pensioen e.d.) tegenover nieuwe schoolverlaters (6-jaars totaal %).</p>
+            <div class="chart-container">
+                <canvas id="gapChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Grafiek 2: Sector Analyse -->
+        <div class="chart-card">
+            <h2>📈 Groeiverwachting per Sector (Uitbreidingsvraag)</h2>
+            <p style="font-size: 0.9em; color: #666;">Welke sectoren verwachten groei in werkgelegenheid (Totaal 6 jr. %)?</p>
+            <div class="chart-container">
+                <canvas id="sectorChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Grafiek 3: Regio Vergelijking -->
+        <div class="chart-card">
+            <h2>🌍 Regio Profiel: Twente vs. Achterhoek</h2>
+            <p style="font-size: 0.9em; color: #666;">Totaalbeeld van de drie kernindicatoren.</p>
+            <div class="chart-container">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Grafiek 4: Opleidingsniveau Detail -->
+        <div class="chart-card">
+            <h2>🎓 Instroom Schoolverlaters per Niveau</h2>
+            <p style="font-size: 0.9em; color: #666;">Waar komen de meeste nieuwe arbeidskrachten vandaan?</p>
+            <div class="chart-container">
+                <canvas id="levelChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // 1. DE RUWE DATA (Geplakt uit jouw bijlage)
+    const csvData = `aggregatieniveau,detailniveau,thema,onderwerp,totaal 6 jr. %,gem. jaarlijks %,regionaam
+opleidingssector (ONR2019),Mbo2 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,2,"0,3",Twente
+opleidingssector (ONR2019),Mbo2 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,1",Achterhoek
+opleidingssector (ONR2019),Mbo2 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,19,3,Twente
+opleidingssector (ONR2019),Mbo2 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,11,"1,8",Achterhoek
+opleidingssector (ONR2019),Mbo2 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,38,"5,6",Twente
+opleidingssector (ONR2019),Mbo2 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,18,"2,9",Achterhoek
+opleidingssector (ONR2019),Mbo2 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,1",Twente
+opleidingssector (ONR2019),Mbo2 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-1,"-0,1",Achterhoek
+opleidingssector (ONR2019),Mbo2 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,12,"1,9",Twente
+opleidingssector (ONR2019),Mbo2 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,7,"1,1",Achterhoek
+opleidingssector (ONR2019),Mbo2 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,53,"7,4",Twente
+opleidingssector (ONR2019),Mbo2 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,2,"0,3",Achterhoek
+opleidingssector (ONR2019),Mbo2 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,3,"0,6",Twente
+opleidingssector (ONR2019),Mbo2 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,2",Achterhoek
+opleidingssector (ONR2019),Mbo2 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,15,"2,4",Twente
+opleidingssector (ONR2019),Mbo2 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,9,"1,4",Achterhoek
+opleidingssector (ONR2019),Mbo2 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,72,"9,4",Twente
+opleidingssector (ONR2019),Mbo2 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,40,"5,7",Achterhoek
+opleidingssector (ONR2019),Mbo3 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,4,"0,6",Twente
+opleidingssector (ONR2019),Mbo3 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,13,"2,1",Twente
+opleidingssector (ONR2019),Mbo3 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,33,"4,8",Twente
+opleidingssector (ONR2019),Mbo3 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,2,"0,3",Twente
+opleidingssector (ONR2019),Mbo3 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-1,"-0,1",Achterhoek
+opleidingssector (ONR2019),Mbo3 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,12,"1,9",Twente
+opleidingssector (ONR2019),Mbo3 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,15,"2,4",Achterhoek
+opleidingssector (ONR2019),Mbo3 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,20,"3,1",Twente
+opleidingssector (ONR2019),Mbo3 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,17,"2,6",Achterhoek
+opleidingssector (ONR2019),Mbo3 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,2,"0,4",Twente
+opleidingssector (ONR2019),Mbo3 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,2",Achterhoek
+opleidingssector (ONR2019),Mbo3 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,15,"2,4",Twente
+opleidingssector (ONR2019),Mbo3 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,18,"2,8",Achterhoek
+opleidingssector (ONR2019),Mbo3 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,29,"4,3",Twente
+opleidingssector (ONR2019),Mbo3 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,47,"6,6",Achterhoek
+opleidingssector (ONR2019),Mbo4 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,2,"0,3",Twente
+opleidingssector (ONR2019),Mbo4 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,1",Achterhoek
+opleidingssector (ONR2019),Mbo4 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,10,"1,6",Twente
+opleidingssector (ONR2019),Mbo4 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,16,"2,5",Achterhoek
+opleidingssector (ONR2019),Mbo4 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,17,"2,7",Twente
+opleidingssector (ONR2019),Mbo4 - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,21,"3,2",Achterhoek
+opleidingssector (ONR2019),Mbo4 - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,2",Twente
+opleidingssector (ONR2019),Mbo4 - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,0,"-0,1",Achterhoek
+opleidingssector (ONR2019),Mbo4 - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,23,"3,5",Twente
+opleidingssector (ONR2019),Mbo4 - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,13,"2,1",Achterhoek
+opleidingssector (ONR2019),Mbo4 - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,16,"2,5",Twente
+opleidingssector (ONR2019),Mbo4 - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,12,"1,9",Achterhoek
+opleidingssector (ONR2019),Mbo4 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-1,"-0,1",Twente
+opleidingssector (ONR2019),Mbo4 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-2,"-0,4",Achterhoek
+opleidingssector (ONR2019),Mbo4 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,23,"3,5",Twente
+opleidingssector (ONR2019),Mbo4 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,27,4,Achterhoek
+opleidingssector (ONR2019),Mbo4 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,23,"3,6",Twente
+opleidingssector (ONR2019),Mbo4 - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,20,"3,1",Achterhoek
+opleidingssector (ONR2019),Mbo4 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,3,"0,5",Twente
+opleidingssector (ONR2019),Mbo4 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,2",Achterhoek
+opleidingssector (ONR2019),Mbo4 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,17,"2,7",Twente
+opleidingssector (ONR2019),Mbo4 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,14,"2,1",Achterhoek
+opleidingssector (ONR2019),Mbo4 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,52,"7,2",Twente
+opleidingssector (ONR2019),Mbo4 - zorg en dienstverlening,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,35,"5,1",Achterhoek
+opleidingssector (ONR2019),Bachelor - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,2,"0,3",Twente
+opleidingssector (ONR2019),Bachelor - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,0,0,Achterhoek
+opleidingssector (ONR2019),Bachelor - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,12,"1,9",Twente
+opleidingssector (ONR2019),Bachelor - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,19,"2,9",Achterhoek
+opleidingssector (ONR2019),Bachelor - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,29,"4,3",Twente
+opleidingssector (ONR2019),Bachelor - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,23,"3,5",Achterhoek
+opleidingssector (ONR2019),Bachelor - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,0,"0,1",Twente
+opleidingssector (ONR2019),Bachelor - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-2,"-0,4",Achterhoek
+opleidingssector (ONR2019),Bachelor - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,17,"2,7",Twente
+opleidingssector (ONR2019),Bachelor - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,38,"5,6",Achterhoek
+opleidingssector (ONR2019),Bachelor - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,19,3,Twente
+opleidingssector (ONR2019),Bachelor - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,20,3,Achterhoek
+opleidingssector (ONR2019),Bachelor - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-2,"-0,3",Twente
+opleidingssector (ONR2019),Bachelor - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-3,"-0,5",Achterhoek
+opleidingssector (ONR2019),Bachelor - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,15,"2,4",Twente
+opleidingssector (ONR2019),Bachelor - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,21,"3,2",Achterhoek
+opleidingssector (ONR2019),Bachelor - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,25,"3,8",Twente
+opleidingssector (ONR2019),Bachelor - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,34,5,Achterhoek
+opleidingssector (ONR2019),Master - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,5,"0,8",Twente
+opleidingssector (ONR2019),Master - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,2",Achterhoek
+opleidingssector (ONR2019),Master - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,30,"4,5",Twente
+opleidingssector (ONR2019),Master - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,38,"5,5",Achterhoek
+opleidingssector (ONR2019),Master - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,17,"2,7",Twente
+opleidingssector (ONR2019),Master - economie en maatschappij,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,4,"0,6",Achterhoek
+opleidingssector (ONR2019),Master - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-1,"-0,1",Twente
+opleidingssector (ONR2019),Master - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,16,"2,6",Twente
+opleidingssector (ONR2019),Master - landbouw en natuur,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,36,"5,3",Twente
+opleidingssector (ONR2019),Master - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,2",Twente
+opleidingssector (ONR2019),Master - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,19,3,Twente
+opleidingssector (ONR2019),Master - techniek en ict,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,30,"4,5",Twente
+opleidingssector (ONR2019),Master - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-2,"-0,3",Twente
+opleidingssector (ONR2019),Master - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,-4,"-0,6",Achterhoek
+opleidingssector (ONR2019),Master - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,17,"2,7",Twente
+opleidingssector (ONR2019),Master - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,28,"4,2",Achterhoek
+opleidingssector (ONR2019),Master - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,27,4,Twente
+opleidingssector (ONR2019),Master - zorg en onderwijs,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,22,"3,4",Achterhoek
+opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,1,"0,2",Twente
+opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte uitbreidingsvraag tot 2028,0,"-0,1",Achterhoek
+opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,21,"3,2",Twente
+opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte vervangingsvraag tot 2028,25,"3,9",Achterhoek
+opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,30,"4,5",Twente
+opleidingssector (ONR2019),Totaal,Risicoindicatoren en arbeidsmarktprognoses tot 2028,verwachte instroom van schoolverlaters tot 2028,28,"4,2",Achterhoek`;
+
+    // 2. PARSING LOGICA
+    function parseCSV(csv) {
+        const lines = csv.trim().split('\n');
+        const result = [];
+        
+        // Skip header line 0
+        for (let i = 1; i < lines.length; i++) {
+            // Regex om te splitten op komma's, maar niet binnen aanhalingstekens (voor "0,3")
+            const matches = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+            if (!matches) continue;
+
+            // Schoon de matches op (quotes verwijderen)
+            const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            
+            if(row.length < 7) continue;
+
+            const region = row[6].trim();
+            const rawValue = row[4]; // Totaal 6 jr %
+            let value = 0;
+
+            if (rawValue) {
+                // Verwijder quotes en vervang komma door punt voor JS float conversie
+                let cleanVal = rawValue.replace(/"/g, '').replace(',', '.');
+                value = parseFloat(cleanVal);
+                if (isNaN(value)) value = 0;
+            }
+
+            result.push({
+                aggLevel: row[0].trim(),
+                detail: row[1].trim(),
+                subject: row[3].trim(),
+                value: value,
+                region: region
+            });
+        }
+        return result;
+    }
+
+    const data = parseCSV(csvData);
+
+    // 3. DATA VERWERKING VOOR GRAFIEKEN
+
+    // Helper: Filter data
+    const filterData = (subj, region) => data.filter(d => d.subject.includes(subj) && d.region === region && d.detail !== 'Totaal');
+    const filterTotal = (subj, region) => data.find(d => d.subject.includes(subj) && d.region === region && d.detail === 'Totaal');
+
+    // Kleuren
+    const colorTwente = '#e74c3c';
+    const colorAchterhoek = '#27ae60';
+
+    // --- KPI KAARTEN ---
+    const kpiContainer = document.getElementById('kpiContainer');
+    const metrics = [
+        { title: 'Uitbreidingsvraag (Twente)', key: 'uitbreidingsvraag', region: 'Twente', color: colorTwente },
+        { title: 'Uitbreidingsvraag (Achterhoek)', key: 'uitbreidingsvraag', region: 'Achterhoek', color: colorAchterhoek },
+        { title: 'Vervangingsvraag (Twente)', key: 'vervangingsvraag', region: 'Twente', color: colorTwente },
+        { title: 'Vervangingsvraag (Achterhoek)', key: 'vervangingsvraag', region: 'Achterhoek', color: colorAchterhoek },
+    ];
+
+    metrics.forEach(m => {
+        const item = filterTotal(m.key, m.region);
+        if(item) {
+            const div = document.createElement('div');
+            div.className = 'kpi-card';
+            div.style.borderLeftColor = m.color;
+            div.innerHTML = `<h3>${m.title}</h3><div class="value">${item.value}%</div><div class="sub">Totaal over 6 jaar</div>`;
+            kpiContainer.appendChild(div);
+        }
+    });
+
+    // --- GRAFIEK 1: GAP ANALYSIS (Vervanging vs Instroom per Niveau - Twente Focus) ---
+    // We groeperen op opleidingsniveau (eerste woord van detail)
+    const levels = ['Mbo2', 'Mbo3', 'Mbo4', 'Bachelor', 'Master'];
+    
+    // Aggregeren van data
+    function getAggregatedData(region, subjectSnippet) {
+        return levels.map(lvl => {
+            const items = data.filter(d => d.region === region && d.subject.includes(subjectSnippet) && d.detail.startsWith(lvl));
+            // Gemiddelde nemen van de sectoren binnen dit niveau (simpele benadering voor visualisatie)
+            const sum = items.reduce((a, b) => a + b.value, 0);
+            return items.length ? (sum / items.length).toFixed(1) : 0;
+        });
+    }
+
+    const ctxGap = document.getElementById('gapChart').getContext('2d');
+    new Chart(ctxGap, {
+        type: 'bar',
+        data: {
+            labels: levels,
+            datasets: [
+                {
+                    label: 'Vervangingsvraag (Twente)',
+                    data: getAggregatedData('Twente', 'vervangingsvraag'),
+                    backgroundColor: 'rgba(231, 76, 60, 0.7)',
+                    borderColor: colorTwente,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Instroom (Twente)',
+                    data: getAggregatedData('Twente', 'instroom'),
+                    backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                    borderColor: '#3498db',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { title: { display: true, text: 'Twente: Gemiddelde % per Opleidingsniveau' } }
+        }
+    });
+
+    // --- GRAFIEK 2: SECTOR UITBREIDINGSVRAAG ---
+    // Unieke sectoren extraheren (alles na de dash "-")
+    const rawSectors = [...new Set(data.filter(d => d.detail !== 'Totaal').map(d => {
+        const parts = d.detail.split(' - ');
+        return parts.length > 1 ? parts[1] : parts[0];
+    }))];
+    
+    // Alleen unieke en relevante sectoren overhouden
+    const sectors = [...new Set(rawSectors)].slice(0, 7); // Pak top 7 unieke namen voor overzichtelijkheid
+
+    // Data ophalen voor deze sectoren (gemiddelde over niveaus heen)
+    function getSectorData(region) {
+        return sectors.map(sec => {
+            const items = data.filter(d => d.region === region && d.detail.includes(sec) && d.subject.includes('uitbreidingsvraag'));
+            const sum = items.reduce((a, b) => a + b.value, 0);
+            return items.length ? (sum / items.length).toFixed(1) : 0;
+        });
+    }
+
+    const ctxSector = document.getElementById('sectorChart').getContext('2d');
+    new Chart(ctxSector, {
+        type: 'bar',
+        indexAxis: 'y', // Horizontale bar
+        data: {
+            labels: sectors,
+            datasets: [
+                {
+                    label: 'Twente',
+                    data: getSectorData('Twente'),
+                    backgroundColor: colorTwente
+                },
+                {
+                    label: 'Achterhoek',
+                    data: getSectorData('Achterhoek'),
+                    backgroundColor: colorAchterhoek
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { x: { grid: { color: '#eee' } } }
+        }
+    });
+
+    // --- GRAFIEK 3: RADAR CHART (Regio Vergelijking Totaal) ---
+    const radarLabels = ['Uitbreidingsvraag', 'Vervangingsvraag', 'Instroom Schoolverlaters'];
+    const radarDataTwente = [
+        filterTotal('uitbreidingsvraag', 'Twente')?.value || 0,
+        filterTotal('vervangingsvraag', 'Twente')?.value || 0,
+        filterTotal('instroom', 'Twente')?.value || 0
+    ];
+    const radarDataAchterhoek = [
+        filterTotal('uitbreidingsvraag', 'Achterhoek')?.value || 0,
+        filterTotal('vervangingsvraag', 'Achterhoek')?.value || 0,
+        filterTotal('instroom', 'Achterhoek')?.value || 0
+    ];
+
+    const ctxRadar = document.getElementById('radarChart').getContext('2d');
+    new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+            labels: radarLabels,
+            datasets: [
+                {
+                    label: 'Twente',
+                    data: radarDataTwente,
+                    fill: true,
+                    backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                    borderColor: colorTwente,
+                    pointBackgroundColor: colorTwente
+                },
+                {
+                    label: 'Achterhoek',
+                    data: radarDataAchterhoek,
+                    fill: true,
+                    backgroundColor: 'rgba(39, 174, 96, 0.2)',
+                    borderColor: colorAchterhoek,
+                    pointBackgroundColor: colorAchterhoek
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: { color: '#eee' },
+                    grid: { color: '#eee' },
+                    suggestedMin: 0
+                }
+            }
+        }
+    });
+
+    // --- GRAFIEK 4: DOUGHNUT (Instroom Verdeling) ---
+    // Totale instroom percentage optellen per niveau (indicatief)
+    const inflowData = levels.map(lvl => {
+        const val = getAggregatedData('Twente', 'instroom')[levels.indexOf(lvl)];
+        return parseFloat(val);
+    });
+
+    const ctxLevel = document.getElementById('levelChart').getContext('2d');
+    new Chart(ctxLevel, {
+        type: 'doughnut',
+        data: {
+            labels: levels,
+            datasets: [{
+                data: inflowData,
+                backgroundColor: ['#f1c40f', '#e67e22', '#e74c3c', '#9b59b6', '#34495e'],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'right' },
+                title: { display: true, text: 'Instroom mix in Twente' }
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>
