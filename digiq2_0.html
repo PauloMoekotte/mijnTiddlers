@@ -365,7 +365,7 @@
             // Simuleer "AI Generatie" van workflow syntax gebaseerd op rapport protocollen
             if (type === 'privacy') {
                 mermaidCode = `
-                graph LR
+                graph TD
                     A[Start: Privacy Check] --> B{Account Instellingen};
                     B -->|Controleer| C[Zichtbaarheid];
                     B -->|Controleer| D[Data Delen];
