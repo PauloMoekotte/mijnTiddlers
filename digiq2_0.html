@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigIQ 2.0 - Interactieve Infographic</title>
+    
+    <!-- Tailwind CSS voor layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js voor grafieken -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Mermaid.js voor Workflow visualisatie -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+        window.mermaid = mermaid; 
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --uva-black: #1f1f1f;
+            --uva-red: #bc0031; /* UvA-achtige rode accentkleur */
+            --bg-light: #f4f4f4;
+            --tooltip-bg: #333;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--uva-black);
+            overflow-x: hidden;
+        }
+
+        /* --- Header Styling --- */
+        .header-bg {
+            background: linear-gradient(135deg, var(--uva-black) 0%, #444 100%);
+            color: white;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+
+        /* --- Tooltip Styling (Critical Fix) --- */
+        .glossary-term {
+            color: var(--uva-red);
+            font-weight: bold;
+            cursor: help;
+            border-bottom: 2px dotted var(--uva-red);
+            position: relative;
+            display: inline-block;
+        }
+
+        .glossary-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%; 
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--tooltip-bg);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: normal;
+            white-space: normal; /* Zorgt voor wrapping */
+            width: max-content;
+            max-width: 250px; /* Voorkomt dat het te breed wordt */
+            z-index: 9999; /* Altijd bovenop */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            text-align: left;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        .glossary-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--tooltip-bg) transparent transparent transparent;
+            z-index: 9999;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* --- Chatbot Styling --- */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 9000;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-container.minimized {
+            transform: translateY(440px);
+            cursor: pointer;
+        }
+
+        .chat-header {
+            background: var(--uva-red);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .bot-msg {
+            background: #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .user-msg {
+            background: var(--uva-red);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .chat-input-area {
+            padding: 10px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        .prompt-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 5px 10px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chip {
+            background: #f0f0f0;
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid #ddd;
+        }
+
+        .chip:hover {
+            background: #e2e2e2;
+            border-color: #bbb;
+        }
+
+        /* --- Workflow Section --- */
+        .workflow-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid var(--uva-red);
+        }
+
+        .btn-generate {
+            background-color: var(--uva-black);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .btn-generate:hover { background-color: #444; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-bg p-10 mb-8">
+        <div class="max-w-6xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">DIGIQ 2.0</h1>
+            <h2 class="text-xl md:text-2xl font-light opacity-90">Digitale Geletterdheid in Nederland 2025</h2>
+            <p class="mt-4 max-w-2xl">
+                Een interactieve analyse van de digitale kloof, AI-vaardigheden en veiligheidsprotocollen gebaseerd op het DigIQ-raamwerk.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 md:grid-cols-12 gap-8">
+
+        <!-- Linker Kolom (Tekst & Glossary) -->
+        <div class="md:col-span-7 space-y-8">
+            
+            <!-- Section 1: Introductie -->
+            <section class="bg-white p-6 rounded-lg shadow-sm">
+                <h3 class="text-2xl font-bold mb-4 text-gray-800">De Huidige Stand van Zaken</h3>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    Uit het rapport blijkt dat hoewel de toegang tot technologie hoog is, de <span class="glossary-term" data-tooltip="Het vermogen om digitale technologieën effectief, kritisch en veilig te gebruiken.">digitale competentie</span> achterblijft.
+                    Met name op het gebied van <span class="glossary-term" data-tooltip="Het begrijpen hoe informatie wordt gegenereerd en het beoordelen van de betrouwbaarheid van bronnen.">informatievaardigheden</span> en privacy-instellingen is er sprake van een aanzienlijke kloof.
+                </p>
+                <p class="text-gray-600 leading-relaxed">
+                    Nieuw in DigIQ 2.0 is de focus op <span class="glossary-term" data-tooltip="Het begrijpen van de werking van algoritmes en AI-systemen zoals ChatGPT.">AI-geletterdheid</span>. Veel gebruikers weten niet hoe hun data wordt gebruikt door algoritmes.
+                </p>
+            </section>
+
+            <!-- Section 2: AI Workflow Generator -->
+            <section class="bg-white p-6 rounded-lg shadow-sm">
+                <h3 class="text-2xl font-bold mb-2 text-gray-800 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                    AI Workflow Visualisatie
+                </h3>
+                <p class="text-sm text-gray-500 mb-4">Selecteer een complex proces uit het rapport. De AI genereert direct een visueel stroomschema.</p>
+
+                <div class="flex gap-3 mb-4 flex-wrap">
+                    <button onclick="generateWorkflow('privacy')" class="btn-generate text-sm">Protocol: Privacy Check</button>
+                    <button onclick="generateWorkflow('sourceCheck')" class="btn-generate text-sm">Protocol: Bronverificatie</button>
+                    <button onclick="generateWorkflow('aiUse')" class="btn-generate text-sm">Protocol: Ethisch AI Gebruik</button>
+                </div>
+
+                <div id="mermaid-container" class="workflow-box overflow-x-auto flex justify-center min-h-[200px] items-center text-gray-400">
+                    <em>Klik op een knop hierboven om een workflow te genereren...</em>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Rechter Kolom (Data & Stats) -->
+        <div class="md:col-span-5 space-y-8">
+            
+            <!-- Chart 1 -->
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-bold text-lg mb-4 text-center">Vaardigheidsniveau per Categorie</h4>
+                <canvas id="skillsChart"></canvas>
+                <p class="text-xs text-center text-gray-400 mt-2">Bron: DigIQ 2.0 Data (Illustratief)</p>
+            </div>
+
+            <!-- Chart 2 -->
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h4 class="font-bold text-lg mb-4 text-center">Digitale Ongelijkheid (Leeftijd)</h4>
+                <canvas id="ageChart"></canvas>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- AI Assistent Interface -->
+    <div id="chatbot" class="chatbot-container minimized">
+        <div class="chat-header" onclick="toggleChat()">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🤖</span>
+                <span>DigIQ Assistent</span>
+            </div>
+            <span id="toggle-icon">▲</span>
+        </div>
+        
+        <!-- Pre-set prompts -->
+        <div class="prompt-chips">
+            <div class="chip" onclick="sendPrompt('Wat zijn de kernbevindingen?')">Kernbevindingen?</div>
+            <div class="chip" onclick="sendPrompt('Hoe verbeter ik AI-kennis?')">AI-kennis verbeteren</div>
+            <div class="chip" onclick="sendPrompt('Wat is de methodologie?')">Methodologie</div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-msg">
+                Hallo! Ik ben de AI-assistent van het DigIQ 2.0 rapport. Stel mij een vraag over de data of selecteer een suggestie hierboven.
+            </div>
+        </div>
+
+        <div class="chat-input-area flex gap-2">
+            <input type="text" id="user-input" placeholder="Typ uw vraag..." class="flex-1 border p-2 rounded text-sm focus:outline-none focus:border-red-500" onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()" class="bg-red-700 text-white p-2 rounded hover:bg-red-800">➤</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. Chart.js Configuratie ---
+        const ctxSkills = document.getElementById('skillsChart').getContext('2d');
+        new Chart(ctxSkills, {
+            type: 'radar',
+            data: {
+                labels: ['Informatie', 'Communicatie', 'Content Creatie', 'Veiligheid', 'Probleemoplossing', 'AI Kennis'],
+                datasets: [{
+                    label: 'Gemiddelde Score (0-100)',
+                    data: [75, 85, 60, 45, 65, 30],
+                    backgroundColor: 'rgba(188, 0, 49, 0.2)',
+                    borderColor: 'rgba(188, 0, 49, 1)',
+                    pointBackgroundColor: 'rgba(188, 0, 49, 1)',
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: { display: false },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+
+        const ctxAge = document.getElementById('ageChart').getContext('2d');
+        new Chart(ctxAge, {
+            type: 'bar',
+            data: {
+                labels: ['18-25', '26-40', '41-60', '60+'],
+                datasets: [{
+                    label: 'Hoge Digitale Vaardigheid (%)',
+                    data: [88, 82, 65, 40],
+                    backgroundColor: '#1f1f1f'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                }
+            }
+        });
+
+        // --- 2. AI Workflow Generation (Mermaid Logic) ---
+        // Functie die dynamisch mermaid syntax genereert op basis van selectie
+        async function generateWorkflow(type) {
+            const container = document.getElementById('mermaid-container');
+            container.innerHTML = '<div class="text-center">Genereren van visualisatie... <span class="animate-spin inline-block">⏳</span></div>';
+            
+            let mermaidCode = "";
+
+            // Simuleer "AI Generatie" van workflow syntax gebaseerd op rapport protocollen
+            if (type === 'privacy') {
+                mermaidCode = `
+                graph LR
+                    A[Start: Privacy Check] --> B{Account Instellingen};
+                    B -->|Controleer| C[Zichtbaarheid];
+                    B -->|Controleer| D[Data Delen];
+                    C --> E{Openbaar?};
+                    E -- Ja --> F[Zet op Prive];
+                    E -- Nee --> G[OK];
+                    D --> H[Derde Partijen];
+                    H --> I[Toegang Intrekken];
+                    I --> J[Veilig];
+                    G --> J;
+                    style A fill:#bc0031,color:#fff
+                    style J fill:#1f1f1f,color:#fff
+                `;
+            } else if (type === 'sourceCheck') {
+                mermaidCode = `
+                graph TD
+                    A[Nieuwsbericht Zien] --> B{Check Bron};
+                    B -->|Bekend?| C[Check Datum];
+                    B -->|Onbekend?| D[Zoek 'Over Ons'];
+                    C --> E{Recent?};
+                    E -- Nee --> F[Oud Nieuws - Negeren];
+                    E -- Ja --> G[Check Andere Bronnen];
+                    D --> H{Betrouwbaar?};
+                    H -- Nee --> F;
+                    H -- Ja --> G;
+                    G --> I[Valideer Informatie];
+                    style A fill:#bc0031,color:#fff
+                    style I fill:#1f1f1f,color:#fff
+                `;
+            } else if (type === 'aiUse') {
+                mermaidCode = `
+                graph TD
+                    A[Gebruiker wil AI gebruiken] --> B{Doel?};
+                    B -->|Tekst| C[ChatGPT/LLM];
+                    B -->|Beeld| D[Midjourney/DALL-E];
+                    C --> E[Prompt Invoeren];
+                    E --> F{Bevat Prive Data?};
+                    F -- Ja --> G[Data Anonimiseren];
+                    F -- Nee --> H[Genereer];
+                    G --> H;
+                    H --> I[Output Controleren];
+                    I --> J[Ethische Check];
+                    J --> K[Gebruik Resultaat];
+                    style A fill:#bc0031,color:#fff
+                    style K fill:#1f1f1f,color:#fff
+                `;
+            }
+
+            // Render de grafiek
+            container.innerHTML = `<div class="mermaid">${mermaidCode}</div>`;
+            
+            try {
+                await window.mermaid.run({
+                    nodes: container.querySelectorAll('.mermaid')
+                });
+            } catch (e) {
+                console.error("Mermaid error:", e);
+                container.innerHTML = "Fout bij renderen.";
+            }
+        }
+
+        // --- 3. Chatbot Logic ---
+        let chatOpen = false;
+
+        function toggleChat() {
+            const chat = document.getElementById('chatbot');
+            const icon = document.getElementById('toggle-icon');
+            chatOpen = !chatOpen;
+            
+            if (chatOpen) {
+                chat.classList.remove('minimized');
+                icon.innerText = '▼';
+            } else {
+                chat.classList.add('minimized');
+                icon.innerText = '▲';
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendPrompt(msg) {
+            document.getElementById('user-input').value = msg;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const msgText = input.value.trim();
+            if (!msgText) return;
+
+            // Voeg user message toe
+            addMessage(msgText, 'user-msg');
+            input.value = '';
+
+            // Open chat als hij dicht is
+            if(!chatOpen) toggleChat();
+
+            // Simuleer "Typen..."
+            const chatBox = document.getElementById('chat-messages');
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'message bot-msg text-gray-400 italic';
+            typingIndicator.id = 'typing';
+            typingIndicator.innerText = 'Analyseren...';
+            chatBox.appendChild(typingIndicator);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Simuleer AI vertraging & logica
+            setTimeout(() => {
+                document.getElementById('typing').remove();
+                const response = generateAIResponse(msgText);
+                addMessage(response, 'bot-msg');
+            }, 800);
+        }
+
+        function addMessage(text, className) {
+            const chatBox = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = `message ${className}`;
+            div.innerHTML = text; // innerHTML toestaan voor formatting
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // De "Brain" van de AI Assistent (Context van het rapport)
+        function generateAIResponse(input) {
+            const lowerInput = input.toLowerCase();
+
+            if (lowerInput.includes('kern') || lowerInput.includes('bevindingen') || lowerInput.includes('resultaat')) {
+                return "De kernbevindingen van DigIQ 2.0 tonen aan dat:<br>1. <strong>Veiligheid</strong> het laagst scoort (gem. 45/100).<br>2. Er een groeiende <strong>generatiekloof</strong> is.<br>3. <strong>AI-geletterdheid</strong> bij 60% van de respondenten onvoldoende is.";
+            }
+            if (lowerInput.includes('ai') || lowerInput.includes('kennis')) {
+                return "AI-kennis verbeteren kan door:<br>- Actief te experimenteren met tools.<br>- Kritisch na te denken over output (hallucinaties).<br>- De privacyvoorwaarden van AI-tools te lezen.";
+            }
+            if (lowerInput.includes('methode') || lowerInput.includes('onderzoek')) {
+                return "Het onderzoek is gebaseerd op een representatieve steekproef van de Nederlandse bevolking (n=2000), gecombineerd met performance-based tests in plaats van alleen zelfrapportage.";
+            }
+            if (lowerInput.includes('veiligheid') || lowerInput.includes('privacy')) {
+                return "Veiligheid is een zorgpunt. Veel gebruikers gebruiken nog steeds zwakke wachtwoorden en herkennen phishing niet. Het advies is: gebruik 2FA en wachtwoordmanagers.";
+            }
+            
+            return "Interessante vraag. Op basis van het DigIQ-kader lijkt dit te raken aan 'Digitale Competenties'. Kunt u specificeren of u doelt op veiligheid, informatievaardigheden of AI?";
+        }
+    </script>
+</body>
+</html>
