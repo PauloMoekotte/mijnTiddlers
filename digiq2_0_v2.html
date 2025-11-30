@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigIQ 2.0 - Dashboard & Analytics</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Mermaid.js -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
+        window.mermaid = mermaid; 
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --uva-black: #1f1f1f;
+            --uva-red: #bc0031;
+            --bg-light: #f4f6f8;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--uva-black);
+        }
+
+        /* Header */
+        .header-bg {
+            background: linear-gradient(135deg, var(--uva-black) 0%, #2c2c2c 100%);
+            color: white;
+            border-bottom: 4px solid var(--uva-red);
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s;
+            border-left: 4px solid transparent;
+        }
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            border-left-color: var(--uva-red);
+        }
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--uva-black);
+        }
+        .kpi-label {
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .kpi-delta {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .delta-up { color: green; }
+        .delta-down { color: var(--uva-red); }
+
+        /* Tooltip Logic */
+        .glossary-term {
+            color: var(--uva-red);
+            font-weight: 600;
+            cursor: help;
+            border-bottom: 2px dotted rgba(188, 0, 49, 0.4);
+            position: relative;
+        }
+        .glossary-term:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%; left: 50%;
+            transform: translateX(-50%);
+            background: #2d2d2d;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            width: 280px;
+            z-index: 50;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+            line-height: 1.4;
+            pointer-events: none;
+        }
+        .glossary-term:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 110%; left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #2d2d2d;
+            z-index: 50;
+        }
+
+        /* Chatbot */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 360px;
+            height: 550px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 9000;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .chatbot-container.minimized {
+            transform: translateY(490px);
+        }
+        .chat-header {
+            background: var(--uva-red);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .bot-msg { background: #e5e7eb; color: #1f2937; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user-msg { background: var(--uva-black); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        
+        /* Workflow */
+        .btn-workflow {
+            background: white;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-workflow:hover, .btn-workflow.active {
+            background: var(--uva-black);
+            color: white;
+            border-color: var(--uva-black);
+        }
+        .mermaid { display: flex; justify-content: center; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Header Section -->
+    <header class="header-bg p-8 mb-6">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-4xl font-bold tracking-tight">DIGIQ 2.0 <span class="font-light opacity-75">| Rapportage Nederland</span></h1>
+            <p class="mt-2 text-gray-300">Interactieve analyse van digitale competenties, veiligheid en AI-adaptatie.</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 pb-24">
+        
+        <!-- 2. KPI Kaarten (Nieuw) -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            
+            <div class="kpi-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="kpi-label">Gem. DigIQ Score</div>
+                        <div class="kpi-value">64.8</div>
+                    </div>
+                    <div class="p-2 bg-red-50 rounded-full text-red-700">📊</div>
+                </div>
+                <div class="mt-2 kpi-delta delta-up">▲ 1.2% t.o.v. 2023</div>
+                <div class="text-xs text-gray-400 mt-1">Landelijke index</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="kpi-label">AI Adaptatie</div>
+                        <div class="kpi-value">31%</div>
+                    </div>
+                    <div class="p-2 bg-blue-50 rounded-full text-blue-700">🤖</div>
+                </div>
+                <div class="mt-2 kpi-delta delta-up">▲ 12% sterke stijging</div>
+                <div class="text-xs text-gray-400 mt-1">Gebruikt wekelijks AI</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="kpi-label">Cyber Hygiëne</div>
+                        <div class="kpi-value">4.2<span class="text-lg">/10</span></div>
+                    </div>
+                    <div class="p-2 bg-yellow-50 rounded-full text-yellow-700">🛡️</div>
+                </div>
+                <div class="mt-2 kpi-delta delta-down">▼ Risicovol niveau</div>
+                <div class="text-xs text-gray-400 mt-1">Wachtwoordbeheer & 2FA</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="kpi-label">Kloof Hoog/Laag</div>
+                        <div class="kpi-value">28%</div>
+                    </div>
+                    <div class="p-2 bg-gray-100 rounded-full text-gray-700">≠</div>
+                </div>
+                <div class="mt-2 kpi-delta delta-down">▼ Kloof vergroot</div>
+                <div class="text-xs text-gray-400 mt-1">Verschil in vaardigheid</div>
+            </div>
+
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- LINKER KOLOM (Data Visualisaties) -->
+            <div class="lg:col-span-7 space-y-8">
+                
+                <!-- Chart: Radar Skills -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg text-gray-800">Digitaal Competentie Profiel</h3>
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded">2025 Data</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4">Vergelijking van de 6 kerndomeinen uit het DigIQ model.</p>
+                    <div class="h-80 w-full relative">
+                        <canvas id="skillsRadar"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart: Trend Analyse (Nieuw) -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Trendanalyse 2021 - 2025</h3>
+                    <p class="text-sm text-gray-500 mb-4">Ontwikkeling van technische vs. kritische vaardigheden.</p>
+                    <div class="h-64 w-full relative">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 italic">Opvallend: Terwijl technisch gebruiksgemak toeneemt, stagneert het kritisch vermogen om desinformatie te herkennen.</p>
+                </div>
+
+                <!-- AI Workflow Generator -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-gray-800">
+                    <h3 class="font-bold text-lg mb-2">AI Workflow Generator</h3>
+                    <p class="text-sm text-gray-600 mb-4">
+                        Genereer visuele stappenplannen voor complexe digitale processen beschreven in het rapport.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <button onclick="renderFlow('phishing')" class="btn-workflow">Detectie Phishing</button>
+                        <button onclick="renderFlow('privacy')" class="btn-workflow">Privacy Audit</button>
+                        <button onclick="renderFlow('ai_ethics')" class="btn-workflow">AI Bronverificatie</button>
+                    </div>
+
+                    <div id="mermaid-wrapper" class="bg-gray-50 rounded min-h-[200px] flex items-center justify-center p-4 border border-dashed border-gray-300">
+                        <span class="text-gray-400 text-sm">Selecteer een proces hierboven...</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RECHTER KOLOM (Tekst & Context) -->
+            <div class="lg:col-span-5 space-y-8">
+                
+                <!-- Context Blok -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-bold text-xl text-uva-red mb-3">De "Black Box" Paradox</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">
+                        Ondanks dat 98% van de Nederlanders dagelijks internet gebruikt, begrijpt minder dan 20% hoe <span class="glossary-term" data-tooltip="Algoritmes bepalen welke informatie je ziet op sociale media, vaak gebaseerd op wat je eerder leuk vond (filterbubbel).">algoritmische sturing</span> werkt. 
+                        Dit fenomeen, beschreven in het rapport als de <em>Black Box Paradox</em>, zorgt voor een afname in digitale autonomie.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        Uit de data blijkt dat <span class="glossary-term" data-tooltip="Het vermogen om AI-systemen te begrijpen, effectief te gebruiken en de ethische implicaties ervan te overzien.">AI-geletterdheid</span> de nieuwe bepalende factor is voor sociale mobiliteit op de arbeidsmarkt.
+                    </p>
+                </div>
+
+                <!-- Chart: Educatie Kloof (Nieuw) -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-bold text-lg text-gray-800 mb-4">De Kloof per Opleidingsniveau</h3>
+                    <div class="h-64 w-full relative">
+                        <canvas id="educationChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 bg-red-50 text-red-900 text-sm rounded border-l-4 border-red-600">
+                        <strong>Waarschuwing:</strong> De kloof in 'Veiligheidsbewustzijn' is groter dan verwacht tussen praktisch en theoretisch opgeleiden.
+                    </div>
+                </div>
+
+                <!-- Legenda Begrippen -->
+                <div class="bg-gray-800 text-white p-6 rounded-lg">
+                    <h4 class="font-bold mb-3 border-b border-gray-600 pb-2">Begrippenkader</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><span class="text-gray-400">DigIQ:</span> Digitale Intelligentie Quotiënt.</li>
+                        <li><span class="text-gray-400">2FA:</span> Twee-factor-authenticatie.</li>
+                        <li><span class="text-gray-400">LLM:</span> Large Language Model (zoals ChatGPT).</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 3. AI Assistent -->
+    <div id="chatbot" class="chatbot-container minimized">
+        <div class="chat-header" onclick="toggleChat()">
+            <div class="flex items-center gap-2 font-bold">
+                <span class="text-xl">🤖</span> DigIQ Assistent
+            </div>
+            <span id="toggle-icon">▲</span>
+        </div>
+        
+        <!-- Quick Prompts -->
+        <div class="p-3 bg-white border-b flex gap-2 flex-wrap">
+            <button onclick="askBot('Wat zeggen de KPI\'s?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">📈 KPI Analyse</button>
+            <button onclick="askBot('Verklaar de kloof')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">≠ De Kloof</button>
+            <button onclick="askBot('Advies voor veiligheid?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">🛡️ Veiligheidstips</button>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-msg">
+                Welkom. Ik heb toegang tot de volledige dataset van het DigIQ 2.0 rapport. Vraag mij naar specifieke statistieken, de KPI's of definities.
+            </div>
+        </div>
+
+        <div class="p-3 bg-white border-t flex gap-2">
+            <input type="text" id="user-input" placeholder="Stel een vraag..." class="flex-1 text-sm p-2 border rounded focus:outline-none focus:border-red-500" onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()" class="bg-gray-900 text-white px-4 rounded hover:bg-gray-700">➤</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- CHART 1: Skills Radar ---
+        const ctxRadar = document.getElementById('skillsRadar').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Info Geletterdheid', 'Communicatie', 'Content Creatie', 'Veiligheid', 'Probleemoplossing', 'AI Kennis'],
+                datasets: [{
+                    label: 'Nationaal Gemiddelde',
+                    data: [78, 82, 65, 42, 68, 31],
+                    fill: true,
+                    backgroundColor: 'rgba(188, 0, 49, 0.1)',
+                    borderColor: '#bc0031',
+                    pointBackgroundColor: '#bc0031',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#bc0031'
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#eee' },
+                        grid: { c
