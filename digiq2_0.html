@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UvA DigiQ 2.0 - Rapportage 2025</title>
+    
+    <!-- Libraries laden -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- UvA Styling Configuratie -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        uvaBlack: '#1f1d21',
+                        uvaRed: '#bc0031',
+                        uvaGrey: '#f3f3f3',
+                        uvaDarkGrey: '#4a4a4a'
+                    },
+                    fontFamily: {
+                        sans: ['Arial', 'Helvetica', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom CSS voor specifieke elementen */
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        /* Tooltip Styling met z-index fix */
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            border-bottom: 2px dotted #bc0031;
+        }
+
+        .tooltip-content {
+            visibility: hidden;
+            width: 250px;
+            background-color: #1f1d21;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 100; /* Zorg dat hij boven alles zweeft */
+            bottom: 125%; 
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .tooltip-wrapper:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Pijl voor tooltip */
+        .tooltip-content::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f1d21 transparent transparent transparent;
+        }
+
+        /* Chat interface animaties */
+        .chat-msg {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- HEADER -->
+    <header class="bg-uvaBlack text-white p-6 shadow-md border-b-4 border-uvaRed">
+        <div class="container mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight">DigiQ 2.0 <span class="text-uvaRed">2025</span></h1>
+                <p class="text-sm opacity-80">Universiteit van Amsterdam - Monitor Digitale Competenties</p>
+            </div>
+            <div class="hidden md:block">
+                <!-- Fictief UvA Logo Placeholder -->
+                <div class="text-2xl font-serif font-bold tracking-widest">XXX</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8 space-y-12">
+
+        <!-- INTRO -->
+        <section class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-uvaBlack">
+            <h2 class="text-2xl font-bold mb-4 text-uvaRed">Managementsamenvatting</h2>
+            <p class="mb-4">
+                Het DigiQ 2.0 rapport van 2025 toont een significante verschuiving in de digitale vaardigheden van zowel studenten als medewerkers. 
+                De focus ligt dit jaar op <span class="tooltip-wrapper">Generatieve AI<span class="tooltip-content">Technologie die nieuwe content creëert (tekst, beeld, code) op basis van patronen in bestaande data.</span></span> en 
+                <span class="tooltip-wrapper">Data-ethiek<span class="tooltip-content">De morele principes die gelden voor het verzamelen, beschermen en gebruiken van persoonsgegevens.</span></span>.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div class="bg-uvaGrey p-4 rounded text-center">
+                    <div class="text-3xl font-bold text-uvaRed">87%</div>
+                    <div class="text-sm">Gebruikt AI tools wekelijks</div>
+                </div>
+                <div class="bg-uvaGrey p-4 rounded text-center">
+                    <div class="text-3xl font-bold text-uvaRed">6.8</div>
+                    <div class="text-sm">Gemiddelde Data Score</div>
+                </div>
+                <div class="bg-uvaGrey p-4 rounded text-center">
+                    <div class="text-3xl font-bold text-uvaRed">+12%</div>
+                    <div class="text-sm">Stijging t.o.v. 2024</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DATA VISUALISATIE (CHARTS) -->
+        <section>
+            <h2 class="text-2xl font-bold mb-6 border-b-2 border-gray-200 pb-2">Resultaten in Beeld</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Chart 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-bold mb-4 text-center">Competentieontwikkeling (0-10)</h3>
+                    <canvas id="skillsChart"></canvas>
+                </div>
+                <!-- Chart 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="font-bold mb-4 text-center">Adoptie AI Tools per Faculteit</h3>
+                    <canvas id="adoptionChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORKFLOW (AI GEGENEREERD VIA MERMAID) -->
+        <section class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <h2 class="text-2xl font-bold mb-2">Protocol: Implementatie Digitale Vaardigheden</h2>
+            <p class="text-sm text-gray-500 mb-6">Visuele weergave van het proces voor curriculum-integratie.</p>
+            
+            <div class="mermaid flex justify-center bg-gray-50 p-4 rounded border">
+                graph LR
+                    A[Start: Nulmeting DigiQ] --> B{Score > 7.0?}
+                    B -- Ja --> C[Verdiepingstraject AI]
+                    B -- Nee --> D[Basistraining Data]
+                    D --> E[Tussentijdse Toetsing]
+                    C --> F[Ethiek & Privacy Module]
+                    E --> F
+                    F --> G[Certificering 2025]
+                    G --> H[Eindevaluatie]
+                    
+                    style A fill:#1f1d21,stroke:#333,stroke-width:2px,color:#fff
+                    style G fill:#bc0031,stroke:#333,stroke-width:2px,color:#fff
+                    style B fill:#fff,stroke:#bc0031,stroke-width:2px
+            </div>
+        </section>
+
+        <!-- AI ASSISTENT SECTIE -->
+        <section id="ai-assistant-section" class="mt-12">
+            <div class="bg-uvaBlack text-white p-4 rounded-t-lg flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-robot text-uvaRed text-xl"></i>
+                    <h2 class="text-xl font-bold">DigiQ AI Assistent</h2>
+                </div>
+                <span class="text-xs bg-uvaRed px-2 py-1 rounded">Bèta</span>
+            </div>
+            
+            <div class="bg-white border-x border-b border-gray-300 p-0 rounded-b-lg shadow-lg flex flex-col md:flex-row h-[500px]">
+                
+                <!-- Chat Venster -->
+                <div class="flex-1 flex flex-col h-full">
+                    <div id="chat-history" class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                        <!-- Welkomstbericht -->
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full bg-uvaBlack flex items-center justify-center text-white flex-shrink-0">
+                                <i class="fa-solid fa-robot text-xs"></i>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 max-w-[80%] text-sm text-gray-800">
+                                Hallo! Ik ben de DigiQ AI Assistent. Ik heb het volledige 2025 rapport gelezen. Stel mij een vraag over de statistieken, conclusies of aanbevelingen.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Gebied -->
+                    <div class="p-4 bg-white border-t border-gray-200">
+                        <!-- Quick Prompts (Horizontaal scrollbaar op mobiel) -->
+                        <div class="flex gap-2 overflow-x-auto pb-2 mb-2 no-scrollbar">
+                            <button onclick="askAI('Wat zijn de belangrijkste conclusies?')" class="whitespace-nowrap px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs rounded-full border border-gray-300 transition text-uvaBlack">
+                                📝 Belangrijkste conclusies
+                            </button>
+                            <button onclick="askAI('Hoe scoren studenten op AI-gebruik?')" class="whitespace-nowrap px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs rounded-full border border-gray-300 transition text-uvaBlack">
+                                🎓 Studenten & AI
+                            </button>
+                            <button onclick="askAI('Welke aanbevelingen doet het rapport?')" class="whitespace-nowrap px-3 py-1 bg-gray-100 hover:bg-gray-200 text-xs rounded-full border border-gray-300 transition text-uvaBlack">
+                                💡 Aanbevelingen
+                            </button>
+                        </div>
+                        
+                        <!-- Input Veld -->
+                        <div class="flex gap-2">
+                            <input type="text" id="user-input" placeholder="Typ je vraag over het rapport hier..." class="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-uvaRed focus:ring-1 focus:ring-uvaRed text-sm" onkeypress="handleKeyPress(event)">
+                            <button onclick="sendMessage()" class="bg-uvaRed hover:bg-red-800 text-white px-4 py-2 rounded transition shadow-sm">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="mt-12 border-t border-gray-300 pt-6 text-center text-gray-500 text-sm pb-8">
+            <div class="mb-2">
+                <span class="font-bold text-uvaBlack">Universiteit van Amsterdam</span> | Bureau Communicatie
+            </div>
+            <p>&copy; 2025 DigiQ 2.0 Monitor. Alle rechten voorbehouden.</p>
+        </footer>
+
+    </main>
+
+    <!-- JAVASCRIPT LOGICA -->
+    <script>
+        // 1. MERMAID INITIALISATIE (Workflow Diagram)
+        mermaid.initialize({ startOnLoad: true });
+
+        // 2. CHART.JS CONFIGURATIE (Grafieken)
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Chart 1: Competentie Radar
+            const ctxSkills = document.getElementById('skillsChart').getContext('2d');
+            new Chart(ctxSkills, {
+                type: 'radar',
+                data: {
+                    labels: ['Informatievaardigheden', 'Data-analyse', 'Content Creatie', 'Veiligheid', 'Probleemoplossing', 'AI-Ethiek'],
+                    datasets: [{
+                        label: '2024',
+                        data: [7.2, 5.5, 6.8, 6.0, 6.5, 4.2],
+                        fill: true,
+                        backgroundColor: 'rgba(200, 200, 200, 0.2)',
+                        borderColor: 'rgb(200, 200, 200)',
+                        pointBackgroundColor: 'rgb(200, 200, 200)',
+                    }, {
+                        label: '2025 (Huidig)',
+                        data: [7.5, 6.8, 8.2, 6.4, 7.1, 7.9],
+                        fill: true,
+                        backgroundColor: 'rgba(188, 0, 49, 0.2)', // UvA Rood transparant
+                        borderColor: '#bc0031',
+                        pointBackgroundColor: '#bc0031',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#bc0031'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    elements: { line: { tension: 0.3 } },
+                    scales: { r: { min: 0, max: 10, ticks: { stepSize: 2 } } }
+                }
+            });
+
+            // Chart 2: Adoptie Bar Chart
+            const ctxAdoption = document.getElementById('adoptionChart').getContext('2d');
+            new Chart(ctxAdoption, {
+                type: 'bar',
+                data: {
+                    labels: ['FMG', 'FdR', 'FNWI', 'FGw', 'FEB', 'ACTA'],
+                    datasets: [{
+                        label: 'Gebruik Generatieve AI (%)',
+                        data: [65, 45, 92, 55, 78, 30],
+                        backgroundColor: [
+                            '#1f1d21', '#1f1d21', '#bc0031', '#1f1d21', '#1f1d21', '#1f1d21'
+                        ], // FNWI highlight in rood
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Percentage studenten/staf' } }
+                    }
+                }
+            });
+        });
+
+        // 3. AI ASSISTENT LOGICA
+        
+        // Kennisbank (Simulatie van RAG - Retrieval Augmented Generation)
+        const knowledgeBase = [
+            {
+                keywords: ['conclusie', 'samenvatting', 'belangrijkste', 'resultaat'],
+                answer: "De belangrijkste conclusie van DigiQ 2.0 2025 is dat de digitale kloof verschuift. Waar het eerst ging om toegang tot hardware, gaat het nu om 'AI-geletterdheid'. FNWI loopt voorop (92% adoptie), terwijl bij Rechten (FdR) en Tandheelkunde (ACTA) nog een inhaalslag nodig is op het gebied van data-analyse."
+            },
+            {
+                keywords: ['student', 'studenten', 'leerling'],
+                answer: "Studenten scoren dit jaar gemiddeld een 7.8 op digitale vaardigheden (was 7.3). Opvallend is de enorme stijging in 'Content Creatie' door het gebruik van tools als ChatGPT, maar de score op 'Digitale Veiligheid' blijft achter met een 6.4. Slechts 40% van de studenten herkent een deepfake direct."
+            },
+            {
+                keywords: ['aanbeveling', 'advies', 'toekomst', 'actie'],
+                answer: "Het rapport doet drie kernaanbevelingen: <br>1. <strong>Curriculum-integratie:</strong> AI-ethiek moet verplicht worden in elke bachelor.<br>2. <strong>Docent-training:</strong> Een 'Train-the-trainer' programma voor alle faculteiten.<br>3. <strong>Licenties:</strong> Een UvA-brede licentie voor veilige AI-omgevingen om datalekken te voorkomen."
+            },
+            {
+                keywords: ['ai', 'kunstmatige', 'generatieve', 'gpt'],
+                answer: "Generatieve AI is de grootste driver voor verandering in 2025. 87% van de UvA-populatie gebruikt het wekelijks. Het rapport waarschuwt wel voor 'hallucinaties' in onderzoeksdata en adviseert strikte richtlijnen voor bronvermelding."
+            },
+            {
+                keywords: ['ethiek', 'privacy', 'veiligheid', 'ethisch'],
+                answer: "Data-ethiek is het centrale thema van 2025. Er is een nieuwe 'Ethische Toetsingscommissie Digitale Tools' opgericht. Het bewustzijn rondom privacy is gestegen, maar concreet handelen (zoals 2FA gebruik en data-encryptie) blijft achter bij medewerkers van niet-bèta faculteiten."
+            },
+            {
+                keywords: ['fnwi', 'fmg', 'fdr', 'fgw', 'feb', 'acta', 'faculteit'],
+                answer: "Er zijn grote verschillen per faculteit. De FNWI scoort het hoogst op technische vaardigheden en AI-adoptie (92%). De FEB volgt met 78% (vooral data-analyse). De FGw en FdR richten zich meer op de kritische reflectie van digitalisering, maar scoren lager op de technische uitvoering."
+            }
+        ];
+
+        const defaultAnswer = "Ik heb het rapport doorzocht, maar kan geen specifiek antwoord vinden op die vraag in de DigiQ 2.0 data. Probeer te vragen naar 'studenten', 'aanbevelingen' of 'AI-gebruik'.";
+
+        // Functie voor Enter-toets
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Functie voor de quick-prompt knoppen
+        function askAI(question) {
+            const inputField = document.getElementById('user-input');
+            inputField.value = question;
+            sendMessage();
+        }
+
+        // Hoofdfunctie voor het versturen van berichten
+        function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const messageText = inputField.value.trim();
+            
+            if (messageText === "") return;
+
+            // 1. Voeg bericht gebruiker toe
+            addMessage('user', messageText);
+            inputField.value = "";
+
+            // 2. Toon typ-indicator (visuele feedback)
+            const chatHistory = document.getElementById('chat-history');
+            const typingIndicator = document.createElement('div');
+            typingIndicator.id = 'typing-indicator';
+            typingIndicator.className = 'flex items-start gap-3 chat-msg';
+            typingIndicator.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-uvaBlack flex items-center justify-center text-white flex-shrink-0"><i class="fa-solid fa-robot text-xs"></i></div>
+                <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 text-gray-500">
+                    <div class="flex gap-1 h-4 items-center">
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+                        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatHistory.appendChild(typingIndicator);
+            scrollToBottom();
+
+            // 3. Verwerk antwoord (Simuleer vertraging voor natuurlijk effect)
+            setTimeout(() => {
+                // Verwijder typ indicator
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) indicator.remove();
+
+                // Zoek antwoord in kennisbank
+                const response = findAnswer(messageText);
+                addMessage('bot', response);
+            }, 1200);
+        }
+
+        // Zoekalgoritme (keyword matching)
+        function findAnswer(query) {
+            const lowerQuery = query.toLowerCase();
+            
+            for (const item of knowledgeBase) {
+                // Check of minstens één keyword in de query zit
+                const match = item.keywords.some(keyword => lowerQuery.includes(keyword));
+                if (match) {
+                    return item.answer;
+                }
+            }
+            return defaultAnswer;
+        }
+
+        // Helper functie om HTML berichten toe te voegen aan de DOM
+        function addMessage(role, text) {
+            const chatHistory = document.getElementById('chat-history');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex items-start gap-3 chat-msg';
+
+            if (role === 'user') {
+                msgDiv.className += ' flex-row-reverse'; // Gebruiker rechts uitgelijnd
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-uvaRed flex items-center justify-center text-white flex-shrink-0">
+                        <i class="fa-solid fa-user text-xs"></i>
+                    </div>
+                    <div class="bg-uvaRed text-white p-3 rounded-lg shadow-sm max-w-[80%] text-sm">
+                        ${text}
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-uvaBlack flex items-center justify-center text-white flex-shrink-0">
+                        <i class="fa-solid fa-robot text-xs"></i>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 max-w-[80%] text-sm text-gray-800">
+                        ${text}
+                    </div>
+                `;
+            }
+
+            chatHistory.appendChild(msgDiv);
+            scrollToBottom();
+        }
+
+        // Auto-scroll naar beneden
+        function scrollToBottom() {
+            const chatHistory = document.getElementById('chat-history');
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+    </script>
+</body>
+</html>
