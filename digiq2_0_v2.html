@@ -105,7 +105,7 @@
             margin-left: 1rem;
         }
 
-        /* Tooltip & Chatbot styles (behouden van vorige versie) */
+        /* Tooltip Logic */
         .glossary-term {
             color: var(--uva-red);
             font-weight: 600;
@@ -123,21 +123,7 @@
             pointer-events: none;
         }
         
-        .chatbot-container {
-            position: fixed; bottom: 20px; right: 20px;
-            width: 360px; height: 550px; background: white;
-            border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            display: flex; flex-direction: column; z-index: 9000;
-            overflow: hidden; border: 1px solid #e5e7eb;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .chatbot-container.minimized { transform: translateY(490px); }
-        .chat-header { background: var(--uva-red); color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; background: #f9fafb; display: flex; flex-direction: column; gap: 12px; }
-        .message { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.9rem; line-height: 1.5; }
-        .bot-msg { background: #e5e7eb; color: #1f2937; align-self: flex-start; }
-        .user-msg { background: var(--uva-black); color: white; align-self: flex-end; }
-        
+        /* Workflow Buttons */
         .btn-workflow {
             background: white; border: 1px solid #d1d5db; color: #374151;
             padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer;
@@ -238,7 +224,7 @@
             <!-- RECHTER KOLOM -->
             <div class="lg:col-span-5 space-y-8">
                 
-                <!-- NIEUW: Vaardigheidsbewustzijn Harmonica -->
+                <!-- Vaardigheidsbewustzijn Harmonica -->
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div class="p-6 bg-gray-50 border-b border-gray-200">
                         <h3 class="font-bold text-xl text-uva-red">Vaardigheidsbewustzijn</h3>
@@ -299,34 +285,11 @@
         </div>
     </main>
 
-    <!-- Chatbot -->
-    <div id="chatbot" class="chatbot-container minimized">
-        <div class="chat-header" onclick="toggleChat()">
-            <div class="flex items-center gap-2 font-bold">
-                <span class="text-xl">🤖</span> DigIQ Assistent
-            </div>
-            <span id="toggle-icon">▲</span>
-        </div>
-        <div class="p-3 bg-white border-b flex gap-2 flex-wrap">
-            <button onclick="askBot('Vergelijk 2023 en 2025')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">⚖️ 2023 vs 2025</button>
-            <button onclick="askBot('Wat is vaardigheidsbewustzijn?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">🧠 Bewustzijn</button>
-        </div>
-        <div class="chat-messages" id="chat-messages">
-            <div class="message bot-msg">
-                Hallo. Ik kan de data uit rapport 2023 en 2025 vergelijken. Waar wilt u meer over weten?
-            </div>
-        </div>
-        <div class="p-3 bg-white border-t flex gap-2">
-            <input type="text" id="user-input" placeholder="Stel een vraag..." class="flex-1 text-sm p-2 border rounded focus:outline-none focus:border-red-500" onkeypress="handleEnter(event)">
-            <button onclick="sendMessage()" class="bg-gray-900 text-white px-4 rounded hover:bg-gray-700">➤</button>
-        </div>
-    </div>
-
     <!-- Scripts -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             
-            // --- CHART 1: Skills Radar (Updated with Comparison) ---
+            // --- CHART 1: Skills Radar (Comparison) ---
             const ctxRadar = document.getElementById('skillsRadar');
             if (ctxRadar) {
                 new Chart(ctxRadar.getContext('2d'), {
@@ -336,7 +299,7 @@
                         datasets: [
                             {
                                 label: 'Rapport 2025',
-                                data: [78, 82, 65, 42, 68, 31], // 2025 Data: Lager op veiligheid, hoger op AI
+                                data: [78, 82, 65, 42, 68, 31],
                                 fill: true,
                                 backgroundColor: 'rgba(188, 0, 49, 0.2)',
                                 borderColor: '#bc0031',
@@ -345,7 +308,7 @@
                             },
                             {
                                 label: 'Rapport 2023',
-                                data: [75, 80, 60, 48, 62, 12], // 2023 Data: Hoger op veiligheid, bijna geen AI
+                                data: [75, 80, 60, 48, 62, 12],
                                 fill: false,
                                 backgroundColor: 'transparent',
                                 borderColor: '#9ca3af',
@@ -458,42 +421,6 @@
             container.innerHTML = `<div class="mermaid">${code}</div>`;
             try { if(window.mermaid) await window.mermaid.run({ nodes: container.querySelectorAll('.mermaid') }); } 
             catch(e) { console.log(e); }
-        }
-
-        // --- Chatbot Logic ---
-        let isOpen = false;
-        function toggleChat() {
-            const el = document.getElementById('chatbot');
-            isOpen = !isOpen;
-            el.classList.toggle('minimized', !isOpen);
-            document.getElementById('toggle-icon').innerText = isOpen ? '▼' : '▲';
-        }
-        function askBot(q) { document.getElementById('user-input').value = q; sendMessage(); }
-        function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
-        function sendMessage() {
-            const input = document.getElementById('user-input');
-            const txt = input.value.trim();
-            if(!txt) return;
-            addMsg(txt, 'user-msg');
-            input.value = '';
-            if(!isOpen) toggleChat();
-            setTimeout(() => { addMsg(getBotResponse(txt), 'bot-msg'); }, 600);
-        }
-        function addMsg(html, type) {gr
-            const box = document.getElementById('chat-messages');
-            const div = document.createElement('div');
-            div.className = `message ${type}`;
-            div.innerHTML = html;
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function getBotResponse(input) {
-            const txt = input.toLowerCase();
-            if(txt.includes('vergelijk') || txt.includes('2023')) return "In vergelijking met 2023 is de <strong>AI-kennis verdriedubbeld</strong>, maar de basisveiligheid (wachtwoorden, phishing herkenning) is gedaald met 6 punten. We worden handiger, maar minder veilig.";
-            if(txt.includes('bewustzijn') || txt.includes('zelfbeeld')) return "Vaardigheidsbewustzijn is de mate waarin u uw eigen kunnen accuraat inschat. Uit de harmonica rechts blijkt dat 72% zichzelf overschat, wat leidt tot risicovol gedrag.";
-            if(txt.includes('kpi')) return "De belangrijkste KPI: DigIQ is gestegen naar 64.8, maar de veiligheidsscore is zorgwekkend laag (4.2).";
-            return "Ik kan vragen beantwoorden over de dataverschillen tussen 2023 en 2025, of over het begrip 'vaardigheidsbewustzijn'.";
         }
     </script>
 </body>
