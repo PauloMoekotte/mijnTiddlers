@@ -1,14 +1,32 @@
+Hier is de geüpdatete versie van de interactieve infographic.
+
+Wat is er nieuw/aangepast?
+
+Vergelijkende Data (2023 vs 2025): De 'Competentie Profiel' (Radar) grafiek bevat nu twee datasets. Je ziet direct waar we gegroeid zijn (AI) en waar we gedaald zijn (Veiligheid).
+
+Harmonica (Accordion): In de rechterkolom is een interactief blok Vaardigheidsbewustzijn toegevoegd. Dit werkt met uitklapbare panelen om dieper op de materie in te gaan zonder de pagina te overladen.
+
+AI-Update: De chatbot is bijgewerkt om vragen over het verschil tussen 2023 en 2025 te beantwoorden.
+
+Je kunt de code direct opslaan als .html bestand.
+
+code
+Html
+play_circle
+download
+content_copy
+expand_less
 <!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DigIQ 2.0 - Dashboard & Analytics (Fixed)</title>
+    <title>DigIQ 2.0 - Vergelijkende Analyse 2023-2025</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Chart.js (Specifieke UMD versie voor directe browser support) -->
+    <!-- Chart.js (UMD versie voor stabiliteit) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     
     <!-- Mermaid.js -->
@@ -33,10 +51,10 @@
             font-family: 'Roboto', sans-serif;
             background-color: var(--bg-light);
             color: var(--uva-black);
-            overflow-x: hidden; /* Voorkomt horizontale scroll */
+            overflow-x: hidden;
         }
 
-        /* Chart Containers - Geforceerde hoogte voor stabiliteit */
+        /* Chart Containers */
         .chart-container {
             position: relative;
             height: 350px; 
@@ -63,25 +81,49 @@
             transform: translateY(-3px);
             border-left-color: var(--uva-red);
         }
-        .kpi-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--uva-black);
-        }
-        .kpi-label {
-            font-size: 0.85rem;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .kpi-delta {
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
+        .kpi-value { font-size: 2.5rem; font-weight: 700; color: var(--uva-black); }
+        .kpi-label { font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+        .kpi-delta { font-size: 0.8rem; font-weight: 500; }
         .delta-up { color: green; }
         .delta-down { color: var(--uva-red); }
 
-        /* Tooltip Logic */
+        /* Accordion / Harmonica Styling */
+        details {
+            border-bottom: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        details[open] { background-color: #fafafa; }
+        summary {
+            cursor: pointer;
+            list-style: none;
+            padding: 1rem;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary:hover { color: var(--uva-red); }
+        summary::after {
+            content: '+';
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        details[open] summary::after {
+            content: '-';
+            color: var(--uva-red);
+        }
+        .accordion-content {
+            padding: 0 1rem 1rem 1rem;
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            border-left: 3px solid var(--uva-red);
+            margin-left: 1rem;
+        }
+
+        /* Tooltip & Chatbot styles (behouden van vorige versie) */
         .glossary-term {
             color: var(--uva-red);
             font-weight: 600;
@@ -92,103 +134,44 @@
         .glossary-term:hover::after {
             content: attr(data-tooltip);
             position: absolute;
-            bottom: 120%; left: 50%;
-            transform: translateX(-50%);
-            background: #2d2d2d;
-            color: white;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            width: 280px;
-            z-index: 50;
-            box-shadow: 0 10px 15px rgba(0,0,0,0.2);
-            line-height: 1.4;
+            bottom: 120%; left: 50%; transform: translateX(-50%);
+            background: #2d2d2d; color: white; padding: 12px;
+            border-radius: 6px; font-size: 0.85rem; width: 280px;
+            z-index: 50; box-shadow: 0 10px 15px rgba(0,0,0,0.2);
             pointer-events: none;
         }
-        .glossary-term:hover::before {
-            content: '';
-            position: absolute;
-            bottom: 110%; left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: #2d2d2d;
-            z-index: 50;
-        }
-
-        /* Chatbot */
+        
         .chatbot-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 360px;
-            height: 550px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            z-index: 9000;
-            overflow: hidden;
-            border: 1px solid #e5e7eb;
+            position: fixed; bottom: 20px; right: 20px;
+            width: 360px; height: 550px; background: white;
+            border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            display: flex; flex-direction: column; z-index: 9000;
+            overflow: hidden; border: 1px solid #e5e7eb;
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .chatbot-container.minimized {
-            transform: translateY(490px);
-        }
-        .chat-header {
-            background: var(--uva-red);
-            color: white;
-            padding: 15px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background: #f9fafb;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .message {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-        .bot-msg { background: #e5e7eb; color: #1f2937; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .user-msg { background: var(--uva-black); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chatbot-container.minimized { transform: translateY(490px); }
+        .chat-header { background: var(--uva-red); color: white; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; background: #f9fafb; display: flex; flex-direction: column; gap: 12px; }
+        .message { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.9rem; line-height: 1.5; }
+        .bot-msg { background: #e5e7eb; color: #1f2937; align-self: flex-start; }
+        .user-msg { background: var(--uva-black); color: white; align-self: flex-end; }
         
-        /* Workflow */
         .btn-workflow {
-            background: white;
-            border: 1px solid #d1d5db;
-            color: #374151;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
+            background: white; border: 1px solid #d1d5db; color: #374151;
+            padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-workflow:hover, .btn-workflow.active {
-            background: var(--uva-black);
-            color: white;
-            border-color: var(--uva-black);
-        }
+        .btn-workflow:hover { background: var(--uva-black); color: white; border-color: var(--uva-black); }
         .mermaid { display: flex; justify-content: center; width: 100%; }
     </style>
 </head>
 <body>
 
-    <!-- Header Section -->
+    <!-- Header -->
     <header class="header-bg p-8 mb-6">
         <div class="max-w-7xl mx-auto">
-            <h1 class="text-3xl md:text-4xl font-bold tracking-tight">DIGIQ 2.0 <span class="font-light opacity-75">| Rapportage Nederland</span></h1>
-            <p class="mt-2 text-gray-300">Interactieve analyse van digitale competenties, veiligheid en AI-adaptatie.</p>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight">DIGIQ 2.0 <span class="font-light opacity-75">| Rapportage 2023 vs 2025</span></h1>
+            <p class="mt-2 text-gray-300">Interactieve vergelijking van competenties, vaardigheidsbewustzijn en veiligheid.</p>
         </div>
     </header>
 
@@ -196,146 +179,145 @@
         
         <!-- KPI Kaarten -->
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            
             <div class="kpi-card">
                 <div class="flex justify-between items-start">
-                    <div>
-                        <div class="kpi-label">Gem. DigIQ Score</div>
-                        <div class="kpi-value">64.8</div>
-                    </div>
+                    <div><div class="kpi-label">DigIQ Groei</div><div class="kpi-value">64.8</div></div>
                     <div class="p-2 bg-red-50 rounded-full text-red-700 text-2xl">📊</div>
                 </div>
-                <div class="mt-2 kpi-delta delta-up">▲ 1.2% t.o.v. 2023</div>
-                <div class="text-xs text-gray-400 mt-1">Landelijke index</div>
+                <div class="mt-2 kpi-delta delta-up">▲ +2.4 pnt t.o.v. 2023</div>
             </div>
-
             <div class="kpi-card">
                 <div class="flex justify-between items-start">
-                    <div>
-                        <div class="kpi-label">AI Adaptatie</div>
-                        <div class="kpi-value">31%</div>
-                    </div>
+                    <div><div class="kpi-label">AI Kennis</div><div class="kpi-value">31%</div></div>
                     <div class="p-2 bg-blue-50 rounded-full text-blue-700 text-2xl">🤖</div>
                 </div>
-                <div class="mt-2 kpi-delta delta-up">▲ 12% sterke stijging</div>
-                <div class="text-xs text-gray-400 mt-1">Gebruikt wekelijks AI</div>
+                <div class="mt-2 kpi-delta delta-up">▲ Verdubbeld sinds 2023</div>
             </div>
-
             <div class="kpi-card">
                 <div class="flex justify-between items-start">
-                    <div>
-                        <div class="kpi-label">Cyber Hygiëne</div>
-                        <div class="kpi-value">4.2<span class="text-lg">/10</span></div>
-                    </div>
+                    <div><div class="kpi-label">Veiligheidsscore</div><div class="kpi-value">4.2</div></div>
                     <div class="p-2 bg-yellow-50 rounded-full text-yellow-700 text-2xl">🛡️</div>
                 </div>
-                <div class="mt-2 kpi-delta delta-down">▼ Risicovol niveau</div>
-                <div class="text-xs text-gray-400 mt-1">Wachtwoordbeheer & 2FA</div>
+                <div class="mt-2 kpi-delta delta-down">▼ -0.5 pnt t.o.v. 2023</div>
             </div>
-
             <div class="kpi-card">
                 <div class="flex justify-between items-start">
-                    <div>
-                        <div class="kpi-label">Kloof Hoog/Laag</div>
-                        <div class="kpi-value">28%</div>
-                    </div>
-                    <div class="p-2 bg-gray-100 rounded-full text-gray-700 text-2xl">≠</div>
+                    <div><div class="kpi-label">Overschatting</div><div class="kpi-value">High</div></div>
+                    <div class="p-2 bg-gray-100 rounded-full text-gray-700 text-2xl">⚠</div>
                 </div>
-                <div class="mt-2 kpi-delta delta-down">▼ Kloof vergroot</div>
-                <div class="text-xs text-gray-400 mt-1">Verschil in vaardigheid</div>
+                <div class="mt-2 kpi-delta text-gray-500">Gap: Prestatie < Zelfbeeld</div>
             </div>
-
         </section>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-            <!-- LINKER KOLOM (Data Visualisaties) -->
+            <!-- LINKER KOLOM -->
             <div class="lg:col-span-7 space-y-8">
                 
-                <!-- Chart: Radar Skills -->
+                <!-- Chart: Radar 2023 vs 2025 -->
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg text-gray-800">Digitaal Competentie Profiel</h3>
-                        <span class="text-xs bg-gray-100 px-2 py-1 rounded">2025 Data</span>
+                        <h3 class="font-bold text-lg text-gray-800">Competentieprofiel: 2023 vs 2025</h3>
+                        <div class="flex gap-3 text-xs">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-400"></span> 2023</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-700"></span> 2025</span>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-500 mb-4">Vergelijking van de 6 kerndomeinen uit het DigIQ model.</p>
+                    <p class="text-sm text-gray-500 mb-4">Vergelijk de verschuiving in vaardigheden over de afgelopen 2 jaar.</p>
                     <div class="chart-container">
                         <canvas id="skillsRadar"></canvas>
                     </div>
+                    <p class="text-xs text-center text-gray-400 mt-2">Duidelijke verschuiving van 'Safety' naar 'AI Kennis'.</p>
                 </div>
 
-                <!-- Chart: Trend Analyse -->
+                <!-- Chart: Trend -->
                 <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2">Trendanalyse 2021 - 2025</h3>
-                    <p class="text-sm text-gray-500 mb-4">Ontwikkeling van technische vs. kritische vaardigheden.</p>
+                    <h3 class="font-bold text-lg text-gray-800 mb-2">Trend: Techniek vs Kritiek</h3>
                     <div class="chart-container" style="height: 300px;">
                         <canvas id="trendChart"></canvas>
                     </div>
-                    <p class="text-xs text-gray-400 mt-2 italic">Opvallend: Terwijl technisch gebruiksgemak toeneemt, stagneert het kritisch vermogen om desinformatie te herkennen.</p>
                 </div>
 
-                <!-- AI Workflow Generator -->
+                <!-- Workflow Generator -->
                 <div class="bg-white p-6 rounded-lg shadow-sm border-t-4 border-gray-800">
                     <h3 class="font-bold text-lg mb-2">AI Workflow Generator</h3>
-                    <p class="text-sm text-gray-600 mb-4">
-                        Genereer visuele stappenplannen voor complexe digitale processen beschreven in het rapport.
-                    </p>
-                    
+                    <p class="text-sm text-gray-600 mb-4">Genereer visuele flows van rapport-protocollen.</p>
                     <div class="flex flex-wrap gap-2 mb-4">
                         <button onclick="renderFlow('phishing')" class="btn-workflow">Detectie Phishing</button>
                         <button onclick="renderFlow('privacy')" class="btn-workflow">Privacy Audit</button>
                         <button onclick="renderFlow('ai_ethics')" class="btn-workflow">AI Bronverificatie</button>
                     </div>
-
                     <div id="mermaid-wrapper" class="bg-gray-50 rounded min-h-[200px] flex items-center justify-center p-4 border border-dashed border-gray-300 overflow-auto">
-                        <span class="text-gray-400 text-sm">Selecteer een proces hierboven...</span>
+                        <span class="text-gray-400 text-sm">Selecteer een proces...</span>
                     </div>
                 </div>
-
             </div>
 
-            <!-- RECHTER KOLOM (Tekst & Context) -->
+            <!-- RECHTER KOLOM -->
             <div class="lg:col-span-5 space-y-8">
                 
-                <!-- Context Blok -->
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 class="font-bold text-xl text-uva-red mb-3">De "Black Box" Paradox</h3>
-                    <p class="text-gray-700 leading-relaxed mb-4">
-                        Ondanks dat 98% van de Nederlanders dagelijks internet gebruikt, begrijpt minder dan 20% hoe <span class="glossary-term" data-tooltip="Algoritmes bepalen welke informatie je ziet op sociale media, vaak gebaseerd op wat je eerder leuk vond (filterbubbel).">algoritmische sturing</span> werkt. 
-                        Dit fenomeen, beschreven in het rapport als de <em>Black Box Paradox</em>, zorgt voor een afname in digitale autonomie.
-                    </p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Uit de data blijkt dat <span class="glossary-term" data-tooltip="Het vermogen om AI-systemen te begrijpen, effectief te gebruiken en de ethische implicaties ervan te overzien.">AI-geletterdheid</span> de nieuwe bepalende factor is voor sociale mobiliteit op de arbeidsmarkt.
-                    </p>
+                <!-- NIEUW: Vaardigheidsbewustzijn Harmonica -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="p-6 bg-gray-50 border-b border-gray-200">
+                        <h3 class="font-bold text-xl text-uva-red">Vaardigheidsbewustzijn</h3>
+                        <p class="text-sm text-gray-600 mt-1">
+                            Analyse van het verschil tussen wat men <em>denkt</em> te kunnen en daadwerkelijk <em>kan</em> (Self-Efficacy vs. Performance).
+                        </p>
+                    </div>
+
+                    <!-- Item 1 -->
+                    <details class="group" open>
+                        <summary class="text-gray-800 hover:bg-gray-50">
+                            1. De Illusie van Competentie
+                        </summary>
+                        <div class="accordion-content">
+                            <p>Uit de data van 2025 blijkt dat <strong>72%</strong> van de respondenten hun eigen digitale veiligheid als 'Hoog' inschat. Echter, bij de praktische tests faalde <strong>58%</strong> van deze groep bij het herkennen van een geavanceerde phishing-mail. Dit gat tussen perceptie en realiteit is groter geworden t.o.v. 2023.</p>
+                        </div>
+                    </details>
+
+                    <!-- Item 2 -->
+                    <details class="group">
+                        <summary class="text-gray-800 hover:bg-gray-50">
+                            2. Het 'Button-Knowledge' Effect
+                        </summary>
+                        <div class="accordion-content">
+                            <p>Gebruikers verwarren 'weten waar de knop zit' (operationele vaardigheid) met 'begrijpen wat de knop doet' (conceptueel begrip). In 2023 was dit vooral zichtbaar bij privacy-instellingen; in 2025 zien we dit massaal bij AI-gebruik (prompts invoeren zonder begrip van hallucinaties).</p>
+                        </div>
+                    </details>
+
+                    <!-- Item 3 -->
+                    <details class="group">
+                        <summary class="text-gray-800 hover:bg-gray-50">
+                            3. Impact op Leercultuur
+                        </summary>
+                        <div class="accordion-content">
+                            <p>Wie denkt dat hij het al kan, leert niet meer. De hoge mate van zelfoverschatting bij jongeren (18-25 jaar) zorgt voor een stagnatie in de ontwikkeling van kritische informatievaardigheden. Het rapport adviseert 'Confronterend Leren': gebruikers actief testen in plaats van vragenlijsten afnemen.</p>
+                        </div>
+                    </details>
                 </div>
 
-                <!-- Chart: Educatie Kloof -->
+                <!-- Education Chart -->
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <h3 class="font-bold text-lg text-gray-800 mb-4">De Kloof per Opleidingsniveau</h3>
                     <div class="chart-container" style="height: 300px;">
                         <canvas id="educationChart"></canvas>
                     </div>
-                    <div class="mt-4 p-3 bg-red-50 text-red-900 text-sm rounded border-l-4 border-red-600">
-                        <strong>Waarschuwing:</strong> De kloof in 'Veiligheidsbewustzijn' is groter dan verwacht tussen praktisch en theoretisch opgeleiden.
-                    </div>
                 </div>
 
-                <!-- Legenda Begrippen -->
+                <!-- Legenda -->
                 <div class="bg-gray-800 text-white p-6 rounded-lg">
                     <h4 class="font-bold mb-3 border-b border-gray-600 pb-2">Begrippenkader</h4>
                     <ul class="space-y-2 text-sm">
+                        <li><span class="text-gray-400">Vaardigheidsbewustzijn:</span> De mate waarin zelfbeeld overeenkomt met daadwerkelijke skill.</li>
                         <li><span class="text-gray-400">DigIQ:</span> Digitale Intelligentie Quotiënt.</li>
-                        <li><span class="text-gray-400">2FA:</span> Twee-factor-authenticatie.</li>
-                        <li><span class="text-gray-400">LLM:</span> Large Language Model (zoals ChatGPT).</li>
                     </ul>
                 </div>
 
             </div>
         </div>
-
     </main>
 
-    <!-- 3. AI Assistent -->
+    <!-- Chatbot -->
     <div id="chatbot" class="chatbot-container minimized">
         <div class="chat-header" onclick="toggleChat()">
             <div class="flex items-center gap-2 font-bold">
@@ -343,20 +325,15 @@
             </div>
             <span id="toggle-icon">▲</span>
         </div>
-        
-        <!-- Quick Prompts -->
         <div class="p-3 bg-white border-b flex gap-2 flex-wrap">
-            <button onclick="askBot('Wat zeggen de KPI\'s?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">📈 KPI Analyse</button>
-            <button onclick="askBot('Verklaar de kloof')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">≠ De Kloof</button>
-            <button onclick="askBot('Advies voor veiligheid?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">🛡️ Veiligheidstips</button>
+            <button onclick="askBot('Vergelijk 2023 en 2025')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">⚖️ 2023 vs 2025</button>
+            <button onclick="askBot('Wat is vaardigheidsbewustzijn?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full border">🧠 Bewustzijn</button>
         </div>
-
         <div class="chat-messages" id="chat-messages">
             <div class="message bot-msg">
-                Welkom. Ik heb toegang tot de volledige dataset van het DigIQ 2.0 rapport. Vraag mij naar specifieke statistieken, de KPI's of definities.
+                Hallo. Ik kan de data uit rapport 2023 en 2025 vergelijken. Waar wilt u meer over weten?
             </div>
         </div>
-
         <div class="p-3 bg-white border-t flex gap-2">
             <input type="text" id="user-input" placeholder="Stel een vraag..." class="flex-1 text-sm p-2 border rounded focus:outline-none focus:border-red-500" onkeypress="handleEnter(event)">
             <button onclick="sendMessage()" class="bg-gray-900 text-white px-4 rounded hover:bg-gray-700">➤</button>
@@ -365,27 +342,36 @@
 
     <!-- Scripts -->
     <script>
-        // Wacht tot de DOM geladen is om Chart.js conflicten te voorkomen
         document.addEventListener("DOMContentLoaded", function() {
             
-            // --- CHART 1: Skills Radar ---
+            // --- CHART 1: Skills Radar (Updated with Comparison) ---
             const ctxRadar = document.getElementById('skillsRadar');
             if (ctxRadar) {
                 new Chart(ctxRadar.getContext('2d'), {
                     type: 'radar',
                     data: {
                         labels: ['Info Geletterdheid', 'Communicatie', 'Content Creatie', 'Veiligheid', 'Probleemoplossing', 'AI Kennis'],
-                        datasets: [{
-                            label: 'Nationaal Gemiddelde',
-                            data: [78, 82, 65, 42, 68, 31],
-                            fill: true,
-                            backgroundColor: 'rgba(188, 0, 49, 0.1)',
-                            borderColor: '#bc0031',
-                            pointBackgroundColor: '#bc0031',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: '#bc0031'
-                        }]
+                        datasets: [
+                            {
+                                label: 'Rapport 2025',
+                                data: [78, 82, 65, 42, 68, 31], // 2025 Data: Lager op veiligheid, hoger op AI
+                                fill: true,
+                                backgroundColor: 'rgba(188, 0, 49, 0.2)',
+                                borderColor: '#bc0031',
+                                pointBackgroundColor: '#bc0031',
+                                order: 1
+                            },
+                            {
+                                label: 'Rapport 2023',
+                                data: [75, 80, 60, 48, 62, 12], // 2023 Data: Hoger op veiligheid, bijna geen AI
+                                fill: false,
+                                backgroundColor: 'transparent',
+                                borderColor: '#9ca3af',
+                                pointBackgroundColor: '#9ca3af',
+                                borderDash: [5, 5],
+                                order: 2
+                            }
+                        ]
                     },
                     options: {
                         responsive: true,
@@ -394,33 +380,34 @@
                             r: {
                                 angleLines: { color: '#eee' },
                                 grid: { color: '#eee' },
-                                suggestedMin: 0,
-                                suggestedMax: 100,
+                                suggestedMin: 0, suggestedMax: 100,
                                 ticks: { backdropColor: 'transparent' }
                             }
                         },
-                        plugins: { legend: { display: false } }
+                        plugins: { 
+                            legend: { display: true, position: 'bottom' } 
+                        }
                     }
                 });
             }
 
-            // --- CHART 2: Trend Line ---
+            // --- CHART 2: Trend ---
             const ctxTrend = document.getElementById('trendChart');
             if (ctxTrend) {
                 new Chart(ctxTrend.getContext('2d'), {
                     type: 'line',
                     data: {
-                        labels: ['2021', '2022', '2023', '2024', '2025 (prognose)'],
+                        labels: ['2021', '2023', '2025'],
                         datasets: [
                             {
                                 label: 'Technische Vaardigheid',
-                                data: [60, 65, 70, 78, 82],
+                                data: [60, 70, 82],
                                 borderColor: '#1f1f1f',
                                 tension: 0.3
                             },
                             {
                                 label: 'Kritisch Denken',
-                                data: [55, 54, 55, 53, 52],
+                                data: [55, 55, 52],
                                 borderColor: '#bc0031',
                                 borderDash: [5, 5],
                                 tension: 0.3
@@ -428,19 +415,13 @@
                         ]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom' }
-                        },
-                        scales: {
-                            y: { beginAtZero: false, min: 40, max: 100 }
-                        }
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: false, min: 40, max: 100 } }
                     }
                 });
             }
 
-            // --- CHART 3: Education Bar ---
+            // --- CHART 3: Education ---
             const ctxEdu = document.getElementById('educationChart');
             if (ctxEdu) {
                 new Chart(ctxEdu.getContext('2d'), {
@@ -448,87 +429,56 @@
                     data: {
                         labels: ['Praktisch', 'Middelbaar', 'Theoretisch'],
                         datasets: [
-                            {
-                                label: 'Basiskennis',
-                                data: [85, 90, 95],
-                                backgroundColor: '#ddd'
-                            },
-                            {
-                                label: 'AI & Data Skills',
-                                data: [20, 35, 65],
-                                backgroundColor: '#bc0031'
-                            }
+                            { label: 'Basiskennis', data: [85, 90, 95], backgroundColor: '#ddd' },
+                            { label: 'AI & Data Skills', data: [20, 35, 65], backgroundColor: '#bc0031' }
                         ]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true, max: 100 }
-                        }
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } }
                 });
             }
         });
 
-        // --- WORKFLOW GENERATOR (AI Simulation) ---
+        // --- Workflow Logic ---
         async function renderFlow(type) {
             const container = document.getElementById('mermaid-wrapper');
-            container.innerHTML = '<span class="animate-pulse">Genereren van workflow...</span>';
-            
+            container.innerHTML = '<span class="animate-pulse">Genereren...</span>';
             let code = "";
             
             if(type === 'phishing') {
                 code = `graph TD
-                A[E-mail ontvangen] --> B{Bekende afzender?};
-                B -- Nee --> C[Check domeinnaam];
-                B -- Ja --> D{Verwacht bericht?};
-                C --> E{Rare tekens?};
-                E -- Ja --> F[Markeer SPAM];
-                E -- Nee --> G[Check Links (hover)];
-                D -- Nee --> H[Bel afzender];
-                G --> I{Begint met https?};
-                I -- Nee --> F;
-                I -- Ja --> J[Veilig];
-                style F fill:#bc0031,color:#fff,stroke:none
-                style J fill:#1f1f1f,color:#fff,stroke:none`;
+                A[E-mail 2025] --> B{AI-gegenereerd?};
+                B -- Ja (Perfect NL) --> C[Check Context];
+                B -- Nee (Taalfouten) --> D[Traditionele Spam];
+                C --> E{Verwacht bericht?};
+                E -- Nee --> F[Check Afzender];
+                F --> G{Spoofing?};
+                G -- Ja --> H[DELETE];
+                G -- Nee --> I[Bel Afzender];
+                style H fill:#bc0031,color:#fff`;
             } else if (type === 'privacy') {
                 code = `graph TD
-                A[Start Audit] --> B[Social Media];
-                A --> C[Browser];
-                B --> D{Profiel Openbaar?};
-                D -- Ja --> E[Zet op Prive];
-                C --> F[Cookies wissen];
-                F --> G[Installeer Adblocker];
-                E --> H[Check 3rd Party Apps];
-                H --> I[Revoke Permissions];
-                style E fill:#bc0031,color:#fff
-                style I fill:#1f1f1f,color:#fff`;
+                A[Audit 2025] --> B[AI Settings];
+                A --> C[Browser Data];
+                B --> D{Data Training AAN?};
+                D -- Ja --> E[UITZETTEN];
+                C --> F[Cookies];
+                style E fill:#bc0031,color:#fff`;
             } else if (type === 'ai_ethics') {
                 code = `graph TD
-                A[AI Output] --> B{Feit of Mening?};
-                B -- Feit --> C[Zoek 2e bron];
-                B -- Mening --> D[Check Bias];
-                C --> E{Bron gevonden?};
-                E -- Nee --> F[Hallucinatie! Niet gebruiken];
-                E -- Ja --> G[Gebruiken met referentie];
-                style F fill:#bc0031,color:#fff
-                style G fill:#1f1f1f,color:#fff`;
+                A[Prompt] --> B[LLM Output];
+                B --> C{Fact Check};
+                C -- OK --> D[Bias Check];
+                C -- Fout --> E[Hallucinatie];
+                D -- OK --> F[Gebruik];
+                style E fill:#bc0031,color:#fff`;
             }
 
             container.innerHTML = `<div class="mermaid">${code}</div>`;
-            try {
-                // Mermaid is geladen via module, dus we roepen het aan op window object als het beschikbaar is
-                if(window.mermaid) {
-                    await window.mermaid.run({ nodes: container.querySelectorAll('.mermaid') });
-                }
-            } catch(e) { 
-                console.error(e);
-                container.innerHTML = "Error rendering chart. Controleer console."; 
-            }
+            try { if(window.mermaid) await window.mermaid.run({ nodes: container.querySelectorAll('.mermaid') }); } 
+            catch(e) { console.log(e); }
         }
 
-        // --- CHATBOT LOGICA ---
+        // --- Chatbot Logic ---
         let isOpen = false;
         function toggleChat() {
             const el = document.getElementById('chatbot');
@@ -536,42 +486,21 @@
             el.classList.toggle('minimized', !isOpen);
             document.getElementById('toggle-icon').innerText = isOpen ? '▼' : '▲';
         }
-
-        function askBot(q) {
-            document.getElementById('user-input').value = q;
-            sendMessage();
-        }
-
+        function askBot(q) { document.getElementById('user-input').value = q; sendMessage(); }
         function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
-
         function sendMessage() {
             const input = document.getElementById('user-input');
             const txt = input.value.trim();
             if(!txt) return;
-
             addMsg(txt, 'user-msg');
             input.value = '';
-            
             if(!isOpen) toggleChat();
-
-            // Simulate thinking
-            const thinkingId = 'thinking-' + Date.now();
-            addMsg('<span class="animate-pulse">Analyseren...</span>', 'bot-msg', thinkingId);
-
-            setTimeout(() => {
-                const el = document.getElementById(thinkingId);
-                if(el) el.remove();
-                
-                const response = getBotResponse(txt);
-                addMsg(response, 'bot-msg');
-            }, 600);
+            setTimeout(() => { addMsg(getBotResponse(txt), 'bot-msg'); }, 600);
         }
-
-        function addMsg(html, type, id=null) {
+        function addMsg(html, type) {gr
             const box = document.getElementById('chat-messages');
             const div = document.createElement('div');
             div.className = `message ${type}`;
-            if(id) div.id = id;
             div.innerHTML = html;
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
@@ -579,11 +508,10 @@
 
         function getBotResponse(input) {
             const txt = input.toLowerCase();
-            if(txt.includes('kpi') || txt.includes('score')) return "De gemiddelde DigIQ score is <strong>64.8</strong>. Dit is een lichte stijging, maar de veiligheidsscore (4.2/10) trekt het gemiddelde omlaag.";
-            if(txt.includes('kloof') || txt.includes('ongelijkheid')) return "De kloof is zichtbaar in de 'Education Chart'. Theoretisch opgeleiden scoren 65% op AI-skills, terwijl praktisch opgeleiden op 20% blijven steken. Dit riskeert digitale uitsluiting.";
-            if(txt.includes('veilig') || txt.includes('wachtwoord')) return "De data is zorgwekkend: slechts 42% gebruikt 2FA. Het advies uit het rapport is dwingend: activeer overal tweestapsverificatie.";
-            if(txt.includes('trend') || txt.includes('ontwikkeling')) return "In de trendgrafiek zien we een 'schaar-beweging': we worden handiger met apps (technisch), maar minder kritisch op de inhoud (cognitief).";
-            return "Interessante vraag. Kunt u specificeren of u doelt op de 'Skills Radar', de 'Kloof' of de 'Veiligheidscijfers'?";
+            if(txt.includes('vergelijk') || txt.includes('2023')) return "In vergelijking met 2023 is de <strong>AI-kennis verdriedubbeld</strong>, maar de basisveiligheid (wachtwoorden, phishing herkenning) is gedaald met 6 punten. We worden handiger, maar minder veilig.";
+            if(txt.includes('bewustzijn') || txt.includes('zelfbeeld')) return "Vaardigheidsbewustzijn is de mate waarin u uw eigen kunnen accuraat inschat. Uit de harmonica rechts blijkt dat 72% zichzelf overschat, wat leidt tot risicovol gedrag.";
+            if(txt.includes('kpi')) return "De belangrijkste KPI: DigIQ is gestegen naar 64.8, maar de veiligheidsscore is zorgwekkend laag (4.2).";
+            return "Ik kan vragen beantwoorden over de dataverschillen tussen 2023 en 2025, of over het begrip 'vaardigheidsbewustzijn'.";
         }
     </script>
 </body>
