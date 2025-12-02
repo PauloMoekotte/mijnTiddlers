@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DigIQ 2.0 - Dashboard & Analytics</title>
+    <title>DigIQ 2.0 - Dashboard & Analytics (Fixed)</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js (Specifieke UMD versie voor directe browser support) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     
     <!-- Mermaid.js -->
     <script type="module">
@@ -33,6 +33,14 @@
             font-family: 'Roboto', sans-serif;
             background-color: var(--bg-light);
             color: var(--uva-black);
+            overflow-x: hidden; /* Voorkomt horizontale scroll */
+        }
+
+        /* Chart Containers - Geforceerde hoogte voor stabiliteit */
+        .chart-container {
+            position: relative;
+            height: 350px; 
+            width: 100%;
         }
 
         /* Header */
@@ -171,22 +179,22 @@
             color: white;
             border-color: var(--uva-black);
         }
-        .mermaid { display: flex; justify-content: center; }
+        .mermaid { display: flex; justify-content: center; width: 100%; }
     </style>
 </head>
 <body>
 
-    <!-- 1. Header Section -->
+    <!-- Header Section -->
     <header class="header-bg p-8 mb-6">
         <div class="max-w-7xl mx-auto">
-            <h1 class="text-4xl font-bold tracking-tight">DIGIQ 2.0 <span class="font-light opacity-75">| Rapportage Nederland</span></h1>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight">DIGIQ 2.0 <span class="font-light opacity-75">| Rapportage Nederland</span></h1>
             <p class="mt-2 text-gray-300">Interactieve analyse van digitale competenties, veiligheid en AI-adaptatie.</p>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 pb-24">
         
-        <!-- 2. KPI Kaarten (Nieuw) -->
+        <!-- KPI Kaarten -->
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
             
             <div class="kpi-card">
@@ -195,7 +203,7 @@
                         <div class="kpi-label">Gem. DigIQ Score</div>
                         <div class="kpi-value">64.8</div>
                     </div>
-                    <div class="p-2 bg-red-50 rounded-full text-red-700">📊</div>
+                    <div class="p-2 bg-red-50 rounded-full text-red-700 text-2xl">📊</div>
                 </div>
                 <div class="mt-2 kpi-delta delta-up">▲ 1.2% t.o.v. 2023</div>
                 <div class="text-xs text-gray-400 mt-1">Landelijke index</div>
@@ -207,7 +215,7 @@
                         <div class="kpi-label">AI Adaptatie</div>
                         <div class="kpi-value">31%</div>
                     </div>
-                    <div class="p-2 bg-blue-50 rounded-full text-blue-700">🤖</div>
+                    <div class="p-2 bg-blue-50 rounded-full text-blue-700 text-2xl">🤖</div>
                 </div>
                 <div class="mt-2 kpi-delta delta-up">▲ 12% sterke stijging</div>
                 <div class="text-xs text-gray-400 mt-1">Gebruikt wekelijks AI</div>
@@ -219,7 +227,7 @@
                         <div class="kpi-label">Cyber Hygiëne</div>
                         <div class="kpi-value">4.2<span class="text-lg">/10</span></div>
                     </div>
-                    <div class="p-2 bg-yellow-50 rounded-full text-yellow-700">🛡️</div>
+                    <div class="p-2 bg-yellow-50 rounded-full text-yellow-700 text-2xl">🛡️</div>
                 </div>
                 <div class="mt-2 kpi-delta delta-down">▼ Risicovol niveau</div>
                 <div class="text-xs text-gray-400 mt-1">Wachtwoordbeheer & 2FA</div>
@@ -231,7 +239,7 @@
                         <div class="kpi-label">Kloof Hoog/Laag</div>
                         <div class="kpi-value">28%</div>
                     </div>
-                    <div class="p-2 bg-gray-100 rounded-full text-gray-700">≠</div>
+                    <div class="p-2 bg-gray-100 rounded-full text-gray-700 text-2xl">≠</div>
                 </div>
                 <div class="mt-2 kpi-delta delta-down">▼ Kloof vergroot</div>
                 <div class="text-xs text-gray-400 mt-1">Verschil in vaardigheid</div>
@@ -251,16 +259,16 @@
                         <span class="text-xs bg-gray-100 px-2 py-1 rounded">2025 Data</span>
                     </div>
                     <p class="text-sm text-gray-500 mb-4">Vergelijking van de 6 kerndomeinen uit het DigIQ model.</p>
-                    <div class="h-80 w-full relative">
+                    <div class="chart-container">
                         <canvas id="skillsRadar"></canvas>
                     </div>
                 </div>
 
-                <!-- Chart: Trend Analyse (Nieuw) -->
+                <!-- Chart: Trend Analyse -->
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <h3 class="font-bold text-lg text-gray-800 mb-2">Trendanalyse 2021 - 2025</h3>
                     <p class="text-sm text-gray-500 mb-4">Ontwikkeling van technische vs. kritische vaardigheden.</p>
-                    <div class="h-64 w-full relative">
+                    <div class="chart-container" style="height: 300px;">
                         <canvas id="trendChart"></canvas>
                     </div>
                     <p class="text-xs text-gray-400 mt-2 italic">Opvallend: Terwijl technisch gebruiksgemak toeneemt, stagneert het kritisch vermogen om desinformatie te herkennen.</p>
@@ -279,7 +287,7 @@
                         <button onclick="renderFlow('ai_ethics')" class="btn-workflow">AI Bronverificatie</button>
                     </div>
 
-                    <div id="mermaid-wrapper" class="bg-gray-50 rounded min-h-[200px] flex items-center justify-center p-4 border border-dashed border-gray-300">
+                    <div id="mermaid-wrapper" class="bg-gray-50 rounded min-h-[200px] flex items-center justify-center p-4 border border-dashed border-gray-300 overflow-auto">
                         <span class="text-gray-400 text-sm">Selecteer een proces hierboven...</span>
                     </div>
                 </div>
@@ -301,10 +309,10 @@
                     </p>
                 </div>
 
-                <!-- Chart: Educatie Kloof (Nieuw) -->
+                <!-- Chart: Educatie Kloof -->
                 <div class="bg-white p-6 rounded-lg shadow-sm">
                     <h3 class="font-bold text-lg text-gray-800 mb-4">De Kloof per Opleidingsniveau</h3>
-                    <div class="h-64 w-full relative">
+                    <div class="chart-container" style="height: 300px;">
                         <canvas id="educationChart"></canvas>
                     </div>
                     <div class="mt-4 p-3 bg-red-50 text-red-900 text-sm rounded border-l-4 border-red-600">
@@ -357,27 +365,226 @@
 
     <!-- Scripts -->
     <script>
-        // --- CHART 1: Skills Radar ---
-        const ctxRadar = document.getElementById('skillsRadar').getContext('2d');
-        new Chart(ctxRadar, {
-            type: 'radar',
-            data: {
-                labels: ['Info Geletterdheid', 'Communicatie', 'Content Creatie', 'Veiligheid', 'Probleemoplossing', 'AI Kennis'],
-                datasets: [{
-                    label: 'Nationaal Gemiddelde',
-                    data: [78, 82, 65, 42, 68, 31],
-                    fill: true,
-                    backgroundColor: 'rgba(188, 0, 49, 0.1)',
-                    borderColor: '#bc0031',
-                    pointBackgroundColor: '#bc0031',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#bc0031'
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: '#eee' },
-                        grid: { c
+        // Wacht tot de DOM geladen is om Chart.js conflicten te voorkomen
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // --- CHART 1: Skills Radar ---
+            const ctxRadar = document.getElementById('skillsRadar');
+            if (ctxRadar) {
+                new Chart(ctxRadar.getContext('2d'), {
+                    type: 'radar',
+                    data: {
+                        labels: ['Info Geletterdheid', 'Communicatie', 'Content Creatie', 'Veiligheid', 'Probleemoplossing', 'AI Kennis'],
+                        datasets: [{
+                            label: 'Nationaal Gemiddelde',
+                            data: [78, 82, 65, 42, 68, 31],
+                            fill: true,
+                            backgroundColor: 'rgba(188, 0, 49, 0.1)',
+                            borderColor: '#bc0031',
+                            pointBackgroundColor: '#bc0031',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#bc0031'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                angleLines: { color: '#eee' },
+                                grid: { color: '#eee' },
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                ticks: { backdropColor: 'transparent' }
+                            }
+                        },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // --- CHART 2: Trend Line ---
+            const ctxTrend = document.getElementById('trendChart');
+            if (ctxTrend) {
+                new Chart(ctxTrend.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['2021', '2022', '2023', '2024', '2025 (prognose)'],
+                        datasets: [
+                            {
+                                label: 'Technische Vaardigheid',
+                                data: [60, 65, 70, 78, 82],
+                                borderColor: '#1f1f1f',
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Kritisch Denken',
+                                data: [55, 54, 55, 53, 52],
+                                borderColor: '#bc0031',
+                                borderDash: [5, 5],
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        },
+                        scales: {
+                            y: { beginAtZero: false, min: 40, max: 100 }
+                        }
+                    }
+                });
+            }
+
+            // --- CHART 3: Education Bar ---
+            const ctxEdu = document.getElementById('educationChart');
+            if (ctxEdu) {
+                new Chart(ctxEdu.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Praktisch', 'Middelbaar', 'Theoretisch'],
+                        datasets: [
+                            {
+                                label: 'Basiskennis',
+                                data: [85, 90, 95],
+                                backgroundColor: '#ddd'
+                            },
+                            {
+                                label: 'AI & Data Skills',
+                                data: [20, 35, 65],
+                                backgroundColor: '#bc0031'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: { beginAtZero: true, max: 100 }
+                        }
+                    }
+                });
+            }
+        });
+
+        // --- WORKFLOW GENERATOR (AI Simulation) ---
+        async function renderFlow(type) {
+            const container = document.getElementById('mermaid-wrapper');
+            container.innerHTML = '<span class="animate-pulse">Genereren van workflow...</span>';
+            
+            let code = "";
+            
+            if(type === 'phishing') {
+                code = `graph TD
+                A[E-mail ontvangen] --> B{Bekende afzender?};
+                B -- Nee --> C[Check domeinnaam];
+                B -- Ja --> D{Verwacht bericht?};
+                C --> E{Rare tekens?};
+                E -- Ja --> F[Markeer SPAM];
+                E -- Nee --> G[Check Links (hover)];
+                D -- Nee --> H[Bel afzender];
+                G --> I{Begint met https?};
+                I -- Nee --> F;
+                I -- Ja --> J[Veilig];
+                style F fill:#bc0031,color:#fff,stroke:none
+                style J fill:#1f1f1f,color:#fff,stroke:none`;
+            } else if (type === 'privacy') {
+                code = `graph LR
+                A[Start Audit] --> B[Social Media];
+                A --> C[Browser];
+                B --> D{Profiel Openbaar?};
+                D -- Ja --> E[Zet op Prive];
+                C --> F[Cookies wissen];
+                F --> G[Installeer Adblocker];
+                E --> H[Check 3rd Party Apps];
+                H --> I[Revoke Permissions];
+                style E fill:#bc0031,color:#fff
+                style I fill:#1f1f1f,color:#fff`;
+            } else if (type === 'ai_ethics') {
+                code = `graph TD
+                A[AI Output] --> B{Feit of Mening?};
+                B -- Feit --> C[Zoek 2e bron];
+                B -- Mening --> D[Check Bias];
+                C --> E{Bron gevonden?};
+                E -- Nee --> F[Hallucinatie! Niet gebruiken];
+                E -- Ja --> G[Gebruiken met referentie];
+                style F fill:#bc0031,color:#fff
+                style G fill:#1f1f1f,color:#fff`;
+            }
+
+            container.innerHTML = `<div class="mermaid">${code}</div>`;
+            try {
+                // Mermaid is geladen via module, dus we roepen het aan op window object als het beschikbaar is
+                if(window.mermaid) {
+                    await window.mermaid.run({ nodes: container.querySelectorAll('.mermaid') });
+                }
+            } catch(e) { 
+                console.error(e);
+                container.innerHTML = "Error rendering chart. Controleer console."; 
+            }
+        }
+
+        // --- CHATBOT LOGICA ---
+        let isOpen = false;
+        function toggleChat() {
+            const el = document.getElementById('chatbot');
+            isOpen = !isOpen;
+            el.classList.toggle('minimized', !isOpen);
+            document.getElementById('toggle-icon').innerText = isOpen ? '▼' : '▲';
+        }
+
+        function askBot(q) {
+            document.getElementById('user-input').value = q;
+            sendMessage();
+        }
+
+        function handleEnter(e) { if(e.key === 'Enter') sendMessage(); }
+
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const txt = input.value.trim();
+            if(!txt) return;
+
+            addMsg(txt, 'user-msg');
+            input.value = '';
+            
+            if(!isOpen) toggleChat();
+
+            // Simulate thinking
+            const thinkingId = 'thinking-' + Date.now();
+            addMsg('<span class="animate-pulse">Analyseren...</span>', 'bot-msg', thinkingId);
+
+            setTimeout(() => {
+                const el = document.getElementById(thinkingId);
+                if(el) el.remove();
+                
+                const response = getBotResponse(txt);
+                addMsg(response, 'bot-msg');
+            }, 600);
+        }
+
+        function addMsg(html, type, id=null) {
+            const box = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            if(id) div.id = id;
+            div.innerHTML = html;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function getBotResponse(input) {
+            const txt = input.toLowerCase();
+            if(txt.includes('kpi') || txt.includes('score')) return "De gemiddelde DigIQ score is <strong>64.8</strong>. Dit is een lichte stijging, maar de veiligheidsscore (4.2/10) trekt het gemiddelde omlaag.";
+            if(txt.includes('kloof') || txt.includes('ongelijkheid')) return "De kloof is zichtbaar in de 'Education Chart'. Theoretisch opgeleiden scoren 65% op AI-skills, terwijl praktisch opgeleiden op 20% blijven steken. Dit riskeert digitale uitsluiting.";
+            if(txt.includes('veilig') || txt.includes('wachtwoord')) return "De data is zorgwekkend: slechts 42% gebruikt 2FA. Het advies uit het rapport is dwingend: activeer overal tweestapsverificatie.";
+            if(txt.includes('trend') || txt.includes('ontwikkeling')) return "In de trendgrafiek zien we een 'schaar-beweging': we worden handiger met apps (technisch), maar minder kritisch op de inhoud (cognitief).";
+            return "Interessante vraag. Kunt u specificeren of u doelt op de 'Skills Radar', de 'Kloof' of de 'Veiligheidscijfers'?";
+        }
+    </script>
+</body>
+</html>
