@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acemoglu's Task-Based Model</title>
+    <!-- Chart.js laden voor de interactieve simulatie -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --text: #333;
+            --success: #27ae60;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+        }
+
+        /* Header & Navigatie */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 { margin: 0; font-size: 2.5rem; font-weight: 700; }
+        header p { font-size: 1.2rem; opacity: 0.9; margin-top: 10px; }
+
+        nav {
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem;
+        }
+
+        nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+            transition: color 0.3s, background 0.3s;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background: var(--light);
+            color: var(--secondary);
+        }
+
+        /* Content Layout */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 80px; /* Voor soepel scrollen */
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 { color: var(--secondary); margin-top: 1.5rem; }
+
+        p { margin-bottom: 1rem; text-align: justify; }
+
+        /* Visuele Elementen */
+        .highlight-box {
+            background-color: #fff8e1;
+            border-left: 5px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .viz-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        /* SVG Diagram Styling */
+        svg.model-viz {
+            width: 100%;
+            max-width: 700px;
+            height: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        /* Interactieve Simulatie Sectie */
+        .simulation-box {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #dfe6e9;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        
+        input[type=range] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            background: white;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary);
+            color: white;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            nav { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Het Op Taken Gebaseerde Model</h1>
+    <p>Een analyse van Daron Acemoglu's visie op automatisering en werk</p>
+</header>
+
+<nav>
+    <a href="#intro">Introductie</a>
+    <a href="#model">Het Model</a>
+    <a href="#visualisatie">Visualisatie</a>
+    <a href="#simulatie">Interactieve Simulatie</a>
+    <a href="#toekomst">Toekomst</a>
+</nav>
+
+<div class="container">
+    
+    <!-- Sectie 1: Introductie -->
+    <section id="intro">
+        <h2>1. Introductie</h2>
+        <p>
+            Traditionele economische modellen worstelen om de huidige impact van technologie op de arbeidsmarkt te verklaren. 
+            Waarom stagneren lonen ondanks technologische vooruitgang? Het <strong>Task-Based Model</strong> van Daron Acemoglu en Pascual Restrepo 
+            biedt een antwoord: productie is geen abstract proces, maar een verzameling van specifieke taken.
+        </p>
+        <div class="highlight-box">
+            <strong>Kernidee:</strong> De toekomst van werk is een race tussen <em>Automatisering</em> (oude taken verdwijnen) en <em>Innovatie</em> (nieuwe taken ontstaan).
+        </div>
+    </section>
+
+    <!-- Sectie 2: Het Model -->
+    <section id="model">
+        <h2>2. De Drie Krachten</h2>
+        <p>Het model identificeert drie mechanismen die bepalen of technologie arbeiders helpt of schaadt:</p>
+        
+        <h3>1. Het Verplaatsingseffect (Displacement)</h3>
+        <p>Automatisering neemt taken over die voorheen door mensen werden gedaan. Dit verlaagt de vraag naar arbeid en drukt de lonen.</p>
+
+        <h3>2. Het Productiviteitseffect</h3>
+        <p>Automatisering maakt producten goedkoper. Dit leidt tot meer vraag, waardoor bedrijven moeten uitbreiden en (soms) meer mensen aannemen in niet-geautomatiseerde taken.</p>
+
+        <h3>3. Het Wederinstellingseffect (Reinstatement)</h3>
+        <p><strong>Dit is de sleutel tot groei.</strong> Technologie creëert compleet nieuwe taken (bijv. app-ontwikkelaar, drone-piloot). Dit herstelt de vraag naar menselijke arbeid.</p>
+    </section>
+
+    <!-- Sectie 3: Visualisatie (SVG) -->
+    <section id="visualisatie">
+        <h2>3. Visuele Samenvatting</h2>
+        <p>Onderstaand diagram toont de dynamiek van het model. Arbeid verliest terrein door automatisering, maar wint terrein terug door nieuwe taken.</p>
+        
+        <div class="viz-container">
+            <!-- Inline SVG Diagram -->
+            <svg class="model-viz" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background -->
+                <rect width="800" height="400" fill="#fcfcfc"/>
+                
+                <!-- Central Axis -->
+                <line x1="100" y1="200" x2="700" y2="200" stroke="#ccc" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="400" y="190" text-anchor="middle" fill="#777" font-size="12">Huidig Evenwicht</text>
+
+                <!-- Automatisering Block -->
+                <rect x="50" y="50" width="200" height="100" rx="10" fill="#e74c3c" opacity="0.1" stroke="#e74c3c" stroke-width="2"/>
+                <text x="150" y="100" text-anchor="middle" fill="#c0392b" font-weight="bold" font-size="16">Automatisering</text>
+                <text x="150" y="120" text-anchor="middle" fill="#c0392b" font-size="12">Neemt taken over</text>
+
+                <!-- Arrow Down (Displacement) -->
+                <path d="M 150 160 L 150 250" stroke="#e74c3c" stroke-width="4" marker-end="url(#arrowhead-red)"/>
+                <text x="160" y="210" fill="#c0392b" font-size="14">Verplaatsingseffect</text>
+                <text x="160" y="230" fill="#555" font-size="12">(Lonen ↓)</text>
+
+                <!-- Reinstatement Block -->
+                <rect x="550" y="50" width="200" height="100" rx="10" fill="#3498db" opacity="0.1" stroke="#3498db" stroke-width="2"/>
+                <text x="650" y="100" text-anchor="middle" fill="#2980b9" font-weight="bold" font-size="16">Nieuwe Taken</text>
+                <text x="650" y="120" text-anchor="middle" fill="#2980b9" font-size="12">AI Support, Coding, Care</text>
+
+                <!-- Arrow Up (Reinstatement) -->
+                <path d="M 650 250 L 650 160" stroke="#3498db" stroke-width="4" marker-end="url(#arrowhead-blue)"/>
+                <text x="500" y="210" fill="#2980b9" font-size="14" text-anchor="end">Wederinstellingseffect</text>
+                <text x="500" y="230" fill="#555" font-size="12" text-anchor="end">(Lonen ↑)</text>
+
+                <!-- Productivity Loop -->
+                <path d="M 260 100 Q 400 20 540 100" fill="none" stroke="#f1c40f" stroke-width="3" stroke-dasharray="10,5"/>
+                <text x="400" y="50" text-anchor="middle" fill="#f39c12" font-weight="bold">Productiviteitseffect</text>
+
+                <!-- Definitions for markers -->
+                <defs>
+                    <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c" />
+                    </marker>
+                    <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#3498db" />
+                    </marker>
+                </defs>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Sectie 4: Interactieve Simulatie -->
+    <section id="simulatie">
+        <h2>4. Interactieve Simulatie: De Balans</h2>
+        <p>
+            Wat gebeurt er als we alleen automatiseren zonder nieuwe taken te creëren? Gebruik de sliders hieronder om de impact op de <strong>vraag naar arbeid</strong> te zien.
+        </p>
+
+        <div class="simulation-box">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="automationRange">Mate van Automatisering (Displacement):</label>
+                    <input type="range" id="automationRange" min="1" max="100" value="50">
+                    <span style="font-size: 0.8rem; color: #e74c3c;">Hoog = Banen verdwijnen</span>
+                </div>
+                <div class="control-group">
+                    <label for="newTaskRange">Creatie Nieuwe Taken (Reinstatement):</label>
+                    <input type="range" id="newTaskRange" min="1" max="100" value="50">
+                    <span style="font-size: 0.8rem; color: #3498db;">Hoog = Nieuwe banen ontstaan</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="laborChart"></canvas>
+            </div>
+            <p id="simulation-status" style="text-align: center; font-weight: bold; margin-top: 10px;"></p>
+        </div>
+    </section>
+
+    <!-- Sectie 5: Toekomst -->
+    <section id="toekomst">
+        <h2>5. Toekomstperspectief & "So-so Automation"</h2>
+        <p>
+            Een groot gevaar is <strong>"So-so automation"</strong>: technologie die net goed genoeg is om mensen te vervangen, maar niet efficiënt genoeg om de economie echt te laten groeien (bijvoorbeeld: slechte zelfscankassa's).
+        </p>
+        <p>
+            Voor een positieve toekomst moeten beleidsmakers en bedrijven zich niet alleen richten op kostenbesparing (mensen vervangen), maar op technologie die de menselijke capaciteit uitbreidt.
+        </p>
+    </section>
+
+</div>
+
+<footer>
+    <p>Rapport gegenereerd op basis van onderzoek van Acemoglu & Restrepo | © 2025</p>
+</footer>
+
+<script>
+    // Configuratie van de Chart.js grafiek
+    const ctx = document.getElementById('laborChart').getContext('2d');
+    
+    // Initiële data (dummy tijdsverloop)
+    const timeLabels = ['2020', '2021', '2022', '2023', '2024', '2025', '2026', '2027', '2028', '2029', '2030'];
+    
+    let laborChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: timeLabels,
+            datasets: [{
+                label: 'Vraag naar Arbeid (Geïndexeerd)',
+                data: [], // Wordt gevuld door functie
+                borderColor: '#2c3e50',
+                backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    suggestedMin: 80,
+                    suggestedMax: 150,
+                    title: { display: true, text: 'Arbeidsvraag & Loonruimte' }
+                }
+            },
+            plugins: {
+                legend: { display: true }
+            }
+        }
+    });
+
+    // Logica voor de simulatie
+    const automationInput = document.getElementById('automationRange');
+    const newTasksInput = document.getElementById('newTaskRange');
+    const statusText = document.getElementById('simulation-status');
+
+    function updateChart() {
+        const autoVal = parseInt(automationInput.value);
+        const taskVal = parseInt(newTasksInput.value);
+        
+        // Simpel model: Start op 100.
+        // Elk jaar: - (Automatisering * factor) + (NieuweTaken * factor) + (Productiviteit * factor)
+        // Productiviteit groeit licht mee met automatisering, maar minder sterk dan het verlies.
+        
+        let currentLevel = 100;
+        let dataPoints = [100];
+
+        for (let i = 1; i < timeLabels.length; i++) {
+            // Verplaatsingseffect (negatief)
+            const displacement = autoVal * 0.5; 
+            
+            // Wederinstellingseffect (positief)
+            const reinstatement = taskVal * 0.6; // Nieuwe taken wegen zwaar mee voor groei
+            
+            // Productiviteitseffect (klein positief effect van automatisering)
+            const productivity = autoVal * 0.15;
+
+            // Netto verandering
+            const netChange = reinstatement + productivity - displacement;
+            
+            // Dempende factor om de grafiek leesbaar te houden
+            currentLevel = currentLevel + (netChange * 0.5);
+            dataPoints.push(currentLevel);
+        }
+
+        laborChart.data.datasets[0].data = dataPoints;
+        
+        // Kleurverandering basis van resultaat
+        if (dataPoints[dataPoints.length - 1] < 90) {
+            laborChart.data.datasets[0].borderColor = '#e74c3c'; // Rood (slecht)
+            laborChart.data.datasets[0].backgroundColor = 'rgba(231, 76, 60, 0.2)';
+            statusText.innerText = "Scenario: Loonstagnatie & Baanverlies (Displacement domineert)";
+            statusText.style.color = "#c0392b";
+        } else if (dataPoints[dataPoints.length - 1] > 110) {
+            laborChart.data.datasets[0].borderColor = '#27ae60'; // Groen (goed)
+            laborChart.data.datasets[0].backgroundColor = 'rgba(39, 174, 96, 0.2)';
+            statusText.innerText = "Scenario: Groei & Welvaart (Innovatie domineert)";
+            statusText.style.color = "#27ae60";
+        } else {
+            laborChart.data.datasets[0].borderColor = '#f39c12'; // Oranje (neutraal)
+            laborChart.data.datasets[0].backgroundColor = 'rgba(243, 156, 18, 0.2)';
+            statusText.innerText = "Scenario: Stagnatie / Evenwicht";
+            statusText.style.color = "#d35400";
+        }
+
+        laborChart.update();
+    }
+
+    // Event listeners
+    automationInput.addEventListener('input', updateChart);
+    newTasksInput.addEventListener('input', updateChart);
+
+    // Initial run
+    updateChart();
+
+</script>
+
+</body>
+</html>
