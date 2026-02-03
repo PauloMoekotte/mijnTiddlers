@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MORA VSV Rapportage Architectuur - Actoren & Activiteiten</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+        }
+        .data-line {
+            stroke: #2563eb;
+            stroke-width: 1.2;
+            fill: none;
+        }
+        .process-node {
+            fill: #ffffff;
+            stroke: #cbd5e1;
+            stroke-width: 1;
+        }
+        .actor-label {
+            font-size: 10px;
+            font-weight: 700;
+            fill: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        .text-label {
+            font-size: 12px;
+            fill: #1e293b;
+        }
+        .text-header {
+            font-size: 14px;
+            font-weight: 600;
+            fill: #0f172a;
+        }
+        .annotation {
+            font-size: 11px;
+            font-style: italic;
+            fill: #64748b;
+        }
+        .layer-bg {
+            fill: #f8fafc;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-10">
+            <h1 class="text-3xl font-light tracking-tight text-slate-900 mb-2">Architectuur Rapportagefunctie VSV</h1>
+            <p class="text-sm text-slate-500 max-w-2xl">Integratie van functionarissen, organisatieonderdelen en MORA-processen binnen de ROC-informatielaag.</p>
+        </header>
+
+        <div class="relative bg-white border-t border-slate-200 pt-8">
+            <svg viewBox="0 0 900 650" class="w-full h-auto">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+                    </marker>
+                </defs>
+
+                <!-- LAAG 1: DATA-ACQUISITIE -->
+                <rect x="0" y="30" width="900" height="150" class="layer-bg" rx="4" />
+                <text x="15" y="20" class="text-header">1. Data-acquisitie & Operationele Vastlegging</text>
+                
+                <!-- SIS/LMS Groep -->
+                <g transform="translate(40, 60)">
+                    <text x="0" y="-10" class="actor-label">Onderwijsadministratie / Docenten</text>
+                    <rect width="250" height="80" class="process-node" rx="2"/>
+                    <text x="12" y="25" class="text-label font-bold">Invoer SIS (Eduarte)</text>
+                    <text x="12" y="45" class="annotation">Verantwoording: Aanwezigheid & Voortgang</text>
+                    <text x="12" y="65" class="text-xs fill-slate-400">Proces: MORA 3.2 Onderwijsondersteuning</text>
+                </g>
+
+                <!-- BRON Groep -->
+                <g transform="translate(320, 60)">
+                    <text x="0" y="-10" class="actor-label">Applicatiebeheer / DUO</text>
+                    <rect width="250" height="80" class="process-node" rx="2"/>
+                    <text x="12" y="25" class="text-label font-bold">Koppeling BRON / RIO</text>
+                    <text x="12" y="45" class="annotation">Validatie wettelijke inschrijving</text>
+                    <text x="12" y="65" class="text-xs fill-slate-400">Systeem: Landelijke registers</text>
+                </g>
+
+                <!-- Begeleiding Groep -->
+                <g transform="translate(600, 60)">
+                    <text x="0" y="-10" class="actor-label">Zorgadviesteam (ZAT) / Trajectbegeleider</text>
+                    <rect width="260" height="80" class="process-node" rx="2"/>
+                    <text x="12" y="25" class="text-label font-bold">Vastlegging Begeleiding</text>
+                    <text x="12" y="45" class="annotation">Signalen van uitvalrisico (soft data)</text>
+                    <text x="12" y="65" class="text-xs fill-slate-400">Proces: MORA 3.3 Begeleiding</text>
+                </g>
+
+                <!-- LAAG 2: DE 'ROC LAYER' (RAPPORTAGEFUNCTIE) -->
+                <rect x="0" y="240" width="900" height="200" class="layer-bg" rx="4" />
+                <text x="15" y="230" class="text-header">2. Structurele Rapportagefunctie (Data Management & Intelligence)</text>
+                
+                <!-- Connectors van 1 naar 2 -->
+                <path d="M165 140 L165 240" class="data-line" marker-end="url(#arrowhead)"/>
+                <path d="M445 140 L445 240" class="data-line" marker-end="url(#arrowhead)"/>
+                <path d="M730 140 L730 240" class="data-line" marker-end="url(#arrowhead)"/>
+
+                <!-- Centraal Data Team -->
+                <g transform="translate(40, 270)">
+                    <text x="0" y="-10" class="actor-label">Onderwijslogistiek / Data-analisten / FG</text>
+                    <rect width="820" height="140" class="process-node" rx="2" style="stroke-dasharray: 4;"/>
+                    
+                    <!-- Detail activiteiten binnen de laag -->
+                    <g transform="translate(20, 30)">
+                        <text x="0" y="20" class="text-label font-semibold">Integratie & Opschoning</text>
+                        <text x="0" y="40" class="annotation">Samenvoegen SIS en Verzuimdata</text>
+                        <text x="0" y="60" class="text-xs font-bold text-blue-600">Rollen: Data Engineer</text>
+                        <line x1="240" y1="10" x2="240" y2="90" stroke="#e2e8f0" />
+                    </g>
+
+                    <g transform="translate(280, 30)">
+                        <text x="0" y="20" class="text-label font-semibold">Privacy & Validatie</text>
+                        <text x="0" y="40" class="annotation">DPIA check & Autorisatiebeheer</text>
+                        <text x="0" y="60" class="text-xs font-bold text-blue-600">Rollen: FG / Security Officer</text>
+                        <line x1="240" y1="10" x2="240" y2="90" stroke="#e2e8f0" />
+                    </g>
+
+                    <g transform="translate(560, 30)">
+                        <text x="0" y="20" class="text-label font-semibold">Analyse & Visualisatie</text>
+                        <text x="0" y="40" class="annotation">Identificeren van VSV-trends</text>
+                        <text x="0" y="60" class="text-xs font-bold text-blue-600">Rollen: Business Intelligence</text>
+                    </g>
+
+                    <text x="15" y="125" class="text-xs fill-slate-400">Referentie: MORA 4.1 Besturing & Ondersteuning (Informatiemanagement)</text>
+                </g>
+
+                <!-- LAAG 3: BESLUITVORMING -->
+                <text x="15" y="490" class="text-header">3. Evidence-Based Output & Interventie</text>
+                <path d="M450 410 L450 510" class="data-line" marker-end="url(#arrowhead)"/>
+
+                <g transform="translate(40, 530)">
+                    <rect width="250" height="70" class="process-node" rx="2"/>
+                    <text x="10" y="20" class="actor-label">SlB'er / Team</text>
+                    <text x="10" y="40" class="text-label font-bold">Vroegsignalering</text>
+                    <text x="10" y="60" class="annotation">Actie op individuele student</text>
+                </g>
+
+                <g transform="translate(325, 530)">
+                    <rect width="250" height="70" class="process-node" rx="2"/>
+                    <text x="10" y="20" class="actor-label">Onderwijsmanager</text>
+                    <text x="10" y="40" class="text-label font-bold">Resource Management</text>
+                    <text x="10" y="60" class="annotation">Sturing op teamniveau</text>
+                </g>
+
+                <g transform="translate(610, 530)">
+                    <rect width="250" height="70" class="process-node" rx="2"/>
+                    <text x="10" y="20" class="actor-label">CvB / Regietafel</text>
+                    <text x="10" y="40" class="text-label font-bold">Beleid & Governance</text>
+                    <text x="10" y="60" class="annotation">Landelijke verantwoording</text>
+                </g>
+            </svg>
+        </div>
+
+        <footer class="mt-8 grid grid-cols-2 gap-8 text-[10px] text-slate-400 border-t border-slate-100 pt-4 uppercase tracking-widest">
+            <div>
+                Architectuur: MORA 3.2, 3.3, 4.1
+            </div>
+            <div class="text-right">
+                Methodiek: Structurele Rapportagefunctie VSV
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
