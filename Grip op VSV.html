@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grip op VSV - Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .layer-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .active .layer-content {
+            max-height: 500px;
+        }
+        .active .chevron {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 p-4 md:p-8 font-sans text-slate-900">
+
+    <header class="max-w-4xl mx-auto text-center mb-12">
+        <div class="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-bold mb-4 uppercase tracking-widest">
+            Executive Summary
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+            Grip op VSV door Integratie
+        </h1>
+        <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Optimale verbinding tussen Onderwijsorganisatie, MORA-processen en de Rapportagefunctie.
+        </p>
+    </header>
+
+    <main class="max-w-5xl mx-auto relative">
+        <div class="flex flex-col gap-6" id="pyramid-container">
+            
+            <!-- Niveau 1 -->
+            <div class="layer-item relative" onclick="toggleLayer(this)">
+                <div class="cursor-pointer rounded-2xl shadow-xl overflow-hidden border border-white/20 bg-blue-600 text-white p-6 md:p-8 flex items-center justify-between">
+                    <div class="flex items-center gap-6">
+                        <div class="p-4 bg-white/20 rounded-xl backdrop-blur-md">
+                            <i data-lucide="target"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold opacity-75 uppercase tracking-tighter">Niveau 1</span>
+                            <h2 class="text-2xl font-bold">Beleidsmatige Verbinding</h2>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron transition-transform"></i>
+                </div>
+                <div class="layer-content bg-blue-700 text-white rounded-b-2xl -mt-4 pt-8 p-6 md:p-8 shadow-inner">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 flex items-center gap-2 italic">Essentie</h3>
+                            <p class="text-white/90 leading-relaxed">Strategische sturing op VSV-cijfers en verantwoording naar het Ministerie van OCW.</p>
+                        </div>
+                        <div class="bg-black/10 rounded-xl p-4">
+                            <ul class="space-y-2 text-sm">
+                                <li>• Bestuurlijke verantwoording</li>
+                                <li>• Regionale samenwerking (RMC)</li>
+                                <li>• Middelenallocatie</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connector -->
+            <div class="flex justify-center -my-3">
+                <div class="bg-white p-2 rounded-full shadow-md border border-slate-200 z-10">
+                    <i data-lucide="arrow-down" class="text-slate-400 w-4 h-4"></i>
+                </div>
+            </div>
+
+            <!-- Niveau 2 -->
+            <div class="layer-item relative" onclick="toggleLayer(this)">
+                <div class="cursor-pointer rounded-2xl shadow-xl overflow-hidden border border-white/20 bg-indigo-600 text-white p-6 md:p-8 flex items-center justify-between">
+                    <div class="flex items-center gap-6">
+                        <div class="p-4 bg-white/20 rounded-xl backdrop-blur-md">
+                            <i data-lucide="git-merge"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold opacity-75 uppercase tracking-tighter">Niveau 2</span>
+                            <h2 class="text-2xl font-bold">Procesmatige Verbinding (MORA)</h2>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron transition-transform"></i>
+                </div>
+                <div class="layer-content bg-indigo-700 text-white rounded-b-2xl -mt-4 pt-8 p-6 md:p-8 shadow-inner">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 flex items-center gap-2 italic">Essentie</h3>
+                            <p class="text-white/90 leading-relaxed">De MORA biedt de referentie voor 'Onderwijslogistiek' en 'Studentbegeleiding'.</p>
+                        </div>
+                        <div class="bg-black/10 rounded-xl p-4">
+                            <ul class="space-y-2 text-sm">
+                                <li>• Proces 2.3: Begeleiden student</li>
+                                <li>• Proces 4.1: Inschrijven & Plaatsen</li>
+                                <li>• Incidentmeldingen verzuim</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connector -->
+            <div class="flex justify-center -my-3">
+                <div class="bg-white p-2 rounded-full shadow-md border border-slate-200 z-10">
+                    <i data-lucide="arrow-down" class="text-slate-400 w-4 h-4"></i>
+                </div>
+            </div>
+
+            <!-- Niveau 3 -->
+            <div class="layer-item relative" onclick="toggleLayer(this)">
+                <div class="cursor-pointer rounded-2xl shadow-xl overflow-hidden border border-white/20 bg-emerald-600 text-white p-6 md:p-8 flex items-center justify-between">
+                    <div class="flex items-center gap-6">
+                        <div class="p-4 bg-white/20 rounded-xl backdrop-blur-md">
+                            <i data-lucide="bar-chart-3"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold opacity-75 uppercase tracking-tighter">Niveau 3</span>
+                            <h2 class="text-2xl font-bold">Structurele Rapportagefunctie</h2>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="chevron transition-transform"></i>
+                </div>
+                <div class="layer-content bg-emerald-700 text-white rounded-b-2xl -mt-4 pt-8 p-6 md:p-8 shadow-inner">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 flex items-center gap-2 italic">Essentie</h3>
+                            <p class="text-white/90 leading-relaxed">De motor voor data-gedreven besluitvorming en validatie.</p>
+                        </div>
+                        <div class="bg-black/10 rounded-xl p-4">
+                            <ul class="space-y-2 text-sm">
+                                <li>• Data-validatie (DUO)</li>
+                                <li>• Voorspelmodellen uitval</li>
+                                <li>• Maandelijkse VSV-monitor</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-16 bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col md:flex-row gap-8 items-center">
+            <div class="w-full md:w-1/3 text-center md:text-left">
+                <div class="inline-block p-4 bg-emerald-50 text-emerald-600 rounded-2xl mb-4">
+                    <i data-lucide="shield-check" style="width: 40px; height: 40px;"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-2">Structureel Inzicht</h3>
+                <p class="text-slate-500 text-sm">Single point of truth voor VSV-beleid.</p>
+            </div>
+            <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-4 border border-slate-100 rounded-2xl bg-slate-50 flex items-start gap-3">
+                    <i data-lucide="zap" class="text-yellow-500"></i>
+                    <p class="text-xs font-semibold">Snellere Interventie bij verzuim.</p>
+                </div>
+                <div class="p-4 border border-slate-100 rounded-2xl bg-slate-50 flex items-start gap-3">
+                    <i data-lucide="clipboard-check" class="text-blue-500"></i>
+                    <p class="text-xs font-semibold">Audit-proof Rapportage via VSV-notebook.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-slate-400 text-xs">
+            <p>MORA v2.0 & VSV NotebookLM | Piramideprincipe Architectuur</p>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleLayer(element) {
+            const wasActive = element.classList.contains('active');
+            
+            // Sluit alle andere lagen
+            document.querySelectorAll('.layer-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Toggle de geklikte laag
+            if (!wasActive) {
+                element.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
