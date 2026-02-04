@@ -43,6 +43,8 @@ https://paulomoekotte.github.io/mijnTiddlers/
 
 [Op weg naar AI die werkt voor iedereen](https://paulomoekotte.github.io/mijnTiddlers/OpWegNaarAIDieWerktVoorIedereen.html)
 
+[Human Capital Achterhoek en Twente](https://paulomoekotte.github.io/mijnTiddlers/Human_Capital_Achterhoek-Twente.html)
+
 
 # Streamlit apps
 
