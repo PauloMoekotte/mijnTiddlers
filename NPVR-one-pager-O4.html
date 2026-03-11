@@ -1,149 +1,254 @@
-<!doctype html>
-<html lang='nl'>
+<!DOCTYPE html>
+<html lang="nl">
 <head>
-<meta charset='utf-8'/>
-<meta name='viewport' content='width=device-width, initial-scale=1'/>
-<title>Onderwijsprojecten Twente – Impact op NPVR-opgave ‘Iedereen kan meedoen’ (2026–2030, doorkijk 2050)</title>
-<style>
-  @page { size: A3 landscape; margin: 12mm; }
-  html, body { height: 100%; }
-  body { font-family: Calibri, 'Source Sans 3', Arial, sans-serif; color: #111; }
-  .wrap { display: grid; grid-template-rows: auto 1fr auto; gap: 10mm; height: 100%; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bestuurlijke Eén-pager: Onderwijsprojecten Twente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @page {
+            size: A3 landscape;
+            margin: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f7;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .a3-container {
+            width: 1189px; /* A3 Width in px at 96dpi approx */
+            height: 841px;  /* A3 Height */
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+            box-sizing: border-box;
+            border-top: 8px solid #004a99;
+        }
+        .matrix-table {
+            border-collapse: separate;
+            border-spacing: 12px;
+            width: 100%;
+            table-layout: fixed;
+        }
+        .cell {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 15px;
+            height: 140px;
+            vertical-align: top;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+        .cell-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .impact-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .dot-high { background-color: #059669; } /* Groen */
+        .dot-mid { background-color: #f59e0b; }  /* Oranje */
+        .dot-low { background-color: #9ca3af; }  /* Grijs */
 
-  .header { display: grid; grid-template-columns: 1fr; gap: 3mm; }
-  .title { font-size: 26pt; font-weight: 700; line-height: 1.1; }
-  .subtitle { font-size: 13pt; color: #333; }
-
-  .matrix { width: 100%; border-collapse: collapse; table-layout: fixed; }
-  .matrix th, .matrix td { border: 1.2pt solid #111; vertical-align: top; padding: 6mm; }
-  .matrix th.aspect { width: 14%; font-size: 12.5pt; font-weight: 700; }
-  .matrix th.proj { font-size: 12.5pt; font-weight: 700; }
-
-  .vol { margin-top: 3mm; font-weight: 400; font-size: 10.5pt; color: #222; line-height: 1.2; }
-
-  .cell { display: grid; grid-template-columns: 16mm 1fr; gap: 4mm; align-items: start; }
-  .badge { width: 14mm; height: 14mm; border-radius: 50%; display: grid; place-items: center; font-size: 12pt; font-weight: 800; border: 1pt solid rgba(0,0,0,0.35); }
-  .celltext { font-size: 11pt; line-height: 1.25; }
-
-  .footer { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; align-items: start; }
-  .legend { display: grid; gap: 2mm; }
-  .legtitle { font-size: 11.5pt; font-weight: 700; }
-  .legrow { display: flex; gap: 6mm; flex-wrap: wrap; align-items: center; }
-  .legitem { display: flex; gap: 2mm; align-items: center; font-size: 10.5pt; }
-  .dot { width: 6mm; height: 6mm; border-radius: 50%; border: 0.8pt solid rgba(0,0,0,0.35); display: inline-block; }
-
-  .sources { font-size: 9.8pt; color: #222; line-height: 1.25; }
-  .sources strong { font-weight: 700; }
-
-  .note { margin-top: 2mm; font-size: 9.5pt; color: #333; }
-
-  .hr { height: 0; border-top: 1.2pt solid #111; margin-top: 2mm; }
-</style>
+        .dimensie-label {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            background: #eee;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .header-blue { color: #004a99; }
+        .icon-box { font-size: 1.2rem; }
+    </style>
 </head>
 <body>
-  <div class='wrap'>
-    <div class='header'>
-      <div class='title'>Onderwijsprojecten Twente – Impact op NPVR-opgave ‘Iedereen kan meedoen’ (2026–2030, doorkijk 2050)</div>
-      <div class='subtitle'>Indicatieve aantallen, bijdrage aan 55.000 banen / 100.000 inwoners en langetermijneffecten</div>
-      <div class='hr'></div>
-    </div>
 
-    <div>
-      <table class='matrix'>
-        <tr>
-          <th class='aspect'>Impactdimensie</th>
-          <th class='proj'>Chip Tech Talent / Beethoven<div class='vol'>+1.640 instroom t/m 2030; daarna ±480 extra afgestudeerden/jaar; ±800 zij-instroom; ±2.200 bijscholingen</div></th><th class='proj'>TechWise Twente / TechOost<div class='vol'>€2,3 mln (1,9 RIF + 0,4 provincie); ‘honderden’ extra techniekstudenten en bijscholing in Skills Labs</div></th><th class='proj'>LLO‑Katalysator & LLO‑Innovatiehub<div class='vol'>±€2 mln scholingsimpuls; opgave: 2.500 fte richting 2050 voor 475 wijken; ‘honderden–duizenden’ deelnemers in learning communities</div></th><th class='proj'>Inclusieve leer- & ontwikkelhubs (nieuw)<div class='vol'>Enkele honderden deelnemers/jaar richting startkwalificatie, oplopend naar >1.000/jaar bij uitrol; koppeling met scholingscheques (tot ca. €2.500 p.p.)</div></th>
-        </tr>
-        <tr>
-          <th class='aspect'>Economische groei</th>
-          <td>
-    <div class='cell'>
-      <div class='badge' style='background:#1f9d55;'>€</div>
-      <div class='celltext'>Vergroot talentpijplijn microchipsector; versterkt productiviteit en innovatiecapaciteit.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#7bd67b;'>€</div>
-      <div class='celltext'>Borgt middenkader vakmanschap voor maakindustrie (smart industry/AI/robotisering) en versnelt procesinnovatie.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#7bd67b;'>€</div>
-      <div class='celltext'>(Her)scholing maakt energietransitie/digitalisering uitvoerbaar; vergroot arbeidsproductiviteit in bouw/installatie/energie‑infra.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#7bd67b;'>€</div>
-      <div class='celltext'>Vergroot arbeidsaanbod door mensen zonder startkwalificatie naar werk en (vervolg)onderwijs te begeleiden.</div>
-    </div>
-    </td>
-        </tr>
-        <tr>
-          <th class='aspect'>Sociale cohesie</th>
-          <td>
-    <div class='cell'>
-      <div class='badge' style='background:#6ed4cd;'>👥</div>
-      <div class='celltext'>Onderbenutte doelgroepen en zij-instromers krijgen toegang tot groeibaanmix en LLO-routes.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#6ed4cd;'>👥</div>
-      <div class='celltext'>Modulair BOL/BBL en maatwerk verlaagt drempel voor werkenden en (door)stroom vmbo–mbo–hbo.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#6ed4cd;'>👥</div>
-      <div class='celltext'>Omscholing biedt nieuw perspectief bij sectorverschuivingen; learning communities ondersteunen brede groep werkenden.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#1b998b;'>👥</div>
-      <div class='celltext'>Laagdrempelige ‘voordeur’ in wijken/kernen voor taal, digitaal, oriëntatie en warme doorstroom; vermindert achterstanden.</div>
-    </div>
-    </td>
-        </tr>
-        <tr>
-          <th class='aspect'>Ruimtelijke ontwikkeling</th>
-          <td>
-    <div class='cell'>
-      <div class='badge' style='background:#b07be6;'>⌂</div>
-      <div class='celltext'>Concentreert talent/banen in kernsteden; vergroot vraag naar wonen en voorzieningen in Enschede/Hengelo/Almelo.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#b07be6;'>⌂</div>
-      <div class='celltext'>Versterkt Skills Labs op bedrijventerreinen/campussen; houdt werkgelegenheid en voorzieningen in steden én kernen op peil.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#6f2dbd;'>⌂</div>
-      <div class='celltext'>Versnelt verduurzaming van 475 wijken; verbetert kwaliteit/betaalbaarheid woonklimaat en draagvlak voor gebiedsaanpak.</div>
-    </div>
-    </td><td>
-    <div class='cell'>
-      <div class='badge' style='background:#6f2dbd;'>⌂</div>
-      <div class='celltext'>Verankert leerfunctie in wijkcentra/binnensteden/dorpskernen; ondersteunt vitale kernen en behoud voorzieningen.</div>
-    </div>
-    </td>
-        </tr>
-      </table>
-    </div>
-
-    <div class='footer'>
-      <div class='legend'>
-        <div class='legtitle'>Legenda: impact-intensiteit (per dimensie)</div>
-        <div class='legrow'>
-          <div class='legitem'><span class='dot' style='background:#d7f2d7'></span><span>Beperkt</span></div>
-          <div class='legitem'><span class='dot' style='background:#7bd67b'></span><span>Middel</span></div>
-          <div class='legitem'><span class='dot' style='background:#1f9d55'></span><span>Hoog</span></div>
+<div class="a3-container">
+    <!-- BOVENBALK (10-15%) -->
+    <header class="mb-8">
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-3xl font-bold header-blue tracking-tight">Onderwijsprojecten Twente – Impact op NPVR-opgave ‘Iedereen kan meedoen’</h1>
+                <p class="text-lg text-gray-600 mt-1">Indicatieve aantallen, bijdrage aan 55.000 banen / 100.000 inwoners en doorkijk naar 2050 (2026–2030).</p>
+            </div>
+            <div class="flex space-x-4 opacity-70">
+                <!-- Placeholder voor logo's -->
+                <div class="border-2 border-dashed border-gray-300 p-2 text-xs text-gray-400 rounded">Twente Board</div>
+                <div class="border-2 border-dashed border-gray-300 p-2 text-xs text-gray-400 rounded">Onderwijssectoren</div>
+            </div>
         </div>
-        <div class='note'>Iconen: € = economie, 👥 = sociaal, ⌂ = ruimtelijk.</div>
-      </div>
-      <div class='sources'>
-        <strong>Bronnen & aannames:</strong> indicatieve volumes en framing overgenomen uit “Impact onderwijsprojecten – opgave 3” en de NPVR‑opgave “Iedereen kan meedoen”.<br/>
-        <strong>Gebruik:</strong> bestuurlijke duiding; aantallen zijn indicatief waar geen harde cijfers beschikbaar zijn.
-      </div>
-    </div>
-  </div>
+    </header>
+
+    <!-- MIDDENGEBIED: MATRIX (60-70%) -->
+    <main class="flex-grow">
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;"></th> <!-- Dimensie kolom -->
+                    <th class="text-left text-xl font-bold pb-2 header-blue border-b-2 border-blue-100">Project Beethoven</th>
+                    <th class="text-left text-xl font-bold pb-2 header-blue border-b-2 border-blue-100">TechWise</th>
+                    <th class="text-left text-xl font-bold pb-2 header-blue border-b-2 border-blue-100">LLO-Katalysator / Hub</th>
+                    <th class="text-left text-xl font-bold pb-2 header-blue border-b-2 border-blue-100">Leerhubs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- RIJ 1: ECONOMISCHE GROEI -->
+                <tr>
+                    <td class="dimensie-label bg-emerald-50 text-emerald-800 text-xs">Economische Groei</td>
+                    <td class="cell border-l-4 border-l-emerald-600">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-high">€</span>
+                            <span class="font-semibold text-sm">Hoge Impact</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">±1.640 extra instroom t/m 2030; daarna structureel ±480 extra afgestudeerden per jaar (met bredere Twentse chip-ambitie tot 9.500 extra studenten en 5.250 extra diploma’s t/m 2030).. Cruciaal voor de hightech banenmix.</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-emerald-600">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-high">€</span>
+                            <span class="font-semibold text-sm">Hoge Impact</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">€2,3 mln (1,9 mln RIF + 0,4 mln provincie) voor modulair technisch mbo en Skills Labs; gericht op honderden extra techniekstudenten en bijscholingen (smart industry/AI/robotisering).</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-amber-500">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-mid">€</span>
+                            <span class="font-semibold text-sm">Middel</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">±€2 mln scholingsimpuls; ondersteunt (her)scholing richting energietransitie en digitalisering (opgave: 475 wijken, richting 2050 ca. 2.500 fte extra nodig).</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-gray-400">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-low">€</span>
+                            <span class="font-semibold text-sm">Ondersteunend</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Enkele honderden volwassenen per jaar richting startkwalificatie/taal/digitaal, oplopend naar >1.000/jaar bij volledige uitrol; vergroot arbeidsparticipatie.</p>
+                    </td>
+                </tr>
+
+                <!-- RIJ 2: SOCIALE COHESIE -->
+                <tr>
+                    <td class="dimensie-label bg-blue-50 text-blue-800 text-xs">Sociale Cohesie</td>
+                    <td class="cell border-l-4 border-l-amber-500">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-mid">👤</span>
+                            <span class="font-semibold text-sm">Middel</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Instroom en LLO expliciet voor onderbenutte groepen (zij-instroom/ondervertegenwoordiging); versterkt inkomensperspectief en kansengelijkheid.</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-amber-500">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-mid">👤</span>
+                            <span class="font-semibold text-sm">Middel</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Sterke vmbo–mbo–hbo-keten (o.a. via STO/Skills Labs) voor praktijkgerichte leerlingen en werkenden; vergroot doorstroom.</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-emerald-600">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-high">👤</span>
+                            <span class="font-semibold text-sm">Hoge Impact</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Omscholing voorkomt uitval bij sectorverschuiving; learning communities voor brede groep werkenden (ook mkb en zorg).</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-emerald-600">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-high">👤</span>
+                            <span class="font-semibold text-sm">Hoge Impact</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Laagdrempelige toegang tot taal, digitaal en oriëntatie in wijken/kernen met armoede en lage opleidingsgraad; warme doorstroom naar mbo/hbo/LLO.</p>
+                    </td>
+                </tr>
+
+                <!-- RIJ 3: RUIMTELIJKE ONTWIKKELING -->
+                <tr>
+                    <td class="dimensie-label bg-purple-50 text-purple-800 text-xs">Ruimtelijk</td>
+                    <td class="cell border-l-4 border-l-emerald-600">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-high">🏠</span>
+                            <span class="font-semibold text-sm">Hoge Impact</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Concentratie van talent en banen op campussen en in kernsteden; ondersteunt groei van steden/spoorzones en vraag naar woningen/voorzieningen.</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-amber-500">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-mid">🏠</span>
+                            <span class="font-semibold text-sm">Middel</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Versterkt regionale Skills Labs/bedrijventerreinen; helpt werkgelegenheid en voorzieningen in steden én omliggende kernen op peil te houden.</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-emerald-600">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-high">🏠</span>
+                            <span class="font-semibold text-sm">Hoge Impact</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Versnelt verduurzaming van 475 wijken; verbetert kwaliteit en betaalbaarheid van de woningvoorraad (uitvoerbaarheid hangt af van voldoende vakmensen).</p>
+                    </td>
+                    <td class="cell border-l-4 border-l-amber-500">
+                        <div class="cell-header">
+                            <span class="impact-dot dot-mid">🏠</span>
+                            <span class="font-semibold text-sm">Middel</span>
+                        </div>
+                        <p class="text-xs leading-relaxed">Vaste leerfuncties in dorpskernen en stadswijken; draagt bij aan vitale kernen en behoud/bereikbaarheid van voorzieningen.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <!-- ONDERBALK (15-20%) -->
+    <footer class="mt-8 pt-6 border-t border-gray-200 flex justify-between items-end">
+        <div class="flex space-x-12">
+            <!-- LEGENDA -->
+            <div>
+                <h3 class="text-sm font-bold mb-2 uppercase text-gray-500">Legenda Kleurcodering</h3>
+                <div class="flex items-center space-x-6 text-xs">
+                    <div class="flex items-center"><span class="impact-dot dot-high w-4 h-4 mr-2"></span> Hoge bijdrage</div>
+                    <div class="flex items-center"><span class="impact-dot dot-mid w-4 h-4 mr-2"></span> Middelmatige bijdrage</div>
+                    <div class="flex items-center"><span class="impact-dot dot-low w-4 h-4 mr-2"></span> Ondersteunend / Beperkt</div>
+                </div>
+            </div>
+            <!-- ICONEN -->
+            <div>
+                <h3 class="text-sm font-bold mb-2 uppercase text-gray-500">Impactgebieden</h3>
+                <div class="flex items-center space-x-6 text-xs">
+                    <div class="flex items-center"><span class="mr-2">€</span> Economische Groei</div>
+                    <div class="flex items-center"><span class="mr-2">👤</span> Sociale Cohesie</div>
+                    <div class="flex items-center"><span class="mr-2">🏠</span> Ruimtelijke Ontwikkeling</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTITIES -->
+        <div class="w-1/3 bg-blue-50 p-4 rounded-lg">
+            <h3 class="text-sm font-bold header-blue mb-1">Verbinding Macrodoelen</h3>
+            <p class="text-[11px] leading-tight text-gray-700 italic">
+                De portefeuille <strong>Beethoven + TechWise</strong> levert het bulk van het technisch talent (sleutel voor 55.000 banen). 
+                <strong>LLO-structuren en leerhubs</strong> zijn randvoorwaardelijk om iedereen te laten meedoen en kernen vitaal te houden (100.000 inwoners / 60.000 woningen).
+            </p>
+            <p class="text-[9px] text-gray-400 mt-2 italic">Bron: NPVR, Visie 2050 en Projectfiches onderwijssectoren.</p>
+        </div>
+    </footer>
+</div>
+
 </body>
 </html>
