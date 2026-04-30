@@ -60,9 +60,6 @@
 ## Efficiënt Datagebruik in het Onderwijs
 [Efficiënt Datagebruik in het Onderwijs](https://paulomoekotte.github.io/mijnTiddlers/Datagebruik-2.html)
 
-## Voucher - Richard Claus 65 jaar!
-[Voucher - Richard Claus 65 jaar!](https://paulomoekotte.github.io/mijnTiddlers/voucher.html)
-
 ## Grip op VSV door Integratie
 [Grip op VSV door Integratie](https://paulomoekotte.github.io/mijnTiddlers/Grip%20op%20VSV.html)
 
