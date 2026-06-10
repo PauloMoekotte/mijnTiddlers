@@ -13,9 +13,128 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        .quadrant-glow:hover {
-            box-shadow: 0 20px 40px -15px rgba(var(--glow-color), 0.15);
+        
+        .quadrant-glow {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
         }
+        
+        .quadrant-glow:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Quadrant specific glows */
+        .quadrant-q1:hover {
+            box-shadow: 0 24px 48px -12px rgba(239, 68, 68, 0.2), 
+                        0 0 40px -10px rgba(239, 68, 68, 0.1);
+        }
+        
+        .quadrant-q2:hover {
+            box-shadow: 0 24px 48px -12px rgba(2, 132, 199, 0.2), 
+                        0 0 40px -10px rgba(2, 132, 199, 0.1);
+        }
+        
+        .quadrant-q3:hover {
+            box-shadow: 0 24px 48px -12px rgba(245, 158, 11, 0.2), 
+                        0 0 40px -10px rgba(245, 158, 11, 0.1);
+        }
+        
+        .quadrant-q4:hover {
+            box-shadow: 0 24px 48px -12px rgba(34, 197, 94, 0.2), 
+                        0 0 40px -10px rgba(34, 197, 94, 0.1);
+        }
+        
+        /* Button animations */
+        .btn-nav {
+            transition: all 0.25s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-nav:hover:not(.active) {
+            background-color: rgba(71, 85, 105, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .btn-nav.active {
+            background-color: rgb(2, 132, 199);
+            box-shadow: 0 8px 16px -4px rgba(2, 132, 199, 0.4);
+        }
+        
+        /* Smooth fade transitions */
+        .view-container {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Enhanced card backgrounds */
+        .card-q1 { background: linear-gradient(135deg, rgba(127, 29, 29, 0.05), rgba(239, 68, 68, 0.02)); }
+        .card-q2 { background: linear-gradient(135deg, rgba(12, 74, 110, 0.05), rgba(2, 132, 199, 0.02)); }
+        .card-q3 { background: linear-gradient(135deg, rgba(120, 53, 15, 0.05), rgba(245, 158, 11, 0.02)); }
+        .card-q4 { background: linear-gradient(135deg, rgba(20, 83, 45, 0.05), rgba(34, 197, 94, 0.02)); }
+        
+        /* Intro card enhancement */
+        .intro-card {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(15, 23, 42, 0.2));
+            backdrop-filter: blur(12px);
+        }
+        
+        /* Modal enhancements */
+        .modal-enter {
+            animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        /* Bullet point animations */
+        .bullet-item {
+            animation: bulletFadeIn 0.4s ease-out;
+        }
+        
+        @keyframes bulletFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Icon pulse */
+        .icon-pulse:hover {
+            animation: iconPulse 0.6s ease-out;
+        }
+        
+        @keyframes iconPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
     </style>
     <script>
         tailwind.config = {
@@ -49,211 +168,203 @@
         }
     </script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen selection:bg-sky-500 selection:text-white overflow-x-hidden">
-
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 min-h-screen selection:bg-sky-500 selection:text-white overflow-x-hidden">
+    
     <!-- Header / Navigation -->
-    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50 px-4 sm:px-6 py-3 sm:py-4">
+    <header class="border-b border-slate-800/50 bg-slate-950/60 backdrop-blur-xl sticky top-0 z-50 px-4 sm:px-6 py-3 sm:py-4">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
             <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                <div class="p-2 sm:p-2.5 bg-sky-500/10 text-sky-400 rounded-lg sm:rounded-xl border border-sky-500/20 shrink-0">
+                <div class="p-2 sm:p-2.5 bg-sky-500/15 text-sky-300 rounded-lg sm:rounded-xl border border-sky-500/30 shrink-0 icon-pulse">
                     <i data-lucide="graduation-cap" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </div>
                 <div class="min-w-0 flex-1">
                     <h1 class="text-base sm:text-xl font-bold tracking-tight text-white flex items-center gap-2 flex-wrap">
                         Onderwijs AI Governance Matrix 
-                        <span class="text-xs bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">Kennisnet & AIC4NL</span>
+                        <span class="text-xs bg-sky-500/20 text-sky-300 border border-sky-500/40 px-2.5 py-0.5 rounded-full font-semibold whitespace-nowrap">Kennisnet & AIC4NL</span>
                     </h1>
                     <p class="text-xs text-slate-400 mt-0.5">Strategisch kompas voor onderwijsinstellingen</p>
                 </div>
             </div>
             
-            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-start sm:justify-end">
-                <button onclick="switchView('matrix')" id="btn-matrix" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition bg-sky-600 text-white shadow-lg shadow-sky-600/20 whitespace-nowrap">
+            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-start sm:justify-end">
+                <button onclick="switchView('matrix')" id="btn-matrix" class="btn-nav active px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-white">
                     <span class="flex items-center gap-1 sm:gap-2"><i data-lucide="grid" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i><span class="hidden sm:inline">Matrix</span></span>
                 </button>
-                <button onclick="switchView('presentation')" id="btn-presentation" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800 whitespace-nowrap">
+                <button onclick="switchView('presentation')" id="btn-presentation" class="btn-nav px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-300">
                     <span class="flex items-center gap-1 sm:gap-2"><i data-lucide="presentation" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i><span class="hidden sm:inline">Present.</span></span>
                 </button>
-                <button onclick="switchView('about')" id="btn-about" class="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800 whitespace-nowrap">
+                <button onclick="switchView('about')" id="btn-about" class="btn-nav px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-slate-300">
                     <span class="flex items-center gap-1 sm:gap-2"><i data-lucide="book-open" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i><span class="hidden sm:inline">Info</span></span>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
+    <main class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
         
         <!-- VIEW: MATRIX (Default) -->
-        <div id="view-matrix" class="space-y-4 sm:space-y-6">
+        <div id="view-matrix" class="view-container space-y-6 sm:space-y-8">
             <!-- Strategic introduction card -->
-            <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 relative overflow-hidden shadow-2xl">
-                <div class="absolute -right-12 -top-12 w-64 h-64 bg-sky-500/5 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="intro-card border border-slate-700/50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-xl">
+                <div class="absolute -right-16 -top-16 w-96 h-96 bg-sky-500/8 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="relative z-10 max-w-4xl">
-                    <h2 class="text-base sm:text-lg font-bold text-slate-200 mb-2">AI Governance in het Onderwijs</h2>
-                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                    <h2 class="text-lg sm:text-2xl font-bold text-slate-100 mb-3">AI Governance in het Onderwijs</h2>
+                    <p class="text-xs sm:text-base text-slate-300 leading-relaxed">
                         Dit kompas classificeert onderwijstoepassingen op basis van risicografiering en sturingsgraad, conform de EU AI Act (2026).
                     </p>
                 </div>
             </div>
 
-            <!-- Interatieve 2x2 Grid -->
-            <div class="relative mt-6 sm:mt-8">
+            <!-- Interactive 2x2 Grid -->
+            <div class="relative mt-8 sm:mt-10">
                 <!-- Vertical Axis (Risico) Label - Desktop only -->
-                <div class="absolute -left-12 top-1/2 -translate-y-1/2 -rotate-90 hidden xl:flex items-center gap-4 text-xs font-semibold uppercase tracking-widest text-slate-400">
-                    <span class="text-danger-500">Hoog Risico</span>
-                    <div class="w-16 h-[2px] bg-slate-700"></div>
-                    <span class="text-success-500">Laag Risico</span>
+                <div class="absolute -left-14 top-1/2 -translate-y-1/2 -rotate-90 hidden xl:flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-slate-400">
+                    <span class="text-danger-400">Hoog Risico</span>
+                    <div class="w-20 h-px bg-slate-700/50"></div>
+                    <span class="text-success-400">Laag Risico</span>
                 </div>
 
                 <!-- Horizontal Axis (Sturing) Label - Desktop only -->
-                <div class="absolute -top-10 left-1/2 -translate-x-1/2 hidden xl:flex items-center gap-4 text-xs font-semibold uppercase tracking-widest text-slate-400">
-                    <span class="text-warning-500">Shadow AI</span>
-                    <div class="w-16 h-[2px] bg-slate-700"></div>
-                    <span class="text-brand-500">Responsible AI</span>
+                <div class="absolute -top-12 left-1/2 -translate-x-1/2 hidden xl:flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-slate-400">
+                    <span class="text-warning-400">Shadow AI</span>
+                    <div class="w-20 h-px bg-slate-700/50"></div>
+                    <span class="text-brand-400">Responsible AI</span>
                 </div>
 
                 <!-- Mobile Axis Indicator -->
-                <div class="xl:hidden bg-slate-950 p-3 sm:p-4 rounded-lg sm:rounded-xl border border-slate-800 flex flex-col gap-2 text-xs font-bold text-slate-400 mb-4">
-                    <div>Y-As: Hoog → Laag Impact op Student</div>
-                    <div>X-As: Shadow AI → Responsible AI</div>
+                <div class="xl:hidden bg-slate-900/60 backdrop-blur p-4 rounded-xl border border-slate-700/50 flex flex-col gap-2.5 text-xs font-bold text-slate-300 mb-6">
+                    <div class="flex items-center gap-2"><i data-lucide="arrow-up-down" class="w-4 h-4 text-danger-400"></i>Y-As: Hoog → Laag Impact</div>
+                    <div class="flex items-center gap-2"><i data-lucide="arrow-left-right" class="w-4 h-4 text-warning-400"></i>X-As: Shadow AI → Responsible AI</div>
                 </div>
 
                 <!-- The 2x2 Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6 relative">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 relative">
                     
-                    <!-- Top Axis Badges for Medium Screens -->
-                    <div class="absolute -top-3 left-3 sm:left-6 px-2 sm:px-4 py-1 bg-slate-900 border border-slate-800 rounded-full text-xs font-bold text-warning-400 uppercase tracking-wider hidden lg:block">
-                        Shadow AI
-                    </div>
-                    <div class="absolute -top-3 right-3 sm:right-6 px-2 sm:px-4 py-1 bg-slate-900 border border-slate-800 rounded-full text-xs font-bold text-sky-400 uppercase tracking-wider hidden lg:block">
-                        Responsible AI
-                    </div>
-
                     <!-- KWADRANT I: HIGH RISK & SHADOW AI -->
-                    <div onclick="showQuadrantDetail('q1')" class="quadrant-glow cursor-pointer bg-slate-950 border-2 border-danger-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 relative group overflow-hidden hover:border-danger-500/50">
-                        <div class="absolute top-0 left-0 w-1 sm:w-2 h-full bg-danger-500"></div>
-                        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+                    <div onclick="showQuadrantDetail('q1')" class="quadrant-glow quadrant-q1 cursor-pointer card-q1 border-2 border-danger-500/40 rounded-2xl sm:rounded-3xl p-5 sm:p-7 group">
+                        <div class="absolute top-0 left-0 w-1.5 sm:w-2 h-full bg-gradient-to-b from-danger-500 to-danger-500/60 rounded-l-2xl sm:rounded-l-3xl"></div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-5">
                             <div class="flex-1 min-w-0">
-                                <span class="text-xs font-bold text-danger-500 uppercase tracking-widest line-clamp-1">Kwadrant I • Ongeautoriseerd</span>
-                                <h3 class="text-base sm:text-xl font-bold text-white mt-1 group-hover:text-danger-400 transition">Kritieke Selectie</h3>
+                                <span class="text-xs font-bold text-danger-400 uppercase tracking-widest opacity-90">Kwadrant I • Ongeautoriseerd</span>
+                                <h3 class="text-lg sm:text-2xl font-bold text-white mt-2 group-hover:text-danger-300 transition">Kritieke Selectie</h3>
                             </div>
-                            <span class="p-2 bg-danger-500/10 text-danger-400 rounded-lg shrink-0"><i data-lucide="skull" class="w-5 h-5"></i></span>
+                            <span class="p-2.5 bg-danger-500/20 text-danger-300 rounded-lg sm:rounded-xl shrink-0 group-hover:scale-110 transition-transform"><i data-lucide="skull" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-xs sm:text-sm text-slate-400 mb-4">Wilde inzet van ongetoetste AI-systemen voor toelating en examinering.</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mb-5">Wilde inzet van ongetoetste AI-systemen voor toelating en examinering.</p>
                         
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-danger-500 shrink-0 mt-1"></span>
+                        <div class="space-y-2.5 mb-5">
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-danger-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Wildgroei proctoring</span>
                             </div>
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-danger-500 shrink-0 mt-1"></span>
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-danger-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Ongetoetste AI-profilering</span>
                             </div>
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-danger-500 shrink-0 mt-1"></span>
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-danger-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Black-box AI-beoordeling</span>
                             </div>
                         </div>
-                        <div class="pt-3 sm:pt-4 border-t border-slate-800 flex items-center justify-between gap-2 text-xs text-danger-400 font-semibold">
-                            <span class="line-clamp-1">Bevriezen</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4 transition group-hover:translate-x-1 shrink-0"></i>
+                        <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between gap-2 text-xs text-danger-300 font-semibold">
+                            <span>Bevriezen</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
                         </div>
                     </div>
 
                     <!-- KWADRANT II: HIGH RISK & RESPONSIBLE AI -->
-                    <div onclick="showQuadrantDetail('q2')" class="quadrant-glow cursor-pointer bg-slate-950 border-2 border-brand-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 relative group overflow-hidden hover:border-brand-500/50">
-                        <div class="absolute top-0 left-0 w-1 sm:w-2 h-full bg-brand-500"></div>
-                        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+                    <div onclick="showQuadrantDetail('q2')" class="quadrant-glow quadrant-q2 cursor-pointer card-q2 border-2 border-brand-500/40 rounded-2xl sm:rounded-3xl p-5 sm:p-7 group">
+                        <div class="absolute top-0 left-0 w-1.5 sm:w-2 h-full bg-gradient-to-b from-brand-500 to-brand-500/60 rounded-l-2xl sm:rounded-l-3xl"></div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-5">
                             <div class="flex-1 min-w-0">
-                                <span class="text-xs font-bold text-brand-500 uppercase tracking-widest line-clamp-1">Kwadrant II • Gereguleerd</span>
-                                <h3 class="text-base sm:text-xl font-bold text-white mt-1 group-hover:text-brand-400 transition">Formele Summatieve AI</h3>
+                                <span class="text-xs font-bold text-brand-400 uppercase tracking-widest opacity-90">Kwadrant II • Gereguleerd</span>
+                                <h3 class="text-lg sm:text-2xl font-bold text-white mt-2 group-hover:text-brand-300 transition">Formele Summatieve AI</h3>
                             </div>
-                            <span class="p-2 bg-brand-500/10 text-brand-400 rounded-lg shrink-0"><i data-lucide="shield-check" class="w-5 h-5"></i></span>
+                            <span class="p-2.5 bg-brand-500/20 text-brand-300 rounded-lg sm:rounded-xl shrink-0 group-hover:scale-110 transition-transform"><i data-lucide="shield-check" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-xs sm:text-sm text-slate-400 mb-4">AI-toepassingen volledig compliant met wetgeving.</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mb-5">AI-toepassingen volledig compliant met wetgeving.</p>
                         
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0 mt-1"></span>
+                        <div class="space-y-2.5 mb-5">
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-brand-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Human-in-the-Loop</span>
                             </div>
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0 mt-1"></span>
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-brand-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Transparante algoritmes (XAI)</span>
                             </div>
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-brand-500 shrink-0 mt-1"></span>
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-brand-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Bias-vrije trainingsdata</span>
                             </div>
                         </div>
-                        <div class="pt-3 sm:pt-4 border-t border-slate-800 flex items-center justify-between gap-2 text-xs text-brand-400 font-semibold">
-                            <span class="line-clamp-1">Auditering borgen</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4 transition group-hover:translate-x-1 shrink-0"></i>
+                        <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between gap-2 text-xs text-brand-300 font-semibold">
+                            <span>Auditering borgen</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
                         </div>
                     </div>
 
                     <!-- KWADRANT III: LOW RISK & SHADOW AI -->
-                    <div onclick="showQuadrantDetail('q3')" class="quadrant-glow cursor-pointer bg-slate-950 border-2 border-warning-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 relative group overflow-hidden hover:border-warning-500/50">
-                        <div class="absolute top-0 left-0 w-1 sm:w-2 h-full bg-warning-500"></div>
-                        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+                    <div onclick="showQuadrantDetail('q3')" class="quadrant-glow quadrant-q3 cursor-pointer card-q3 border-2 border-warning-500/40 rounded-2xl sm:rounded-3xl p-5 sm:p-7 group">
+                        <div class="absolute top-0 left-0 w-1.5 sm:w-2 h-full bg-gradient-to-b from-warning-500 to-warning-500/60 rounded-l-2xl sm:rounded-l-3xl"></div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-5">
                             <div class="flex-1 min-w-0">
-                                <span class="text-xs font-bold text-warning-500 uppercase tracking-widest line-clamp-1">Kwadrant III • Ongestuurd</span>
-                                <h3 class="text-base sm:text-xl font-bold text-white mt-1 group-hover:text-warning-400 transition">Didactische Desintegratie</h3>
+                                <span class="text-xs font-bold text-warning-400 uppercase tracking-widest opacity-90">Kwadrant III • Ongestuurd</span>
+                                <h3 class="text-lg sm:text-2xl font-bold text-white mt-2 group-hover:text-warning-300 transition">Didactische Desintegratie</h3>
                             </div>
-                            <span class="p-2 bg-warning-500/10 text-warning-400 rounded-lg shrink-0"><i data-lucide="flame" class="w-5 h-5"></i></span>
+                            <span class="p-2.5 bg-warning-500/20 text-warning-300 rounded-lg sm:rounded-xl shrink-0 group-hover:scale-110 transition-transform"><i data-lucide="flame" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-xs sm:text-sm text-slate-400 mb-4">Ad-hoc AI-consumptie zonder didactische inbedding.</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mb-5">Ad-hoc AI-consumptie zonder didactische inbedding.</p>
                         
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-warning-500 shrink-0 mt-1"></span>
+                        <div class="space-y-2.5 mb-5">
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-warning-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">AI als 'antwoordknop'</span>
                             </div>
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-warning-500 shrink-0 mt-1"></span>
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-warning-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Privacy-lekken GDPR</span>
                             </div>
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-warning-500 shrink-0 mt-1"></span>
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-warning-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Hallucinatie-blind</span>
                             </div>
                         </div>
-                        <div class="pt-3 sm:pt-4 border-t border-slate-800 flex items-center justify-between gap-2 text-xs text-warning-400 font-semibold">
-                            <span class="line-clamp-1">Kanaliseren</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4 transition group-hover:translate-x-1 shrink-0"></i>
+                        <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between gap-2 text-xs text-warning-300 font-semibold">
+                            <span>Kanaliseren</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
                         </div>
                     </div>
 
                     <!-- KWADRANT IV: LOW RISK & RESPONSIBLE AI -->
-                    <div onclick="showQuadrantDetail('q4')" class="quadrant-glow cursor-pointer bg-slate-950 border-2 border-success-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-300 relative group overflow-hidden hover:border-success-500/50">
-                        <div class="absolute top-0 left-0 w-1 sm:w-2 h-full bg-success-500"></div>
-                        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+                    <div onclick="showQuadrantDetail('q4')" class="quadrant-glow quadrant-q4 cursor-pointer card-q4 border-2 border-success-500/40 rounded-2xl sm:rounded-3xl p-5 sm:p-7 group">
+                        <div class="absolute top-0 left-0 w-1.5 sm:w-2 h-full bg-gradient-to-b from-success-500 to-success-500/60 rounded-l-2xl sm:rounded-l-3xl"></div>
+                        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 mb-5">
                             <div class="flex-1 min-w-0">
-                                <span class="text-xs font-bold text-success-500 uppercase tracking-widest line-clamp-1">Kwadrant IV • Gestuurd</span>
-                                <h3 class="text-base sm:text-xl font-bold text-white mt-1 group-hover:text-success-400 transition">AI-Empowered Leren</h3>
+                                <span class="text-xs font-bold text-success-400 uppercase tracking-widest opacity-90">Kwadrant IV • Gestuurd</span>
+                                <h3 class="text-lg sm:text-2xl font-bold text-white mt-2 group-hover:text-success-300 transition">AI-Empowered Leren</h3>
                             </div>
-                            <span class="p-2 bg-success-500/10 text-success-400 rounded-lg shrink-0"><i data-lucide="check-circle" class="w-5 h-5"></i></span>
+                            <span class="p-2.5 bg-success-500/20 text-success-300 rounded-lg sm:rounded-xl shrink-0 group-hover:scale-110 transition-transform"><i data-lucide="check-circle" class="w-5 h-5"></i></span>
                         </div>
-                        <p class="text-xs sm:text-sm text-slate-400 mb-4">Formatieve tools didactisch doordacht en ethisch geborgd.</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mb-5">Formatieve tools didactisch doordacht en ethisch geborgd.</p>
                         
-                        <div class="space-y-2 mb-4">
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-success-500 shrink-0 mt-1"></span>
+                        <div class="space-y-2.5 mb-5">
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-success-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">AI als sparringpartner</span>
                             </div>
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-success-500 shrink-0 mt-1"></span>
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-success-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Inclusieve SEN-tools</span>
                             </div>
-                            <div class="flex items-start gap-2 p-2 sm:p-2.5 bg-slate-900/60 rounded-lg border border-slate-800/80 hover:bg-slate-900 transition">
-                                <span class="w-1.5 h-1.5 rounded-full bg-success-500 shrink-0 mt-1"></span>
+                            <div class="flex items-start gap-2.5 p-3 bg-slate-900/50 rounded-lg border border-slate-700/50 hover:bg-slate-900/70 transition">
+                                <span class="w-1.5 h-1.5 rounded-full bg-success-400 shrink-0 mt-1.5"></span>
                                 <span class="text-xs font-medium text-slate-200">Open leermaterialen</span>
                             </div>
                         </div>
-                        <div class="pt-3 sm:pt-4 border-t border-slate-800 flex items-center justify-between gap-2 text-xs text-success-400 font-semibold">
-                            <span class="line-clamp-1">Opschalen</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4 transition group-hover:translate-x-1 shrink-0"></i>
+                        <div class="pt-4 border-t border-slate-700/50 flex items-center justify-between gap-2 text-xs text-success-300 font-semibold">
+                            <span>Opschalen</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
                         </div>
                     </div>
 
@@ -261,71 +372,71 @@
             </div>
             
             <!-- Quick metrics / dashboard callouts -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mt-4 sm:mt-6">
-                <div class="bg-slate-950 border border-slate-800 p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-                    <div class="p-2 sm:p-3 bg-red-500/10 text-red-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="alert-triangle" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-8 sm:mt-10">
+                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition-all hover:border-slate-700">
+                    <div class="p-3 bg-red-500/15 text-red-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="alert-triangle" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                     <div class="min-w-0">
                         <h4 class="text-xs sm:text-sm font-bold text-slate-200">AI-Strategie</h4>
-                        <p class="text-xs text-slate-400 mt-1">Kies voor AI-empowered of AI-supported route.</p>
+                        <p class="text-xs text-slate-400 mt-1.5">Kies voor AI-empowered of AI-supported route.</p>
                     </div>
                 </div>
-                <div class="bg-slate-950 border border-slate-800 p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-                    <div class="p-2 sm:p-3 bg-amber-500/10 text-amber-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="brain" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition-all hover:border-slate-700">
+                    <div class="p-3 bg-amber-500/15 text-amber-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="brain" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                     <div class="min-w-0">
                         <h4 class="text-xs sm:text-sm font-bold text-slate-200">Docent Empowerment</h4>
-                        <p class="text-xs text-slate-400 mt-1">Betrek docenten actief in AI-transitie.</p>
+                        <p class="text-xs text-slate-400 mt-1.5">Betrek docenten actief in AI-transitie.</p>
                     </div>
                 </div>
-                <div class="bg-slate-950 border border-slate-800 p-3 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-                    <div class="p-2 sm:p-3 bg-green-500/10 text-green-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="layers" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
+                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition-all hover:border-slate-700">
+                    <div class="p-3 bg-green-500/15 text-green-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="layers" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                     <div class="min-w-0">
                         <h4 class="text-xs sm:text-sm font-bold text-slate-200">Curriculuminbedding</h4>
-                        <p class="text-xs text-slate-400 mt-1">Minor → volledige integratie in vakgebied.</p>
+                        <p class="text-xs text-slate-400 mt-1.5">Minor → volledige integratie in vakgebied.</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- VIEW: PRESENTATION MODE -->
-        <div id="view-presentation" class="hidden space-y-4 sm:space-y-6">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 bg-slate-950 p-3 sm:p-4 rounded-lg sm:rounded-xl border border-slate-800">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="play" class="w-4 h-4 sm:w-5 sm:h-5 text-sky-400"></i>
-                    <span class="text-xs sm:text-sm font-bold">Presentatie: AI Governance</span>
+        <div id="view-presentation" class="hidden view-container space-y-6 sm:space-y-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/40 backdrop-blur border border-slate-700/50 p-4 sm:p-5 rounded-xl sm:rounded-2xl">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <i data-lucide="play" class="w-5 h-5 sm:w-6 sm:h-6 text-sky-400"></i>
+                    <span class="text-xs sm:text-sm font-bold text-slate-200">Presentatie: AI Governance</span>
                 </div>
-                <div class="flex items-center gap-1.5 sm:gap-2">
-                    <button onclick="prevSlide()" class="p-1.5 sm:p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="prevSlide()" class="p-2 sm:p-2.5 bg-slate-800/60 hover:bg-slate-700 rounded-lg text-slate-300 transition hover:text-white">
                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
                     </button>
-                    <span id="slide-indicator" class="text-xs font-mono px-2 sm:px-3">Slide 1 / 5</span>
-                    <button onclick="nextSlide()" class="p-1.5 sm:p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition">
+                    <span id="slide-indicator" class="text-xs font-mono px-3 sm:px-4 py-1 bg-slate-800/40 rounded-lg">Slide 1 / 5</span>
+                    <button onclick="nextSlide()" class="p-2 sm:p-2.5 bg-slate-800/60 hover:bg-slate-700 rounded-lg text-slate-300 transition hover:text-white">
                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Slide Canvas -->
-            <div class="bg-slate-950 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-8 min-h-[400px] sm:min-h-[500px] flex flex-col justify-between relative overflow-hidden shadow-2xl">
+            <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-700/50 rounded-2xl sm:rounded-3xl p-6 sm:p-10 min-h-[400px] sm:min-h-[500px] flex flex-col justify-between relative overflow-hidden shadow-2xl">
                 <div class="absolute right-0 bottom-0 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl pointer-events-none"></div>
                 
                 <!-- Slide Header -->
-                <div class="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-4 border-b border-slate-800 pb-4 sm:pb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-4 border-b border-slate-700/50 pb-6 sm:pb-8">
                     <div class="flex-1 min-w-0">
                         <span id="slide-tag" class="text-xs font-bold text-sky-400 uppercase tracking-widest">INTRODUCTIE</span>
-                        <h2 id="slide-title" class="text-lg sm:text-3xl font-extrabold text-white mt-2">AI-Transitie: Onderwijs over AI</h2>
+                        <h2 id="slide-title" class="text-xl sm:text-4xl font-bold text-white mt-3 leading-tight">AI-Transitie: Onderwijs over AI</h2>
                     </div>
-                    <div id="slide-icon-container" class="p-2 sm:p-3 bg-sky-500/10 text-sky-400 rounded-lg sm:rounded-xl shrink-0">
+                    <div id="slide-icon-container" class="p-3 sm:p-4 bg-sky-500/15 text-sky-400 rounded-lg sm:rounded-2xl shrink-0">
                         <i data-lucide="presentation" class="w-6 h-6 sm:w-8 sm:h-8"></i>
                     </div>
                 </div>
 
                 <!-- Slide Content -->
-                <div id="slide-content" class="my-4 sm:my-8 text-slate-300 text-xs sm:text-lg leading-relaxed space-y-4 overflow-y-auto max-h-[200px] sm:max-h-none">
+                <div id="slide-content" class="my-6 sm:my-10 text-slate-300 text-xs sm:text-lg leading-relaxed space-y-4 overflow-y-auto">
                     <!-- Dynamic Content Injection -->
                 </div>
 
                 <!-- Slide Footer -->
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 pt-4 sm:pt-6 border-t border-slate-800/60 text-xs text-slate-500 font-medium">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-slate-700/50 text-xs text-slate-500">
                     <span>Pijltjestoetsen of knoppen</span>
                     <span class="text-slate-400">AIC4NL & Kennisnet</span>
                 </div>
@@ -333,77 +444,77 @@
         </div>
 
         <!-- VIEW: ABOUT & BRONNEN -->
-        <div id="view-about" class="hidden space-y-6 sm:space-y-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+        <div id="view-about" class="hidden view-container space-y-8 sm:space-y-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10">
                 <!-- AIC4NL Transitiepijlers -->
-                <div class="bg-slate-950 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 space-y-4">
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <div class="p-2 sm:p-2.5 bg-sky-500/10 text-sky-400 rounded-lg sm:rounded-xl">
+                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 space-y-5">
+                    <div class="flex items-center gap-3 sm:gap-4">
+                        <div class="p-3 bg-sky-500/15 text-sky-400 rounded-lg sm:rounded-xl">
                             <i data-lucide="book-open" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                         </div>
-                        <h3 class="text-sm sm:text-lg font-bold text-white">AIC4NL: 6 Pijlers</h3>
+                        <h3 class="text-sm sm:text-xl font-bold text-white">AIC4NL: 6 Pijlers</h3>
                     </div>
-                    <p class="text-xs sm:text-sm text-slate-400">Transitie naar instellingsbreed AI-onderwijs:</p>
+                    <p class="text-xs sm:text-sm text-slate-300">Transitie naar instellingsbreed AI-onderwijs:</p>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs">
-                        <div class="p-2.5 sm:p-3 bg-slate-900 rounded-lg sm:rounded-xl border border-slate-800">
-                            <h5 class="font-bold text-sky-400 mb-1">1. Commitment</h5>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                        <div class="p-3 sm:p-4 bg-slate-800/50 rounded-lg sm:rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+                            <h5 class="font-bold text-sky-400 mb-1.5 text-xs sm:text-sm">1. Commitment</h5>
                             <span class="text-xs text-slate-400">Steun vanuit CvB.</span>
                         </div>
-                        <div class="p-2.5 sm:p-3 bg-slate-900 rounded-lg sm:rounded-xl border border-slate-800">
-                            <h5 class="font-bold text-sky-400 mb-1">2. Curriculum</h5>
+                        <div class="p-3 sm:p-4 bg-slate-800/50 rounded-lg sm:rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+                            <h5 class="font-bold text-sky-400 mb-1.5 text-xs sm:text-sm">2. Curriculum</h5>
                             <span class="text-xs text-slate-400">Leerlijnen vormen.</span>
                         </div>
-                        <div class="p-2.5 sm:p-3 bg-slate-900 rounded-lg sm:rounded-xl border border-slate-800">
-                            <h5 class="font-bold text-sky-400 mb-1">3. Community</h5>
+                        <div class="p-3 sm:p-4 bg-slate-800/50 rounded-lg sm:rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+                            <h5 class="font-bold text-sky-400 mb-1.5 text-xs sm:text-sm">3. Community</h5>
                             <span class="text-xs text-slate-400">Docent-cafés.</span>
                         </div>
-                        <div class="p-2.5 sm:p-3 bg-slate-900 rounded-lg sm:rounded-xl border border-slate-800">
-                            <h5 class="font-bold text-sky-400 mb-1">4. Professionalisering</h5>
+                        <div class="p-3 sm:p-4 bg-slate-800/50 rounded-lg sm:rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+                            <h5 class="font-bold text-sky-400 mb-1.5 text-xs sm:text-sm">4. Professionalisering</h5>
                             <span class="text-xs text-slate-400">BKO + Edubadges.</span>
                         </div>
-                        <div class="p-2.5 sm:p-3 bg-slate-900 rounded-lg sm:rounded-xl border border-slate-800">
-                            <h5 class="font-bold text-sky-400 mb-1">5. OER</h5>
+                        <div class="p-3 sm:p-4 bg-slate-800/50 rounded-lg sm:rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+                            <h5 class="font-bold text-sky-400 mb-1.5 text-xs sm:text-sm">5. OER</h5>
                             <span class="text-xs text-slate-400">CC-licenties delen.</span>
                         </div>
-                        <div class="p-2.5 sm:p-3 bg-slate-900 rounded-lg sm:rounded-xl border border-slate-800">
-                            <h5 class="font-bold text-sky-400 mb-1">6. Technische Infra</h5>
+                        <div class="p-3 sm:p-4 bg-slate-800/50 rounded-lg sm:rounded-xl border border-slate-700/50 hover:bg-slate-800/70 transition">
+                            <h5 class="font-bold text-sky-400 mb-1.5 text-xs sm:text-sm">6. Technische Infra</h5>
                             <span class="text-xs text-slate-400">Veilige datalabs.</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- EU AI Act & Kennisnet Principles -->
-                <div class="bg-slate-950 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 space-y-4 sm:space-y-6">
+                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 space-y-6 sm:space-y-8">
                     <div>
-                        <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                            <div class="p-2 sm:p-2.5 bg-amber-500/10 text-amber-400 rounded-lg sm:rounded-xl">
+                        <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-5">
+                            <div class="p-3 bg-amber-500/15 text-amber-400 rounded-lg sm:rounded-xl">
                                 <i data-lucide="scale" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                             </div>
-                            <h3 class="text-sm sm:text-lg font-bold text-white">EU AI Act</h3>
+                            <h3 class="text-sm sm:text-xl font-bold text-white">EU AI Act</h3>
                         </div>
-                        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed mb-3 sm:mb-4">
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
                             AI-systemen in onderwijs zijn onder hoog risico als ze toelating, examinering of placement beïnvloeden.
                         </p>
-                        <ul class="space-y-2 text-xs text-slate-300">
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5"></i>
+                        <ul class="space-y-3 text-xs text-slate-300">
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
                                 <span><strong>Admissions:</strong> Automatische filtering onder AI Act.</span>
                             </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5"></i>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
                                 <span><strong>Examinering:</strong> Strikte governance vereist.</span>
                             </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="info" class="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5"></i>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="info" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
                                 <span><strong>Formatief:</strong> Laag risico zonder diplomering.</span>
                             </li>
                         </ul>
                     </div>
 
-                    <div class="p-3 sm:p-4 bg-slate-900 border border-slate-800 rounded-lg sm:rounded-xl">
-                        <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-2">Kernbericht Kennisnet</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed">
+                    <div class="p-4 sm:p-5 bg-slate-800/50 border border-slate-700/50 rounded-lg sm:rounded-xl">
+                        <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-2.5">Kernbericht Kennisnet</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed">
                             AI is een 'arrival technology'. Richt het onderwijs zo in dat AI aanzet tot actief leren en kritisch denken.
                         </p>
                     </div>
@@ -414,42 +525,42 @@
     </main>
 
     <!-- DETAILED MODAL FOR QUADRANTS -->
-    <div id="quadrant-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl sm:rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+    <div id="quadrant-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6 hidden">
+        <div class="modal-enter bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/60 rounded-2xl sm:rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
             <!-- Modal Header -->
-            <div class="p-4 sm:p-6 border-b border-slate-800 flex justify-between items-start gap-3">
+            <div class="p-5 sm:p-8 border-b border-slate-700/50 flex justify-between items-start gap-4 bg-gradient-to-r from-slate-900/50 to-transparent">
                 <div class="flex-1 min-w-0">
                     <span id="modal-tag" class="text-xs font-bold uppercase tracking-widest">KWADRANT DETAIL</span>
-                    <h3 id="modal-title" class="text-lg sm:text-2xl font-bold text-white mt-1">Kwadrant Titel</h3>
+                    <h3 id="modal-title" class="text-xl sm:text-3xl font-bold text-white mt-2">Kwadrant Titel</h3>
                 </div>
-                <button onclick="closeModal()" class="p-1 sm:p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg transition shrink-0">
-                    <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                <button onclick="closeModal()" class="p-2 sm:p-2.5 bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg transition shrink-0">
+                    <i data-lucide="x" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                 </button>
             </div>
             
             <!-- Modal Body -->
-            <div class="p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto">
+            <div class="p-5 sm:p-8 space-y-6 sm:space-y-8 overflow-y-auto">
                 <div>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Context</h4>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Context</h4>
                     <p id="modal-desc" class="text-sm text-slate-300 leading-relaxed">Definitie en beschrijving.</p>
                 </div>
 
                 <div>
-                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Concreet in het Onderwijs</h4>
-                    <div id="modal-bullets" class="space-y-2">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Concreet in het Onderwijs</h4>
+                    <div id="modal-bullets" class="space-y-3">
                         <!-- Dynamic list items -->
                     </div>
                 </div>
 
-                <div id="modal-action-box" class="p-3 sm:p-4 rounded-lg sm:rounded-xl border">
-                    <h5 class="text-xs font-bold uppercase tracking-wider mb-1" id="modal-action-title">Aanbevolen Actie</h5>
-                    <p class="text-xs leading-relaxed" id="modal-action-desc">Actieplan.</p>
+                <div id="modal-action-box" class="p-4 sm:p-5 rounded-lg sm:rounded-xl border">
+                    <h5 class="text-xs font-bold uppercase tracking-wider mb-2" id="modal-action-title">Aanbevolen Actie</h5>
+                    <p class="text-xs leading-relaxed text-slate-300" id="modal-action-desc">Actieplan.</p>
                 </div>
             </div>
             
             <!-- Modal Footer -->
-            <div class="p-4 sm:p-6 border-t border-slate-800 flex justify-end">
-                <button onclick="closeModal()" class="px-3 sm:px-5 py-1.5 sm:py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl transition">
+            <div class="p-5 sm:p-8 border-t border-slate-700/50 flex justify-end bg-slate-900/40">
+                <button onclick="closeModal()" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl transition-all hover:shadow-lg hover:shadow-sky-600/30">
                     Sluiten
                 </button>
             </div>
@@ -457,13 +568,13 @@
     </div>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-950/40 text-slate-500 text-xs py-6 sm:py-8 px-4 sm:px-6 text-center mt-8 sm:mt-12">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+    <footer class="border-t border-slate-800/50 bg-slate-950/40 text-slate-500 text-xs py-8 sm:py-10 px-4 sm:px-6 text-center mt-12 sm:mt-16">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
             <p>&copy; 2026 AI Onderwijs Governance Kompas</p>
-            <div class="flex gap-3 sm:gap-4 text-xs">
-                <a href="#" onclick="switchView('about')" class="hover:text-slate-300 transition">Methodologie</a>
+            <div class="flex gap-4 text-xs">
+                <a href="#" onclick="switchView('about')" class="hover:text-slate-300 transition font-medium">Methodologie</a>
                 <span>•</span>
-                <a href="#" onclick="switchView('matrix')" class="hover:text-slate-300 transition">Matrix</a>
+                <a href="#" onclick="switchView('matrix')" class="hover:text-slate-300 transition font-medium">Matrix</a>
             </div>
         </div>
     </footer>
@@ -477,20 +588,20 @@
             document.getElementById('view-presentation').classList.add('hidden');
             document.getElementById('view-about').classList.add('hidden');
 
-            document.getElementById('btn-matrix').className = "px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800 whitespace-nowrap";
-            document.getElementById('btn-presentation').className = "px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800 whitespace-nowrap";
-            document.getElementById('btn-about').className = "px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800 whitespace-nowrap";
+            document.getElementById('btn-matrix').classList.remove('active');
+            document.getElementById('btn-presentation').classList.remove('active');
+            document.getElementById('btn-about').classList.remove('active');
 
             if (viewId === 'matrix') {
                 document.getElementById('view-matrix').classList.remove('hidden');
-                document.getElementById('btn-matrix').className = "px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition bg-sky-600 text-white shadow-lg shadow-sky-600/20 whitespace-nowrap";
+                document.getElementById('btn-matrix').classList.add('active');
             } else if (viewId === 'presentation') {
                 document.getElementById('view-presentation').classList.remove('hidden');
-                document.getElementById('btn-presentation').className = "px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition bg-sky-600 text-white shadow-lg shadow-sky-600/20 whitespace-nowrap";
+                document.getElementById('btn-presentation').classList.add('active');
                 renderSlide();
             } else if (viewId === 'about') {
                 document.getElementById('view-about').classList.remove('hidden');
-                document.getElementById('btn-about').className = "px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition bg-sky-600 text-white shadow-lg shadow-sky-600/20 whitespace-nowrap";
+                document.getElementById('btn-about').classList.add('active');
             }
         }
 
@@ -501,33 +612,33 @@
                 icon: "graduation-cap",
                 content: `<p class="mb-4">Expliciet onderscheid maken:</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                        <div class="p-2 sm:p-3 bg-slate-900 border border-slate-800 rounded-lg"><h4 class="font-bold text-sky-400 text-xs">Onderwijs over AI</h4><p class="text-xs text-slate-400 mt-1">Modellen, risico's en impact.</p></div>
-                        <div class="p-2 sm:p-3 bg-slate-900 border border-slate-800 rounded-lg"><h4 class="font-bold text-slate-400 text-xs">AI als hulpmiddel</h4><p class="text-xs text-slate-500 mt-1">Adaptieve systemen.</p></div>
+                        <div class="p-2 sm:p-3 bg-slate-900 border border-slate-800 rounded-lg"><h4 class="font-bold text-sky-400 text-xs">Onderwijs over AI</h4><p class="text-xs text-slate-400 mt-1">AI-geletterdheid als onderdeel van het curriculum.</p></div>
+                        <div class="p-2 sm:p-3 bg-slate-900 border border-slate-800 rounded-lg"><h4 class="font-bold text-slate-400 text-xs">AI als hulpmiddel</h4><p class="text-xs text-slate-500 mt-1">Directe toepassing in het onderwijs.</p></div>
                     </div>`
             },
             {
                 tag: "Kwadrant I",
                 title: "Kritieke Fricties",
                 icon: "skull",
-                content: `<p class="mb-4"><strong>De gevarenzone:</strong> Wilde AI-implementatie.</p><p class="text-xs">Stop onbeheerd proctoring-gebruik.</p>`
+                content: `<p class="mb-4"><strong>De gevarenzone:</strong> Wilde AI-implementatie.</p><p class="text-xs text-slate-400">Stop onbeheerd proctoring-gebruik.</p>`
             },
             {
                 tag: "Kwadrant II",
                 title: "Gereguleerde AI",
                 icon: "shield-check",
-                content: `<p class="mb-4"><strong>Formele zone:</strong> Strikte compliance.</p><p class="text-xs">Human-in-the-loop, XAI, bias-vrije data.</p>`
+                content: `<p class="mb-4"><strong>Formele zone:</strong> Strikte compliance.</p><p class="text-xs text-slate-400">Human-in-the-loop, XAI, bias-vrije data.</p>`
             },
             {
                 tag: "Kwadrant III",
                 title: "Didactische Drama",
                 icon: "flame",
-                content: `<p class="mb-4"><strong>Risico:</strong> AI als antwoordknop.</p><p class="text-xs">Docenten trainen voor kritisch gebruik.</p>`
+                content: `<p class="mb-4"><strong>Risico:</strong> AI als antwoordknop.</p><p class="text-xs text-slate-400">Docenten trainen voor kritisch gebruik.</p>`
             },
             {
                 tag: "Kwadrant IV",
                 title: "AI-Empowered",
                 icon: "check-circle",
-                content: `<p class="mb-4"><strong>Ideaal:</strong> Formatief en doordacht.</p><p class="text-xs">Sparringpartner, inclusiviteit, OER.</p>`
+                content: `<p class="mb-4"><strong>Ideaal:</strong> Formatief en doordacht.</p><p class="text-xs text-slate-400">Sparringpartner, inclusiviteit, OER.</p>`
             }
         ];
 
@@ -560,7 +671,7 @@
                 title: "Kritieke Selectie & Beoordeling",
                 tag: "Kwadrant I • Ongeautoriseerd",
                 colorClass: "text-danger-500",
-                borderColor: "border-danger-500/20 bg-danger-500/5 text-danger-400",
+                borderColor: "border-danger-500/30 bg-danger-500/8 text-danger-400",
                 desc: "Processen die de loopbaan bepalen, maar wild zijn ingezet.",
                 bullets: ["<strong>Wildgroei Proctoring</strong>", "<strong>Ongetoetste AI-profilering</strong>", "<strong>Black-box AI-beoordeling</strong>"],
                 actionTitle: "Direct Saneren",
@@ -570,7 +681,7 @@
                 title: "Gereguleerde Summatieve AI",
                 tag: "Kwadrant II • Gereguleerd",
                 colorClass: "text-sky-500",
-                borderColor: "border-brand-500/20 bg-brand-500/5 text-brand-400",
+                borderColor: "border-brand-500/30 bg-brand-500/8 text-brand-400",
                 desc: "Summatieve examinering volledig compliant.",
                 bullets: ["<strong>Human-in-the-Loop</strong>", "<strong>Transparante algoritmes (XAI)</strong>", "<strong>Bias-vrije trainingsdata</strong>"],
                 actionTitle: "Auditering Borgen",
@@ -580,7 +691,7 @@
                 title: "Didactische Desintegratie",
                 tag: "Kwadrant III • Ongestuurd",
                 colorClass: "text-amber-500",
-                borderColor: "border-warning-500/20 bg-warning-500/5 text-warning-400",
+                borderColor: "border-warning-500/30 bg-warning-500/8 text-warning-400",
                 desc: "Ad-hoc AI-consumptie zonder didactische inbedding.",
                 bullets: ["<strong>AI als antwoordknop</strong>", "<strong>Privacy-lekken GDPR</strong>", "<strong>Hallucinatie-blind</strong>"],
                 actionTitle: "Kanaliseren",
@@ -590,7 +701,7 @@
                 title: "AI-Empowered Leren",
                 tag: "Kwadrant IV • Gestuurd",
                 colorClass: "text-emerald-500",
-                borderColor: "border-success-500/20 bg-success-500/5 text-success-400",
+                borderColor: "border-success-500/30 bg-success-500/8 text-success-400",
                 desc: "Formatieve AI didactisch doordacht.",
                 bullets: ["<strong>AI als sparringpartner</strong>", "<strong>Inclusieve SEN-tools</strong>", "<strong>Open leermaterialen</strong>"],
                 actionTitle: "Opschalen",
@@ -607,15 +718,16 @@
             
             const bulletsContainer = document.getElementById('modal-bullets');
             bulletsContainer.innerHTML = '';
-            data.bullets.forEach(bullet => {
+            data.bullets.forEach((bullet, index) => {
                 const li = document.createElement('div');
-                li.className = "flex items-start gap-2 text-xs text-slate-300";
+                li.className = "bullet-item flex items-start gap-2.5 text-xs text-slate-300";
+                li.style.animationDelay = `${index * 0.05}s`;
                 li.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-slate-500 shrink-0 mt-0.5"></i> <span>${bullet}</span>`;
                 bulletsContainer.appendChild(li);
             });
 
             const actionBox = document.getElementById('modal-action-box');
-            actionBox.className = `p-3 sm:p-4 rounded-lg sm:rounded-xl border ${data.borderColor}`;
+            actionBox.className = `p-4 sm:p-5 rounded-lg sm:rounded-xl border ${data.borderColor}`;
             document.getElementById('modal-action-title').innerText = `${data.actionTitle}`;
             document.getElementById('modal-action-desc').innerText = data.actionDesc;
 
