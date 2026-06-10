@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onderwijs AI Governance Matrix: Van Risico tot Regie</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .quadrant-glow:hover {
+            box-shadow: 0 20px 40px -15px rgba(var(--glow-color), 0.15);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            900: '#0c4a6e',
+                        },
+                        danger: {
+                            50: '#fef2f2',
+                            500: '#ef4444',
+                            900: '#7f1d1d',
+                        },
+                        warning: {
+                            50: '#fffbeb',
+                            500: '#f59e0b',
+                            900: '#78350f',
+                        },
+                        success: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen selection:bg-sky-500 selection:text-white overflow-x-hidden">
+
+    <!-- Header / Navigation -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-sky-500/10 text-sky-400 rounded-xl border border-sky-500/20">
+                    <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        Onderwijs AI Governance Matrix <span class="text-xs bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2 py-0.5 rounded-full font-semibold">Kennisnet, AIC4NL & EU AI Act Verified</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Strategisch kompas voor onderwijsinstellingen (MBO, HBO, WO)</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="switchView('matrix')" id="btn-matrix" class="px-4 py-2 text-sm font-medium rounded-lg transition bg-sky-600 text-white shadow-lg shadow-sky-600/20">
+                    <span class="flex items-center gap-2"><i data-lucide="grid" class="w-4 h-4"></i> Matrix Weergave</span>
+                </button>
+                <button onclick="switchView('presentation')" id="btn-presentation" class="px-4 py-2 text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800">
+                    <span class="flex items-center gap-2"><i data-lucide="presentation" class="w-4 h-4"></i> Presentatiemodus</span>
+                </button>
+                <button onclick="switchView('about')" id="btn-about" class="px-4 py-2 text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800">
+                    <span class="flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i> Kaders &amp; Wetgeving</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6">
+        
+        <!-- VIEW: MATRIX (Default) -->
+        <div id="view-matrix" class="space-y-6">
+            <!-- Strategic introduction card -->
+            <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-6 relative overflow-hidden shadow-2xl">
+                <div class="absolute -right-12 -top-12 w-64 h-64 bg-sky-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-4xl">
+                    <h2 class="text-lg font-bold text-slate-200 mb-2">AI Governance in het Onderwijs</h2>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        De komst van Generatieve AI raakt de kern van het onderwijs. Dit kompas classificeert onderwijstoepassingen op basis van de <strong>EU AI Act (Richtsnoeren 2026)</strong> op de verticale as (van laag naar hoog impact op de student) en de mate van institutionele regie op de horizontale as (van <strong>Shadow AI</strong>-wildgroei naar <strong>Verantwoorde/Uitlegbare AI-kaders</strong>). Klik op de kwadranten om diepgaande onderwijskundige adviezen en implementatiestappen te bekijken.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interatieve 2x2 Grid -->
+            <div class="relative mt-8">
+                <!-- Vertical Axis (Risico) Label -->
+                <div class="absolute -left-12 top-1/2 -translate-y-1/2 -rotate-90 hidden xl:flex items-center gap-4 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                    <span class="text-danger-500">Hoog Risico (EU AI Act Annex III - Impact op Studietraject)</span>
+                    <div class="w-16 h-[2px] bg-slate-700"></div>
+                    <span class="text-success-500">Laag Risico (Formatief / Ondersteunend)</span>
+                </div>
+
+                <!-- Horizontal Axis (Sturing) Label -->
+                <div class="absolute -top-10 left-1/2 -translate-x-1/2 hidden xl:flex items-center gap-4 text-xs font-semibold uppercase tracking-widest text-slate-400">
+                    <span class="text-warning-500">Shadow AI (Didactisch Drama & Privacy-lekken)</span>
+                    <div class="w-16 h-[2px] bg-slate-700"></div>
+                    <span class="text-brand-500">Responsible AI (Didactisch Doordacht &amp; GDPR-Proof)</span>
+                </div>
+
+                <!-- Mobile Axis Indicator (Visible on small screens) -->
+                <div class="xl:hidden bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-between text-xs font-bold text-slate-400 mb-4">
+                    <span>Y-As: Hoog &rarr; Laag Impact op Student</span>
+                    <span>X-As: Links (Shadow AI) &rarr; Rechts (Verantwoorde Regie)</span>
+                </div>
+
+                <!-- The 2x2 Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 relative">
+                    
+                    <!-- Top Axis Badges for Medium Screens -->
+                    <div class="absolute -top-3 left-6 px-4 py-1 bg-slate-900 border border-slate-800 rounded-full text-xs font-bold text-warning-400 uppercase tracking-wider hidden lg:block">
+                        Shadow AI (Ongestuurd)
+                    </div>
+                    <div class="absolute -top-3 right-6 px-4 py-1 bg-slate-900 border border-slate-800 rounded-full text-xs font-bold text-sky-400 uppercase tracking-wider hidden lg:block">
+                        Responsible AI (Gestuurd)
+                    </div>
+
+                    <!-- KWADRANT I: HIGH RISK & SHADOW AI -->
+                    <div onclick="showQuadrantDetail('q1')" class="quadrant-glow cursor-pointer bg-slate-950 border-2 border-danger-500/30 rounded-2xl p-6 transition-all duration-300 relative group overflow-hidden" style="--glow-color: 239, 68, 68;">
+                        <div class="absolute top-0 left-0 w-2 h-full bg-danger-500"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-xs font-bold text-danger-500 uppercase tracking-widest">Kwadrant I &bull; Ongeautoriseerd Hoog-Risico</span>
+                                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-danger-400 transition">Kritieke Selectie & Beoordeling</h3>
+                            </div>
+                            <span class="p-2 bg-danger-500/10 text-danger-400 rounded-lg"><i data-lucide="skull" class="w-5 h-5"></i></span>
+                        </div>
+                        <p class="text-sm text-slate-400 mb-6">Wilde inzet van ongetoetste AI-systemen voor processen die de studentenloopbaan direct beïnvloeden. Dit is onder de EU AI Act strikt verboden of leidt tot zware compliantieboetes.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-danger-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Ongetoetste AI-profilering voor toelating en weging van transcripts</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-danger-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Wildgroei aan fraudedetectie/proctoring-software (biasgevoelig!)</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-danger-500"></span>
+                                <span class="text-xs font-medium text-slate-200">AI-beoordeling voor summatieve toetsen zonder formele audit</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-danger-400 font-semibold">
+                            <span>Governance Actie: Onmiddellijk bevriezen & compliant maken</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 transition group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+
+                    <!-- KWADRANT II: HIGH RISK & RESPONSIBLE AI -->
+                    <div onclick="showQuadrantDetail('q2')" class="quadrant-glow cursor-pointer bg-slate-950 border-2 border-brand-500/30 rounded-2xl p-6 transition-all duration-300 relative group overflow-hidden" style="--glow-color: 2, 132, 199;">
+                        <div class="absolute top-0 left-0 w-2 h-full bg-brand-500"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-xs font-bold text-brand-500 uppercase tracking-widest">Kwadrant II &bull; Gereguleerd & Auditeerbaar</span>
+                                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-brand-400 transition">Formele Summatieve AI</h3>
+                            </div>
+                            <span class="p-2 bg-brand-500/10 text-brand-400 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5"></i></span>
+                        </div>
+                        <p class="text-sm text-slate-400 mb-6">AI-toepassingen met een grote impact (toelating, examinering) die volledig voldoen aan de wetgeving en onder toezicht van een AI Advisory Board staan.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Betekenisvolle Human-in-the-Loop (nooit als compliantie-trucje)</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Geadmiteerde, transparante scoringstools met audit-logging</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-brand-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Ethische screenings op bias en kansengelijkheid bij pre-selectie</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-brand-400 font-semibold">
+                            <span>Governance Actie: Auditering borgen & AI Act registers bijhouden</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 transition group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+
+                    <!-- KWADRANT III: LOW RISK & SHADOW AI -->
+                    <div onclick="showQuadrantDetail('q3')" class="quadrant-glow cursor-pointer bg-slate-950 border-2 border-warning-500/30 rounded-2xl p-6 transition-all duration-300 relative group overflow-hidden" style="--glow-color: 245, 158, 11;">
+                        <div class="absolute top-0 left-0 w-2 h-full bg-warning-500"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-xs font-bold text-warning-500 uppercase tracking-widest">Kwadrant III &bull; Het 'Antwoordknop' Syndroom</span>
+                                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-warning-400 transition">Didactische Desintegratie</h3>
+                            </div>
+                            <span class="p-2 bg-warning-500/10 text-warning-400 rounded-lg"><i data-lucide="flame" class="w-5 h-5"></i></span>
+                        </div>
+                        <p class="text-sm text-slate-400 mb-6">Studenten en docenten die AI ad-hoc consumeren zonder didactische inbedding of datakaders. Dit leidt tot vaardigheidsverlies en intellectuele luiheid.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-warning-500"></span>
+                                <span class="text-xs font-medium text-slate-200">AI als loutere 'antwoordknop': taak af, maar nul leerrendement</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-warning-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Uploaden van studentencases en privacygevoelige essays in openbare LLM's</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-warning-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Passief consumeren van ongetoetste en hallucinerende samenvattingen</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-warning-400 font-semibold">
+                            <span>Governance Actie: Actief kanaliseren & professionalisering starten</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 transition group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+
+                    <!-- KWADRANT IV: LOW RISK & RESPONSIBLE AI -->
+                    <div onclick="showQuadrantDetail('q4')" class="quadrant-glow cursor-pointer bg-slate-950 border-2 border-success-500/30 rounded-2xl p-6 transition-all duration-300 relative group overflow-hidden" style="--glow-color: 34, 197, 94;">
+                        <div class="absolute top-0 left-0 w-2 h-full bg-success-500"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-xs font-bold text-success-500 uppercase tracking-widest">Kwadrant IV &bull; De Geautoriseerde Leeromgeving</span>
+                                <h3 class="text-xl font-bold text-white mt-1 group-hover:text-success-400 transition">AI-Empowered &amp; Inclusief Leren</h3>
+                            </div>
+                            <span class="p-2 bg-success-500/10 text-success-400 rounded-lg"><i data-lucide="check-circle" class="w-5 h-5"></i></span>
+                        </div>
+                        <p class="text-sm text-slate-400 mb-6">Doordachte inzet van formatieve tools en didactische integratie. Dit stimuleert actieve verwerking, kritische beoordeling en gelijke kansen.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-success-500"></span>
+                                <span class="text-xs font-medium text-slate-200">AI als actieve sparringpartner (o.a. prompt-onderbouwing eisen)</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-success-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Inclusieve, formatieve SEN-tools (bijv. Dytective dyslexietraining, KOBI)</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-2.5 bg-slate-900/60 rounded-xl border border-slate-800/80 hover:bg-slate-900 transition">
+                                <span class="w-2 h-2 rounded-full bg-success-500"></span>
+                                <span class="text-xs font-medium text-slate-200">Open leermaterialen (OER) via Edusource en Wikiwijs-standaarden</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-success-400 font-semibold">
+                            <span>Governance Actie: Opschalen, curriculum integreren & borgen</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 transition group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- Quick metrics / dashboard callouts -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl flex items-center gap-4">
+                    <div class="p-3 bg-red-500/10 text-red-400 rounded-xl"><i data-lucide="alert-triangle" class="w-6 h-6"></i></div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-200">Formuleer een AI-Strategie</h4>
+                        <p class="text-xs text-slate-400 mt-1">Elke school heeft een expliciete visie nodig: kiest u voor de <em>AI-empowered</em> of <em>AI-supported</em> route?</p>
+                    </div>
+                </div>
+                <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl flex items-center gap-4">
+                    <div class="p-3 bg-amber-500/10 text-amber-400 rounded-xl"><i data-lucide="brain" class="w-6 h-6"></i></div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-200">Beroepsidentiteit &amp; Weerstand</h4>
+                        <p class="text-xs text-slate-400 mt-1">Betrek docenten actief bij het 'AI-ready' maken van hun eigen vakgebied om verlies van autonomie te voorkomen.</p>
+                    </div>
+                </div>
+                <div class="bg-slate-950 border border-slate-800 p-5 rounded-2xl flex items-center gap-4">
+                    <div class="p-3 bg-green-500/10 text-green-400 rounded-xl"><i data-lucide="layers" class="w-6 h-6"></i></div>
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-200">Curriculuminbedding</h4>
+                        <p class="text-xs text-slate-400 mt-1">Integreer AI stapsgewijs: begin met een losse minor en werk toe naar volledige integratie in de vakdiscipline.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: PRESENTATION MODE -->
+        <div id="view-presentation" class="hidden space-y-6">
+            <div class="flex justify-between items-center bg-slate-950 p-4 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="play" class="w-5 h-5 text-sky-400"></i>
+                    <span class="text-sm font-bold">Presentatie Modus: AI Governance in het Onderwijs</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <button onclick="prevSlide()" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    <span id="slide-indicator" class="text-xs font-mono px-3">Slide 1 / 5</span>
+                    <button onclick="nextSlide()" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 transition">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Slide Canvas -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-8 min-h-[500px] flex flex-col justify-between relative overflow-hidden shadow-2xl">
+                <div class="absolute right-0 bottom-0 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <!-- Slide Header -->
+                <div class="flex justify-between items-start border-b border-slate-800 pb-6">
+                    <div>
+                        <span id="slide-tag" class="text-xs font-bold text-sky-400 uppercase tracking-widest">INTRODUCTIE</span>
+                        <h2 id="slide-title" class="text-3xl font-extrabold text-white mt-2">AI-Transitie: Onderwijs over AI</h2>
+                    </div>
+                    <div id="slide-icon-container" class="p-3 bg-sky-500/10 text-sky-400 rounded-xl">
+                        <i data-lucide="presentation" class="w-8 h-8"></i>
+                    </div>
+                </div>
+
+                <!-- Slide Content -->
+                <div id="slide-content" class="my-8 text-slate-300 text-lg leading-relaxed space-y-4">
+                    <!-- Dynamic Content Injection -->
+                </div>
+
+                <!-- Slide Footer -->
+                <div class="flex justify-between items-center pt-6 border-t border-slate-800/60 text-xs text-slate-500 font-medium">
+                    <span>Gebruik de pijltjestoetsen (&larr; &rarr;) of de knoppen bovenaan om te navigeren</span>
+                    <span class="text-slate-400">AIC4NL & Kennisnet Compliant Onderwijskader</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: ABOUT & BRONNEN -->
+        <div id="view-about" class="hidden space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- AIC4NL Transitiepijlers -->
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-sky-500/10 text-sky-400 rounded-xl">
+                            <i data-lucide="book-open" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white">AIC4NL: De 6 Kernthema's</h3>
+                    </div>
+                    <p class="text-sm text-slate-400">De transitie naar instellingsbreed AI-onderwijs (<em>Adviesrapport projectgroep 2025</em>) steunt op zes onlosmakelijke pijlers:</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <h5 class="font-bold text-sky-400 mb-1">1. Commitment</h5>
+                            <span class="text-slate-400">Zichtbare steun vanuit CvB, mandateer experimenten en wijs centrale aanjagers aan.</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <h5 class="font-bold text-sky-400 mb-1">2. Curriculum</h5>
+                            <span class="text-slate-400">Vorm leerlijnen. Kies voor minor, losstaand vak of volledige integratie in de discipline.</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <h5 class="font-bold text-sky-400 mb-1">3. Community</h5>
+                            <span class="text-slate-400">Stimuleer docentgestuurde cafés en studentenraden (bijv. HvA AI4Students).</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <h5 class="font-bold text-sky-400 mb-1">4. Professionalisering</h5>
+                            <span class="text-slate-400">Koppel BKO-eisen aan AI-geletterdheid, werk met modulaire Edubadges (Fontys).</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <h5 class="font-bold text-sky-400 mb-1">5. Open Leermaterialen</h5>
+                            <span class="text-slate-400">Voorkom platformversnippering. Deel modulaire materialen onder CC-licenties.</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                            <h5 class="font-bold text-sky-400 mb-1">6. Technische Infra</h5>
+                            <span class="text-slate-400">Zorg voor veilige datalabs (Hogeschool Rotterdam) en "secure data sharing".</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EU AI Act & Kennisnet Principles -->
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-6">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="p-2.5 bg-amber-500/10 text-amber-400 rounded-xl">
+                                <i data-lucide="scale" class="w-6 h-6"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">EU AI Act (Classificatierichtlijnen)</h3>
+                        </div>
+                        <p class="text-sm text-slate-400 leading-relaxed mb-4">
+                            De Europese Commissie classificeert AI-systemen in het onderwijs strikt onder <strong>hoog risico</strong> als ze de toelating, examinering (summatieve evaluatie) of plaatsing van individuen bepalen.
+                        </p>
+                        <ul class="space-y-3 text-xs text-slate-300">
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
+                                <span><strong>Admissions & Assignments:</strong> Systemen die automatisch aanvragen filteren of leerlingen toewijzen aan scholen op basis van profilering vallen onder Annex III.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500 shrink-0 mt-0.5"></i>
+                                <span><strong>Summatieve Evaluatie:</strong> AI die direct gebruikt wordt om examens na te kijken of cijfers te berekenen die meetellen voor het eindexamen. Dit vereist volledige registratie, logging en traceerbaarheid.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i data-lucide="info" class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5"></i>
+                                <span><strong>Uitzonderingen (Laag risico):</strong> AI die louter formatieve feedback geeft (pronunciation tools, neurodiverse metgezellen zonder diplomering, of schooladvies-zoekers) valt hierbuiten.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl">
+                        <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider mb-2">Kennisnet: Wilfred Rubens' Waarschuwing</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            "AI is een <em>arrival technology</em>. Het verbieden is een utopie en vergroot kansenongelijkheid. Richt het onderwijs zo in dat AI aanzet tot actief leren (generative learning). Laat studenten hun prompts onderbouwen en beoordeel de kwaliteit van hun ideeën in plaats van de mechanische grammatica."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- DETAILED MODAL FOR QUADRANTS -->
+    <div id="quadrant-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+                <div>
+                    <span id="modal-tag" class="text-xs font-bold uppercase tracking-widest">KWADRANT DETAIL</span>
+                    <h3 id="modal-title" class="text-2xl font-bold text-white mt-1">Kwadrant Titel</h3>
+                </div>
+                <button onclick="closeModal()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-lg transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Context &amp; Implicaties</h4>
+                    <p id="modal-desc" class="text-sm text-slate-300 leading-relaxed">Definitie en beschrijving van de omstandigheden.</p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Concreet in het Onderwijs</h4>
+                    <div id="modal-bullets" class="space-y-2.5">
+                        <!-- Dynamic list items -->
+                    </div>
+                </div>
+
+                <div id="modal-action-box" class="p-4 rounded-xl border">
+                    <h5 class="text-xs font-bold uppercase tracking-wider mb-1" id="modal-action-title">Aanbevolen Governance Actie</h5>
+                    <p class="text-xs leading-relaxed" id="modal-action-desc">Inhoud actieplan.</p>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="p-6 border-t border-slate-800 flex justify-end">
+                <button onclick="closeModal()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-semibold rounded-xl transition">
+                    Sluiten
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950/40 text-slate-500 text-xs py-8 px-6 text-center mt-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 AI Onderwijs Governance Kompas. Ontwikkeld op basis van AIC4NL, Kennisnet en OECD kaders.</p>
+            <div class="flex gap-4">
+                <a href="#" onclick="switchView('about')" class="hover:text-slate-300 transition">Methodologie</a>
+                <span>&bull;</span>
+                <a href="#" onclick="switchView('matrix')" class="hover:text-slate-300 transition">Matrix</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS Logic -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // View Switcher logic
+        function switchView(viewId) {
+            document.getElementById('view-matrix').classList.add('hidden');
+            document.getElementById('view-presentation').classList.add('hidden');
+            document.getElementById('view-about').classList.add('hidden');
+
+            document.getElementById('btn-matrix').className = "px-4 py-2 text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800";
+            document.getElementById('btn-presentation').className = "px-4 py-2 text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800";
+            document.getElementById('btn-about').className = "px-4 py-2 text-sm font-medium rounded-lg transition text-slate-300 hover:bg-slate-800";
+
+            if (viewId === 'matrix') {
+                document.getElementById('view-matrix').classList.remove('hidden');
+                document.getElementById('btn-matrix').className = "px-4 py-2 text-sm font-medium rounded-lg transition bg-sky-600 text-white shadow-lg shadow-sky-600/20";
+            } else if (viewId === 'presentation') {
+                document.getElementById('view-presentation').classList.remove('hidden');
+                document.getElementById('btn-presentation').className = "px-4 py-2 text-sm font-medium rounded-lg transition bg-sky-600 text-white shadow-lg shadow-sky-600/20";
+                renderSlide();
+            } else if (viewId === 'about') {
+                document.getElementById('view-about').classList.remove('hidden');
+                document.getElementById('btn-about').className = "px-4 py-2 text-sm font-medium rounded-lg transition bg-sky-600 text-white shadow-lg shadow-sky-600/20";
+            }
+        }
+
+        // Slide presentation data (Focusing on Educational Transition)
+        const slides = [
+            {
+                tag: "Onderwijs over AI vs. met AI",
+                title: "Onderwijs over AI (Teaching about AI)",
+                icon: "graduation-cap",
+                content: `
+                    <p class="mb-4">Conform het <strong>AIC4NL-adviesdocument (2025)</strong> moeten we expliciet onderscheid maken:</p>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                            <h4 class="font-bold text-sky-400 text-sm">Onderwijs over AI</h4>
+                            <p class="text-xs text-slate-400 mt-1">Lessen, cursussen en competenties die leerlingen leren over AI-modellen, risico's (bias, hallucinaties) en maatschappelijke impact.</p>
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                            <h4 class="font-bold text-slate-400 text-sm">AI als hulpmiddel</h4>
+                            <p class="text-xs text-slate-500 mt-1">Het gebruik van adaptieve systemen om het leerproces efficiënter of adaptiever in te richten (niet de focus van deze transitie).</p>
+                        </div>
+                    </div>
+                    <p class="text-sm">Door te focussen op <em>Onderwijs over AI</em> vergroten we de AI-geletterdheid die nodig is om shadow AI te transformeren tot verantwoord gebruik.</p>
+                `
+            },
+            {
+                tag: "Kwadrant I: High Risk & Shadow AI",
+                title: "Kritieke Fricties in Examinering & Toelating",
+                icon: "skull",
+                content: `
+                    <p class="mb-4"><strong>De gevarenzone:</strong> Toepassingen die summatief wegen op het studietraject van de student, maar wild en ad-hoc (Shadow) zijn geïmplementeerd.</p>
+                    <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-xl space-y-2 mb-4">
+                        <div class="flex gap-2 items-center text-sm font-bold text-red-400"><i data-lucide="alert-triangle" class="w-4 h-4"></i> EU AI Act Verboden/Zwaar Gereguleerd:</div>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Wilde proctoring (surveillance) met biometrische data, of het automatisch weigeren van studenten bij overinschrijving zonder formele verklaring en audit. Dit leidt direct tot juridische inbreuken en schending van gelijke kansen.
+                        </p>
+                    </div>
+                    <p class="text-sm text-slate-400"><strong>Directe actie:</strong> Stop onbeheerd gebruik van proctoring-software en herzie de AVG-voorwaarden direct.</p>
+                `
+            },
+            {
+                tag: "Kwadrant II: High Risk & Responsible AI",
+                title: "Gereguleerde & Traceerbare Loopbaantoetsen",
+                icon: "shield-check",
+                content: `
+                    <p class="mb-4"><strong>De formele summatieve zone:</strong> Het inzetten van AI voor toelatingen, cijferberekeningen of trajectkeuzes onder strikte kwaliteitsbewaking.</p>
+                    <ul class="list-disc list-inside space-y-2 text-sm text-slate-400">
+                        <li><strong>Human-in-the-loop:</strong> Altijd een betekenisvolle docent/examinator die AI-beoordelingen handmatig kan herroepen.</li>
+                        <li><strong>Inkoop &amp; Juridisch (TNO-aspect 8):</strong> Systematische controle op de trainingsdata van de leverancier om institutionele bias te bannen.</li>
+                        <li><strong>Explainable AI (XAI):</strong> Algoritmes die helder uitleggen waarom een student naar een specifiek niveau is geadviseerd.</li>
+                    </ul>
+                `
+            },
+            {
+                tag: "Kwadrant III: Low Risk & Shadow AI",
+                title: "Het Didactische Drama van de 'Antwoordknop'",
+                icon: "flame",
+                content: `
+                    <p class="mb-4"><strong>Didactisch risico:</strong> Wilfred Rubens waarschuwt voor de 'makkelijke' route. Als AI enkel fungeert als panklare antwoordgenerator, stopt het actieve leerproces.</p>
+                    <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-400 leading-relaxed mb-4">
+                        "De taak is af, maar de student heeft niets geleerd. Er ontstaat didactisch frictieverlies en cognitieve achteruitgang."
+                    </div>
+                    <p class="text-sm text-slate-400"><strong>Kanalisatie:</strong> Train docenten om opdrachten zo te herontwerpen dat studenten de prompts en bronafwegingen (data provenance) moeten aantonen.</p>
+                `
+            },
+            {
+                tag: "Kwadrant IV: Low Risk & Responsible AI",
+                title: "De AI-Empowered Leeromgeving",
+                icon: "check-circle",
+                content: `
+                    <p class="mb-4"><strong>De verantwoorde, formatieve zone:</strong> Formatieve toepassingen en inclusief onderwijs die studenten helpen 'sneller te rennen' in plaats van werk uit te besteden.</p>
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                            <h5 class="font-bold text-emerald-400 mb-1">Inclusiviteit &amp; SEN</h5>
+                            <span class="text-slate-400">Door de OECD aangetoond: Dytective screent dyslexie, neurodiverse companions personaliseren leertempo zonder stempels.</span>
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl">
+                            <h5 class="font-bold text-emerald-400 mb-1">Actief Genereren</h5>
+                            <span class="text-slate-400">Kennisnet-toolkit: Werk met duidelijke visie-charters en schoolafspraken. AI fungeert als sparringpartner.</span>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentSlideIndex = 0;
+
+        function renderSlide() {
+            const slide = slides[currentSlideIndex];
+            document.getElementById('slide-tag').innerText = slide.tag;
+            document.getElementById('slide-title').innerText = slide.title;
+            document.getElementById('slide-content').innerHTML = slide.content;
+            document.getElementById('slide-indicator').innerText = `Slide ${currentSlideIndex + 1} / ${slides.length}`;
+            
+            const iconContainer = document.getElementById('slide-icon-container');
+            iconContainer.innerHTML = `<i data-lucide="${slide.icon}" class="w-8 h-8"></i>`;
+            lucide.createIcons();
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                renderSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                renderSlide();
+            }
+        }
+
+        // Key listeners for presentation
+        window.addEventListener('keydown', (e) => {
+            const presView = document.getElementById('view-presentation');
+            if (!presView.classList.contains('hidden')) {
+                if (e.key === 'ArrowRight') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                }
+            }
+        });
+
+        // Quadrant details modal dataset with educational contexts
+        const quadrantDetails = {
+            q1: {
+                title: "Kritieke Selectie & Beoordeling",
+                tag: "Kwadrant I &bull; Ongeautoriseerd Hoog-Risico",
+                colorClass: "text-danger-500",
+                borderColor: "border-danger-500/20 bg-danger-500/5 text-danger-400",
+                desc: "Dit betreft processen die de academische loopbaan of de toelating tot een onderwijsinstelling direct en formeel bepalen, maar wild of zonder compliantie-controle zijn ingezet.",
+                bullets: [
+                    "<strong>Wildgroei Proctoring:</strong> Gebruik van surveillance-software tijdens toetsen zonder dat studenten de bias of profiling kunnen aanvechten (inbreuk EU AI Act).",
+                    "<strong>Wilde Toelatingsalgoritmes:</strong> AI-gedreven matching of pre-selectie voor selectieve opleidingen die verborgen vooroordelen (bias) versterkt op basis van herkomst of postcodes.",
+                    "<strong>Cijfercalculators met automatische weging:</strong> AI-cijferbepalingen die niet transparant zijn voor leerlingen en ouders (de beruchte black box)."
+                ],
+                actionTitle: "Direct Saneren & AVG-screening uitvoeren",
+                actionDesc: "Breng alle gebruikte selectieve/summatieve tools in kaart. Onderwerp ze aan een risico-inventarisatie via een AI Advisory Board en verplaats ze naar Kwadrant II."
+            },
+            q2: {
+                title: "Gereguleerde Summatieve AI",
+                tag: "Kwadrant II &bull; Gereguleerd & Auditeerbaar",
+                colorClass: "text-sky-500",
+                borderColor: "border-brand-500/20 bg-brand-500/5 text-brand-400",
+                desc: "Dit kwadrant omvat summatieve examinering en formele toelatingssystemen die volledig voldoen aan de wetgeving (AI Act en AVG/GDPR), inclusief actieve menselijke controle.",
+                bullets: [
+                    "<strong>Betekenisvol Menselijk Toezicht:</strong> Docenten/examinatoren die getraind zijn om AI-bias direct te herkennen en de resultaten handmatig kunnen herroepen.",
+                    "<strong>Transparante Algoritmes:</strong> Systemen die aan leerlingen, ouders en de examencommissie helder kunnen uitleggen (XAI) hoe een pre-selectie-advies tot stand is gekomen.",
+                    "<strong>AI Act Conform Inkoopbeleid:</strong> Selecteren van leveranciers die aantoonbaar inclusieve datasets hebben gebruikt om hun modellen te trainen."
+                ],
+                actionTitle: "Examencommissie-kader implementeren",
+                actionDesc: "Stel duidelijke regels en logs op voor AI-ondersteunde besluitvorming. Evalueer de systemen periodiek op privacy- en ethische risico's."
+            },
+            q3: {
+                title: "Didactische Desintegratie",
+                tag: "Kwadrant III &bull; Het 'Antwoordknop' Syndroom",
+                colorClass: "text-amber-500",
+                borderColor: "border-warning-500/20 bg-warning-500/5 text-warning-400",
+                desc: "Hier bevindt zich het ongereguleerde, formatieve gebruik. Medewerkers en leerlingen die tools als ChatGPT consumeren zonder didactisch besef, wat leidt tot didactische 'ellende' en privacyinbreuken.",
+                bullets: [
+                    "<strong>Cognitieve Out-sourcing:</strong> Studenten die leervragen volledig uitbesteden. De taak is af, maar er is geen actieve kennisverwerking of leerrendement (Wilfred Rubens).",
+                    "<strong>Data Provenance & Hallucinatie-blinde inzet:</strong> Klakkeloos overnemen van foute samenvattingen zonder kritische controle van bronnen.",
+                    "<strong>GDPR Privacy-lekken:</strong> Docenten die gevoelige leerlingendossiers of cijferlijsten invoeren in onbeveiligde consumenten-LLM's."
+                ],
+                actionTitle: "Docent- en studenttraining opzetten",
+                actionDesc: "Verbied AI niet (kansenongelijkheid!), maar bied een officieel goedgekeurde enterprise-omgeving en voer trainingen in AI-geletterdheid uit."
+            },
+            q4: {
+                title: "AI-Empowered & Inclusief Leren",
+                tag: "Kwadrant IV &bull; De Geautoriseerde Leeromgeving",
+                colorClass: "text-emerald-500",
+                borderColor: "border-success-500/20 bg-success-500/5 text-success-400",
+                desc: "Dit is de ideale eindsituatie voor formatief AI-gebruik. Didactisch doordacht, ethisch geborgd en maximaal helpend voor de cognitieve ontwikkeling van de student.",
+                bullets: [
+                    "<strong>AI als actieve Sparringpartner:</strong> Opdrachten die studenten dwingen hun prompt-keuzes te onderbouwen en de gegenereerde argumenten kritisch te evalueren.",
+                    "<strong>Inclusiviteit & Special Education Needs:</strong> Formatieve tools die specifiek zijn ontworpen om dyslexie (Dytective, KOBI) of dysgrafie formatief te ondersteunen.",
+                    "<strong>Borging via Edusource & OER:</strong> Delen van didactische open leermaterialen en getoetste prompts via gemeenschappelijke onderwijsplatforms."
+                ],
+                actionTitle: "Opschalen via Leerlijnen",
+                actionDesc: "Richt u op de factor 'Professionalisering' en zorg dat AI-geletterdheid een integraal onderdeel wordt van het BKO-traject (Basiskwalificatie Onderwijs)."
+            }
+        };
+
+        function showQuadrantDetail(quadId) {
+            const data = quadrantDetails[quadId];
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-tag').innerHTML = data.tag;
+            document.getElementById('modal-tag').className = `text-xs font-bold uppercase tracking-widest ${data.colorClass}`;
+            document.getElementById('modal-desc').innerText = data.desc;
+            
+            const bulletsContainer = document.getElementById('modal-bullets');
+            bulletsContainer.innerHTML = '';
+            data.bullets.forEach(bullet => {
+                const li = document.createElement('div');
+                li.className = "flex items-start gap-2.5 text-xs text-slate-300";
+                li.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-slate-500 shrink-0 mt-0.5"></i> <span>${bullet}</span>`;
+                bulletsContainer.appendChild(li);
+            });
+
+            const actionBox = document.getElementById('modal-action-box');
+            actionBox.className = `p-4 rounded-xl border ${data.borderColor}`;
+            document.getElementById('modal-action-title').innerText = `Aanbevolen actie: ${data.actionTitle}`;
+            document.getElementById('modal-action-desc').innerText = data.actionDesc;
+
+            document.getElementById('quadrant-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('quadrant-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
