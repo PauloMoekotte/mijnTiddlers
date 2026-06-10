@@ -373,21 +373,21 @@
             
             <!-- Quick metrics / dashboard callouts -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-8 sm:mt-10">
-                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition-all hover:border-slate-700">
+                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition">
                     <div class="p-3 bg-red-500/15 text-red-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="alert-triangle" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                     <div class="min-w-0">
                         <h4 class="text-xs sm:text-sm font-bold text-slate-200">AI-Strategie</h4>
                         <p class="text-xs text-slate-400 mt-1.5">Kies voor AI-empowered of AI-supported route.</p>
                     </div>
                 </div>
-                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition-all hover:border-slate-700">
+                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition">
                     <div class="p-3 bg-amber-500/15 text-amber-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="brain" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                     <div class="min-w-0">
                         <h4 class="text-xs sm:text-sm font-bold text-slate-200">Docent Empowerment</h4>
                         <p class="text-xs text-slate-400 mt-1.5">Betrek docenten actief in AI-transitie.</p>
                     </div>
                 </div>
-                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition-all hover:border-slate-700">
+                <div class="bg-slate-900/40 backdrop-blur border border-slate-700/50 p-5 sm:p-6 rounded-xl sm:rounded-2xl flex flex-col sm:flex-row items-start gap-4 hover:bg-slate-900/60 transition">
                     <div class="p-3 bg-green-500/15 text-green-400 rounded-lg sm:rounded-xl shrink-0"><i data-lucide="layers" class="w-5 h-5 sm:w-6 sm:h-6"></i></div>
                     <div class="min-w-0">
                         <h4 class="text-xs sm:text-sm font-bold text-slate-200">Curriculuminbedding</h4>
@@ -416,7 +416,7 @@
             </div>
 
             <!-- Slide Canvas -->
-            <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-700/50 rounded-2xl sm:rounded-3xl p-6 sm:p-10 min-h-[400px] sm:min-h-[500px] flex flex-col justify-between relative overflow-hidden shadow-2xl">
+            <div class="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-700/50 rounded-2xl sm:rounded-3xl p-6 sm:p-10 min-h-[400px] sm:min-h-[500px] flex flex-col justify-between relative overflow-hidden">
                 <div class="absolute right-0 bottom-0 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl pointer-events-none"></div>
                 
                 <!-- Slide Header -->
@@ -560,7 +560,7 @@
             
             <!-- Modal Footer -->
             <div class="p-5 sm:p-8 border-t border-slate-700/50 flex justify-end bg-slate-900/40">
-                <button onclick="closeModal()" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl transition-all hover:shadow-lg hover:shadow-sky-600/30">
+                <button onclick="closeModal()" class="px-4 sm:px-6 py-2 sm:py-2.5 bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl transition-all hover:shadow-lg">
                     Sluiten
                 </button>
             </div>
@@ -581,6 +581,13 @@
 
     <!-- JS Logic -->
     <script>
+        // Disable WebSocket errors from dev tools
+        window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('WebSocket')) {
+                return true;
+            }
+        });
+
         lucide.createIcons();
 
         function switchView(viewId) {
@@ -612,8 +619,8 @@
                 icon: "graduation-cap",
                 content: `<p class="mb-4">Expliciet onderscheid maken:</p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                        <div class="p-2 sm:p-3 bg-slate-900 border border-slate-800 rounded-lg"><h4 class="font-bold text-sky-400 text-xs">Onderwijs over AI</h4><p class="text-xs text-slate-400 mt-1">AI-geletterdheid als onderdeel van het curriculum.</p></div>
-                        <div class="p-2 sm:p-3 bg-slate-900 border border-slate-800 rounded-lg"><h4 class="font-bold text-slate-400 text-xs">AI als hulpmiddel</h4><p class="text-xs text-slate-500 mt-1">Directe toepassing in het onderwijs.</p></div>
+                        <div class="p-2 sm:p-3 bg-slate-900 border border-slate-800 rounded-lg"><h4 class="font-bold text-sky-400 text-xs">Onderwijs over AI</h4><p class="text-xs text-slate-400 mt-1">Kritisch inzicht</p></div>
+                        <div class="p-2 sm:p-3 bg-slate-900 border border-slate-800 rounded-lg"><h4 class="font-bold text-slate-400 text-xs">AI als hulpmiddel</h4><p class="text-xs text-slate-500 mt-1">Skill development</p></div>
                     </div>`
             },
             {
