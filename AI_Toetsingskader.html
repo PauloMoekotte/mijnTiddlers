@@ -1,1373 +1,942 @@
-import React, { useState, useEffect } from 'react';
-
-// --- INLINE SVG ICONS (LUCIDE REPLICAS) ---
-const IconShield = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-  </svg>
-);
-
-const IconAlert = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-  </svg>
-);
-
-const IconCheck = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-  </svg>
-);
-
-const IconFileText = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-  </svg>
-);
-
-const IconCompass = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-  </svg>
-);
-
-const IconBookOpen = () => (
-  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-  </svg>
-);
-
-const IconChevronRight = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-  </svg>
-);
-
-const IconCopy = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-  </svg>
-);
-
-const IconInfo = () => (
-  <svg className="w-5 h-5 inline-block mr-1 text-sky-600 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-);
-
-export default function App() {
-  // --- STATE ---
-  const [activeTab, setActiveTab] = useState('wizard'); // 'wizard', 'fria', 'cases', 'sources'
-  const [role, setRole] = useState(null); // 'school', 'leverancier'
-  const [currentStep, setCurrentStep] = useState(1);
-  const [toastMessage, setToastMessage] = useState(null);
-
-  // Wizard Questions state
-  const [wizardAnswers, setWizardAnswers] = useState({
-    // Step 1: AI Definitie
-    isMachine: null,
-    hasAutonomy: null,
-    hasInference: null,
-    generatesOutput: null,
-    affectsEnvironment: null,
-    // Step 2: Verboden praktijken
-    emotionRecognition: null,
-    biometricCategorization: null,
-    socialScoring: null,
-    subliminalManipulation: null,
-    // Step 3: Hoog Risico Categorieën
-    admissionSystem: null,
-    evaluationSystem: null,
-    levelAdvancement: null,
-    proctoringSystem: null,
-    isAdministrativeException: false,
-    // Step 5: Ethiek & Pedagogiek
-    humanOversight: null,
-    biasTested: null,
-    alignsValues: null,
-    transparencyProvided: null
-  });
-
-  // FRIA Form State
-  const [friaForm, setFriaForm] = useState({
-    appName: '',
-    stakeholders: ['Leerlingen', 'Docenten'],
-    identifiedRisks: ['Privacy van leerlinggegevens', 'Inbreuk op autonomie van de docent'],
-    oversightMethod: 'Human-in-the-loop (HITL): Docent keurt alle AI-concepten handmatig goed voordat ze gedeeld worden met leerlingen.',
-    mitigationMeasures: '1. Periodieke controle op bias\n2. Duidelijke communicatie naar ouders over AI-gebruik\n3. Opt-out mogelijkheid voor specifieke leerlingen.',
-    schoolResponsible: 'Stichting Funderend Onderwijs - IT Bestuur'
-  });
-
-  // Compliance Checklist state
-  const [complianceChecks, setComplianceChecks] = useState({
-    riskSystem: false,
-    qualityData: false,
-    technicalDoc: false,
-    loggingEnabled: false,
-    ceMarking: false,
-    userInstructions: false,
-    friaDone: false,
-    notifiedParents: false,
-    euDbRegistration: false
-  });
-
-  // Trigger temporary notification toast
-  const showToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => {
-      setToastMessage(null);
-    }, 3000);
-  };
-
-  // Safe clipboard copy helper as per guidelines
-  const copyToClipboard = (text) => {
-    const textField = document.createElement('textarea');
-    textField.innerText = text;
-    document.body.appendChild(textField);
-    textField.select();
-    try {
-      document.execCommand('copy');
-      showToast("Gekopieerd naar klembord!");
-    } catch (err) {
-      showToast("Kopiëren mislukt. Selecteer de tekst handmatig.");
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactief Toetsingskader AI+ - SIVON, Kennisnet &amp; AI Verify</title>
+  <!-- Tailwind CSS voor een moderne en responsieve vormgeving -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons voor heldere processtappen -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sivonBlue: '#0d3b66',
+            kennisnetTeal: '#00a896',
+            accentAmber: '#f4a261',
+            dangerRed: '#e76f51',
+            bgLight: '#f8f9fa',
+          }
+        }
+      }
     }
-    textField.remove();
-  };
-
-  // --- DERIVED VALUES ---
-  
-  // Step 1 Outcome: Is it an AI system?
-  const isAISystem = 
-    wizardAnswers.isMachine === 'ja' && 
-    wizardAnswers.hasAutonomy === 'ja' && 
-    wizardAnswers.hasInference === 'ja' && 
-    wizardAnswers.generatesOutput === 'ja';
-
-  // Step 2 Outcome: Uses forbidden practices?
-  const isForbidden = 
-    wizardAnswers.emotionRecognition === 'ja' || 
-    wizardAnswers.biometricCategorization === 'ja' || 
-    wizardAnswers.socialScoring === 'ja' || 
-    wizardAnswers.subliminalManipulation === 'ja';
-
-  // Step 3 Outcome: Is it high risk?
-  // It's high risk if it falls in one of the educational categories and IS NOT an administrative exception
-  const fitsHighRiskCategory = 
-    wizardAnswers.admissionSystem === 'ja' || 
-    wizardAnswers.evaluationSystem === 'ja' || 
-    wizardAnswers.levelAdvancement === 'ja' || 
-    wizardAnswers.proctoringSystem === 'ja';
-  
-  const isHighRisk = fitsHighRiskCategory && !wizardAnswers.isAdministrativeException;
-
-  // Pre-load demo cases
-  const applyCase = (caseType) => {
-    if (caseType === 'homework_chatbot') {
-      setWizardAnswers({
-        isMachine: 'ja',
-        hasAutonomy: 'ja',
-        hasInference: 'ja',
-        generatesOutput: 'ja',
-        affectsEnvironment: 'ja',
-        emotionRecognition: 'nee',
-        biometricCategorization: 'nee',
-        socialScoring: 'nee',
-        subliminalManipulation: 'nee',
-        admissionSystem: 'nee',
-        evaluationSystem: 'nee',
-        levelAdvancement: 'nee',
-        proctoringSystem: 'nee',
-        isAdministrativeException: false,
-        humanOversight: 'ja',
-        biasTested: 'nee',
-        alignsValues: 'ja',
-        transparencyProvided: 'ja'
-      });
-      setRole('school');
-      setCurrentStep(3); // direct naar resultaatstap sturen of stap 3 laten inspecteren
-      showToast("Casus 'Huiswerk Chatbot' geladen!");
-    } else if (caseType === 'grading_system') {
-      setWizardAnswers({
-        isMachine: 'ja',
-        hasAutonomy: 'ja',
-        hasInference: 'ja',
-        generatesOutput: 'ja',
-        affectsEnvironment: 'ja',
-        emotionRecognition: 'nee',
-        biometricCategorization: 'nee',
-        socialScoring: 'nee',
-        subliminalManipulation: 'nee',
-        admissionSystem: 'nee',
-        evaluationSystem: 'ja', // High risk category
-        levelAdvancement: 'ja', // High risk category
-        proctoringSystem: 'nee',
-        isAdministrativeException: false,
-        humanOversight: 'ja',
-        biasTested: 'ja',
-        alignsValues: 'ja',
-        transparencyProvided: 'ja'
-      });
-      setRole('leverancier');
-      setCurrentStep(4);
-      showToast("Casus 'Geautomatiseerd Nakijken' geladen!");
-    } else if (caseType === 'proctoring_biometrics') {
-      setWizardAnswers({
-        isMachine: 'ja',
-        hasAutonomy: 'ja',
-        hasInference: 'ja',
-        generatesOutput: 'ja',
-        affectsEnvironment: 'ja',
-        emotionRecognition: 'ja', // Forbidden!
-        biometricCategorization: 'nee',
-        socialScoring: 'nee',
-        subliminalManipulation: 'nee',
-        admissionSystem: 'nee',
-        evaluationSystem: 'nee',
-        levelAdvancement: 'nee',
-        proctoringSystem: 'ja',
-        isAdministrativeException: false,
-        humanOversight: 'nee',
-        biasTested: 'nee',
-        alignsValues: 'nee',
-        transparencyProvided: 'nee'
-      });
-      setRole('school');
-      setCurrentStep(2);
-      showToast("Casus 'Proctoring met Emotieherkenning' geladen!");
+  </script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-  };
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printArea, #printArea * {
+        visibility: visible;
+      }
+      #printArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
 
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col">
-      
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div className="fixed top-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2 animate-fade-in border border-slate-700">
-          <span className="text-emerald-400">✔</span>
-          <span className="text-sm font-medium">{toastMessage}</span>
+  <!-- Header met context van de fusie van frameworks -->
+  <header class="bg-gradient-to-r from-sivonBlue to-indigo-900 text-white shadow-md no-print">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 bg-white/10 rounded-xl">
+          <i class="fa-solid fa-scale-balanced text-3xl text-kennisnetTeal"></i>
         </div>
-      )}
-
-      {/* Header */}
-      <header className="bg-[#2D5A87] text-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="flex items-center space-x-3">
-            <div className="bg-white/10 p-2 rounded-xl border border-white/20">
-              <IconShield />
-            </div>
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold tracking-wide">AI Toetsingskader</h1>
-              <p className="text-xs text-slate-200">Geïntegreerd Gidsinstrument voor Funderend Onderwijs (SIVON, AP, Kennisnet, IMDA)</p>
-            </div>
-          </div>
-          
-          <nav className="flex space-x-1 bg-white/10 p-1 rounded-xl border border-white/10 text-sm">
-            <button 
-              onClick={() => setActiveTab('wizard')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'wizard' ? 'bg-white text-[#2D5A87] shadow-sm' : 'hover:bg-white/5 text-slate-100'}`}
-            >
-              🔍 Toetsing Wizard
-            </button>
-            <button 
-              onClick={() => setActiveTab('fria')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'fria' ? 'bg-white text-[#2D5A87] shadow-sm' : 'hover:bg-white/5 text-slate-100'}`}
-            >
-              📋 FRIA-Generator
-            </button>
-            <button 
-              onClick={() => setActiveTab('cases')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'cases' ? 'bg-white text-[#2D5A87] shadow-sm' : 'hover:bg-white/5 text-slate-100'}`}
-            >
-              💡 Test Cases
-            </button>
-            <button 
-              onClick={() => setActiveTab('sources')}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'sources' ? 'bg-white text-[#2D5A87] shadow-sm' : 'hover:bg-white/5 text-slate-100'}`}
-            >
-              📚 Bronnen &amp; Info
-            </button>
-          </nav>
+        <div>
+          <h1 class="text-2xl font-extrabold tracking-tight">Toetsingskader AI+</h1>
+          <p class="text-xs text-blue-200">Gefuseerd Model: SIVON (EU AI Act) &bull; Kennisnet (Didactiek) &bull; AI Verify (Technische Audit)</p>
         </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
-        
-        {/* TAB 1: TOETSING WIZARD */}
-        {activeTab === 'wizard' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            {/* Left Column: Input Panel */}
-            <div className="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              
-              {/* Role Selector Header */}
-              <div className="bg-slate-50 border-b border-slate-200 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <span className="text-sm font-semibold text-slate-600">Selecteer uw rol voor gerichte feedback:</span>
-                <div className="flex space-x-2">
-                  <button 
-                    onClick={() => { setRole('school'); showToast("Rol ingesteld: School"); }}
-                    className={`px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all ${role === 'school' ? 'bg-emerald-50 border-emerald-500 text-emerald-700 shadow-sm' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'}`}
-                  >
-                    🏫 Ik ben een School / Bestuur
-                  </button>
-                  <button 
-                    onClick={() => { setRole('leverancier'); showToast("Rol ingesteld: Leverancier"); }}
-                    className={`px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all ${role === 'leverancier' ? 'bg-sky-50 border-sky-500 text-sky-700 shadow-sm' : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50'}`}
-                  >
-                    🚀 Ik ben een Leverancier / Ontwikkelaar
-                  </button>
-                </div>
-              </div>
-
-              {/* Step Navigation Bar */}
-              <div className="grid grid-cols-5 border-b border-slate-200 text-center text-xs font-bold bg-slate-50/50">
-                {[1, 2, 3, 4, 5].map((step) => (
-                  <button
-                    key={step}
-                    onClick={() => setCurrentStep(step)}
-                    className={`py-3 transition-colors border-b-2 ${currentStep === step ? 'border-[#2D5A87] text-[#2D5A87]' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
-                  >
-                    Stap {step}
-                    <span className="hidden sm:inline">: {
-                      step === 1 ? 'Definitie' :
-                      step === 2 ? 'Verboden AI' :
-                      step === 3 ? 'Hoog Risico' :
-                      step === 4 ? 'Maatregelen' : 'Ethiek'
-                    }</span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Wizard Content container */}
-              <div className="p-6 min-h-[400px]">
-                
-                {/* STAP 1: AI DEFINITIE */}
-                {currentStep === 1 && (
-                  <div className="space-y-6">
-                    <div className="border-l-4 border-sky-500 bg-sky-50/50 p-4 rounded-r-xl">
-                      <h3 className="font-bold text-sky-900 flex items-center text-base">
-                        <IconInfo /> Stap 1: Valt de software onder de officiële AI-definitie?
-                      </h3>
-                      <p className="text-sm text-sky-800 mt-1">
-                        Sinds de EU AI-Verordening (AI Act) is er een strakke juridische definitie van een AI-systeem. Niet elke rekentool of Excel-macro is een AI-systeem.
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      {/* Q1.1 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          1. Is het een machinegebaseerd systeem?
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Draait de functionaliteit op digitale computerinfrastructuur en verwerkt het invoergegevens?
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, isMachine: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.isMachine === 'ja' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, isMachine: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.isMachine === 'nee' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Q1.2 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          2. Werkt het systeem met een bepaalde mate van autonomie?
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Kan het systeem acties of berekeningen zelfstandig uitvoeren nadat het is ingesteld, zonder directe menselijke tussenkomst bij elke afzonderlijke stap?
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, hasAutonomy: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.hasAutonomy === 'ja' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, hasAutonomy: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.hasAutonomy === 'nee' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Q1.3 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          3. Voert het systeem inferentie uit? (Modellering / Afleiding)
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Leidt het systeem uit data nieuwe patronen, voorspellingen of inzichten af? 
-                          <span className="italic block mt-1 text-[#2D5A87] font-semibold">
-                            Voorbeeld: Een rekenmachine die cijfers optelt doet dit NIET (vaste regels), maar een adaptief leersysteem dat leerdoelen adviseert doet dit WEL.
-                          </span>
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, hasInference: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.hasInference === 'ja' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, hasInference: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.hasInference === 'nee' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Q1.4 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          4. Genereert het systeem output die de omgeving beïnvloedt?
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Denk aan voorspellingen, aanbevelingen, beslissingen of nieuw gegenereerde content (tekst, afbeeldingen, opdrachten).
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, generatesOutput: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.generatesOutput === 'ja' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, generatesOutput: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.generatesOutput === 'nee' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-200">
-                      <span className="text-xs text-slate-400">Beantwoord alle vragen om de live status rechts te updaten.</span>
-                      <button 
-                        onClick={() => setCurrentStep(2)}
-                        className="bg-[#2D5A87] hover:bg-[#204366] text-white px-5 py-2 rounded-xl text-sm font-semibold flex items-center space-x-1"
-                      >
-                        <span>Volgende Stap</span>
-                        <IconChevronRight />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* STAP 2: VERBODEN PRAKTIJKEN */}
-                {currentStep === 2 && (
-                  <div className="space-y-6">
-                    <div className="border-l-4 border-rose-500 bg-rose-50/50 p-4 rounded-r-xl">
-                      <h3 className="font-bold text-rose-950 flex items-center text-base">
-                        <IconAlert /> Stap 2: Bevat het systeem verboden AI-praktijken?
-                      </h3>
-                      <p className="text-sm text-rose-900 mt-1">
-                        De AI Act verbiedt bepaalde toepassingen expliciet, met name in kwetsbare settings zoals scholen en werkvloeren. Als u een van deze vragen met 'Ja' beantwoordt, mag u dit systeem absoluut niet inzetten.
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      {/* Q2.1 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          1. Wordt er gebruikgemaakt van emotieherkenning?
-                        </label>
-                        <p className="text-xs text-slate-500 mb-2">
-                          Bijvoorbeeld: Software die via camera of spraakanalyse de emotionele staat, stress of alertheid van leerlingen registreert tijdens het leren of een toets.
-                        </p>
-                        <span className="inline-block text-xs font-semibold bg-rose-100 text-rose-800 px-2 py-0.5 rounded mb-3">
-                          Uitzondering: Alleen toegestaan voor strikt medische of veiligheidsredenen (zelden van toepassing in regulier onderwijs).
-                        </span>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, emotionRecognition: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.emotionRecognition === 'ja' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja (Verboden)
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, emotionRecognition: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.emotionRecognition === 'nee' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Q2.2 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          2. Wordt biometrische categorisering toegepast?
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Systemen die leerlingen automatisch indelen in klassen of groepen gebaseerd op gevoelige biometrische kenmerken (zoals gender, ras, etniciteit, religie, of politieke overtuiging).
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, biometricCategorization: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.biometricCategorization === 'ja' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja (Verboden)
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, biometricCategorization: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.biometricCategorization === 'nee' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Q2.3 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          3. Doet het systeem aan Sociale Scoring?
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Evalueert of classificeert het gedrag of de persoonlijkheid van leerlingen over een periode, wat leidt tot nadelige behandeling of uitsluiting buiten de context waarin de data is verzameld?
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, socialScoring: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.socialScoring === 'ja' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja (Verboden)
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, socialScoring: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.socialScoring === 'nee' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-200">
-                      <button 
-                        onClick={() => setCurrentStep(1)}
-                        className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2 rounded-xl text-sm font-semibold"
-                      >
-                        Vorige Stap
-                      </button>
-                      <button 
-                        onClick={() => setCurrentStep(3)}
-                        className="bg-[#2D5A87] hover:bg-[#204366] text-white px-5 py-2 rounded-xl text-sm font-semibold flex items-center space-x-1"
-                      >
-                        <span>Volgende Stap</span>
-                        <IconChevronRight />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* STAP 3: HOOG RISICO BEPALING */}
-                {currentStep === 3 && (
-                  <div className="space-y-6">
-                    <div className="border-l-4 border-amber-500 bg-amber-50/50 p-4 rounded-r-xl">
-                      <h3 className="font-bold text-amber-950 flex items-center text-base">
-                        <IconAlert /> Stap 3: Is er sprake van een Hoog-Risico AI-systeem?
-                      </h3>
-                      <p className="text-sm text-amber-900 mt-1">
-                        Systemen in het onderwijs vallen al snel onder 'hoog risico' omdat ze de levensloop en toekomst van leerlingen sterk kunnen beïnvloeden. Geef aan welke van de onderstaande taken dit systeem uitvoert.
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      {/* Q3 Grid */}
-                      <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
-                        <h4 className="font-bold text-slate-700 text-sm">Selecteer alle toepassingen die van kracht zijn:</h4>
-                        
-                        <div className="space-y-3">
-                          {/* Item 1 */}
-                          <label className="flex items-start p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
-                            <input 
-                              type="checkbox"
-                              className="mt-1 mr-3 h-4 w-4 text-amber-600 border-slate-300 rounded focus:ring-amber-500"
-                              checked={wizardAnswers.admissionSystem === 'ja'}
-                              onChange={(e) => setWizardAnswers({...wizardAnswers, admissionSystem: e.target.checked ? 'ja' : 'nee'})}
-                            />
-                            <div>
-                              <span className="block text-sm font-bold text-slate-700">Toelating of plaatsing (Selectie)</span>
-                              <span className="block text-xs text-slate-500">Systemen gebruikt om de toelating of toewijzing van leerlingen tot onderwijs- of opleidingsinstellingen te bepalen.</span>
-                            </div>
-                          </label>
-
-                          {/* Item 2 */}
-                          <label className="flex items-start p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
-                            <input 
-                              type="checkbox"
-                              className="mt-1 mr-3 h-4 w-4 text-amber-600 border-slate-300 rounded focus:ring-amber-500"
-                              checked={wizardAnswers.evaluationSystem === 'ja'}
-                              onChange={(e) => setWizardAnswers({...wizardAnswers, evaluationSystem: e.target.checked ? 'ja' : 'nee'})}
-                            />
-                            <div>
-                              <span className="block text-sm font-bold text-slate-700">Evaluatie van leerresultaten</span>
-                              <span className="block text-xs text-slate-500">Gebruikt voor het beoordelen of nakijken van examens, toetsen, opdrachten, of om het gedrag of de prestaties van leerlingen te evalueren.</span>
-                            </div>
-                          </label>
-
-                          {/* Item 3 */}
-                          <label className="flex items-start p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
-                            <input 
-                              type="checkbox"
-                              className="mt-1 mr-3 h-4 w-4 text-amber-600 border-slate-300 rounded focus:ring-amber-500"
-                              checked={wizardAnswers.levelAdvancement === 'ja'}
-                              onChange={(e) => setWizardAnswers({...wizardAnswers, levelAdvancement: e.target.checked ? 'ja' : 'nee'})}
-                            />
-                            <div>
-                              <span className="block text-sm font-bold text-slate-700">Bepalen van onderwijsniveau &amp; Doorstroom</span>
-                              <span className="block text-xs text-slate-500">Gebruikt om beslissingen te nemen over het onderwijsniveau dat een persoon mag volgen, of de doorstroom (bijv. schooladvies basisschool).</span>
-                            </div>
-                          </label>
-
-                          {/* Item 4 */}
-                          <label className="flex items-start p-3 bg-white rounded-lg border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
-                            <input 
-                              type="checkbox"
-                              className="mt-1 mr-3 h-4 w-4 text-amber-600 border-slate-300 rounded focus:ring-amber-500"
-                              checked={wizardAnswers.proctoringSystem === 'ja'}
-                              onChange={(e) => setWizardAnswers({...wizardAnswers, proctoringSystem: e.target.checked ? 'ja' : 'nee'})}
-                            />
-                            <div>
-                              <span className="block text-sm font-bold text-slate-700">Toezicht en monitoring (Proctoring)</span>
-                              <span className="block text-xs text-slate-500">Gebruikt om toezicht te houden tijdens examens of fraude op te sporen (bijvoorbeeld webcam-proctoring).</span>
-                            </div>
-                          </label>
-                        </div>
-                      </div>
-
-                      {/* Exception Clause */}
-                      <div className="p-4 bg-sky-50 rounded-xl border border-sky-100">
-                        <label className="flex items-start cursor-pointer">
-                          <input 
-                            type="checkbox"
-                            className="mt-1 mr-3 h-4 w-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500"
-                            checked={wizardAnswers.isAdministrativeException}
-                            onChange={(e) => setWizardAnswers({...wizardAnswers, isAdministrativeException: e.target.checked})}
-                          />
-                          <div>
-                            <span className="block text-sm font-bold text-sky-950">Is dit een louter administratieve uitzondering?</span>
-                            <span className="block text-xs text-sky-800 mt-0.5">
-                              De AI Act kent een uitzondering als het systeem uitsluitend een puur administratieve of ondersteunende taak heeft die de uiteindelijke beoordeling of menselijke beslissing niet wezenlijk beïnvloedt (bijv. het indelen van klassen op basis van reistijd, of louter alfabetisch sorteren).
-                            </span>
-                          </div>
-                        </label>
-                      </div>
-
-                    </div>
-
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-200">
-                      <button 
-                        onClick={() => setCurrentStep(2)}
-                        className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2 rounded-xl text-sm font-semibold"
-                      >
-                        Vorige Stap
-                      </button>
-                      <button 
-                        onClick={() => setCurrentStep(4)}
-                        className="bg-[#2D5A87] hover:bg-[#204366] text-white px-5 py-2 rounded-xl text-sm font-semibold flex items-center space-x-1"
-                      >
-                        <span>Volgende Stap</span>
-                        <IconChevronRight />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* STAP 4: MAATREGELEN EN COMPLIANCE */}
-                {currentStep === 4 && (
-                  <div className="space-y-6">
-                    <div className="border-l-4 border-emerald-500 bg-emerald-50/50 p-4 rounded-r-xl">
-                      <h3 className="font-bold text-emerald-950 flex items-center text-base">
-                        <IconCheck /> Stap 4: Welke compliance maatregelen moet u treffen?
-                      </h3>
-                      <p className="text-sm text-emerald-900 mt-1">
-                        Hieronder vindt u de wettelijke verplichtingen op basis van de ingevoerde status. Vink aan welke acties u al heeft ondernomen om uw compliance bij te houden.
-                      </p>
-                    </div>
-
-                    {isHighRisk ? (
-                      <div className="space-y-6">
-                        <div className="bg-amber-100 text-amber-900 px-4 py-3 rounded-xl text-sm font-semibold flex items-center space-x-2">
-                          <span className="text-lg">⚠</span>
-                          <span>Dit systeem is gemarkeerd als <strong>Hoog Risico</strong>. Er gelden strikte wettelijke verplichtingen!</span>
-                        </div>
-
-                        {/* Suppliers Checklist */}
-                        {(role === 'leverancier' || !role) && (
-                          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                            <h4 className="font-bold text-[#2D5A87] text-sm flex items-center">
-                              <span className="mr-2">🚀</span> Verplichtingen voor de Leverancier (Aanbieder)
-                            </h4>
-                            <p className="text-xs text-slate-500 mb-2">Conform art. 9 t/m 15 van de AI-Verordening:</p>
-                            
-                            <div className="space-y-2">
-                              <label className="flex items-center space-x-3 p-2 bg-white rounded border border-slate-100 hover:bg-slate-50 cursor-pointer">
-                                <input 
-                                  type="checkbox"
-                                  checked={complianceChecks.riskSystem}
-                                  onChange={(e) => setComplianceChecks({...complianceChecks, riskSystem: e.target.checked})}
-                                  className="h-4 w-4 text-emerald-600 rounded focus:ring-emerald-500"
-                                />
-                                <span className="text-xs text-slate-700 font-medium">Systematisch Risicobeheersysteem ingericht (art. 9)</span>
-                              </label>
-
-                              <label className="flex items-center space-x-3 p-2 bg-white rounded border border-slate-100 hover:bg-slate-50 cursor-pointer">
-                                <input 
-                                  type="checkbox"
-                                  checked={complianceChecks.qualityData}
-                                  onChange={(e) => setComplianceChecks({...complianceChecks, qualityData: e.target.checked})}
-                                  className="h-4 w-4 text-emerald-600 rounded focus:ring-emerald-500"
-                                />
-                                <span className="text-xs text-slate-700 font-medium">Hoge kwaliteit trainingsdata &amp; bias-testing (art. 10)</span>
-                              </label>
-
-                              <label className="flex items-center space-x-3 p-2 bg-white rounded border border-slate-100 hover:bg-slate-50 cursor-pointer">
-                                <input 
-                                  type="checkbox"
-                                  checked={complianceChecks.technicalDoc}
-                                  onChange={(e) => setComplianceChecks({...complianceChecks, technicalDoc: e.target.checked})}
-                                  className="h-4 w-4 text-emerald-600 rounded focus:ring-emerald-500"
-                                />
-                                <span className="text-xs text-slate-700 font-medium">Technische documentatie opgesteld voor toezichthouders (art. 11)</span>
-                              </label>
-
-                              <label className="flex items-center space-x-3 p-2 bg-white rounded border border-slate-100 hover:bg-slate-50 cursor-pointer">
-                                <input 
-                                  type="checkbox"
-                                  checked={complianceChecks.loggingEnabled}
-                                  onChange={(e) => setComplianceChecks({...complianceChecks, loggingEnabled: e.target.checked})}
-                                  className="h-4 w-4 text-emerald-600 rounded focus:ring-emerald-500"
-                                />
-                                <span className="text-xs text-slate-700 font-medium">Automatische logboekregistratie (Traceerbaarheid) (art. 12)</span>
-                              </label>
-
-                              <label className="flex items-center space-x-3 p-2 bg-white rounded border border-slate-100 hover:bg-slate-50 cursor-pointer">
-                                <input 
-                                  type="checkbox"
-                                  checked={complianceChecks.ceMarking}
-                                  onChange={(e) => setComplianceChecks({...complianceChecks, ceMarking: e.target.checked})}
-                                  className="h-4 w-4 text-emerald-600 rounded focus:ring-emerald-500"
-                                />
-                                <span className="text-xs text-slate-700 font-medium">Conformiteitsbeoordeling &amp; CE-markering aangebracht (art. 48)</span>
-                              </label>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* School Checklist */}
-                        {(role === 'school' || !role) && (
-                          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                            <h4 className="font-bold text-[#2D5A87] text-sm flex items-center">
-                              <span className="mr-2">🏫</span> Verplichtingen voor de School (Gebruiker)
-                            </h4>
-                            <p className="text-xs text-slate-500 mb-2">Conform SIVON Toetsingskader &amp; AI Act:</p>
-
-                            <div className="space-y-2">
-                              <label className="flex items-center space-x-3 p-2 bg-white rounded border border-slate-100 hover:bg-slate-50 cursor-pointer">
-                                <input 
-                                  type="checkbox"
-                                  checked={complianceChecks.friaDone}
-                                  onChange={(e) => setComplianceChecks({...complianceChecks, friaDone: e.target.checked})}
-                                  className="h-4 w-4 text-emerald-600 rounded focus:ring-emerald-500"
-                                />
-                                <span className="text-xs text-slate-700 font-medium">FRIA (Fundamental Rights Impact Assessment) uitgevoerd &amp; gedocumenteerd</span>
-                              </label>
-
-                              <label className="flex items-center space-x-3 p-2 bg-white rounded border border-slate-100 hover:bg-slate-50 cursor-pointer">
-                                <input 
-                                  type="checkbox"
-                                  checked={complianceChecks.notifiedParents}
-                                  onChange={(e) => setComplianceChecks({...complianceChecks, notifiedParents: e.target.checked})}
-                                  className="h-4 w-4 text-emerald-600 rounded focus:ring-emerald-500"
-                                />
-                                <span className="text-xs text-slate-700 font-medium">Transparantie: Leerlingen/ouders actief geïnformeerd over AI-inzet (art. 50)</span>
-                              </label>
-
-                              <label className="flex items-center space-x-3 p-2 bg-white rounded border border-slate-100 hover:bg-slate-50 cursor-pointer">
-                                <input 
-                                  type="checkbox"
-                                  checked={complianceChecks.euDbRegistration}
-                                  onChange={(e) => setComplianceChecks({...complianceChecks, euDbRegistration: e.target.checked})}
-                                  className="h-4 w-4 text-emerald-600 rounded focus:ring-emerald-500"
-                                />
-                                <span className="text-xs text-slate-700 font-medium">Geregistreerd in de openbare EU-database voor AI-systemen (art. 49)</span>
-                              </label>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <div className="bg-emerald-100 text-emerald-900 px-4 py-3 rounded-xl text-sm font-semibold">
-                          <span>Dit systeem is <strong>Geen Hoog Risico</strong> (of geen AI-systeem).</span>
-                        </div>
-                        <p className="text-sm text-slate-600">
-                          U heeft geen zware compliance-verplichtingen onder de AI-Verordening. Echter raden SIVON en Kennisnet aan om altijd de ethische en privacyprincipes te respecteren. Ga door naar Stap 5 om de ethische waardenwijzer in te vullen.
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-200">
-                      <button 
-                        onClick={() => setCurrentStep(3)}
-                        className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2 rounded-xl text-sm font-semibold"
-                      >
-                        Vorige Stap
-                      </button>
-                      <button 
-                        onClick={() => setCurrentStep(5)}
-                        className="bg-[#2D5A87] hover:bg-[#204366] text-white px-5 py-2 rounded-xl text-sm font-semibold flex items-center space-x-1"
-                      >
-                        <span>Volgende Stap</span>
-                        <IconChevronRight />
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* STAP 5: ETHIEK EN PEDAGOGIEK */}
-                {currentStep === 5 && (
-                  <div className="space-y-6">
-                    <div className="border-l-4 border-indigo-500 bg-indigo-50/50 p-4 rounded-r-xl">
-                      <h3 className="font-bold text-indigo-950 flex items-center text-base">
-                        <IconCompass /> Stap 5: Ethische en pedagogische afstemming (Kennisnet Waardenwijzer)
-                      </h3>
-                      <p className="text-sm text-indigo-900 mt-1">
-                        Zelfs als een systeem juridisch is toegestaan, moet het passen binnen de menselijke en pedagogische waarden van de school. Beantwoord de onderstaande ethische vragen.
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      {/* Q5.1 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          1. Is er effectief menselijk toezicht ingericht? (Human-in-the-loop)
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Kan een gekwalificeerde docent of administrator de beslissingen van het AI-systeem te allen tijde overrulen of corrigeren? (Bijv. bij automatische beoordelingen).
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, humanOversight: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.humanOversight === 'ja' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja, gegarandeerd
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, humanOversight: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.humanOversight === 'nee' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee / Onzeker
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Q5.2 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          2. Is het AI-systeem getoetst op bias en non-discriminatie?
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Is er bewijs of documentatie van de leverancier dat het model leerlingen met een migratieachtergrond, specifieke leerbehoeften (bijv. dyslexie) of bepaald dialect niet benadeelt?
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, biasTested: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.biasTested === 'ja' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja, getoetst
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, biasTested: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.biasTested === 'nee' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee / Onbekend
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Q5.3 */}
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <label className="block text-sm font-bold text-slate-700 mb-2">
-                          3. Sluit het systeem aan bij de pedagogische visie van de school?
-                        </label>
-                        <p className="text-xs text-slate-500 mb-3">
-                          Draagt de tool bij aan actieve kennisontwikkeling of stimuleert het juist passieve consumptie (zoals het te makkelijk weggeven van toetsantwoorden)?
-                        </p>
-                        <div className="flex space-x-4">
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, alignsValues: 'ja'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.alignsValues === 'ja' ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Ja, sluit aan
-                          </button>
-                          <button
-                            onClick={() => setWizardAnswers({...wizardAnswers, alignsValues: 'nee'})}
-                            className={`px-6 py-2 rounded-lg text-sm font-semibold border transition-all ${wizardAnswers.alignsValues === 'nee' ? 'bg-rose-600 text-white border-rose-600 shadow-sm' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'}`}
-                          >
-                            Nee / Twijfelachtig
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-4 border-t border-slate-200">
-                      <button 
-                        onClick={() => setCurrentStep(4)}
-                        className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2 rounded-xl text-sm font-semibold"
-                      >
-                        Vorige Stap
-                      </button>
-                      <button 
-                        onClick={() => {
-                          showToast("Toetsing succesvol doorlopen!");
-                        }}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center space-x-2 shadow"
-                      >
-                        <span>✓ Voltooid</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-              </div>
-            </div>
-
-            {/* Right Column: Live Status & Rapport Generator */}
-            <div className="lg:col-span-4 space-y-6">
-              
-              {/* Live Status Card */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h3 className="font-bold text-slate-700 mb-4 flex items-center text-sm tracking-wide uppercase">
-                  <span>📊 Live Status &amp; Risicoklasse</span>
-                </h3>
-
-                <div className="space-y-4">
-                  {/* Status 1: Is it AI? */}
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-xs font-semibold text-slate-500">Is AI-systeem:</span>
-                    {wizardAnswers.isMachine === null ? (
-                      <span className="text-xs text-slate-400 font-bold">Onvolledig</span>
-                    ) : isAISystem ? (
-                      <span className="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded">✓ BEVESTIGD</span>
-                    ) : (
-                      <span className="text-xs bg-slate-200 text-slate-700 font-extrabold px-2 py-0.5 rounded">GEEN AI-ACT</span>
-                    )}
-                  </div>
-
-                  {/* Status 2: Forbidden? */}
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-xs font-semibold text-slate-500">Verboden Praktijken:</span>
-                    {wizardAnswers.emotionRecognition === null ? (
-                      <span className="text-xs text-slate-400 font-bold">Onvolledig</span>
-                    ) : isForbidden ? (
-                      <span className="text-xs bg-rose-100 text-rose-800 font-extrabold px-2 py-0.5 rounded">⚠️ CRITISCH (VERBODEN)</span>
-                    ) : (
-                      <span className="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded">✓ GEEN DETECTIE</span>
-                    )}
-                  </div>
-
-                  {/* Status 3: Risk Level */}
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-slate-500">Risiconiveau:</span>
-                      {isForbidden ? (
-                        <span className="text-xs bg-rose-600 text-white font-extrabold px-2 py-0.5 rounded">ONGEAUTOMATISEERD STOP</span>
-                      ) : isHighRisk ? (
-                        <span className="text-xs bg-amber-500 text-white font-extrabold px-2 py-0.5 rounded">HOOG RISICO</span>
-                      ) : (
-                        <span className="text-xs bg-sky-100 text-sky-800 font-extrabold px-2 py-0.5 rounded">LAAG / MINIMAAL</span>
-                      )}
-                    </div>
-                    {isHighRisk && (
-                      <p className="text-[10px] text-amber-700 leading-relaxed italic">
-                        Wettelijk regime van kracht (Conformiteitsbeoordeling, FRIA verplicht).
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Status 4: Ethical Compliance */}
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-xs font-semibold text-slate-500">Menselijk toezicht:</span>
-                    {wizardAnswers.humanOversight === 'ja' ? (
-                      <span className="text-xs bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded">GEREGELD</span>
-                    ) : (
-                      <span className="text-xs bg-amber-100 text-amber-800 font-extrabold px-2 py-0.5 rounded">RISICO OP BIAS</span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Micro Visual representation of AI Act logic flow */}
-                <div className="mt-6 border-t border-slate-100 pt-4">
-                  <span className="text-[11px] font-bold text-slate-400 block mb-2 uppercase">Wettelijke flow (Visualisatie)</span>
-                  <div className="grid grid-cols-3 gap-1 text-center text-[10px] font-bold">
-                    <div className={`p-1.5 rounded ${isAISystem ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500'}`}>Definitie</div>
-                    <div className={`p-1.5 rounded ${isForbidden ? 'bg-rose-600 text-white' : isAISystem ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500'}`}>Verboden Check</div>
-                    <div className={`p-1.5 rounded ${isHighRisk ? 'bg-amber-500 text-white' : isAISystem ? 'bg-sky-500 text-white' : 'bg-slate-200 text-slate-500'}`}>Risico</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Dynamic Action Plan / Report Generator */}
-              <div className="bg-[#2D5A87] text-white p-6 rounded-2xl shadow-sm space-y-4">
-                <div className="flex items-center space-x-2">
-                  <IconFileText />
-                  <h3 className="font-bold text-base">Toetsingsrapport</h3>
-                </div>
-                <p className="text-xs text-slate-200 leading-relaxed">
-                  Genereer direct een gestructureerd compliance rapport op basis van uw huidige invoer. Handig om te delen met schoolbestuurders of toezichthouders.
-                </p>
-
-                <div className="bg-white/10 p-4 rounded-xl border border-white/10 text-xs font-mono max-h-48 overflow-y-auto whitespace-pre-wrap">
-                  {`=== COMPLIANCE REPORT AI ACT ===\n`}
-                  {`Rol: ${role === 'school' ? 'School / Bestuur' : role === 'leverancier' ? 'Leverancier' : 'Niet geselecteerd'}\n`}
-                  {`AI Systeem: ${isAISystem ? 'JA' : 'NEE'}\n`}
-                  {`Risicoklasse: ${isForbidden ? 'VERBODEN' : isHighRisk ? 'HOOG RISICO' : 'LAAG / MINIMAAL'}\n`}
-                  {`Verboden Praktijken: ${isForbidden ? 'JA (Gedetecteerd!)' : 'NEE'}\n`}
-                  {`Menselijk Toezicht: ${wizardAnswers.humanOversight === 'ja' ? 'JA' : 'NEE / RISICO'}\n`}
-                  {`Uitzonderingsclausule: ${wizardAnswers.isAdministrativeException ? 'JA (Administratief)' : 'NEE'}\n`}
-                </div>
-
-                <button
-                  onClick={() => {
-                    const reportText = `
-=== COMPLIANCE REPORT AI ACT ===
-Generatiedatum: ${new Date().toLocaleDateString('nl-NL')}
-Rol: ${role === 'school' ? 'School / Onderwijsbestuur' : role === 'leverancier' ? 'AI Leverancier / Ontwikkelaar' : 'Niet gedefinieerd'}
-
-Toetsing Criteria:
-1. Valt onder AI Act Definitie: ${isAISystem ? 'JA' : 'NEE'}
-2. Bevat Verboden Praktijken: ${isForbidden ? 'JA (Emotieherkenning/Biometrie)' : 'NEE'}
-3. Hoog Risico Categorie: ${isHighRisk ? 'JA (Onderwijs Evaluatie/Toelating/Proctoring)' : 'NEE'}
-   - Administratieve uitzondering: ${wizardAnswers.isAdministrativeException ? 'JA' : 'NEE'}
-
-Ethische & Pedagogische aspecten (Kennisnet Waardenwijzer):
-- Menselijke controle ingeregeld: ${wizardAnswers.humanOversight === 'ja' ? 'JA' : 'NEE'}
-- Getoetst op bias: ${wizardAnswers.biasTested === 'ja' ? 'JA' : 'NEE'}
-- Past binnen onderwijskwaliteit: ${wizardAnswers.alignsValues === 'ja' ? 'JA' : 'NEE'}
-
-Status compliance: ${isForbidden ? 'BANNED - Stop gebruik onmiddellijk' : isHighRisk ? 'VERPLICHT REGIME (FRIA, CE-Marking vereist)' : 'VRIJ - Geen verplichte stappen, volg ethische richtlijnen'}
-                    `;
-                    copyToClipboard(reportText);
-                  }}
-                  className="w-full bg-white text-[#2D5A87] hover:bg-slate-100 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2"
-                >
-                  <IconCopy />
-                  <span>Kopieer Rapport</span>
-                </button>
-              </div>
-
-            </div>
-          </div>
-        )}
-
-        {/* TAB 2: FRIA GENERATOR */}
-        {activeTab === 'fria' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-w-4xl mx-auto space-y-6">
-            <div className="border-b border-slate-200 pb-4">
-              <h2 className="text-xl font-bold text-[#2D5A87] flex items-center">
-                <span className="mr-2">📋</span> Fundamental Rights Impact Assessment (FRIA) Generator
-              </h2>
-              <p className="text-sm text-slate-500 mt-1">
-                Scholen die <strong>Hoog-Risico AI</strong> inzetten zijn onder de AI Act verplicht om een impactbeoordeling voor de grondrechten uit te voeren. Gebruik deze generator om een eerste opzet te formuleren.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Form Column */}
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Naam van de AI-Toepassing</label>
-                  <input 
-                    type="text"
-                    placeholder="Bijv. Adaptief NakijkPlatform 2026"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2D5A87]"
-                    value={friaForm.appName}
-                    onChange={(e) => setFriaForm({...friaForm, appName: e.target.value})}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Verantwoordelijk Bestuur</label>
-                  <input 
-                    type="text"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2D5A87]"
-                    value={friaForm.schoolResponsible}
-                    onChange={(e) => setFriaForm({...friaForm, schoolResponsible: e.target.value})}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Wie zijn de Betrokkenen?</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {['Leerlingen', 'Docenten', 'Ouders', 'Schoolleiding'].map((actor) => (
-                      <label key={actor} className="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
-                        <input 
-                          type="checkbox"
-                          checked={friaForm.stakeholders.includes(actor)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setFriaForm({...friaForm, stakeholders: [...friaForm.stakeholders, actor]});
-                            } else {
-                              setFriaForm({...friaForm, stakeholders: friaForm.stakeholders.filter(s => s !== actor)});
-                            }
-                          }}
-                          className="rounded text-emerald-600 focus:ring-emerald-500"
-                        />
-                        <span>{actor}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Gedefinieerde Grondrechtenrisico's</label>
-                  <div className="space-y-2">
-                    {[
-                      'Privacy van leerlinggegevens',
-                      'Discriminatie door algoritmische bias',
-                      'Inbreuk op autonomie van de docent',
-                      'Gebrek aan transparantie over beslissingen'
-                    ].map((risk) => (
-                      <label key={risk} className="flex items-start text-xs text-slate-700 cursor-pointer">
-                        <input 
-                          type="checkbox"
-                          checked={friaForm.identifiedRisks.includes(risk)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setFriaForm({...friaForm, identifiedRisks: [...friaForm.identifiedRisks, risk]});
-                            } else {
-                              setFriaForm({...friaForm, identifiedRisks: friaForm.identifiedRisks.filter(r => r !== risk)});
-                            }
-                          }}
-                          className="mt-0.5 mr-2 rounded text-emerald-600 focus:ring-emerald-500"
-                        />
-                        <span>{risk}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Methode van Menselijk Toezicht</label>
-                  <textarea 
-                    rows="2"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2D5A87]"
-                    value={friaForm.oversightMethod}
-                    onChange={(e) => setFriaForm({...friaForm, oversightMethod: e.target.value})}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Beperkende Maatregelen</label>
-                  <textarea 
-                    rows="3"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2D5A87]"
-                    value={friaForm.mitigationMeasures}
-                    onChange={(e) => setFriaForm({...friaForm, mitigationMeasures: e.target.value})}
-                  />
-                </div>
-              </div>
-
-              {/* Real-time Preview Column */}
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 flex flex-col justify-between">
-                <div className="space-y-4">
-                  <h3 className="font-bold text-sm text-slate-700 border-b border-slate-200 pb-2 uppercase tracking-wide">
-                    Live FRIA Concept Preview
-                  </h3>
-                  
-                  <div className="text-xs text-slate-700 space-y-3 font-serif max-h-[350px] overflow-y-auto bg-white p-4 rounded-xl border border-slate-100 shadow-inner leading-relaxed">
-                    <p className="text-center font-bold underline">GRONDRECHTEN IMPACT ASSESSMENT (FRIA)</p>
-                    <p><strong>Organisatie:</strong> {friaForm.schoolResponsible || '[Naam Schoolbestuur]'}</p>
-                    <p><strong>Systeem:</strong> {friaForm.appName || '[Naam Toepassing]'}</p>
-                    <p><strong>Doelgroep &amp; Betrokkenen:</strong> {friaForm.stakeholders.join(', ') || 'Geen geselecteerd'}</p>
-                    
-                    <div>
-                      <p className="font-bold underline">1. Risico-analyse Grondrechten:</p>
-                      <ul className="list-disc pl-4 space-y-1">
-                        {friaForm.identifiedRisks.map((risk, idx) => (
-                          <li key={idx}>{risk}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <p className="font-bold underline">2. Ingericht Menselijk Toezicht:</p>
-                      <p>{friaForm.oversightMethod}</p>
-                    </div>
-
-                    <div>
-                      <p className="font-bold underline">3. Beheersmaatregelen:</p>
-                      <p className="whitespace-pre-line">{friaForm.mitigationMeasures}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => {
-                    const fullFriaText = `
-GRONDRECHTEN IMPACT ASSESSMENT (FRIA)
--------------------------------------
-Datum: ${new Date().toLocaleDateString('nl-NL')}
-Organisatie: ${friaForm.schoolResponsible}
-Toepassing: ${friaForm.appName}
-
-Betrokkenen:
-${friaForm.stakeholders.map(s => `- ${s}`).join('\n')}
-
-Geïdentificeerde Grondrechten Risico's:
-${friaForm.identifiedRisks.map(r => `- ${r}`).join('\n')}
-
-Menselijk Toezicht Protocol:
-${friaForm.oversightMethod}
-
-Mitigatiemaatregelen & Compliance Acties:
-${friaForm.mitigationMeasures}
-                    `;
-                    copyToClipboard(fullFriaText);
-                  }}
-                  className="w-full mt-4 bg-[#2D5A87] hover:bg-[#1a3854] text-white py-3 rounded-xl text-sm font-bold flex items-center justify-center space-x-2 shadow-md transition-colors"
-                >
-                  <IconCopy />
-                  <span>Kopieer Volledige FRIA</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: TEST CASES */}
-        {activeTab === 'cases' && (
-          <div className="space-y-6 max-w-4xl mx-auto">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-              <h2 className="text-xl font-bold text-[#2D5A87] mb-2">💡 Casus Bibliotheek &amp; Validatie</h2>
-              <p className="text-sm text-slate-500">
-                Om de werking van het toetsingskader direct te begrijpen, hebben we drie praktijkvoorbeelden klaargezet. Klik op een casus om de bijbehorende antwoorden direct in de wizard te laden en het resultaat te inspecteren.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Case 1 */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div>
-                  <span className="inline-block text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded mb-3">Laag Risico</span>
-                  <h3 className="font-bold text-slate-800 text-base mb-2">Chatbot voor Huiswerkhulp</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-4">
-                    Een generatieve AI-chatbot die leerlingen thuis helpt met uitleg over wiskundevragen. De tool geeft geen cijfers en bepaalt geen toelating.
-                  </p>
-                </div>
-                <button 
-                  onClick={() => applyCase('homework_chatbot')}
-                  className="w-full bg-slate-100 hover:bg-[#2D5A87] hover:text-white text-[#2D5A87] text-xs font-bold py-2.5 rounded-xl transition-all"
-                >
-                  Laad deze Casus
-                </button>
-              </div>
-
-              {/* Case 2 */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div>
-                  <span className="inline-block text-[10px] font-extrabold uppercase bg-amber-100 text-amber-800 px-2 py-0.5 rounded mb-3">Hoog Risico (Wettelijk Regime)</span>
-                  <h3 className="font-bold text-slate-800 text-base mb-2">Geautomatiseerd Nakijken</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-4">
-                    Software die ingezonden essays van leerlingen automatisch beoordeelt en conceptcijfers toekent. Dit heeft directe invloed op de overgang van de leerling.
-                  </p>
-                </div>
-                <button 
-                  onClick={() => applyCase('grading_system')}
-                  className="w-full bg-slate-100 hover:bg-[#2D5A87] hover:text-white text-[#2D5A87] text-xs font-bold py-2.5 rounded-xl transition-all"
-                >
-                  Laad deze Casus
-                </button>
-              </div>
-
-              {/* Case 3 */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div>
-                  <span className="inline-block text-[10px] font-extrabold uppercase bg-rose-100 text-rose-800 px-2 py-0.5 rounded mb-3">Verboden Toepassing</span>
-                  <h3 className="font-bold text-slate-800 text-base mb-2">Proctoring met Emotieherkenning</h3>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-4">
-                    Een fraudepreventiesysteem dat tijdens thuistoetsen de camera gebruikt om de emotionele staat en oogbewegingen van de leerling te analyseren om stress te meten.
-                  </p>
-                </div>
-                <button 
-                  onClick={() => applyCase('proctoring_biometrics')}
-                  className="w-full bg-slate-100 hover:bg-[#2D5A87] hover:text-white text-[#2D5A87] text-xs font-bold py-2.5 rounded-xl transition-all"
-                >
-                  Laad deze Casus
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 4: INFORMATION & SOURCES */}
-        {activeTab === 'sources' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 max-w-4xl mx-auto space-y-6">
-            <h2 className="text-xl font-bold text-[#2D5A87] border-b border-slate-200 pb-3">
-              📚 Geïntegreerde Bronnen &amp; Juridische Referenties
-            </h2>
-            
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Dit interactieve platform combineert de meest recente kaders en wetgeving uit 2025 en 2026 om scholen en leveranciers te ontlasten van complexe juridische taal. De volgende bronnen zijn structureel verwerkt in de logica:
-            </p>
-
-            <div className="space-y-4">
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <h3 className="font-bold text-sm text-slate-800">1. Toetsingskader AI Funderend Onderwijs (SIVON, 2026)</h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Biedt de basis voor de 4 specifieke onderwijscategorieën voor hoog-risico aanduiding (Toelating, Evaluatie, Niveaubepaling, Proctoring). Daarnaast is de noodzaak van een FRIA rechtstreeks overgenomen van dit kader.
-                </p>
-              </div>
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <h3 className="font-bold text-sm text-slate-800">2. Autoriteit Persoonsgegevens (AP, 2025)</h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Focus op de formele interpretatie van geharmoniseerde Europese standaarden voor conformiteitsbeoordelingen (CE-markering) en de strikte scheiding van verboden praktijken (zoals emotieherkenning op de werkvloer/school).
-                </p>
-              </div>
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <h3 className="font-bold text-sm text-slate-800">3. IMDA AI Verify Framework (2025)</h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Internationaal evidence-based framework dat direct de checklist voor leveranciers structureert op basis van 4 pijlers: Transparantie (Model Cards), Veiligheid (Cybersecurity Scans), Fairness (Bias-testen) en Accountability (Logbestanden).
-                </p>
-              </div>
-
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <h3 className="font-bold text-sm text-slate-800">4. Kennisnet Handreiking AI</h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  Levert de ethische en pedagogische fundering. Via het 'Ethiekkompas' en de 'Waardenwijzer' wordt de nadruk gelegd op menselijke waardigheid, academische integriteit, en actieve menselijke controle boven blind vertrouwen in algoritmes (automation bias).
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-6 text-center text-xs mt-12 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4">
-          <p>© 2026 AI Toetsingskader Funderend Onderwijs. Ontwikkeld ten behoeve van compliance en ethische besluitvorming.</p>
-          <p className="mt-2 text-slate-600">Gefedereerd op basis van kaders van SIVON, Kennisnet, IMDA en de Autoriteit Persoonsgegevens.</p>
-        </div>
-      </footer>
+      </div>
+      <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full text-sm font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Versie 1.2 (Geïntegreerd Framework - Hersteld)</span>
+      </div>
     </div>
-  );
-}
+  </header>
+
+  <!-- Navigatiebalk voor intuïtieve flow -->
+  <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 no-print shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto scrollbar-none">
+      <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn px-5 py-4 border-b-2 border-sivonBlue text-sivonBlue font-bold flex items-center gap-2 whitespace-nowrap transition">
+        <i class="fa-solid fa-chart-line"></i> Dashboard AI+
+      </button>
+      <button onclick="switchTab('stappen')" id="btn-stappen" class="tab-btn px-5 py-4 border-b-2 border-transparent text-gray-500 hover:text-sivonBlue font-medium flex items-center gap-2 whitespace-nowrap transition">
+        <i class="fa-solid fa-list-check"></i> 1. Is het AI? (SIVON)
+      </button>
+      <button onclick="switchTab('risico')" id="btn-risico" class="tab-btn px-5 py-4 border-b-2 border-transparent text-gray-500 hover:text-sivonBlue font-medium flex items-center gap-2 whitespace-nowrap transition">
+        <i class="fa-solid fa-triangle-exclamation"></i> 2. Risicoclassificatie
+      </button>
+      <button onclick="switchTab('verify')" id="btn-verify" class="tab-btn px-5 py-4 border-b-2 border-transparent text-gray-500 hover:text-sivonBlue font-medium flex items-center gap-2 whitespace-nowrap transition">
+        <i class="fa-solid fa-shield-virus"></i> 3. Technische Audit (AI Verify)
+      </button>
+      <button onclick="switchTab('checklists')" id="btn-checklists" class="tab-btn px-5 py-4 border-b-2 border-transparent text-gray-500 hover:text-sivonBlue font-medium flex items-center gap-2 whitespace-nowrap transition">
+        <i class="fa-solid fa-clipboard-check"></i> 4. Actie-Checklists
+      </button>
+      <button onclick="switchTab('generator')" id="btn-generator" class="tab-btn px-5 py-4 border-b-2 border-transparent text-gray-500 hover:text-sivonBlue font-medium flex items-center gap-2 whitespace-nowrap transition">
+        <i class="fa-solid fa-file-signature"></i> 5. Toetsscan &amp; Rapport
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hoofdinhoud van de applicatie -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
+
+    <!-- TAB: DASHBOARD -->
+    <div id="tab-dashboard" class="tab-content space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
+        <div class="space-y-4 md:w-2/3">
+          <h2 class="text-3xl font-extrabold text-sivonBlue leading-tight">Beoordeel en implementeer AI verantwoord op school</h2>
+          <p class="text-gray-600 leading-relaxed text-sm md:text-base">
+            Om onderwijsinstellingen te helpen voldoen aan de wetgeving zonder de didactische focus te verliezen, combineert deze assistent de compliance-checks van <strong>SIVON</strong> met de didactische sparringpartner-visie van <strong>Kennisnet</strong> en de diepgaande technische controle (TEVV-principes) van het internationale <strong>IMDA AI Verify Framework</strong>.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="switchTab('stappen')" class="bg-sivonBlue hover:bg-opacity-95 text-white font-semibold px-5 py-3 rounded-xl shadow-sm transition flex items-center gap-2">
+              Start de AI-Definitietest <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+            <button onclick="switchTab('verify')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold px-5 py-3 rounded-xl transition">
+              Bekijk AI Verify Technische Vragen
+            </button>
+          </div>
+        </div>
+        <div class="md:w-1/3 flex justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-40 h-40">
+            <circle cx="50" cy="50" r="45" fill="#f0f4f8"/>
+            <path d="M30 40h40M30 50h30M30 60h25" stroke="#0d3b66" stroke-width="4" stroke-linecap="round"/>
+            <path d="M65 55v15M55 62l10 8 15-12" fill="none" stroke="#00a896" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="50" cy="25" r="6" fill="#f4a261"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Vergelijking & Synergie Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4">
+          <div class="p-3 bg-blue-50 text-sivonBlue rounded-xl">
+            <i class="fa-solid fa-scale-balanced text-xl"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-900">1. SIVON Screening</h3>
+            <p class="text-xs text-gray-500 mt-1">Sorteert AI-systemen op basis van de risicoklassen van de AI Act en didactische toepasbaarheid in de klas.</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4">
+          <div class="p-3 bg-teal-50 text-kennisnetTeal rounded-xl">
+            <i class="fa-solid fa-vial-circle-check text-xl"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-900">2. AI Verify Testing (TEVV)</h3>
+            <p class="text-xs text-gray-500 mt-1">Evalueert de feitelijke technische werking: robuustheid, cyberbeveiliging en biasdetectie in het algoritme.</p>
+          </div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4">
+          <div class="p-3 bg-amber-50 text-accentAmber rounded-xl">
+            <i class="fa-solid fa-arrows-spin text-xl"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-900">3. Geïntegreerde Transitie</h3>
+            <p class="text-xs text-gray-500 mt-1">Zorgt voor de 6 transitiepijlers (curriculum, training, open leermiddelen) om verantwoord op te schalen.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-6 border border-indigo-100 space-y-3">
+        <div class="flex items-center gap-2 text-indigo-900">
+          <i class="fa-solid fa-circle-nodes text-lg"></i>
+          <h3 class="font-extrabold text-lg">De synergie tussen SIVON en AI Verify</h3>
+        </div>
+        <p class="text-sm text-indigo-950/80 leading-relaxed">
+          Waar de wet (SIVON/AI Act) voorschrijft <strong>wat</strong> de regels zijn, geeft het <strong>AI Verify Framework</strong> u de middelen om te controleren <strong>hoe</strong> het systeem technisch presteert. Gebruik deze tool om de leverancier te bevragen over herhaalbaarheid, biascontroles en beveiliging, en leg dit vast in de verplichte FRIA (grondrechtenbeoordeling).
+        </p>
+      </div>
+    </div>
+
+    <!-- TAB: STAPPEN / DEFINITIETEST -->
+    <div id="tab-stappen" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-2xl font-bold text-sivonBlue mb-2">Stap 1: Is het een AI-systeem volgens de AI Act?</h2>
+        <p class="text-gray-600 text-sm mb-6">
+          De AI-Verordening (Artikel 3 lid 1) hanteert 7 criteria. Beantwoord de onderstaande vragen om te bepalen of de tool binnen de scope van de verordening valt.
+        </p>
+
+        <!-- Definitie Wizard -->
+        <div class="space-y-4">
+          <!-- Criterion 1 -->
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="space-y-1">
+                <span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Criterium 1</span>
+                <h3 class="font-bold text-gray-900">Is het een machinegebaseerd systeem?</h3>
+                <p class="text-xs text-gray-500">Werkt het via hardware en computationele software (overstijgt volledig handmatige processen)?</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCriteria(1, true)" id="crit-1-yes" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Ja</button>
+                <button onclick="setCriteria(1, false)" id="crit-1-no" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Nee</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Criterion 2 -->
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="space-y-1">
+                <span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Criterium 2</span>
+                <h3 class="font-bold text-gray-900">Ontworpen om met verschillende niveaus van autonomie te werken?</h3>
+                <p class="text-xs text-gray-500">Kan het systeem na installatie functioneren zonder directe en constante menselijke tussenkomst?</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCriteria(2, true)" id="crit-2-yes" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Ja</button>
+                <button onclick="setCriteria(2, false)" id="crit-2-no" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Nee</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Criterion 3 -->
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="space-y-1">
+                <span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Criterium 3 <span class="text-amber-600">(Optioneel)</span></span>
+                <h3 class="font-bold text-gray-900">Kan het systeem adaptief zijn na implementatie?</h3>
+                <p class="text-xs text-gray-500">Zelflerende capaciteit: produceert het na verloop van tijd andere uitkomsten bij gelijke invoer?</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCriteria(3, true)" id="crit-3-yes" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Ja</button>
+                <button onclick="setCriteria(3, false)" id="crit-3-no" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Nee</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Criterion 4 -->
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="space-y-1">
+                <span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Criterium 4</span>
+                <h3 class="font-bold text-gray-900">Heeft het expliciete of impliciete doelstellingen?</h3>
+                <p class="text-xs text-gray-500">Is er een intern geprogrammeerd doel (zoals het optimaliseren van een score of route)?</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCriteria(4, true)" id="crit-4-yes" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Ja</button>
+                <button onclick="setCriteria(4, false)" id="crit-4-no" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Nee</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Criterion 5 -->
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="space-y-1">
+                <span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Criterium 5</span>
+                <h3 class="font-bold text-gray-900">Voert het systeem inferentie uit?</h3>
+                <p class="text-xs text-gray-500">Leidt het conclusies, voorspellingen of analyses af uit invoerdata (overstijgt simpele invoer-uitvoer tabellen)?</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCriteria(5, true)" id="crit-5-yes" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Ja</button>
+                <button onclick="setCriteria(5, false)" id="crit-5-no" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Nee</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Criterion 6 -->
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="space-y-1">
+                <span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Criterium 6</span>
+                <h3 class="font-bold text-gray-900">Genereert het systeem relevante outputs?</h3>
+                <p class="text-xs text-gray-500">Produceert het voorspellingen, aanbevelingen, beslissingen of digitale inhoud (tekst/beeld)?</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCriteria(6, true)" id="crit-6-yes" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Ja</button>
+                <button onclick="setCriteria(6, false)" id="crit-6-no" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Nee</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Criterion 7 -->
+          <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div class="space-y-1">
+                <span class="text-xs font-bold text-blue-600 tracking-wide uppercase">Criterium 7</span>
+                <h3 class="font-bold text-gray-900">Kan het systeem fysieke of virtuele omgevingen beïnvloeden?</h3>
+                <p class="text-xs text-gray-500">Hebben de outputs effect op processen, leerlingpaden of softwaregedrag in de school?</p>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="setCriteria(7, true)" id="crit-7-yes" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Ja</button>
+                <button onclick="setCriteria(7, false)" id="crit-7-no" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition">Nee</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resultaat Box -->
+        <div id="criteria-result" class="mt-8 p-6 rounded-xl text-center space-y-3 hidden transition duration-300">
+          <!-- Wordt dynamisch gevuld door JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: RISICOCLASSIFICATIE -->
+    <div id="tab-risico" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 animate-fadeIn">
+        <h2 class="text-2xl font-bold text-sivonBlue mb-4">Stap 2: Bepaal de Risicoclassificatie (SIVON)</h2>
+        <p class="text-gray-600 text-sm mb-6">
+          De AI-Verordening hanteert een risicogebaseerde aanpak. In het onderwijs gelden specifieke scenario's voor hoog risico en verboden praktijken.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Prohibited -->
+          <div class="border border-red-200 bg-red-50/30 rounded-2xl p-5 space-y-4">
+            <h3 class="font-extrabold text-lg text-red-900"><i class="fa-solid fa-ban text-dangerRed mr-2"></i>1. Verboden (Onacceptabel)</h3>
+            <p class="text-xs text-gray-600">Sinds 2 februari 2025 absoluut verboden in alle Europese scholen:</p>
+            <ul class="text-xs text-red-950/80 list-disc pl-4 space-y-2">
+              <li><strong>Emotieherkenning:</strong> Systemen die emoties of intenties afleiden op basis van biometrische data (bijv. camera's die stress of concentratie meten).</li>
+              <li><strong>Gedragsbeïnvloeding:</strong> Subliminale of manipulatieve technieken die schade kunnen berokkenen aan kwetsbare leerlingen.</li>
+            </ul>
+          </div>
+
+          <!-- High Risk -->
+          <div class="border border-indigo-200 bg-indigo-50/30 rounded-2xl p-5 space-y-4">
+            <h3 class="font-extrabold text-lg text-indigo-900"><i class="fa-solid fa-circle-exclamation text-indigo-600 mr-2"></i>2. Hoog-Risico (Annex III)</h3>
+            <p class="text-xs text-gray-600">Toegestaan onder strikte conformiteitseisen vanaf 2 augustus 2026:</p>
+            <ul class="text-xs text-indigo-950/80 list-disc pl-4 space-y-2">
+              <li><strong>Loting &amp; Toelating:</strong> Systemen die toelating tot of toewijzing aan klassen/opleidingen bepalen.</li>
+              <li><strong>Summatieve toetsing:</strong> AI die direct leerresultaten evalueert of definitieve overgangsadviezen genereert.</li>
+              <li><strong>Proctoring:</strong> Toezicht en fraudedetectie via webcam/oogbewegingen tijdens tentamens.</li>
+            </ul>
+          </div>
+
+          <!-- Minimal Risk -->
+          <div class="border border-emerald-200 bg-emerald-50/30 rounded-2xl p-5 space-y-4">
+            <h3 class="font-extrabold text-lg text-emerald-900"><i class="fa-solid fa-circle-check text-emerald-600 mr-2"></i>3. Beperkt / Minimaal</h3>
+            <p class="text-xs text-gray-600">Toegestaan met uitsluitend lichte transparantie- of informatieplichten:</p>
+            <ul class="text-xs text-emerald-950/80 list-disc pl-4 space-y-2">
+              <li><strong>Formatieve feedback:</strong> Adaptieve systemen mits de uitkomsten een lichte, ondersteunende rol spelen en geen wezenlijk loopbaaneffect hebben.</li>
+              <li><strong>Chatbots:</strong> Generatieve AI ingezet als sparringpartner of voorbereiding (vereist actieve vermelding dat men met een machine interageert).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: AI VERIFY TECHNICAL TESTING -->
+    <div id="tab-verify" class="tab-content hidden space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-2xl font-bold text-sivonBlue mb-2">Stap 3: Technische &amp; Governance Audit (AI Verify)</h2>
+        <p class="text-gray-600 text-sm mb-6">
+          Beoordeel de technische integriteit van het systeem. Vraag de leverancier bewijslast op basis van de onderstaande specifieke metrics en processen van het AI Verify framework.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Card 1: Robuustheid & Herhaalbaarheid -->
+          <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50/50 space-y-4">
+            <h3 class="font-bold text-gray-900 flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-kennisnetTeal"></i> Robuustheid &amp; Reproduceerbaarheid
+            </h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Een model moet onder alle omstandigheden (zoals datadrift of ruis) stabiel en consistent functioneren.
+            </p>
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="v-drift" onchange="updateScan()" class="h-4 w-4 text-kennisnetTeal rounded">
+                <span>Controleert de leverancier op concept- en datadrift in productie?</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="v-repeat" onchange="updateScan()" class="h-4 w-4 text-kennisnetTeal rounded">
+                <span>Zijn modelversies en trainingsdatasets herleidbaar (version control)?</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Card 2: Eerlijkheid & Non-Discriminatie -->
+          <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50/50 space-y-4">
+            <h3 class="font-bold text-gray-900 flex items-center gap-2">
+              <i class="fa-solid fa-scale-unbalanced-flip text-kennisnetTeal"></i> Eerlijkheid (Biasdetectie)
+            </h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Het algoritme mag geen vooringenomenheid of onbedoelde discriminatie vertonen tegen kwetsbare groepen (SEN of afkomst).
+            </p>
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="v-bias" onchange="updateScan()" class="h-4 w-4 text-kennisnetTeal rounded">
+                <span>Zijn er fairness-metrics (foutmarges per demografie) berekend?</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="v-oversample" onchange="updateScan()" class="h-4 w-4 text-kennisnetTeal rounded">
+                <span>Zijn minderheden in de trainingdata gecorrigeerd (oversampling/SMOTE)?</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Card 3: Cyberbeveiliging & Privacy -->
+          <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50/50 space-y-4">
+            <h3 class="font-bold text-gray-900 flex items-center gap-2">
+              <i class="fa-solid fa-user-shield text-indigo-600"></i> Beveiliging &amp; Data Governance
+            </h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Bescherming tegen kwaadwillige manipulatie (adversarial attacks) en verantwoorde omgang met persoonsgegevens.
+            </p>
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="v-attack" onchange="updateScan()" class="h-4 w-4 text-indigo-600 rounded">
+                <span>Is er actieve bescherming tegen black-box of prompt-injection aanvallen?</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="v-privacy" onchange="updateScan()" class="h-4 w-4 text-indigo-600 rounded">
+                <span>Worden persoonsgegevens (PII) uit de gegenereerde outputs gefilterd?</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Card 4: Accountability & Menselijke Regie -->
+          <div class="p-5 border border-gray-100 rounded-2xl bg-gray-50/50 space-y-4">
+            <h3 class="font-bold text-gray-900 flex items-center gap-2">
+              <i class="fa-solid fa-user-gear text-indigo-600"></i> Accountability &amp; Verantwoording
+            </h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Duidelijk gedefinieerde rollen en escalatie-paden wanneer een systeem fouten maakt of faalt.
+            </p>
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="v-override" onchange="updateScan()" class="h-4 w-4 text-indigo-600 rounded">
+                <span>Is er een expliciete 'override'-knop of escalatieroute naar de directie/docent?</span>
+              </label>
+              <label class="flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                <input type="checkbox" id="v-vendor" onchange="updateScan()" class="h-4 w-4 text-indigo-600 rounded">
+                <span>Heeft de leverancier een transparantierapport (Model Card) gedeeld?</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: CHECKLISTS -->
+    <div id="tab-checklists" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- School checklist -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+          <div class="flex items-center gap-2 text-sivonBlue">
+            <i class="fa-solid fa-school text-xl"></i>
+            <h3 class="text-xl font-extrabold">Verplichtingen voor de School (Deployer)</h3>
+          </div>
+          <p class="text-xs text-gray-500">Maatregelen die het schoolbestuur moet nemen bij inzet van Hoog-Risico-AI.</p>
+          <div class="space-y-3 pt-2 text-sm">
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-sivonBlue border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-xs text-gray-700"><strong>FRIA uitvoeren (Grondrechtenbeoordeling):</strong> Beoordeel effecten op fundamentele rechten (privacy, bias, gelijke kansen).</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-sivonBlue border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-xs text-gray-700"><strong>DPIA &amp; AVG Naleving:</strong> Koppel de FRIA aan uw Data Protection Impact Assessment (Art. 35 AVG).</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-sivonBlue border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-xs text-gray-700"><strong>Menselijk Toezicht (Human Agency):</strong> Wijs bekwame docenten/medewerkers aan die de resultaten controleren (geen automation bias).</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-sivonBlue border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-xs text-gray-700"><strong>AI-Geletterdheid (Art. 4):</strong> Zorg voor training van medewerkers, docenten en leerlingen over risico's en limieten van het AI-systeem.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-sivonBlue border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-xs text-gray-700"><strong>Registratie &amp; Logs:</strong> Bewaar automatisch gegenereerde systeemlogs ten minste 6 maanden.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-sivonBlue border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-xs text-gray-700"><strong>Informatieplicht Betrokkenen:</strong> Informeer leerlingen en ouders expliciet dat er een hoog-risicosysteem wordt toegepast.</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Supplier checklist -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+          <div class="flex items-center gap-2 text-kennisnetTeal">
+            <i class="fa-solid fa-truck-ramp-box text-xl"></i>
+            <h3 class="text-xl font-extrabold">Verplichtingen voor de Leverancier (Provider)</h3>
+          </div>
+          <p class="text-xs text-gray-500">Als schoolbestuur moet u controleren of de leverancier deze stappen aantoonbaar heeft genomen.</p>
+          <div class="space-y-3 pt-2 text-sm">
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-kennisnetTeal border-gray-300 rounded focus:ring-teal-500">
+              <span class="text-xs text-gray-700"><strong>Kwaliteits- &amp; Risicobeheersysteem (Art. 9 &amp; 17):</strong> Continu proces om risico's voor minderjarigen te beperken.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-kennisnetTeal border-gray-300 rounded focus:ring-teal-500">
+              <span class="text-xs text-gray-700"><strong>Data Governance (Art. 10):</strong> Controleren op vooringenomenheid (bias) en zorgen voor representatieve, foutvrije datasets.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-kennisnetTeal border-gray-300 rounded focus:ring-teal-500">
+              <span class="text-xs text-gray-700"><strong>CE-Markering &amp; Conformiteitsbeoordeling (Art. 43 &amp; 48):</strong> Voer de conformiteitsprocedure uit en breng het CE-merk aan.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-kennisnetTeal border-gray-300 rounded focus:ring-teal-500">
+              <span class="text-xs text-gray-700"><strong>Technische Documentatie (Art. 11):</strong> Opstellen van ontwerpspecificaties en archivering gedurende 10 jaar.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-kennisnetTeal border-gray-300 rounded focus:ring-teal-500">
+              <span class="text-xs text-gray-700"><strong>EU-Database Registratie (Art. 49):</strong> Registreer de tool in de EU-databank voor hoog-risico AI-systemen voordat deze in gebruik wordt genomen.</span>
+            </label>
+            <label class="flex items-start gap-3 p-3 bg-gray-50 hover:bg-gray-100 rounded-xl cursor-pointer transition">
+              <input type="checkbox" class="mt-1 h-4 w-4 text-kennisnetTeal border-gray-300 rounded focus:ring-teal-500">
+              <span class="text-xs text-gray-700"><strong>Gebruiksaanwijzing &amp; Transparantie:</strong> Lever heldere instructies voor de school om de werking en limieten te interpreteren.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Critical Shift Warning (Art 25) -->
+      <div class="bg-amber-50 rounded-2xl p-6 border border-amber-200 space-y-3">
+        <div class="flex items-center gap-2 text-accentAmber">
+          <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+          <h3 class="font-extrabold text-lg text-amber-900">Kritiek Juridisch Risico: Verschuiving Verantwoordelijkheid (Art. 25)</h3>
+        </div>
+        <p class="text-xs text-amber-950/80 leading-relaxed">
+          Als een docent of school een bestaande tool (zoals ChatGPT of Microsoft Copilot) via prompts, fine-tuning of API-koppelingen zo instelt dat deze <strong>summatief nakijkt of overgangen beoordeelt</strong>, treedt <strong>Artikel 25</strong> in werking. 
+          De school wordt dan juridisch gezien als de <strong>aanbieder/ontwikkelaar</strong> van een hoog-risicosysteem. Dit betekent dat de school zélf moet voldoen aan de loodzware leveranciersplichten (zoals de conformiteitsbeoordeling, CE-certificering en de EU-registratie), wat praktisch onmogelijk is. 
+          <strong>Advies:</strong> Gebruik generieke AI uitsluitend als formatief/ondersteunend hulpmiddel en verbied summatieve inzet door medewerkers op eigen initiatief.
+        </p>
+      </div>
+    </div>
+
+    <!-- TAB: GENERATOR / TOETSSCAN -->
+    <div id="tab-generator" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        
+        <!-- Input Form -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6 no-print">
+          <div>
+            <h2 class="text-2xl font-bold text-sivonBlue mb-1">AI+ Kwaliteit- &amp; Risicoscan</h2>
+            <p class="text-xs text-gray-500">Vul de details in om direct een gepersonaliseerd inspectierapport met actieplan te genereren.</p>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Naam van de AI-Toepassing</label>
+              <input type="text" id="tool-name" value="Adaptief Leerplatform X" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sivonBlue text-sm">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Beoogd Gebruik / Doelstelling</label>
+              <select id="tool-use" onchange="updateScan()" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sivonBlue text-sm">
+                <option value="formatief">Formatieve oefening & feedback (bijv. taal/rekenen)</option>
+                <option value="summatief">Summatieve beoordeling & cijferbepaling</option>
+                <option value="loting">Toelatingstests, loting of tracksbepaling</option>
+                <option value="proctoring">Monitoring en fraude-detectie tijdens toetsen</option>
+                <option value="emotie">Aandachtsmeting of emotieherkenning bij studenten</option>
+                <option value="sen">Speciale onderwijsbehoeften (SEN, dyslexietraining)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Didactische Inrichting</label>
+              <select id="didactic-approach" onchange="updateScan()" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sivonBlue text-sm">
+                <option value="sparring">Sparringpartner (Student denkt actief mee en controleert)</option>
+                <option value="antwoord">Antwoordknop (AI geeft direct de uitkomst, student is passief)</option>
+                <option value="docent">Docent-assistent (Helpt bij administratie / lesvoorbereiding)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Maakt de tool gebruik van profilering?</label>
+              <div class="flex gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="profilering" value="true" onchange="updateScan()" class="h-4 w-4 text-sivonBlue">
+                  <span class="text-sm">Ja, het volgt & voorspelt studentcapaciteiten</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" name="profilering" value="false" checked onchange="updateScan()" class="h-4 w-4 text-sivonBlue">
+                  <span class="text-sm">Nee, statische verwerking</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="border-t border-gray-100 pt-4 flex gap-3">
+              <button onclick="window.print()" class="flex-1 bg-sivonBlue hover:bg-opacity-95 text-white font-semibold py-3 px-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2 text-sm">
+                <i class="fa-solid fa-print"></i> Print Rapport
+              </button>
+              <button onclick="copyToClipboard()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition text-sm flex items-center gap-2">
+                <i class="fa-solid fa-copy"></i> Kopieer Tekst
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated Report (Live Preview) -->
+        <div id="printArea" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 space-y-6">
+          <!-- Report Header -->
+          <div class="border-b border-gray-200 pb-6 flex justify-between items-start">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 text-sivonBlue">
+                <i class="fa-solid fa-clipboard-list text-xl"></i>
+                <span class="text-xs font-bold tracking-wider uppercase">AI+ Compliance &amp; Kwaliteitsrapport</span>
+              </div>
+              <h3 id="rep-title" class="text-2xl font-black text-gray-900">Rapport: Adaptief Leerplatform X</h3>
+              <p class="text-xs text-gray-500">Gegenereerd conform EU AI Act &amp; Kennisnet &amp; AI Verify</p>
+            </div>
+            <div id="rep-badge" class="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
+              Laag Risico
+            </div>
+          </div>
+
+          <!-- Quick Scan Grid (Nu gebalanceerd opgebouwd in een prachtige 3x2 lay-out met rep-status hersteld!) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+              <span class="text-gray-500 block">Classificatie (SIVON)</span>
+              <strong id="rep-class" class="text-gray-900 block mt-0.5">Beperkt/Minimaal Risico</strong>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+              <span class="text-gray-500 block">Didactische Match</span>
+              <strong id="rep-didactic" class="text-gray-900 block mt-0.5">Sterke Match (Sparringpartner)</strong>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+              <span class="text-gray-500 block">FRIA Verplichting</span>
+              <strong id="rep-fria" class="text-gray-900 block mt-0.5">Niet Verplicht (Wel Aanbevolen)</strong>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+              <span class="text-gray-500 block">Technische Evaluatie (AI Verify)</span>
+              <strong id="rep-technical" class="text-emerald-600 block mt-0.5"><i class="fa-solid fa-circle-check"></i> 0 van de 8 checks actief</strong>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+              <span class="text-gray-500 block">Toetsing-Status</span>
+              <strong id="rep-status" class="text-emerald-600 block mt-0.5"><i class="fa-solid fa-circle-check"></i> Toegestaan</strong>
+            </div>
+            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+              <span class="text-gray-500 block">Laatste Scan-Datum</span>
+              <strong class="text-gray-900 block mt-0.5"><i class="fa-solid fa-calendar-day text-sivonBlue mr-1"></i> Juni 2026</strong>
+            </div>
+          </div>
+
+          <!-- Diagnostic Text -->
+          <div class="space-y-4">
+            <div>
+              <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Juridische Beoordeling</h4>
+              <p id="rep-jur-text" class="text-sm text-gray-600 leading-relaxed">
+                De geselecteerde doelstelling valt onder <strong>Beperkt/Minimaal risico</strong>. Er gelden geen loodzware restricties of verplichte registraties in de EU-database, zolang er aan transparantie en de AVG wordt voldaan.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Didactische Beoordeling (Kennisnet)</h4>
+              <p id="rep-did-text" class="text-sm text-gray-600 leading-relaxed">
+                De didactische benadering als <strong>sparringpartner</strong> is uitstekend. Het nodigt studenten uit tot actieve verwerking en voorkomt de passieve "antwoordknop"-reflex die het leerproces uitholt.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Technische Verificatie (AI Verify Status)</h4>
+              <p id="rep-tech-text" class="text-sm text-gray-600 leading-relaxed">
+                Nog niet alle cruciale technische testmethodieken zijn ingevuld.
+              </p>
+            </div>
+
+            <div>
+              <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Geadviseerde Actiepunten</h4>
+              <ul id="rep-actions-list" class="space-y-2 text-xs text-gray-600 list-disc pl-4">
+                <!-- Injected dynamically -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Signoff Area -->
+          <div class="border-t border-gray-100 pt-6 flex justify-between items-center text-[10px] text-gray-400">
+            <span>Toetsingskader AI+ &bull; SIVON publicatiereeks</span>
+            <span>Handtekening Beoordelaar: _________________</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Notification Banner -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-gray-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-50">
+    <i class="fa-solid fa-circle-info text-kennisnetTeal"></i>
+    <span id="toast-text" class="text-sm font-medium">Melding</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 py-8 border-t border-gray-800 no-print">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-scale-balanced text-kennisnetTeal"></i>
+        <span>SIVON &amp; Kennisnet Funderend Onderwijs Richtlijn, 2026</span>
+      </div>
+      <div class="flex gap-4">
+        <a href="https://sivon.nl/toetsingskader" target="_blank" class="hover:text-white transition">Formele website SIVON</a>
+        <span class="text-gray-700">|</span>
+        <a href="https://kennisnet.nl" target="_blank" class="hover:text-white transition">Kennisnet Handreiking</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Systeem-state om ingevulde parameters bij te houden
+    const state = {
+      criteria: {
+        1: null,
+        2: null,
+        3: null,
+        4: null,
+        5: null,
+        6: null,
+        7: null
+      }
+    };
+
+    // Navigatie tussen tabbladen
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('border-sivonBlue', 'text-sivonBlue', 'font-bold');
+        btn.classList.add('border-transparent', 'text-gray-500', 'font-medium');
+      });
+
+      const activeBtn = document.getElementById('btn-' + tabId);
+      activeBtn.classList.remove('border-transparent', 'text-gray-500', 'font-medium');
+      activeBtn.classList.add('border-sivonBlue', 'text-sivonBlue', 'font-bold');
+    }
+
+    // Set Criteria logic
+    function setCriteria(num, val) {
+      state.criteria[num] = val;
+      
+      const yesBtn = document.getElementById(`crit-${num}-yes`);
+      const noBtn = document.getElementById(`crit-${num}-no`);
+
+      if (val) {
+        yesBtn.className = "px-4 py-2 bg-sivonBlue text-white text-sm font-semibold rounded-lg transition shadow-sm";
+        noBtn.className = "px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition";
+      } else {
+        noBtn.className = "px-4 py-2 bg-dangerRed text-white text-sm font-semibold rounded-lg transition shadow-sm";
+        yesBtn.className = "px-4 py-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-lg transition";
+      }
+
+      evaluateCriteria();
+    }
+
+    // Evalueert of de tool onder de formele wetgeving valt
+    function evaluateCriteria() {
+      const allSelected = Object.keys(state.criteria).every(k => k == 3 ? true : state.criteria[k] !== null);
+      const resultBox = document.getElementById('criteria-result');
+      
+      if (!allSelected) return;
+
+      resultBox.classList.remove('hidden');
+      
+      // Bepaal of het een AI-systeem betreft (criteria 1, 2, 4, 5, 6, 7 moeten 'Ja' zijn)
+      const isAI = state.criteria[1] && state.criteria[2] && state.criteria[4] && state.criteria[5] && state.criteria[6] && state.criteria[7];
+
+      if (isAI) {
+        resultBox.className = "mt-8 p-6 rounded-xl text-center space-y-3 bg-emerald-50 border border-emerald-200 text-emerald-950 animate-fadeIn";
+        resultBox.innerHTML = `
+          <div class="flex justify-center text-emerald-600 text-3xl"><i class="fa-solid fa-circle-check"></i></div>
+          <h3 class="text-lg font-bold">Diagnose: Dit is een AI-systeem onder de AI-Verordening</h3>
+          <p class="text-sm">Voldoet aan alle kerncriteria van Artikel 3 lid 1. Ga door naar stap 2 om de risicoclassificatie bepalen.</p>
+          <button onclick="switchTab('risico')" class="mt-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg text-xs transition">Ga naar Risicoclassificatie</button>
+        `;
+      } else {
+        resultBox.className = "mt-8 p-6 rounded-xl text-center space-y-3 bg-gray-100 border border-gray-300 text-gray-800 animate-fadeIn";
+        resultBox.innerHTML = `
+          <div class="flex justify-center text-gray-500 text-3xl"><i class="fa-solid fa-circle-info"></i></div>
+          <h3 class="text-lg font-bold">Diagnose: Dit is waarschijnlijk géén AI-systeem</h3>
+          <p class="text-sm text-gray-600">Omdat een of meerdere kerncriteria (zoals autonomie of inferentie) ontbreken, valt dit leermiddel niet onder de AI Act. Let op: reguliere privacyregels (AVG) blijven wel van kracht.</p>
+        `;
+      }
+    }
+
+    // Live generator van het kwaliteitsrapport met de data van beide frameworks
+    function updateScan() {
+      const toolName = document.getElementById('tool-name').value || "AI-Toepassing";
+      const useType = document.getElementById('tool-use').value;
+      const didactic = document.getElementById('didactic-approach').value;
+      const hasProfiling = document.querySelector('input[name="profilering"]:checked').value === "true";
+
+      // AI Verify specifieke inputs
+      const checkDrift = document.getElementById('v-drift').checked;
+      const checkRepeat = document.getElementById('v-repeat').checked;
+      const checkBias = document.getElementById('v-bias').checked;
+      const checkOversample = document.getElementById('v-oversample').checked;
+      const checkAttack = document.getElementById('v-attack').checked;
+      const checkPrivacy = document.getElementById('v-privacy').checked;
+      const checkOverride = document.getElementById('v-override').checked;
+      const checkVendor = document.getElementById('v-vendor').checked;
+
+      // Filteren op aantal geselecteerde checks
+      const activeVerifyChecks = [checkDrift, checkRepeat, checkBias, checkOversample, checkAttack, checkPrivacy, checkOverride, checkVendor].filter(Boolean).length;
+
+      const repTitle = document.getElementById('rep-title');
+      const repBadge = document.getElementById('rep-badge');
+      const repClass = document.getElementById('rep-class');
+      const repDidactic = document.getElementById('rep-didactic');
+      const repFria = document.getElementById('rep-fria');
+      const repStatus = document.getElementById('rep-status');
+      const repTechnical = document.getElementById('rep-technical');
+      const repJurText = document.getElementById('rep-jur-text');
+      const repDidText = document.getElementById('rep-did-text');
+      const repTechText = document.getElementById('rep-tech-text');
+      const repActionsList = document.getElementById('rep-actions-list');
+
+      repTitle.innerText = `Rapport: ${toolName}`;
+
+      let riskLevel = "laag";
+      let statusText = "Toegestaan";
+      let statusColor = "text-emerald-600";
+      let badgeClass = "bg-emerald-100 text-emerald-800";
+      let classText = "Beperkt / Minimaal Risico";
+      let friaText = "Niet Verplicht (Wel Aanbevolen)";
+
+      let jurDescription = "";
+      let didDescription = "";
+      let actions = [];
+
+      // Risicobeoordeling op basis van use case en profilering
+      if (useType === "emotie") {
+        riskLevel = "prohibited";
+        classText = "VERBODEN PRAKTIJK (Art. 5)";
+        statusText = "VERBODEN";
+        statusColor = "text-red-600";
+        badgeClass = "bg-red-200 text-red-900";
+        friaText = "N.v.t. (Systeem is Verboden)";
+      } else if (useType === "summatief" || useType === "loting" || useType === "proctoring" || hasProfiling) {
+        riskLevel = "high";
+        classText = "HOOG RISICO (Annex III)";
+        statusText = "Toegestaan onder strikte voorwaarden";
+        statusColor = "text-amber-600";
+        badgeClass = "bg-amber-100 text-amber-800";
+        friaText = "VERPLICHT (Art. 27 FRIA)";
+      }
+
+      // Didactische inrichtingsevaluatie
+      if (didactic === "sparring") {
+        repDidactic.innerText = "Sterke Match (Sparringpartner)";
+        repDidactic.className = "text-emerald-600 block mt-0.5";
+        didDescription = "De tool is ingericht als sparringpartner. Dit sluit optimaal aan op de Kennisnet-visie; het versterkt de actieve oordeelsvorming en voorkomt passief 'antwoordknop'-gedrag.";
+        actions.push("Stimuleer actieve promptvaardigheden en moedig kritische reflectie van studenten aan.");
+      } else if (didactic === "antwoord") {
+        repDidactic.innerText = "Zwakke Match (Antwoordknop)";
+        repDidactic.className = "text-red-500 block mt-0.5";
+        didDescription = "Waarschuwing: De inrichting stimuleert passieve antwoord-afname ('didactisch drama'). Studenten leren hierdoor mogelijk niet zelfstandig redeneren.";
+        actions.push("Herontwerp de opdrachten: zorg dat leerlingen de gegenereerde AI-antwoorden moeten controleren en corrigeren.");
+      } else {
+        repDidactic.innerText = "Match (Docent-assistent)";
+        repDidactic.className = "text-blue-600 block mt-0.5";
+        didDescription = "De tool ondersteunt medewerkers administratief of didactisch, wat de administratieve lasten doeltreffend kan verminderen.";
+        actions.push("Houd toezicht op dataminimalisatie; voer geen ongeanonimiseerde studentenrapportages of privacygevoelige data in.");
+      }
+
+      // Technisch bewijs integreren (AI Verify module)
+      repTechnical.innerText = `${activeVerifyChecks} van de 8 verificaties actief`;
+      if (activeVerifyChecks >= 6) {
+        repTechnical.className = "text-emerald-600 block mt-0.5 font-bold";
+        repTechText.innerHTML = `<strong>Kwaliteit gegarandeerd (AI Verify):</strong> De leverancier scoort hoog op de technische audit (${activeVerifyChecks}/8 checks). Dit duidt op gedegen data-governance en een robuuste en veilige architectuur.`;
+      } else if (activeVerifyChecks >= 3) {
+        repTechnical.className = "text-amber-600 block mt-0.5 font-bold";
+        repTechText.innerHTML = `<strong>Aandacht vereist (AI Verify):</strong> Er zijn momenteel ${activeVerifyChecks} van de 8 technische checks actief. Er zijn risico's op het gebied van herhaalbaarheid, drift of cybersecurity.`;
+        actions.push("<strong>Eis technische documentatie:</strong> Vraag de leverancier naar bewijs voor conceptdrift-monitoring en herhaalbaarheidstesten.");
+      } else {
+        repTechnical.className = "text-red-500 block mt-0.5 font-bold";
+        repTechText.innerHTML = `<strong>Groot Technisch Risico (AI Verify):</strong> Zeer minimale technische audits uitgevoerd (${activeVerifyChecks}/8). Er is onvoldoende bewijs voor cybersecurity, stabiliteit en biasvrije werking.`;
+        actions.push("<strong>Kritiek technisch risico:</strong> Vraag een formele 'Model Card' of 'System Card' op bij de leverancier ter controle.");
+      }
+
+      // Juridische eindoordeel
+      if (riskLevel === "prohibited") {
+        jurDescription = "<strong>Dit systeem is verboden onder de AI-Verordening!</strong> Emotieherkenning of gerichte surveillance op basis van biometrie is absoluut verboden. De tool mag niet meer rechtmatig worden gebruikt of ingekocht.";
+        actions = ["<strong>STAKEN EN DEACTIVEREN:</strong> Beëindig direct het gebruik en de inkoop van deze module op school.", "Informeer de toezichthouder indien leveranciers dit product blijven aanbieden."];
+      } else if (riskLevel === "high") {
+        jurDescription = `Dit systeem kwalificeert als <strong>Hoog Risico</strong> onder de AI Act (Annex III). Het beïnvloedt wezenlijk de onderwijsloopbaan of toetsing. Gebruik is alleen toegestaan als aan alle wettelijke eisen is voldaan.`;
+        
+        actions.push("<strong>Voer een FRIA (Grondrechtenbeoordeling) uit:</strong> Breng risico's voor studenten systematisch in kaart (SIVON levert templates).");
+        actions.push("<strong>Controleer de CE-markering:</strong> Eis een conformiteitsverklaring en registratienummer in de EU-databank van de leverancier.");
+        actions.push("<strong>Menselijk Toezicht:</strong> Richt de werkprocessen zo in dat docenten altijd het eindoordeel vellen (geen automatische sancties).");
+        actions.push("<strong>Meldplicht instellen:</strong> Zorg voor een procedure om incidenten direct te melden bij de leverancier en de markttoezichthouder.");
+      } else {
+        jurDescription = `Dit systeem is geklasseerd als <strong>Beperkt/Minimaal Risico</strong>. Er gelden geen zware conformiteitseisen. Generieke tools (zoals GPT of Copilot) vereisen wel een heldere transparantieplicht.`;
+        actions.push("<strong>Transparantie:</strong> Informeer gebruikers (studenten/ouders) expliciet als zij interageren met AI-content.");
+        actions.push("<strong>AVG-check:</strong> Zorg dat er geen persoonsgegevens of toetsingsantwoorden van studenten met onbeveiligde externe partijen worden gedeeld.");
+      }
+
+      repBadge.className = `${badgeClass} px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider`;
+      repBadge.innerText = riskLevel === "prohibited" ? "Verboden" : (riskLevel === "high" ? "Hoog Risico" : "Laag Risico");
+      repClass.innerText = classText;
+      repFria.innerText = friaText;
+      
+      // Update rep-status en rep-status layout
+      repStatus.innerText = statusText;
+      repStatus.className = `${statusColor} block mt-0.5 font-bold`;
+      
+      repJurText.innerHTML = jurDescription;
+      repDidText.innerText = didDescription;
+
+      // Render actielijst
+      repActionsList.innerHTML = actions.map(act => `<li>${act}</li>`).join('');
+    }
+
+    // Melding/Toast helper
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
+      toastText.innerText = message;
+      toast.style.opacity = '1';
+      toast.style.pointerEvents = 'auto';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.pointerEvents = 'none';
+      }, 3000);
+    }
+
+    // Kopieer rapportage naar het klembord
+    function copyToClipboard() {
+      let text = `AI-TOETSINGSRAPPORT (SIVON & AI VERIFY INTEGRATIE)\n==============================================\n`;
+      text += `Naam: ${document.getElementById('tool-name').value}\n`;
+      text += `SIVON Risicoklassificatie: ${document.getElementById('rep-class').innerText}\n`;
+      text += `Status: ${document.getElementById('rep-status').innerText}\n`;
+      text += `Technische Verificaties (AI Verify): ${document.getElementById('rep-technical').innerText}\n`;
+      text += `Didactische Match (Kennisnet): ${document.getElementById('rep-didactic').innerText}\n\n`;
+      text += `JURIDISCH ADVIES:\n${document.getElementById('rep-jur-text').innerText}\n\n`;
+      text += `TECHNISCH ADVIES (AI VERIFY):\n${document.getElementById('rep-tech-text').innerText}\n\n`;
+      text += `DIDACTISCH ADVIES:\n${document.getElementById('rep-did-text').innerText}\n\n`;
+      text += `ACTIEPUNTEN:\n`;
+      
+      document.querySelectorAll('#rep-actions-list li').forEach((li, idx) => {
+        text += `${idx + 1}. ${li.innerText}\n`;
+      });
+
+      // Standard robust clipboard copy (necessary due to iframe security constraints)
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      showToast("Rapport succesvol gekopieerd naar het klembord!");
+    }
+
+    // Start-up triggers
+    window.onload = function () {
+      updateScan();
+    };
+  </script>
+</body>
+</html>
