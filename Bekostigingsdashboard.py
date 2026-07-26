@@ -8,9 +8,7 @@ import pandas as pd
 import numpy as np
 import re
 from io import BytesIO
-import base64
 import plotly.graph_objects as go
-import plotly.express as px
 from plotly.subplots import make_subplots
 
 # ============================================================
@@ -38,119 +36,11 @@ st.markdown("""
     .metric-sub { font-size: 0.85rem; color: #9ca3af; margin-top: 0.2rem; }
     .insight-box { background: #eff6ff; border-left: 4px solid #2E86AB; 
                   padding: 1rem 1.2rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
-    .stTabs [data-baseweb="tab-list"] { gap: 8px; }
-    .stTabs [data-baseweb="tab"] { padding: 10px 20px; font-weight: 600; }
 </style>
 """, unsafe_allow_html=True)
 
 # ============================================================
-# DATA EXTRACTION FROM PDF TEXT
-# ============================================================
-def extract_tbg_data(pdf_text: str, instelling_code: str) -> dict:
-    """
-    Extract structured TBG data from PDF text content.
-    Falls back to manual entry if parsing fails.
-    """
-    data = {
-        "code": instelling_code,
-        "naam": "",
-        "datum": "",
-        "status": "Voorlopige gegevens 2025/2026",
-        "entree": {},
-        "basisberoeps": {},
-        "vak_middenkader_specialisten": {}
-    }
-    
-    # Try to extract institution name
-    naam_match = re.search(r'(\d{4,5})\s+([A-Z][a-zA-Z\s&]+?)(?:\s+Postbus|\s+Slingelaan|\s+\d)', pdf_text)
-    if naam_match:
-        data["naam"] = naam_match.group(2).strip()
-    
-    # Extract institution shares from cover letter
-    entree_ia = re.search(r'entreeopleidingen.*?(\d+[.,]\d+)%', pdf_text, re.DOTALL)
-    basis_ia = re.search(r'basisberoepsopleidingen.*?(\d+[.,]\d+)%', pdf_text, re.DOTALL)
-    vmks_ia = re.search(r'vak-.*?specialistenopleidingen.*?(\d+[.,]\d+)%', pdf_text, re.DOTALL)
-    
-    if entree_ia:
-        data["entree"]["instellingsaandeel_pct"] = float(entree_ia.group(1).replace(',', '.'))
-    if basis_ia:
-        data["basisberoeps"]["instellingsaandeel_pct"] = float(basis_ia.group(1).replace(',', '.'))
-    if vmks_ia:
-        data["vak_middenkader_specialisten"]["instellingsaandeel_pct"] = float(vmks_ia.group(1).replace(',', '.'))
-    
-    # Extract student values from summary tables
-    # Look for the institution's row in national overview tables
-    pattern = rf'{instelling_code}.*?(?P<sw>\d{{1,2}}(?:\.\d{{3}})*,\d{{2}}).*?(?P<ia>\d,\d{{2}}%)'
-    
-    # Extract from detailed calculation pages
-    entree_calc = re.search(r'Instellingsaandeel studentenwaarde entreeopleidingen.*?(?P<basis>\d+(?:\.\d{3})*,\d{2}).*?(?P<cf>0,\d+).*?(?P<sw>\d+(?:\.\d{3})*,\d{2})', pdf_text, re.DOTALL)
-    if entree_calc:
-        data["entree"]["basis_studentenwaarde"] = parse_dutch_number(entree_calc.group("basis"))
-        data["entree"]["correctiefactor"] = parse_dutch_number(entree_calc.group("cf"))
-        data["entree"]["studentenwaarde"] = parse_dutch_number(entree_calc.group("sw"))
-    
-    basis_calc = re.search(r'Instellingsaandeel studentenen diplomawaarde basisberoepsopleidingen.*?(?P<basis>\d+(?:\.\d{3})*,\d{2}).*?(?P<cf>0,\d+).*?(?P<sw>\d+(?:\.\d{3})*,\d{2}).*?(?P<dw>\d+(?:\.\d{3})*,\d{2})', pdf_text, re.DOTALL)
-    if basis_calc:
-        data["basisberoeps"]["basis_studentenwaarde"] = parse_dutch_number(basis_calc.group("basis"))
-        data["basisberoeps"]["correctiefactor"] = parse_dutch_number(basis_calc.group("cf"))
-        data["basisberoeps"]["studentenwaarde"] = parse_dutch_number(basis_calc.group("sw"))
-        data["basisberoeps"]["diplomawaarde"] = parse_dutch_number(basis_calc.group("dw"))
-        data["basisberoeps"]["som"] = data["basisberoeps"]["studentenwaarde"] + data["basisberoeps"]["diplomawaarde"]
-    
-    vmks_calc = re.search(r'Instellingsaandeel studentenen diplomawaarde vak-.*?specialistenopleidingen.*?(?P<basis>\d+(?:\.\d{3})*,\d{2}).*?(?P<cf>0,\d+).*?(?P<sw>\d+(?:\.\d{3})*,\d{2}).*?(?P<dw>\d+(?:\.\d{3})*,\d{2})', pdf_text, re.DOTALL)
-    if vmks_calc:
-        data["vak_middenkader_specialisten"]["basis_studentenwaarde"] = parse_dutch_number(vmks_calc.group("basis"))
-        data["vak_middenkader_specialisten"]["correctiefactor"] = parse_dutch_number(vmks_calc.group("cf"))
-        data["vak_middenkader_specialisten"]["studentenwaarde"] = parse_dutch_number(vmks_calc.group("sw"))
-        data["vak_middenkader_specialisten"]["diplomawaarde"] = parse_dutch_number(vmks_calc.group("dw"))
-        data["vak_middenkader_specialisten"]["som"] = data["vak_middenkader_specialisten"]["studentenwaarde"] + data["vak_middenkader_specialisten"]["diplomawaarde"]
-    
-    # Extract student counts from total tables
-    entree_stud = re.search(r'Totalen.*?(\d+).*?(\d+)\s*Basis voor instelling studentenwaarde', pdf_text, re.DOTALL)
-    if entree_stud:
-        data["entree"]["aantal_studenten_okt"] = int(entree_stud.group(1))
-        data["entree"]["aantal_studenten_feb"] = int(entree_stud.group(2))
-    
-    # Extract totals from calculation pages
-    basis_totals = re.search(r'Totalen:\s*(\d+(?:\.\d{3})*)\s*.*?(\d+(?:\.\d{3})*,\d{2})\s*(\d+)', pdf_text)
-    if basis_totals:
-        data["basisberoeps"]["aantal_studenten_okt"] = int(basis_totals.group(1).replace('.', ''))
-        data["basisberoeps"]["aantal_studenten_feb"] = int(basis_totals.group(3))
-    
-    return data
-
-
-def parse_dutch_number(s: str) -> float:
-    """Parse Dutch number format (1.234,56 -> 1234.56)"""
-    return float(s.replace('.', '').replace(',', '.'))
-
-
-def extract_from_pdf_bytes(pdf_bytes: bytes, filename: str) -> dict:
-    """Extract text from PDF using PyPDF2 or pdfplumber"""
-    try:
-        import pdfplumber
-        with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
-            text = "\n".join(page.extract_text() or "" for page in pdf.pages)
-    except ImportError:
-        try:
-            import PyPDF2
-            reader = PyPDF2.PdfReader(BytesIO(pdf_bytes))
-            text = "\n".join(page.extract_text() or "" for page in reader.pages)
-        except ImportError:
-            st.error("Installeer pdfplumber of PyPDF2: pip install pdfplumber")
-            return None
-    
-    # Extract institution code from filename
-    code_match = re.search(r'(\d{2}[A-Z]{2})', filename)
-    inst_code = code_match.group(1) if code_match else "UNKN"
-    
-    data = extract_tbg_data(text, inst_code)
-    data["raw_text"] = text[:2000]  # Store first 2000 chars for debugging
-    return data
-
-
-# ============================================================
-# DEMO DATA (fallback when no PDF uploaded)
+# DEMO DATA
 # ============================================================
 DEMO_TWENTE = {
     "code": "27YU", "naam": "ROC van Twente", "datum": "10 maart 2026",
@@ -176,17 +66,60 @@ DEMO_GRAAFSCHAP = {
                                       "aantal_studenten_okt": 6250, "aantal_studenten_feb": 6231, "diploma_niet_specialisten": 6905}
 }
 
-LANDELIJK = {
-    "entree": {"studentenwaarde": 17300.31},
-    "basisberoeps": {"studentenwaarde": 55228.88, "diplomawaarde": 6378.80, "som": 61607.68},
-    "vak_middenkader_specialisten": {"studentenwaarde": 301750.95, "diplomawaarde": 77041.00, "som": 378791.95}
-}
+# ============================================================
+# PDF EXTRACTION
+# ============================================================
+def parse_dutch_number(s: str) -> float:
+    if not s:
+        return 0.0
+    return float(str(s).replace('.', '').replace(',', '.'))
+
+def extract_from_pdf_bytes(pdf_bytes: bytes, filename: str) -> dict:
+    try:
+        import pdfplumber
+        with pdfplumber.open(BytesIO(pdf_bytes)) as pdf:
+            text = "\n".join(page.extract_text() or "" for page in pdf.pages)
+    except ImportError:
+        try:
+            import PyPDF2
+            reader = PyPDF2.PdfReader(BytesIO(pdf_bytes))
+            text = "\n".join(page.extract_text() or "" for page in reader.pages)
+        except ImportError:
+            st.error("Installeer pdfplumber: pip install pdfplumber")
+            return None
+    
+    code_match = re.search(r'(\d{2}[A-Z]{2})', filename)
+    inst_code = code_match.group(1) if code_match else "UNKN"
+    
+    data = {
+        "code": inst_code, "naam": "", "datum": "",
+        "entree": {}, "basisberoeps": {}, "vak_middenkader_specialisten": {}
+    }
+    
+    # Extract name
+    naam_match = re.search(r'(\d{4,5})\s+([A-Z][a-zA-Z\s&]+?)(?:\s+Postbus|\s+Slingelaan|\s+\d)', text)
+    if naam_match:
+        data["naam"] = naam_match.group(2).strip()
+    
+    # Extract shares from cover letter
+    entree_ia = re.search(r'entreeopleidingen.*?(\d+[.,]\d+)%', text, re.DOTALL)
+    if entree_ia:
+        data["entree"]["instellingsaandeel_pct"] = parse_dutch_number(entree_ia.group(1))
+    
+    basis_ia = re.search(r'basisberoepsopleidingen.*?(\d+[.,]\d+)%', text, re.DOTALL)
+    if basis_ia:
+        data["basisberoeps"]["instellingsaandeel_pct"] = parse_dutch_number(basis_ia.group(1))
+    
+    vmks_ia = re.search(r'vak-.*?specialistenopleidingen.*?(\d+[.,]\d+)%', text, re.DOTALL)
+    if vmks_ia:
+        data["vak_middenkader_specialisten"]["instellingsaandeel_pct"] = parse_dutch_number(vmks_ia.group(1))
+    
+    return data
 
 # ============================================================
-# VISUALIZATION FUNCTIONS
+# CHART FUNCTIONS
 # ============================================================
-def plot_instellingsaandelen(inst1, inst2):
-    """Bar chart comparing institution shares"""
+def plot_instellingsaandelen(inst1, inst2, key_suffix=""):
     fig = go.Figure()
     niveaus = ['Entree', 'Basisberoeps', 'Vak/MK/Specialist']
     
@@ -219,24 +152,21 @@ def plot_instellingsaandelen(inst1, inst2):
     )
     return fig
 
-
-def plot_waarden_vergelijking(inst1, inst2):
-    """Stacked bar chart student value + diploma value"""
+def plot_waarden_vergelijking(inst1, inst2, key_suffix=""):
     fig = go.Figure()
     niveaus = ['Entree', 'Basisberoeps', 'Vak/MK/Specialist']
     
-    # Student values
-    fig.add_trace(go.Bar(name=f'Studentenwaarde ({inst1["naam"]})', x=niveaus,
+    fig.add_trace(go.Bar(name=f'SW ({inst1["naam"]})', x=niveaus,
         y=[inst1['entree']['studentenwaarde'], inst1['basisberoeps']['studentenwaarde'], inst1['vak_middenkader_specialisten']['studentenwaarde']],
         marker_color='#2E86AB'))
-    fig.add_trace(go.Bar(name=f'Diplomawaarde ({inst1["naam"]})', x=niveaus,
+    fig.add_trace(go.Bar(name=f'DW ({inst1["naam"]})', x=niveaus,
         y=[0, inst1['basisberoeps']['diplomawaarde'], inst1['vak_middenkader_specialisten']['diplomawaarde']],
         marker_color='#1B4965'))
     
-    fig.add_trace(go.Bar(name=f'Studentenwaarde ({inst2["naam"]})', x=niveaus,
+    fig.add_trace(go.Bar(name=f'SW ({inst2["naam"]})', x=niveaus,
         y=[inst2['entree']['studentenwaarde'], inst2['basisberoeps']['studentenwaarde'], inst2['vak_middenkader_specialisten']['studentenwaarde']],
         marker_color='#A23B72'))
-    fig.add_trace(go.Bar(name=f'Diplomawaarde ({inst2["naam"]})', x=niveaus,
+    fig.add_trace(go.Bar(name=f'DW ({inst2["naam"]})', x=niveaus,
         y=[0, inst2['basisberoeps']['diplomawaarde'], inst2['vak_middenkader_specialisten']['diplomawaarde']],
         marker_color='#6A1B4D'))
     
@@ -248,9 +178,7 @@ def plot_waarden_vergelijking(inst1, inst2):
     )
     return fig
 
-
-def plot_mutatie(inst1, inst2):
-    """Waterfall-style mutation chart"""
+def plot_mutatie(inst1, inst2, key_suffix=""):
     fig = go.Figure()
     niveaus = ['Entree', 'Basisberoeps', 'Vak/MK/Specialist']
     
@@ -271,16 +199,14 @@ def plot_mutatie(inst1, inst2):
     
     fig.add_hline(y=0, line_dash="dash", line_color="gray")
     fig.update_layout(
-        barmode='group', title='Studentenaantal Mutatie (okt 2025 → feb 2026)',
+        barmode='group', title='Mutatie okt 2025 → feb 2026',
         yaxis_title='Mutatie', template='plotly_white',
         legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
         height=450
     )
     return fig
 
-
-def plot_correctiefactoren(inst1, inst2):
-    """Correction factors comparison"""
+def plot_correctiefactoren(inst1, inst2, key_suffix=""):
     fig = go.Figure()
     niveaus = ['Entree', 'Basisberoeps', 'Vak/MK/Specialist']
     
@@ -293,18 +219,16 @@ def plot_correctiefactoren(inst1, inst2):
         marker_color='#A23B72', text=[f"{v:.5f}" for v in [inst2['entree']['correctiefactor'], inst2['basisberoeps']['correctiefactor'], inst2['vak_middenkader_specialisten']['correctiefactor']]],
         textposition='outside'))
     
-    fig.add_hline(y=1.0, line_dash="dash", line_color="gray", annotation_text="Referentie (1.0)")
+    fig.add_hline(y=1.0, line_dash="dash", line_color="gray")
     fig.update_layout(
-        barmode='group', title='Correctiefactoren Vergelijking',
+        barmode='group', title='Correctiefactoren',
         yaxis_title='Correctiefactor', template='plotly_white',
         legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
         height=450, yaxis=dict(range=[0.94, 1.02])
     )
     return fig
 
-
-def plot_radar(inst1, inst2):
-    """Radar chart with normalized metrics"""
+def plot_radar(inst1, inst2, key_suffix=""):
     categories = ['Entree IA', 'Basis IA', 'VMK/S IA', 'Totaal SW', 'Totaal DW', 'Diploma-ratio', 'Studenten', 'CF gem']
     
     t_sw = inst1['entree']['studentenwaarde'] + inst1['basisberoeps']['studentenwaarde'] + inst1['vak_middenkader_specialisten']['studentenwaarde']
@@ -352,10 +276,19 @@ def plot_radar(inst1, inst2):
     )
     return fig
 
+def plot_studenten(inst1, inst2, key_suffix=""):
+    fig = go.Figure()
+    niveaus = ['Entree', 'Basisberoeps', 'Vak/MK/Specialist']
+    fig.add_trace(go.Bar(name=inst1['naam'], x=niveaus,
+        y=[inst1['entree']['aantal_studenten_feb'], inst1['basisberoeps']['aantal_studenten_feb'], inst1['vak_middenkader_specialisten']['aantal_studenten_feb']],
+        marker_color='#2E86AB'))
+    fig.add_trace(go.Bar(name=inst2['naam'], x=niveaus,
+        y=[inst2['entree']['aantal_studenten_feb'], inst2['basisberoeps']['aantal_studenten_feb'], inst2['vak_middenkader_specialisten']['aantal_studenten_feb']],
+        marker_color='#A23B72'))
+    fig.update_layout(barmode='group', title='Studentenaantal (feb 2026)', template='plotly_white', height=500)
+    return fig
 
-def plot_landelijke_ranglijst(inst1, inst2):
-    """Horizontal bar chart with national ranking context"""
-    # Extended data from both PDFs
+def plot_landelijke_ranglijst(inst1, inst2, key_suffix=""):
     instellingen = [
         ("ROC van Amsterdam", 25.61, 6.76), ("Firda", 16.41, 4.33),
         ("ROC van Twente", 14.28, 3.77), ("ROC Mondriaan", 14.19, 3.75),
@@ -380,50 +313,37 @@ def plot_landelijke_ranglijst(inst1, inst2):
     ))
     
     fig.update_layout(
-        title='Vak-/Middenkader-/Specialisten: Landelijke Ranglijst',
+        title='Landelijke Ranglijst VMK/S',
         xaxis_title='Som studenten- en diplomawaarde (x1000)',
         template='plotly_white', height=500,
         yaxis=dict(autorange="reversed")
     )
     return fig
 
-
 # ============================================================
 # SIDEBAR
 # ============================================================
 with st.sidebar:
-    st.image("https://img.icons8.com/color/96/000000/pdf-2.png", width=60)
     st.markdown("## 📁 Data Upload")
-    st.markdown("Upload TBG PDF's om automatisch data te extraheren.")
-    
-    uploaded_files = st.file_uploader(
-        "Upload TBG PDF's (max 2)", 
-        type=['pdf'], 
-        accept_multiple_files=True
-    )
-    
-    st.markdown("---")
-    st.markdown("### ⚙️ Instellingen")
+    uploaded_files = st.file_uploader("Upload TBG PDF's (max 2)", type=['pdf'], accept_multiple_files=True)
     show_demo = st.checkbox("Gebruik demo-data als fallback", value=True)
     
     st.markdown("---")
-    st.markdown("**ℹ️ Vereisten**")
+    st.markdown("**Installatie:**")
     st.code("pip install streamlit plotly pdfplumber pandas", language="bash")
-    
-    st.markdown("**📄 Run app**")
+    st.markdown("**Starten:**")
     st.code("streamlit run app.py", language="bash")
 
 # ============================================================
-# MAIN APP
+# MAIN
 # ============================================================
 st.markdown('<div class="main-header">📊 MBO Bekostigingsdashboard 2025/2026</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Vergelijkende analyse van Terugmelding Bekostigingsgrondslagen (TBG)</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">Vergelijkende analyse van TBG-data</div>', unsafe_allow_html=True)
 
 # Determine data source
 inst1, inst2 = None, None
 
 if uploaded_files and len(uploaded_files) >= 1:
-    # Extract from uploaded PDFs
     extracted = []
     for f in uploaded_files[:2]:
         data = extract_from_pdf_bytes(f.getvalue(), f.name)
@@ -436,192 +356,112 @@ if uploaded_files and len(uploaded_files) >= 1:
     elif len(extracted) == 1:
         inst1 = extracted[0]
         inst2 = DEMO_GRAAFSCHAP if inst1['code'] == '27YU' else DEMO_TWENTE
-        st.info("ℹ️ Eén PDF geüpload, tweede instelling uit demo-data")
+        st.info("ℹ️ Eén PDF geüpload, tweede uit demo-data")
     elif show_demo:
         inst1, inst2 = DEMO_TWENTE, DEMO_GRAAFSCHAP
-        st.info("ℹ️ Geen PDF's herkend, demo-data gebruikt")
+        st.info("ℹ️ Demo-data gebruikt")
 else:
     if show_demo:
         inst1, inst2 = DEMO_TWENTE, DEMO_GRAAFSCHAP
-        st.info("ℹ️ Demo-data actief. Upload PDF's voor eigen analyse.")
+        st.info("ℹ️ Demo-data actief")
 
-# Ensure we have data
 if inst1 is None or inst2 is None:
-    st.error("Geen data beschikbaar. Upload PDF's of schakel demo-data in.")
+    st.error("Geen data beschikbaar.")
     st.stop()
 
-# ============================================================
 # KPI CARDS
-# ============================================================
 col1, col2, col3 = st.columns(3)
-
 t_totaal = inst1['entree']['studentenwaarde'] + inst1['basisberoeps']['som'] + inst1['vak_middenkader_specialisten']['som']
 g_totaal = inst2['entree']['studentenwaarde'] + inst2['basisberoeps']['som'] + inst2['vak_middenkader_specialisten']['som']
 factor = t_totaal / g_totaal
 
 with col1:
-    st.markdown(f"""
-    <div class="kpi-card" style="border-left-color: #2E86AB;">
-        <div class="metric-label">{inst1['naam']}</div>
-        <div class="metric-value">{t_totaal:,.0f}</div>
-        <div class="metric-sub">Totale bekostigingswaarde</div>
-    </div>
-    """, unsafe_allow_html=True)
-
+    st.markdown(f'<div class="kpi-card" style="border-left-color: #2E86AB;"><div class="metric-label">{inst1["naam"]}</div><div class="metric-value">{t_totaal:,.0f}</div><div class="metric-sub">Totale waarde</div></div>', unsafe_allow_html=True)
 with col2:
-    st.markdown(f"""
-    <div class="kpi-card" style="border-left-color: #A23B72;">
-        <div class="metric-label">{inst2['naam']}</div>
-        <div class="metric-value">{g_totaal:,.0f}</div>
-        <div class="metric-sub">Totale bekostigingswaarde</div>
-    </div>
-    """, unsafe_allow_html=True)
-
+    st.markdown(f'<div class="kpi-card" style="border-left-color: #A23B72;"><div class="metric-label">{inst2["naam"]}</div><div class="metric-value">{g_totaal:,.0f}</div><div class="metric-sub">Totale waarde</div></div>', unsafe_allow_html=True)
 with col3:
-    st.markdown(f"""
-    <div class="kpi-card" style="border-left-color: #F59E0B;">
-        <div class="metric-label">Verschil (factor)</div>
-        <div class="metric-value">{factor:.2f}x</div>
-        <div class="metric-sub">{inst1['naam']} is groter</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f'<div class="kpi-card" style="border-left-color: #F59E0B;"><div class="metric-label">Verschil</div><div class="metric-value">{factor:.2f}x</div><div class="metric-sub">{inst1["naam"]} is groter</div></div>', unsafe_allow_html=True)
 
-# ============================================================
-# TABS
-# ============================================================
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📈 Overzicht", "📊 Grafieken", "🎯 Profiel", "🏆 Ranglijst", "📋 Detailtabel"
-])
+# TABS - ELKE CHART HEEFT EEN UNIEKE KEY
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["📈 Overzicht", "📊 Grafieken", "🎯 Profiel", "🏆 Ranglijst", "📋 Detailtabel"])
 
 with tab1:
-    st.markdown("### Kernbevindingen")
-    
     col_a, col_b = st.columns(2)
     with col_a:
-        st.markdown(f"""
-        <div class="insight-box">
-            <h4>📏 Schaalvergelijking</h4>
-            <p><strong>{inst1['naam']}</strong> is <strong>{factor:.1f}x</strong> groter dan {inst2['naam']} op totale bekostigingswaarde.<br><br>
-            • Studenten (feb): {inst1['entree']['aantal_studenten_feb']+inst1['basisberoeps']['aantal_studenten_feb']+inst1['vak_middenkader_specialisten']['aantal_studenten_feb']:,} vs {inst2['entree']['aantal_studenten_feb']+inst2['basisberoeps']['aantal_studenten_feb']+inst2['vak_middenkader_specialisten']['aantal_studenten_feb']:,}<br>
-            • VMK/S waarde: {inst1['vak_middenkader_specialisten']['som']:,.0f} vs {inst2['vak_middenkader_specialisten']['som']:,.0f}</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_b:
         t_ratio = inst1['vak_middenkader_specialisten']['diplomawaarde'] / inst1['vak_middenkader_specialisten']['studentenwaarde']
         g_ratio = inst2['vak_middenkader_specialisten']['diplomawaarde'] / inst2['vak_middenkader_specialisten']['studentenwaarde']
         st.markdown(f"""
         <div class="insight-box">
-            <h4>🎓 Diploma-output</h4>
-            <p><strong>Diploma-ratio VMK/S:</strong><br>
-            • {inst1['naam']}: {t_ratio:.3f}<br>
+            <h4>📏 Schaal</h4>
+            <p><strong>{inst1['naam']}</strong> is <strong>{factor:.1f}x</strong> groter.<br><br>
+            Studenten: {inst1['entree']['aantal_studenten_feb']+inst1['basisberoeps']['aantal_studenten_feb']+inst1['vak_middenkader_specialisten']['aantal_studenten_feb']:,} vs {inst2['entree']['aantal_studenten_feb']+inst2['basisberoeps']['aantal_studenten_feb']+inst2['vak_middenkader_specialisten']['aantal_studenten_feb']:,}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with col_b:
+        st.markdown(f"""
+        <div class="insight-box">
+            <h4>🎓 Diploma-output VMK/S</h4>
+            <p>• {inst1['naam']}: {t_ratio:.3f}<br>
             • {inst2['naam']}: {g_ratio:.3f}<br><br>
-            {'<strong>' + inst2['naam'] + '</strong> scoort relatief hoger op diploma-output.' if g_ratio > t_ratio else '<strong>' + inst1['naam'] + '</strong> scoort relatief hoger op diploma-output.'}</p>
+            <strong>{inst2['naam'] if g_ratio > t_ratio else inst1['naam']}</strong> scoort relatief hoger.</p>
         </div>
         """, unsafe_allow_html=True)
     
-    # Mini charts
     c1, c2 = st.columns(2)
     with c1:
-        st.plotly_chart(plot_instellingsaandelen(inst1, inst2), use_container_width=True)
+        # UNIEKE KEY: tab1_chart1
+        st.plotly_chart(plot_instellingsaandelen(inst1, inst2), use_container_width=True, key="tab1_chart1")
     with c2:
-        st.plotly_chart(plot_mutatie(inst1, inst2), use_container_width=True)
+        # UNIEKE KEY: tab1_chart2
+        st.plotly_chart(plot_mutatie(inst1, inst2), use_container_width=True, key="tab1_chart2")
 
 with tab2:
     metric = st.radio("Selecteer metric:", 
         ["Instellingsaandeel (%)", "Totale waarde", "Studentenaantal", "Mutatie okt→feb", "Correctiefactor"],
-        horizontal=True)
+        horizontal=True, key="metric_selector")
     
     if metric == "Instellingsaandeel (%)":
-        st.plotly_chart(plot_instellingsaandelen(inst1, inst2), use_container_width=True)
+        st.plotly_chart(plot_instellingsaandelen(inst1, inst2), use_container_width=True, key="tab2_ia")
     elif metric == "Totale waarde":
-        st.plotly_chart(plot_waarden_vergelijking(inst1, inst2), use_container_width=True)
+        st.plotly_chart(plot_waarden_vergelijking(inst1, inst2), use_container_width=True, key="tab2_waarde")
     elif metric == "Studentenaantal":
-        fig = go.Figure()
-        niveaus = ['Entree', 'Basisberoeps', 'Vak/MK/Specialist']
-        fig.add_trace(go.Bar(name=inst1['naam'], x=niveaus,
-            y=[inst1['entree']['aantal_studenten_feb'], inst1['basisberoeps']['aantal_studenten_feb'], inst1['vak_middenkader_specialisten']['aantal_studenten_feb']],
-            marker_color='#2E86AB'))
-        fig.add_trace(go.Bar(name=inst2['naam'], x=niveaus,
-            y=[inst2['entree']['aantal_studenten_feb'], inst2['basisberoeps']['aantal_studenten_feb'], inst2['vak_middenkader_specialisten']['aantal_studenten_feb']],
-            marker_color='#A23B72'))
-        fig.update_layout(barmode='group', title='Studentenaantal (feb 2026)', template='plotly_white', height=500)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(plot_studenten(inst1, inst2), use_container_width=True, key="tab2_stud")
     elif metric == "Mutatie okt→feb":
-        st.plotly_chart(plot_mutatie(inst1, inst2), use_container_width=True)
+        st.plotly_chart(plot_mutatie(inst1, inst2), use_container_width=True, key="tab2_mut")
     else:
-        st.plotly_chart(plot_correctiefactoren(inst1, inst2), use_container_width=True)
+        st.plotly_chart(plot_correctiefactoren(inst1, inst2), use_container_width=True, key="tab2_cf")
 
 with tab3:
     col_r1, col_r2 = st.columns([3, 2])
     with col_r1:
-        st.plotly_chart(plot_radar(inst1, inst2), use_container_width=True)
+        st.plotly_chart(plot_radar(inst1, inst2), use_container_width=True, key="tab3_radar")
     with col_r2:
         st.markdown("""
         <div style="background:white;border-radius:12px;padding:1.5rem;border:1px solid #e5e7eb;">
             <h4 style="margin-top:0;color:#1e3a5f;">🎯 Profielinterpretatie</h4>
             <p style="font-size:0.9rem;color:#4b5563;line-height:1.6;">
-            De radar toont genormaliseerde metrics (0-100%).<br><br>
-            <strong style="color:#2E86AB;">Blauw:</strong> grotere schaal, hoger landelijk marktaandeel<br>
-            <strong style="color:#A23B72;">Paars:</strong> compacter profiel, relatief hogere diploma-ratio
+            <strong style="color:#2E86AB;">Blauw:</strong> grotere schaal, hoger marktaandeel<br>
+            <strong style="color:#A23B72;">Paars:</strong> compacter, hogere diploma-ratio
             </p>
         </div>
         """, unsafe_allow_html=True)
 
 with tab4:
-    st.plotly_chart(plot_landelijke_ranglijst(inst1, inst2), use_container_width=True)
-    st.caption("Landelijke ranglijst gebaseerd op vak-/middenkader-/specialistenopleidingen. Data uit TBG 2025/2026.")
+    st.plotly_chart(plot_landelijke_ranglijst(inst1, inst2), use_container_width=True, key="tab4_rank")
 
 with tab5:
-    # Create detailed comparison table
     df = pd.DataFrame({
-        'Metric': ['Studentenwaarde', 'Diplomawaarde', 'Som (SW+DW)', 'Instellingsaandeel (%)', 
-                   'Correctiefactor', 'Studenten okt 2025', 'Studenten feb 2026', 'Mutatie'],
-        f'{inst1["naam"]} - Entree': [
-            inst1['entree']['studentenwaarde'], '-', inst1['entree']['studentenwaarde'],
-            inst1['entree']['instellingsaandeel_pct'], inst1['entree']['correctiefactor'],
-            inst1['entree']['aantal_studenten_okt'], inst1['entree']['aantal_studenten_feb'],
-            inst1['entree']['aantal_studenten_feb'] - inst1['entree']['aantal_studenten_okt']
-        ],
-        f'{inst2["naam"]} - Entree': [
-            inst2['entree']['studentenwaarde'], '-', inst2['entree']['studentenwaarde'],
-            inst2['entree']['instellingsaandeel_pct'], inst2['entree']['correctiefactor'],
-            inst2['entree']['aantal_studenten_okt'], inst2['entree']['aantal_studenten_feb'],
-            inst2['entree']['aantal_studenten_feb'] - inst2['entree']['aantal_studenten_okt']
-        ],
-        f'{inst1["naam"]} - Basis': [
-            inst1['basisberoeps']['studentenwaarde'], inst1['basisberoeps']['diplomawaarde'], inst1['basisberoeps']['som'],
-            inst1['basisberoeps']['instellingsaandeel_pct'], inst1['basisberoeps']['correctiefactor'],
-            inst1['basisberoeps']['aantal_studenten_okt'], inst1['basisberoeps']['aantal_studenten_feb'],
-            inst1['basisberoeps']['aantal_studenten_feb'] - inst1['basisberoeps']['aantal_studenten_okt']
-        ],
-        f'{inst2["naam"]} - Basis': [
-            inst2['basisberoeps']['studentenwaarde'], inst2['basisberoeps']['diplomawaarde'], inst2['basisberoeps']['som'],
-            inst2['basisberoeps']['instellingsaandeel_pct'], inst2['basisberoeps']['correctiefactor'],
-            inst2['basisberoeps']['aantal_studenten_okt'], inst2['basisberoeps']['aantal_studenten_feb'],
-            inst2['basisberoeps']['aantal_studenten_feb'] - inst2['basisberoeps']['aantal_studenten_okt']
-        ],
-        f'{inst1["naam"]} - VMK/S': [
-            inst1['vak_middenkader_specialisten']['studentenwaarde'], inst1['vak_middenkader_specialisten']['diplomawaarde'], inst1['vak_middenkader_specialisten']['som'],
-            inst1['vak_middenkader_specialisten']['instellingsaandeel_pct'], inst1['vak_middenkader_specialisten']['correctiefactor'],
-            inst1['vak_middenkader_specialisten']['aantal_studenten_okt'], inst1['vak_middenkader_specialisten']['aantal_studenten_feb'],
-            inst1['vak_middenkader_specialisten']['aantal_studenten_feb'] - inst1['vak_middenkader_specialisten']['aantal_studenten_okt']
-        ],
-        f'{inst2["naam"]} - VMK/S': [
-            inst2['vak_middenkader_specialisten']['studentenwaarde'], inst2['vak_middenkader_specialisten']['diplomawaarde'], inst2['vak_middenkader_specialisten']['som'],
-            inst2['vak_middenkader_specialisten']['instellingsaandeel_pct'], inst2['vak_middenkader_specialisten']['correctiefactor'],
-            inst2['vak_middenkader_specialisten']['aantal_studenten_okt'], inst2['vak_middenkader_specialisten']['aantal_studenten_feb'],
-            inst2['vak_middenkader_specialisten']['aantal_studenten_feb'] - inst2['vak_middenkader_specialisten']['aantal_studenten_okt']
-        ]
+        'Metric': ['Studentenwaarde', 'Diplomawaarde', 'Som (SW+DW)', 'Inst.aandeel (%)', 'Correctiefactor', 'Studenten okt', 'Studenten feb', 'Mutatie'],
+        f'{inst1["naam"]} - Entree': [inst1['entree']['studentenwaarde'], '-', inst1['entree']['studentenwaarde'], inst1['entree']['instellingsaandeel_pct'], inst1['entree']['correctiefactor'], inst1['entree']['aantal_studenten_okt'], inst1['entree']['aantal_studenten_feb'], inst1['entree']['aantal_studenten_feb'] - inst1['entree']['aantal_studenten_okt']],
+        f'{inst2["naam"]} - Entree': [inst2['entree']['studentenwaarde'], '-', inst2['entree']['studentenwaarde'], inst2['entree']['instellingsaandeel_pct'], inst2['entree']['correctiefactor'], inst2['entree']['aantal_studenten_okt'], inst2['entree']['aantal_studenten_feb'], inst2['entree']['aantal_studenten_feb'] - inst2['entree']['aantal_studenten_okt']],
+        f'{inst1["naam"]} - Basis': [inst1['basisberoeps']['studentenwaarde'], inst1['basisberoeps']['diplomawaarde'], inst1['basisberoeps']['som'], inst1['basisberoeps']['instellingsaandeel_pct'], inst1['basisberoeps']['correctiefactor'], inst1['basisberoeps']['aantal_studenten_okt'], inst1['basisberoeps']['aantal_studenten_feb'], inst1['basisberoeps']['aantal_studenten_feb'] - inst1['basisberoeps']['aantal_studenten_okt']],
+        f'{inst2["naam"]} - Basis': [inst2['basisberoeps']['studentenwaarde'], inst2['basisberoeps']['diplomawaarde'], inst2['basisberoeps']['som'], inst2['basisberoeps']['instellingsaandeel_pct'], inst2['basisberoeps']['correctiefactor'], inst2['basisberoeps']['aantal_studenten_okt'], inst2['basisberoeps']['aantal_studenten_feb'], inst2['basisberoeps']['aantal_studenten_feb'] - inst2['basisberoeps']['aantal_studenten_okt']],
+        f'{inst1["naam"]} - VMK/S': [inst1['vak_middenkader_specialisten']['studentenwaarde'], inst1['vak_middenkader_specialisten']['diplomawaarde'], inst1['vak_middenkader_specialisten']['som'], inst1['vak_middenkader_specialisten']['instellingsaandeel_pct'], inst1['vak_middenkader_specialisten']['correctiefactor'], inst1['vak_middenkader_specialisten']['aantal_studenten_okt'], inst1['vak_middenkader_specialisten']['aantal_studenten_feb'], inst1['vak_middenkader_specialisten']['aantal_studenten_feb'] - inst1['vak_middenkader_specialisten']['aantal_studenten_okt']],
+        f'{inst2["naam"]} - VMK/S': [inst2['vak_middenkader_specialisten']['studentenwaarde'], inst2['vak_middenkader_specialisten']['diplomawaarde'], inst2['vak_middenkader_specialisten']['som'], inst2['vak_middenkader_specialisten']['instellingsaandeel_pct'], inst2['vak_middenkader_specialisten']['correctiefactor'], inst2['vak_middenkader_specialisten']['aantal_studenten_okt'], inst2['vak_middenkader_specialisten']['aantal_studenten_feb'], inst2['vak_middenkader_specialisten']['aantal_studenten_feb'] - inst2['vak_middenkader_specialisten']['aantal_studenten_okt']]
     })
     st.dataframe(df, use_container_width=True, hide_index=True)
-    
-    # Download button
     csv = df.to_csv(index=False).encode('utf-8')
-    st.download_button("⬇️ Download als CSV", csv, "tbg_vergelijking.csv", "text/csv")
+    st.download_button("⬇️ Download CSV", csv, "tbg_vergelijking.csv", "text/csv", key="download_csv")
 
-# ============================================================
-# FOOTER
-# ============================================================
 st.markdown("---")
-st.caption("MBO Bekostigingsdashboard | Data: DUO TBG 2025/2026 | Gegenereerd met Streamlit & Plotly")
+st.caption("MBO Bekostigingsdashboard | Data: DUO TBG 2025/2026")
